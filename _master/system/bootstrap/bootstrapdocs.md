@@ -22,8 +22,6 @@ The export mapping lives in `_master/system/bootstrap/bootstrap-export.json` und
 
 Keep public setup instructions in `README-bootstrap.md`, but keep install implementation in `install.sh`. Keep implementation notes, edge cases, and maintenance details in this file.
 
-The public root `_master/00-StartHere.md` is intentionally not exported. Its first-read and daily-flow guidance is folded into the public README instead.
-
 ## Internal Docs Stay Split
 
 - `_master/system/context/SCRIPTS.md`: normal command/operator workflows.

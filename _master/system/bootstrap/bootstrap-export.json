@@ -34,8 +34,6 @@
   },
   "generated_exclude_paths": [
     "_master/Dashboard.md",
-    "_master/00-StartHere.md",
-    "_master/system/context/00-StartHere.md",
     "_master/system/context/01-Context.md",
     "_master/system/context/02-Identity.md",
     "_master/system/context/03-Momentum.md",

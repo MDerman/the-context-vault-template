@@ -1085,7 +1085,6 @@ Useful docs:
 
 ## First Things To Open
 
-- `_master/00-StartHere.md`
 - `_master/01-Context.md`
 - `_master/system/context/<today>.md`
 - `_master/_obsidian/bases/content-kanban.base`

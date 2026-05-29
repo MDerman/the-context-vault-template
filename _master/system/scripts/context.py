@@ -28,7 +28,6 @@ LEGACY_AGENT_CONTEXT_MARKDOWN_PATH = AGENT_DIR / ("context" + ".md")
 LEGACY_AGENT_SYSTEM_DIR = Path("_master/system/context/system")
 DASHBOARD_PATH = Path("_master/Dashboard.md")
 SYSTEM_NOTES = {
-    "start_here": "_master/00-StartHere.md",
     "context": "_master/01-Context.md",
     "identity": "_master/02-Identity.md",
     "momentum": "_master/03-Momentum.md",
@@ -468,7 +467,6 @@ Use `<context-folder>/_obsidian/periodic/<daily|weekly|quarterly|yearly>/<period
 ## Where To Look First
 
 - `AGENTS.md`
-- `_master/00-StartHere.md`
 - `_master/01-Context.md`
 - relevant `<context-folder>/DECLARATION.md`
 - `_master/system/context/CONTEXT.md`
@@ -503,7 +501,6 @@ def dashboard_markdown(
     home_lines = [obsidian_link(f"{entity}/HOME.md", entity) for entity in selected_entities]
     agent_periodics = agent_periodic_paths(periods)
     standing_lines = [
-        obsidian_link("_master/system/context/00-StartHere.md", "00-StartHere"),
         obsidian_link("_master/system/context/01-Context.md", "01-Context"),
         obsidian_link("_master/system/context/02-Identity.md", "02-Identity"),
         obsidian_link("_master/system/context/03-Momentum.md", "03-Momentum"),

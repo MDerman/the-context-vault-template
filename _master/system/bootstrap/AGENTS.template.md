@@ -18,14 +18,13 @@ Root workspace is one Obsidian vault with context folders. `CLAUDE.md` is a syml
 - Put dormant skills in `_master/agents/skills-dump/`.
 - Ignore incidental `.obsidian/` git churn.
 - Do not bulk-move, restructure, delete, or overwrite user content unless explicitly asked.
-- Do not create `_master/HOME.md`; use `_master/00-StartHere.md` as master entrypoint.
 
 ## First Read
 
 1. Read `_master/system/context/CONTEXT.md` | current generated vault state, active periods, tasks, schedules, first-look files.
 2. Read relevant context folder `HOME.md` before routing or storing info.
 3. Read relevant `<context-folder>/DECLARATION.md` before changing entity operating rules.
-4. Open detail docs only when needed: `_master/00-StartHere.md`, `_master/01-Context.md`, `_master/system/context/SCRIPTS.md` | normal vault commands and refresh workflows, `_master/system/context/SCRIPT-REFERENCE.md` | full script inventory and one-time script cautions, `_master/system/context/OBSIDIAN-PROFILE.md` | Obsidian profile, plugins, UI settings, templates, Sync Embeds.
+4. Open detail docs only when needed: `_master/01-Context.md`, `_master/system/context/SCRIPTS.md` | normal vault commands and refresh workflows, `_master/system/context/SCRIPT-REFERENCE.md` | full script inventory and one-time script cautions, `_master/system/context/OBSIDIAN-PROFILE.md` | Obsidian profile, plugins, UI settings, templates, Sync Embeds.
 5. For public bootstrap/export docs, read `_master/system/bootstrap/README-bootstrap.md` (public README source) and `_master/system/bootstrap/bootstrapdocs.md` (internal bootstrap mechanics).
 
 ## Map
@@ -53,9 +52,6 @@ Use each context folder's `HOME.md` for local routing. Use `_master/01-Context.m
 - Content schedules: `<context-folder>/_obsidian/content-schedules/`
 - Note attachments: owning top-level folder's `_obsidian/attachments/`
 - Brain Dump import: `_master/system/inbox/BRAIN_DUMP.md`
-- Brain Dump proposals/backups: `_master/system/inbox/BRAIN_DUMP_PROPOSALS/`, `_master/system/inbox/BRAIN_DUMP_BACKUPS/`
-- Non-entity thoughts: `_library/thoughts`
-- Utility scripts/tools: `_master/general-tools/`
 
 ## Low-Context Lookups
 
@@ -78,7 +74,8 @@ If exact Obsidian Base drag order matters, check `tasknotes_manual_order` or use
 
 ## Scripts
 
-Use `vault --help` first. Main scripts live in `_master/system/scripts/`.
+Use `vault --help` first. Main vault-related scripts that complement Obsidian workflows live in `_master/system/scripts/`.
+Other random tools and scripts live in `_master/general-tools/`.
 
 Common commands: `vault refresh`, `vault context`, `vault content`, `vault periodic`, `vault sync`, `vault triage`, `vault attachments`, `vault epic`, `vault gcal`, `vault folder`, `vault bootstrap-export`, `vault upgrade`.
 
@@ -129,11 +126,7 @@ Read `_master/system/context/SCRIPTS.md` before refresh/setup commands. Read `_m
 If asked to create skills, add them to `_master/agents/skills` (symlinked to `.agents/skills`).
 If asked to store but not make active a skill, add it to `_master/agents/skills-dump`.
 
-## Tools And Scripts
-
-Add reusable tools and scripts to `_master/general-tools`.
-
-Agents can:
+## Agents Can
 
 - summarize current tasks and periodic notes;
 - create or update TaskNotes tasks when asked;
