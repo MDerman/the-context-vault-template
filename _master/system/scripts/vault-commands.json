@@ -1,0 +1,110 @@
+[
+  {
+    "id": "refresh",
+    "label": "Refresh",
+    "description": "Ingest configured Brain Dump, then regenerate agent context, the dashboard, content schedules, and current agent periodic rollups.",
+    "args": ["refresh"]
+  },
+  {
+    "id": "sync",
+    "label": "Sync Brain Dump",
+    "description": "Import the configured Brain Dump Apple Note into the vault inbox and copy attachments according to the vault Brain Dump ingest config.",
+    "args": ["sync"]
+  },
+  {
+    "id": "context",
+    "label": "Context",
+    "description": "Regenerate compact agent-readable context, realized system notes, the dashboard, content schedules, and current periodic rollups.",
+    "args": ["context"]
+  },
+  {
+    "id": "inventory",
+    "label": "Inventory",
+    "description": "Print agent-friendly context folders, task statuses, epics, and projects for low-context task routing.",
+    "args": ["inventory"]
+  },
+  {
+    "id": "content",
+    "label": "Content Schedules",
+    "description": "Generate current 4-week content schedule notes from enabled cadence JSON and maintain each enabled context folder's current schedule link.",
+    "args": ["content"]
+  },
+  {
+    "id": "attachments-dry-run",
+    "label": "Attachments Dry Run",
+    "description": "Preview attachment routing and cleanup without changing files, showing planned destination moves, unresolved links, and rewrite counts.",
+    "args": ["attachments"]
+  },
+  {
+    "id": "attachments-apply",
+    "label": "Attachments Apply",
+    "description": "Apply planned attachment routing and cleanup so note attachments live under each owning root folder's _obsidian/attachments directory.",
+    "args": ["attachments", "--apply"]
+  },
+  {
+    "id": "epic-sync",
+    "label": "Epic Views Sync",
+    "description": "Regenerate per-epic task Kanban Bases and the managed epic views in the master tasks kanban.",
+    "args": ["epic", "sync"]
+  },
+  {
+    "id": "gcal-list-week",
+    "label": "GCal List Week",
+    "description": "List the next 7 days of Google Calendar events across all calendars as agent-friendly JSON.",
+    "args": ["gcal", "list", "--days", "7", "--calendar", "all", "--json"]
+  },
+  {
+    "id": "gcal-ensure-calendars",
+    "label": "GCal Ensure Calendars",
+    "description": "Create or find the Time Blocks, Scheduled Tasks, and Due Tasks calendars used by vault scripts.",
+    "args": ["gcal", "calendars", "ensure", "--apply"]
+  },
+  {
+    "id": "gcal-sync-tasks-dry-run",
+    "label": "GCal Sync Tasks Dry Run",
+    "description": "Preview the two-way TaskNotes due/scheduled mirror without changing tasks or Google Calendar.",
+    "args": ["gcal", "sync-tasks", "--dry-run"]
+  },
+  {
+    "id": "git-maintenance",
+    "label": "Git Maintenance",
+    "description": "Keep local Git history shallow at 5 commits and prune local unreachable objects.",
+    "args": ["git-maintenance"]
+  },
+  {
+    "id": "mobile-profile",
+    "label": "Mobile Profile",
+    "description": "Refresh .obsidian-mobile with the safe mobile plugin set plus theme, style, color, icon, and snippet settings.",
+    "args": ["mobile-profile"]
+  },
+  {
+    "id": "path-audit",
+    "label": "Path Audit",
+    "description": "Find persisted vault-root paths that would break after moving the vault.",
+    "args": ["path-audit"]
+  },
+  {
+    "id": "backup",
+    "label": "Obsidian Profile Backup",
+    "description": "Back up root .obsidian under _master/system/backup.",
+    "args": ["backup"]
+  },
+  {
+    "id": "bootstrap-export",
+    "label": "Bootstrap Export",
+    "description": "Export the public bootstrap vault from the current vault into the configured export root.",
+    "args": ["bootstrap-export"]
+  },
+  {
+    "id": "upgrade-dry-run",
+    "label": "Upgrade Dry Run",
+    "description": "Preview public bootstrap vault updates using hidden upstream Git state and write an upgrade report.",
+    "args": ["upgrade", "--dry-run"]
+  },
+  {
+    "id": "upgrade-doctor",
+    "label": "Upgrade Doctor",
+    "description": "Check public bootstrap upgrade state, hidden upstream Git wiring, and repo metadata.",
+    "args": ["upgrade", "doctor"]
+  }
+]

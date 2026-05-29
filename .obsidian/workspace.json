@@ -14,7 +14,7 @@
             "state": {
               "type": "bases",
               "state": {
-                "file": "03-business/_obsidian/bases/tasks-epic-growth-kanban.base",
+                "file": "business/_obsidian/bases/tasks-epic-growth-kanban.base",
                 "viewName": "Growth Kanban"
               },
               "icon": "tasknotes-simple",
@@ -27,7 +27,7 @@
             "state": {
               "type": "bases",
               "state": {
-                "file": "03-business/_obsidian/bases/tasks-epic-focus-kanban.base",
+                "file": "business/_obsidian/bases/tasks-epic-focus-kanban.base",
                 "viewName": "Focus Kanban"
               },
               "icon": "tasknotes-simple",
@@ -40,7 +40,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "02-personal-brand/Post Inspo.md",
+                "file": "personal-brand/Post Inspo.md",
                 "mode": "source",
                 "source": false
               },
@@ -54,7 +54,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "01-personal/_obsidian/periodic/weekly/2026-W22.md",
+                "file": "personal/_obsidian/periodic/weekly/2026-W22.md",
                 "mode": "source",
                 "source": false
               },
@@ -68,7 +68,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "master/03-Momentum.md",
+                "file": "_master/03-Momentum.md",
                 "mode": "source",
                 "source": false
               },
@@ -82,7 +82,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "master/Dashboard.md",
+                "file": "_master/Dashboard.md",
                 "mode": "source",
                 "source": false
               },
@@ -110,7 +110,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "03-business/Leads/people.md",
+                "file": "business/Leads/people.md",
                 "mode": "source",
                 "source": false
               },
@@ -132,7 +132,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "master/system/inbox/BRAIN_DUMP.md",
+                "file": "_master/system/inbox/BRAIN_DUMP.md",
                 "mode": "source",
                 "source": false
               },
@@ -172,7 +172,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#03-business",
+                "query": "tag:#business",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -232,7 +232,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "master/system/inbox/BRAIN_DUMP.md",
+                "file": "_master/system/inbox/BRAIN_DUMP.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -275,7 +275,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "01-personal/_obsidian/periodic/weekly/2026-W21.md",
+                "file": "personal/_obsidian/periodic/weekly/2026-W21.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -379,56 +379,56 @@
   },
   "active": "57cae75ccb037b0f",
   "lastOpenFiles": [
-    "master/system/bootstrap/vault-bootstrap/release.json",
-    "master/system/bootstrap/vault-bootstrap/policy.json",
-    "master/system/bootstrap/vault-bootstrap",
-    "master/system/scripts/__pycache__/brain_dump.cpython-310.pyc",
-    "master/system/bootstrap/README.md",
-    "master/system/bootstrap/__pycache__/generate_agents.cpython-310.pyc",
-    "master/system/bootstrap/init_vault.sh",
-    "master/system/bootstrap/init-vault-config.json",
-    "master/system/bootstrap/generate_agents.py",
-    "master/system/bootstrap/AGENTS.template.md",
+    "_master/system/bootstrap/vault-bootstrap/release.json",
+    "_master/system/bootstrap/vault-bootstrap/policy.json",
+    "_master/system/bootstrap/vault-bootstrap",
+    "_master/system/scripts/__pycache__/brain_dump.cpython-310.pyc",
+    "_master/system/bootstrap/README.md",
+    "_master/system/bootstrap/__pycache__/generate_agents.cpython-310.pyc",
+    "_master/system/bootstrap/init_vault.sh",
+    "_master/system/bootstrap/init-vault-config.json",
+    "_master/system/bootstrap/generate_agents.py",
+    "_master/system/bootstrap/AGENTS.template.md",
     "AGENTS.md",
-    "master/Dashboard.md",
-    "03-business/Leads/people.md",
-    "02-personal-brand/_obsidian/content-schedules/Content Calendar for 2026-05-11 to 2026-06-07.md",
-    "01-personal/HOME.md",
-    "master/system/context/01-Context.md",
-    "01-personal/_obsidian/periodic/weekly/2026-W22.md",
-    "master/agents/backups/skill-sync/20260529-095029",
-    "master/agents/skills/personal-folder-structure-code-workflow/SKILL.md",
-    "master/agents/skills/personal-folder-structure-code-workflow",
-    "master/system/scripts/__pycache__/context.cpython-310.pyc",
-    "03-business/_private/Partners Co-founers/Co-founders, strategic partners & FAST etc/Matt joining Notus Agreement Discussion/THE BELOW AGREEMENTS ARE NOT FINAL.md",
-    "03-business/_private/Partners Co-founers/Co-founders, strategic partners & FAST etc/Matt joining Notus Agreement Discussion.md",
-    "03-business/_private/Partners Co-founers/Co-founder agreements/FI_FAST_v2.docx.md",
-    "03-business/_private/Partners Co-founers/chat-summary.md",
-    "03-business/_private/Partners Co-founers/Typeway Partnership Options.md",
-    "03-business/_private/Partners Co-founers/Stefan (The Brand & Growth Engine).md",
-    "03-business/_private/Partners Co-founers/Lucas Wolf.md",
-    "03-business/_private/Partners Co-founers/Lucas (Product & Migration Partner).md",
-    "03-business/_private/Partners Co-founers/Influencer Partnership Playbook.md",
-    "03-business/_private/Partners Co-founers/LightGTM (Whitelabel Partner).md",
-    "03-business/_private/Partners Co-founers/Impression Partners Co-founers.md",
-    "03-business/_private/Partners Co-founers/FI_FAST_v2.docx.md",
-    "03-business/Content/SEO-and-Blogs-for-Impression.md",
-    "03-business/Archive/Lots of ideas here/Mike/Mike.md",
-    "03-business/Archive/Lots of ideas here/Mike/LinkedIn Idea for Mike.md",
-    "master/tools-and-scripts/invoice-generation/output/invoice-boring-studios.jpg",
-    "master/agents/backups/skill-sync/20260513-151720/codex-skills-dir/pdf/assets/pdf.png",
-    "master/agents/skills/pdf/assets/pdf.png",
-    "04-dev/_obsidian/attachments/Pasted image 20260526205648.png",
-    "04-dev/_obsidian/attachments/Pasted image 20260526205641.png",
-    "04-dev/_obsidian/attachments/Pasted image 20260526205620.png",
-    "04-dev/_obsidian/attachments/Pasted image 20260526205606.png",
-    "03-business/_obsidian/attachments/Pasted image 20260524213852.png",
-    "03-business/_obsidian/attachments/Pasted image 20260524213830.png",
-    "03-business/_obsidian/attachments/Pasted image 20260524213815.png",
-    "master/system/obsidian_notes/potential_ideas/Canvas/Habit Tracking Dashboard.canvas",
-    "master/system/obsidian_notes/pkm_reference/Canvas/Habit Tracking Dashboard.canvas",
-    "master/system/obsidian_notes/pkm_reference/Canvas/Habit Tracking Dashboard.canvas",
-    "master/system/obsidian_notes/pkm_reference/Canvas/Habit Tracking Dashboard.canvas",
+    "_master/Dashboard.md",
+    "business/Leads/people.md",
+    "personal-brand/_obsidian/content-schedules/Content Calendar for 2026-05-11 to 2026-06-07.md",
+    "personal/HOME.md",
+    "_master/system/context/01-Context.md",
+    "personal/_obsidian/periodic/weekly/2026-W22.md",
+    "_master/agents/backups/skill-sync/20260529-095029",
+    "_master/agents/skills/personal-folder-structure-code-workflow/SKILL.md",
+    "_master/agents/skills/personal-folder-structure-code-workflow",
+    "_master/system/scripts/__pycache__/context.cpython-310.pyc",
+    "business/_private/Partners Co-founers/Co-founders, strategic partners & FAST etc/Matt joining Notus Agreement Discussion/THE BELOW AGREEMENTS ARE NOT FINAL.md",
+    "business/_private/Partners Co-founers/Co-founders, strategic partners & FAST etc/Matt joining Notus Agreement Discussion.md",
+    "business/_private/Partners Co-founers/Co-founder agreements/FI_FAST_v2.docx.md",
+    "business/_private/Partners Co-founers/chat-summary.md",
+    "business/_private/Partners Co-founers/Typeway Partnership Options.md",
+    "business/_private/Partners Co-founers/Stefan (The Brand & Growth Engine).md",
+    "business/_private/Partners Co-founers/Lucas Wolf.md",
+    "business/_private/Partners Co-founers/Lucas (Product & Migration Partner).md",
+    "business/_private/Partners Co-founers/Influencer Partnership Playbook.md",
+    "business/_private/Partners Co-founers/LightGTM (Whitelabel Partner).md",
+    "business/_private/Partners Co-founers/Impression Partners Co-founers.md",
+    "business/_private/Partners Co-founers/FI_FAST_v2.docx.md",
+    "business/Content/SEO-and-Blogs-for-Impression.md",
+    "business/Archive/Lots of ideas here/Mike/Mike.md",
+    "business/Archive/Lots of ideas here/Mike/LinkedIn Idea for Mike.md",
+    "_master/tools-and-scripts/invoice-generation/output/invoice-boring-studios.jpg",
+    "_master/agents/backups/skill-sync/20260513-151720/codex-skills-dir/pdf/assets/pdf.png",
+    "_master/agents/skills/pdf/assets/pdf.png",
+    "dev/_obsidian/attachments/Pasted image 20260526205648.png",
+    "dev/_obsidian/attachments/Pasted image 20260526205641.png",
+    "dev/_obsidian/attachments/Pasted image 20260526205620.png",
+    "dev/_obsidian/attachments/Pasted image 20260526205606.png",
+    "business/_obsidian/attachments/Pasted image 20260524213852.png",
+    "business/_obsidian/attachments/Pasted image 20260524213830.png",
+    "business/_obsidian/attachments/Pasted image 20260524213815.png",
+    "_master/system/obsidian_notes/potential_ideas/Canvas/Habit Tracking Dashboard.canvas",
+    "_master/system/obsidian_notes/pkm_reference/Canvas/Habit Tracking Dashboard.canvas",
+    "_master/system/obsidian_notes/pkm_reference/Canvas/Habit Tracking Dashboard.canvas",
+    "_master/system/obsidian_notes/pkm_reference/Canvas/Habit Tracking Dashboard.canvas",
     "Untitled 1.canvas",
     "Untitled.canvas"
   ]

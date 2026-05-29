@@ -3,26 +3,26 @@
   "hasMigratedDailyNoteSettings": true,
   "hasMigratedWeeklyNoteSettings": false,
   "daily": {
-    "folder": "01-personal/_obsidian/periodic/daily",
-    "template": "01-personal/_obsidian/templates/periodic/daily-template.md",
+    "folder": "personal/_obsidian/periodic/daily",
+    "template": "personal/_obsidian/templates/periodic/daily-template.md",
     "enabled": true,
     "format": "YYYY-MM-DD"
   },
   "weekly": {
-    "folder": "01-personal/_obsidian/periodic/weekly",
-    "template": "01-personal/_obsidian/templates/periodic/weekly-template.md",
+    "folder": "personal/_obsidian/periodic/weekly",
+    "template": "personal/_obsidian/templates/periodic/weekly-template.md",
     "enabled": true,
     "format": "GGGG-[W]WW"
   },
   "quarterly": {
-    "folder": "01-personal/_obsidian/periodic/quarterly",
-    "template": "01-personal/_obsidian/templates/periodic/quarterly-template.md",
+    "folder": "personal/_obsidian/periodic/quarterly",
+    "template": "personal/_obsidian/templates/periodic/quarterly-template.md",
     "enabled": true,
     "format": "YYYY-[Q]Q"
   },
   "yearly": {
-    "folder": "01-personal/_obsidian/periodic/yearly",
-    "template": "01-personal/_obsidian/templates/periodic/yearly-template.md",
+    "folder": "personal/_obsidian/periodic/yearly",
+    "template": "personal/_obsidian/templates/periodic/yearly-template.md",
     "enabled": true,
     "format": "YYYY"
   }

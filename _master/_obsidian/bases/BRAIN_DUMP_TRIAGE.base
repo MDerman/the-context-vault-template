@@ -1,0 +1,96 @@
+filters:
+  and:
+    - or:
+        - file.hasTag("brain-dump-proposal")
+        - type == "brain-dump-proposal"
+formulas:
+  triageBadge: if(confidence >= 0.8,"High",if(confidence >= 0.5,"Medium","Low"))
+properties:
+  formula.triageBadge:
+    displayName: Confidence
+views:
+  - type: kanban-view
+    name: By Route
+    order:
+      - formula.triageBadge
+      - priority
+      - file.name
+    groupByProperty: route
+    columnOrders:
+      note.route:
+        - unclassified
+        - personal-task
+        - matt-task
+        - business-task
+        - matt-content-idea
+        - business-content-idea
+        - library-thought
+        - append-to-existing-task
+        - needs-splitting
+        - skip
+    columnColors:
+      note.route:
+        unclassified: red
+        personal-task: yellow
+        matt-task: cyan
+        business-task: blue
+        matt-content-idea: green
+        business-content-idea: purple
+        library-thought: orange
+        append-to-existing-task: blue
+        needs-splitting: red
+        skip: red
+    wrapPropertyValues: false
+  - type: kanban-view
+    name: By Review Status
+    order:
+      - route
+      - priority
+      - file.name
+    groupByProperty: proposal_status
+    columnOrders:
+      note.proposal_status:
+        - needs-review
+        - approved
+        - applied
+        - skipped
+        - blocked
+    columnColors:
+      note.proposal_status:
+        needs-review: yellow
+        approved: cyan
+        applied: green
+        skipped: red
+        blocked: orange
+    wrapPropertyValues: false
+  - type: table
+    name: Edit Fields
+    order:
+      - file.name
+      - proposal_status
+      - route
+      - target_context
+      - apply_action
+      - target_path
+      - priority
+      - task_status
+      - platform
+      - content_kind
+      - confidence
+      - applied_to
+  - type: table
+    name: Needs Attention
+    filters:
+      or:
+        - route == "unclassified"
+        - route == "needs-splitting"
+        - confidence < 0.5
+        - and:
+            - route == "append-to-existing-task"
+            - target_path == ""
+    order:
+      - file.name
+      - proposal_status
+      - route
+      - target_path
+      - confidence

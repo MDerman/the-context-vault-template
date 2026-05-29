@@ -1,0 +1,299 @@
+filters:
+  and:
+    - file.hasTag("task")
+formulas:
+  priorityWeight: if(priority=="none",0,if(priority=="low",1,if(priority=="normal",2,if(priority=="high",3,999))))
+  isOverdue: due && date(due) < today() && status != "done"
+  isToday: (due && date(due).date() == today()) || (scheduled && date(scheduled).date() == today())
+  isThisWeek: (due && date(due) >= today() && date(due) <= today() + "7d") || (scheduled && date(scheduled) >= today() && date(scheduled) <= today() + "7d")
+  daysUntilDue: if(due, ((number(date(due)) - number(today())) / 86400000).floor(), null)
+  dueDateDisplay: if(!due, "", if(date(due).date() == today(), "Today", if(date(due).date() == today() + "1d", "Tomorrow", if(date(due).date() == today() - "1d", "Yesterday", if(date(due) < today(), formula.daysUntilDue * -1 + "d ago", if(date(due) <= today() + "7d", date(due).format("ddd"), date(due).format("MMM D")))))))
+  taskBadge: if(priority=="high","🔥 High",if(formula.isOverdue,"⛔ Overdue",if(formula.isToday,"📍 Today",if(due,"📅 " + formula.dueDateDisplay,if(scheduled,"🗓 Scheduled","◇ Task")))))
+properties:
+  formula.taskBadge:
+    displayName: Signal
+views:
+  - type: kanban-view
+    name: Open Tasks
+    filters:
+      and:
+        - status != "done"
+    order:
+      - formula.taskBadge
+    groupByProperty: status
+    swimlaneByProperty: projects
+    columnOrders:
+      note.status:
+        - backlog
+        - up-next
+        - to-be-resumed
+        - ongoing
+        - in-progress
+        - done
+        - archived
+    columnColors:
+      note.status:
+        backlog: yellow
+        up-next: cyan
+        to-be-resumed: orange
+        ongoing: purple
+        in-progress: blue
+        done: green
+        archived: red
+    wrapPropertyValues: false
+    cardOrders:
+      "note.status\x1fnote.projects": {}
+    swimlaneOrders:
+      "note.status\x1fnote.projects":
+        - "[[business/_obsidian/projects/Agency Plan|Agency Plan]]"
+        - "[[business/_obsidian/projects/AI Post Generation|AI Post Generation]]"
+        - "[[business/_obsidian/projects/Analytics & Comments|Analytics & Comments]]"
+        - "[[business/_obsidian/projects/Api and platform support|Api and platform support]]"
+        - "[[business/_obsidian/projects/Auto-Dms & Outreach|Auto-Dms & Outreach]]"
+        - "[[business/_obsidian/projects/Backend Marketing (education, support)|Backend Marketing (education, support)]]"
+        - "[[business/_obsidian/projects/Canva and carousels-images|Canva and carousels-images]]"
+        - "[[business/_obsidian/projects/Copywriting Clients|Copywriting Clients]]"
+        - "[[business/_obsidian/projects/Editor|Editor]]"
+        - "[[business/_obsidian/projects/Email and Newsletter|Email and Newsletter]]"
+        - "[[business/_obsidian/projects/Epic Free Tool Project|Epic Free Tool Project]]"
+        - "[[business/_obsidian/projects/Funny video ads|Funny video ads]]"
+        - "[[business/_obsidian/projects/Importing and scraping|Importing and scraping]]"
+        - "[[business/_obsidian/projects/Landing Page|Landing Page]]"
+        - "[[business/_obsidian/projects/Main|Main]]"
+        - "[[business/_obsidian/projects/Misc Posts functionality|Misc Posts functionality]]"
+        - "[[business/_obsidian/projects/Mobile app|Mobile app]]"
+        - "[[business/_obsidian/projects/Onboarding|Onboarding]]"
+        - "[[business/_obsidian/projects/Other|Other]]"
+        - "[[business/_obsidian/projects/Powerups|Powerups]]"
+        - "[[business/_obsidian/projects/Sales Nav Outreach Campaigns|Sales Nav Outreach Campaigns]]"
+        - "[[business/_obsidian/projects/Tech Adhocs|Tech Adhocs]]"
+        - "[[business/_obsidian/projects/Testimonials and Reviews|Testimonials and Reviews]]"
+        - Uncategorized
+    collapsedLanes:
+      "note.status\x1fnote.projects": []
+  - type: kanban-view
+    name: Today
+    filters:
+      and:
+        - formula.isToday
+        - status != "done"
+    order:
+      - formula.taskBadge
+    groupByProperty: status
+    swimlaneByProperty: projects
+    columnOrders:
+      note.status:
+        - backlog
+        - up-next
+        - to-be-resumed
+        - ongoing
+        - in-progress
+        - done
+        - archived
+    columnColors:
+      note.status:
+        backlog: yellow
+        up-next: cyan
+        to-be-resumed: orange
+        ongoing: purple
+        in-progress: blue
+        done: green
+        archived: red
+    wrapPropertyValues: false
+  - type: kanban-view
+    name: This Week
+    filters:
+      and:
+        - formula.isThisWeek
+        - status != "done"
+    order:
+      - formula.taskBadge
+    groupByProperty: status
+    swimlaneByProperty: projects
+    columnOrders:
+      note.status:
+        - backlog
+        - up-next
+        - to-be-resumed
+        - ongoing
+        - in-progress
+        - done
+        - archived
+    columnColors:
+      note.status:
+        backlog: yellow
+        up-next: cyan
+        to-be-resumed: orange
+        ongoing: purple
+        in-progress: blue
+        done: green
+        archived: red
+    wrapPropertyValues: false
+  - type: kanban-view
+    name: Overdue
+    filters:
+      and:
+        - formula.isOverdue
+    order:
+      - formula.taskBadge
+    groupByProperty: status
+    swimlaneByProperty: projects
+    columnOrders:
+      note.status:
+        - backlog
+        - up-next
+        - to-be-resumed
+        - ongoing
+        - in-progress
+        - done
+        - archived
+    columnColors:
+      note.status:
+        backlog: yellow
+        up-next: cyan
+        to-be-resumed: orange
+        ongoing: purple
+        in-progress: blue
+        done: green
+        archived: red
+    wrapPropertyValues: false
+  - type: kanban-view
+    name: Personal
+    filters:
+      and:
+        - file.inFolder("personal/_obsidian/tasks")
+    order:
+      - formula.taskBadge
+    groupByProperty: status
+    swimlaneByProperty: projects
+    columnOrders:
+      note.status:
+        - backlog
+        - up-next
+        - to-be-resumed
+        - ongoing
+        - in-progress
+        - done
+        - archived
+    columnColors:
+      note.status:
+        backlog: yellow
+        up-next: cyan
+        to-be-resumed: orange
+        ongoing: purple
+        in-progress: blue
+        done: green
+        archived: red
+    wrapPropertyValues: false
+  - type: kanban-view
+    name: Matt Brand
+    filters:
+      and:
+        - file.inFolder("personal-brand/_obsidian/tasks")
+    order:
+      - formula.taskBadge
+    groupByProperty: status
+    swimlaneByProperty: projects
+    columnOrders:
+      note.status:
+        - backlog
+        - up-next
+        - to-be-resumed
+        - ongoing
+        - in-progress
+        - done
+        - archived
+    columnColors:
+      note.status:
+        backlog: yellow
+        up-next: cyan
+        to-be-resumed: orange
+        ongoing: purple
+        in-progress: blue
+        done: green
+        archived: red
+    wrapPropertyValues: false
+  - type: kanban-view
+    name: Impression
+    filters:
+      and:
+        - file.inFolder("business/_obsidian/tasks")
+    order:
+      - formula.taskBadge
+    groupByProperty: status
+    swimlaneByProperty: projects
+    columnOrders:
+      note.status:
+        - backlog
+        - up-next
+        - to-be-resumed
+        - ongoing
+        - in-progress
+        - done
+        - archived
+    columnColors:
+      note.status:
+        backlog: yellow
+        up-next: cyan
+        to-be-resumed: orange
+        ongoing: purple
+        in-progress: blue
+        done: green
+        archived: red
+    wrapPropertyValues: false
+  - type: kanban-view
+    name: Dev
+    filters:
+      and:
+        - file.inFolder("dev/_obsidian/tasks")
+    order:
+      - formula.taskBadge
+    groupByProperty: status
+    swimlaneByProperty: projects
+    columnOrders:
+      note.status:
+        - backlog
+        - up-next
+        - to-be-resumed
+        - ongoing
+        - in-progress
+        - done
+        - archived
+    columnColors:
+      note.status:
+        backlog: yellow
+        up-next: cyan
+        to-be-resumed: orange
+        ongoing: purple
+        in-progress: blue
+        done: green
+        archived: red
+    wrapPropertyValues: false
+  - type: kanban-view
+    name: Claudeche
+    filters:
+      and:
+        - file.inFolder("claudeche/_obsidian/tasks")
+    order:
+      - formula.taskBadge
+    groupByProperty: status
+    swimlaneByProperty: projects
+    columnOrders:
+      note.status:
+        - backlog
+        - up-next
+        - to-be-resumed
+        - ongoing
+        - in-progress
+        - done
+        - archived
+    columnColors:
+      note.status:
+        backlog: yellow
+        up-next: cyan
+        to-be-resumed: orange
+        ongoing: purple
+        in-progress: blue
+        done: green
+        archived: red
+    wrapPropertyValues: false

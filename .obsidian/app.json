@@ -1,6 +1,6 @@
 {
   "promptDelete": false,
-  "attachmentFolderPath": "master/_obsidian/attachments/_inbox",
+  "attachmentFolderPath": "_master/_obsidian/attachments/_inbox",
   "alwaysUpdateLinks": true,
   "newFileLocation": "current",
   "focusNewTab": false

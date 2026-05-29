@@ -1,0 +1,305 @@
+{
+  "default_mode": "business",
+  "clients": [
+    {
+      "name": "soulv",
+      "display_name": "to: Soulv Software (Pty) Ltd",
+      "contact_email": "mark@soulv.co.za"
+    },
+    {
+      "name": "you",
+      "display_name": "to: You"
+    }
+  ],
+  "invoice_modes": {
+    "business": {
+      "brand": {
+        "company_name": "[Friday Studios (Pty) Ltd]",
+        "use_brackets": false
+      },
+      "business": {
+        "show_registration_number": false,
+        "registration_number": "",
+        "show_vat_number": false,
+        "vat_number": "",
+        "legal_terms": [
+          "1. Payment is due within {payment_terms_days} days from issue date.",
+          "2. Please use invoice number {invoice_number} as payment reference.",
+          "3. For queries, contact matt@business.so."
+        ]
+      },
+      "payment": {
+        "heading": "PAYMENT",
+        "header_meta_lines": [],
+        "bank_detail_lines": [
+          "[BANK: FNB]",
+          "[ACCOUNT NAME: FRIDAY STUDIOS (PTY) LTD]",
+          "[ACCOUNT NO: 63087345013]",
+          "[BRANCH CODE: 250655]"
+        ],
+        "contact_detail_lines": [
+          "[EMAIL: matt@business.so]",
+          "[PHONE: 0611926226]",
+          "[DUE DATE: {due_date}]"
+        ]
+      },
+      "footer": {
+        "columns": [
+          {
+            "lines": [
+              "[FRIDAY STUDIOS (PTY) LTD]",
+              "[CAPE TOWN, SOUTH AFRICA]"
+            ]
+          },
+          {
+            "lines": []
+          },
+          {
+            "lines": [
+              "{registration_line}",
+              "{vat_line}"
+            ]
+          },
+          {
+            "lines": []
+          }
+        ]
+      },
+      "invoice_defaults": {
+        "vat_rate_percent": 0,
+        "currency_code": "ZAR",
+        "currency_symbol": "R",
+        "discount_amount": 0,
+        "issue_date_iso": "2026-03-02",
+        "issue_date_display": "2 March 2026",
+        "payment_terms_days": 30
+      }
+    },
+    "personal": {
+      "brand": {
+        "company_name": "MJ DERMAN",
+        "use_brackets": false
+      },
+      "business": {
+        "show_registration_number": false,
+        "registration_number": "",
+        "show_vat_number": false,
+        "vat_number": "",
+        "legal_terms": [
+          "1. Payment is due within {payment_terms_days} days from issue date.",
+          "2. Please use invoice number {invoice_number} as payment reference.",
+          "3. For queries, contact derman.matthew@gmail.com."
+        ]
+      },
+      "payment": {
+        "heading": "PAYMENT",
+        "header_meta_lines": [],
+        "bank_detail_lines": [
+          "[BANK: CAPITEC]",
+          "[ACCOUNT HOLDER: MJ DERMAN]",
+          "[ACCOUNT NO: 1425769525]",
+          "[BRANCH CODE: 470010]"
+        ],
+        "contact_detail_lines": [
+          "[EMAIL: derman.matthew@gmail.com]",
+          "[PHONE: 0611926226]",
+          "[DUE DATE: {due_date}]"
+        ]
+      },
+      "footer": {
+        "columns": [
+          {
+            "lines": [
+              "[MJ DERMAN]",
+              "[PERSONAL INVOICE]"
+            ]
+          },
+          {
+            "lines": []
+          },
+          {
+            "lines": [
+              "{registration_line}",
+              "{vat_line}"
+            ]
+          },
+          {
+            "lines": []
+          }
+        ]
+      },
+      "invoice_defaults": {
+        "vat_rate_percent": 0,
+        "currency_code": "ZAR",
+        "currency_symbol": "R",
+        "discount_amount": 0,
+        "issue_date_iso": "2026-03-02",
+        "issue_date_display": "2 March 2026",
+        "payment_terms_days": 30
+      }
+    },
+    "openclaw": {
+      "brand": {
+        "company_name": "OPENCLAW",
+        "use_brackets": true
+      },
+      "business": {
+        "show_registration_number": false,
+        "registration_number": "",
+        "show_vat_number": false,
+        "vat_number": "",
+        "legal_terms": [
+          "1. Payment is due within {payment_terms_days} days from issue date.",
+          "2. Please use invoice number {invoice_number} as payment reference.",
+          "3. Payment details available on request."
+        ]
+      },
+      "payment": {
+        "heading": "PAYMENT",
+        "header_meta_lines": [],
+        "bank_detail_lines": [
+          "[PAYMENT DETAILS AVAILABLE ON REQUEST]"
+        ],
+        "contact_detail_lines": [
+          "[DUE DATE: {due_date}]"
+        ]
+      },
+      "footer": {
+        "columns": [
+          {
+            "lines": [
+              "[OPENCLAW]"
+            ]
+          },
+          {
+            "lines": []
+          },
+          {
+            "lines": [
+              "{registration_line}",
+              "{vat_line}"
+            ]
+          },
+          {
+            "lines": []
+          }
+        ]
+      },
+      "invoice_defaults": {
+        "vat_rate_percent": 0,
+        "currency_code": "USD",
+        "currency_symbol": "$",
+        "discount_amount": 0,
+        "issue_date_iso": "2026-03-14",
+        "issue_date_display": "14 March 2026",
+        "payment_terms_days": 30
+      }
+    }
+  },
+  "labels": {
+    "invoice": "INVOICE",
+    "meta_col1_format": "[{issue_date}] [#{invoice_number}]",
+    "meta_col2_format": "[{client_display_name}]",
+    "meta_date_format": "[{issue_date}]",
+    "meta_invoice_format": "[#{invoice_number}]",
+    "meta_client_format": "[{client_display_name}]",
+    "subtotal": "SUB TOTAL:",
+    "discount": "DISCOUNT:",
+    "vat": "TAX",
+    "total": "TOTAL:",
+    "balance_due": "BALANCE DUE ({currency_symbol})",
+    "payment": "PAYMENT",
+    "terms": "TERMS & CONDITIONS:"
+  },
+  "layout": {
+    "page": {
+      "width": 810,
+      "height": 1151
+    },
+    "margins": {
+      "left": 28,
+      "right": 28,
+      "top": 24,
+      "bottom": 24
+    },
+    "line_width": 1.0,
+    "font_sizes": {
+      "brand": 80,
+      "meta": 14,
+      "invoice_title": 52,
+      "table": 13,
+      "totals": 13,
+      "section_title": 15,
+      "payment_heading": 22,
+      "terms_heading": 12,
+      "section_body": 9,
+      "terms": 8,
+      "footer": 9
+    },
+    "coordinates": {
+      "masthead_y": 1062,
+      "metadata_y": 900,
+      "invoice_title_y": 895,
+      "table_divider_y": 852,
+      "table_start_y": 822,
+      "totals_start_y": 430,
+      "bottom_section_y": 220,
+      "bottom_divider_y": 246,
+      "payment_heading_y": 198,
+      "terms_heading_y": 198,
+      "footer_divider_y": 82,
+      "footer_text_y": 64
+    },
+    "columns": {
+      "meta_col1_x": 28,
+      "meta_col2_x": 350,
+      "meta_date_x": 28,
+      "meta_invoice_x": 252,
+      "meta_client_x": 450,
+      "meta_gap": 10,
+      "table_description_x": 28,
+      "table_qty_x": 430,
+      "table_rate_x": 560,
+      "table_tax_x": 665,
+      "table_total_x": 782,
+      "totals_label_x": 410,
+      "totals_value_x": 782,
+      "payment_x": 28,
+      "payment_bank_x": 28,
+      "payment_contact_x": 225,
+      "terms_x": 410,
+      "footer_col_1_x": 28,
+      "footer_col_2_x": 220,
+      "footer_col_3_x": 410,
+      "footer_col_4_x": 640
+    },
+    "row_heights": {
+      "table": 30,
+      "totals": 21,
+      "payment": 16,
+      "payment_after_heading": 24,
+      "terms": 10,
+      "terms_after_heading": 16,
+      "footer": 12
+    },
+    "limits": {
+      "max_items": 7
+    }
+  },
+  "fonts": {
+    "headingFont": {
+      "candidates": [
+        "~/Library/Fonts/NeueAlteGrotesk-Bold.ttf",
+        "~/Library/Fonts/IBMPlexSans-Bold.ttf"
+      ],
+      "fallback": "Helvetica-Bold"
+    },
+    "bodyFont": {
+      "candidates": [
+        "~/Library/Fonts/IBMPlexSans-Regular.ttf",
+        "~/Library/Fonts/IBMPlexSans-Bold.ttf"
+      ],
+      "fallback": "Helvetica"
+    }
+  }
+}

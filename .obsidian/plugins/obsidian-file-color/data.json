@@ -65,63 +65,63 @@
       "color": "yWvychFFNA2bLPONczs3Z"
     },
     {
-      "path": "01-personal",
+      "path": "personal",
       "color": "e0Og_LIiYvagpCsq4djGH"
     },
     {
-      "path": "01-personal/_obsidian",
+      "path": "personal/_obsidian",
       "color": "yWvychFFNA2bLPONczs3Z"
     },
     {
-      "path": "02-personal-brand",
+      "path": "personal-brand",
       "color": "twAdXzDQVrWk05UdonPj_"
     },
     {
-      "path": "02-personal-brand/_obsidian",
+      "path": "personal-brand/_obsidian",
       "color": "yWvychFFNA2bLPONczs3Z"
     },
     {
-      "path": "02-personal-brand/Youtube Factory",
+      "path": "personal-brand/Youtube Factory",
       "color": "NhNo_syTkp7k6-McoBpmo"
     },
     {
-      "path": "03-business",
+      "path": "business",
       "color": "L77rK_gmIuLnLI6DIKbi8"
     },
     {
-      "path": "03-business/_obsidian",
+      "path": "business/_obsidian",
       "color": "yWvychFFNA2bLPONczs3Z"
     },
     {
-      "path": "04-dev",
+      "path": "dev",
       "color": "jDkHS3u6Z463GfAMfK1Gb"
     },
     {
-      "path": "04-dev/_obsidian",
+      "path": "dev/_obsidian",
       "color": "yWvychFFNA2bLPONczs3Z"
     },
     {
-      "path": "05-claudeche",
+      "path": "claudeche",
       "color": "vpnI4sM78jQ9WrnkhU3Aj"
     },
     {
-      "path": "05-claudeche/_obsidian",
+      "path": "claudeche/_obsidian",
       "color": "yWvychFFNA2bLPONczs3Z"
     },
     {
-      "path": "library",
+      "path": "_library",
       "color": "iJtq5FLVgI514u7gZ7iiK"
     },
     {
-      "path": "master",
+      "path": "_master",
       "color": "yWvychFFNA2bLPONczs3Z"
     },
     {
-      "path": "master/_obsidian",
+      "path": "_master/_obsidian",
       "color": "yWvychFFNA2bLPONczs3Z"
     },
     {
-      "path": "wiki",
+      "path": "_wiki",
       "color": "iJtq5FLVgI514u7gZ7iiK"
     }
   ]

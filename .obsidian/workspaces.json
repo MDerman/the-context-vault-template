@@ -17,7 +17,7 @@
                 "state": {
                   "type": "bases",
                   "state": {
-                    "file": "master/_obsidian/bases/tasks-kanban-v1.base",
+                    "file": "_master/_obsidian/bases/tasks-kanban-v1.base",
                     "viewName": "Impression"
                   },
                   "pinned": true,
@@ -31,7 +31,7 @@
                 "state": {
                   "type": "bases",
                   "state": {
-                    "file": "03-business/_obsidian/bases/tasks-epic-current-dev-kanban.base",
+                    "file": "business/_obsidian/bases/tasks-epic-current-dev-kanban.base",
                     "viewName": "Current dev Kanban"
                   },
                   "icon": "tasknotes-simple",
@@ -44,7 +44,7 @@
                 "state": {
                   "type": "bases",
                   "state": {
-                    "file": "03-business/_obsidian/bases/tasks-epic-growth-kanban.base",
+                    "file": "business/_obsidian/bases/tasks-epic-growth-kanban.base",
                     "viewName": "Growth Kanban"
                   },
                   "icon": "tasknotes-simple",
@@ -58,7 +58,7 @@
                 "state": {
                   "type": "bases",
                   "state": {
-                    "file": "master/_obsidian/bases/content-kanban.base",
+                    "file": "_master/_obsidian/bases/content-kanban.base",
                     "viewName": "YouTube"
                   },
                   "pinned": true,
@@ -73,7 +73,7 @@
                 "state": {
                   "type": "markdown",
                   "state": {
-                    "file": "master/_obsidian/periodic/quarterly/2026-Q2.md",
+                    "file": "_master/_obsidian/periodic/quarterly/2026-Q2.md",
                     "mode": "source",
                     "source": false
                   },
@@ -88,7 +88,7 @@
                 "state": {
                   "type": "markdown",
                   "state": {
-                    "file": "01-personal/_obsidian/periodic/daily/2026-05-14.md",
+                    "file": "personal/_obsidian/periodic/daily/2026-05-14.md",
                     "mode": "source",
                     "source": false
                   },
@@ -110,7 +110,7 @@
                 "state": {
                   "type": "markdown",
                   "state": {
-                    "file": "master/system/inbox/apple-notes.md",
+                    "file": "_master/system/inbox/apple-notes.md",
                     "mode": "source",
                     "source": false
                   },
@@ -124,7 +124,7 @@
                 "state": {
                   "type": "markdown",
                   "state": {
-                    "file": "master/system/obsidian_notes/potential_ideas/dashboard ideas.md",
+                    "file": "_master/system/obsidian_notes/potential_ideas/dashboard ideas.md",
                     "mode": "source",
                     "source": false
                   },
@@ -138,7 +138,7 @@
                 "state": {
                   "type": "markdown",
                   "state": {
-                    "file": "master/03-Momentum.md",
+                    "file": "_master/03-Momentum.md",
                     "mode": "source",
                     "source": false
                   },
@@ -282,7 +282,7 @@
                 "state": {
                   "type": "outline",
                   "state": {
-                    "file": "01-personal/_obsidian/periodic/daily/2026-05-14.md",
+                    "file": "personal/_obsidian/periodic/daily/2026-05-14.md",
                     "followCursor": false,
                     "showSearch": false,
                     "searchQuery": ""

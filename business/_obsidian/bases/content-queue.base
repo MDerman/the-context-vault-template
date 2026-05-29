@@ -1,0 +1,27 @@
+# business Content Queue
+generated: true
+generated_at: 2026-05-14T09:38:58
+managed_by: "managed-by: _master/system/bootstrap/bootstrap_vault.py"
+
+filters:
+  and:
+    - 'type == "content"'
+    - file.inFolder("business/_obsidian/content/items")
+
+views:
+  - type: table
+    name: "By Status"
+    order:
+      - file.name
+      - status
+      - content_kind
+      - platform
+      - publication
+      - publish_date
+      - cta
+      - conversion_goal
+    sort:
+      - column: status
+        direction: ASC
+      - column: publish_date
+        direction: ASC

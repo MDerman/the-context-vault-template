@@ -1227,22 +1227,22 @@ ${details.trimEnd()}
 
 // src/types.ts
 var DEFAULT_KNOWN_ROOTS = [
-  "01-personal",
-  "02-matt-derman",
-  "03-impression",
-  "04-dev",
-  "05-claudeche",
+  "personal",
+  "matt-derman",
+  "impression",
+  "dev",
+  "claudeche",
   "library",
   "master",
   "shared",
   "wiki"
 ];
 var DEFAULT_SETTINGS = {
-  defaultContext: "03-impression",
-  lastContext: "03-impression",
+  defaultContext: "impression",
+  lastContext: "impression",
   knownRoots: DEFAULT_KNOWN_ROOTS,
-  attachmentInboxPath: "master/_obsidian/attachments/_inbox",
-  appleNotesAttachmentsPath: "master/system/inbox/apple-notes-attachments",
+  attachmentInboxPath: "_master/_obsidian/attachments/_inbox",
+  appleNotesAttachmentsPath: "_master/system/inbox/apple-notes-attachments",
   enableAutoAttachmentRouter: true,
   routeIntervalSeconds: 60,
   enableGcalSync: true,
@@ -1308,7 +1308,7 @@ function parseAdditionalArgs(input) {
 }
 
 // src/vault-command-metadata.ts
-var VAULT_COMMAND_METADATA_PATH = "master/system/scripts/vault-commands.json";
+var VAULT_COMMAND_METADATA_PATH = "_master/system/scripts/vault-commands.json";
 var FALLBACK_VAULT_COMMANDS = [
   {
     id: "refresh",
@@ -1440,7 +1440,7 @@ var VaultCommandRunner = class {
       return false;
     }
     const startedAt = /* @__PURE__ */ new Date();
-    const resolvedCommand = command === "vault" ? (0, import_path.join)(cwd, "master/system/scripts/vault.py") : command;
+    const resolvedCommand = command === "vault" ? (0, import_path.join)(cwd, "_master/system/scripts/vault.py") : command;
     events.onStart({ spec, command: resolvedCommand, cwd, startedAt });
     const child = (0, import_child_process.spawn)(resolvedCommand, spec.args, {
       cwd,
@@ -3286,7 +3286,7 @@ var ContextNinePlugin = class extends import_obsidian9.Plugin {
     return (_b = (_a = adapter.getBasePath) == null ? void 0 : _a.call(adapter)) != null ? _b : "";
   }
   getVaultCommand(command, cwd) {
-    return command === "vault" ? (0, import_path2.join)(cwd, "master/system/scripts/vault.py") : command;
+    return command === "vault" ? (0, import_path2.join)(cwd, "_master/system/scripts/vault.py") : command;
   }
   async openVaultCockpit() {
     const existing = this.app.workspace.getLeavesOfType(VAULT_COCKPIT_VIEW_TYPE)[0];

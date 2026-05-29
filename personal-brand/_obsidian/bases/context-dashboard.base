@@ -1,0 +1,26 @@
+# personal-brand Dashboard
+generated: true
+generated_at: 2026-05-14T09:38:58
+managed_by: "managed-by: _master/system/bootstrap/bootstrap_vault.py"
+
+filters:
+  or:
+    - file.inFolder("personal-brand/_obsidian/tasks")
+    - file.inFolder("personal-brand/_obsidian/projects")
+    - file.inFolder("personal-brand/_obsidian/epics")
+    - file.inFolder("personal-brand/_obsidian/periodic")
+
+views:
+  - type: table
+    name: "Context Folder Files"
+    order:
+      - file.name
+      - file.folder
+      - type
+      - contexts
+      - epic
+      - period
+      - status
+      - priority
+      - scheduled
+      - due
