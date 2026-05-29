@@ -106,4 +106,4 @@ printf '%s\n' "${install_json}" | run_as_install_user tee "${TARGET}/.vault-boot
 
 run_as_install_user rm -f "${TARGET}/.git"
 cd "${TARGET}"
-run_as_install_user /bin/bash master/system/bootstrap/init_vault.sh --no-git
+run_as_install_user /bin/bash master/system/bootstrap/init_vault.sh

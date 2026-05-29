@@ -81,7 +81,7 @@ Public install script:
 - stores upstream bootstrap Git state outside iCloud under `~/Library/Application Support/context-nine-vault-bootstrap`;
 - runs from README via `sudo bash`, resolves the original sudo user, and writes the vault/state as that user;
 - removes the public-repo `.git` pointer from the vault;
-- runs `master/system/bootstrap/init_vault.sh --no-git`.
+- runs `master/system/bootstrap/init_vault.sh`; user Git is off by default.
 
 Public README invokes root `install.sh` through the GitHub raw URL and shows only the default command plus a custom-target example.
 
