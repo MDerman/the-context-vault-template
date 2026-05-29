@@ -2,7 +2,7 @@
 
 The goal of this vault is to have one Obsidian vault where everything related to your personal life, businesses, and other fields of life can live together while staying isolated. It is set up so agents, skills, and workflows have enough context to help schedule, evolve, update, code, and act as personal assistants for you and your business.
 
-This is made possible by a custom plugin called Context Nine and by the Relay plugin. Relay lets team members collaborate on selected folders, called context folders, while each person keeps private life context in their own vault.
+This is made possible by a custom plugin called Context Nine and by the Relay plugin and many others. Relay lets team members collaborate on selected folders into their vault. This assumes everyone on your team will be using this vault setup.
 
 ## Where To Learn The Vault
 
