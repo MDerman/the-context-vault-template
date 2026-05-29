@@ -1,0 +1,4 @@
+interface:
+  display_name: "Audit Repo Security"
+  short_description: "Audit package advisories and install risk"
+  default_prompt: "Use $audit-repo-security to audit this repository for known package vulnerabilities and risky dependency install behavior."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Chrome Extension Sampler"
+  short_description: "Copy installed Chrome extensions for inspection"
+  default_prompt: "Use $chrome-extension-sampler to copy a Chrome extension by ID into my samples folder for inspection."

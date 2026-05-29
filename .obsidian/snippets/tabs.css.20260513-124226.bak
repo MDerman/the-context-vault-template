@@ -1,0 +1,90 @@
+/* --------------compact tabs--------------------*/
+.workspace .mod-root .workspace-tab-header {
+    width: unset;
+    max-width: var(--tab-width);
+    border: 1px solid var(--color-base-50);
+}
+
+/*.workspace-tab-header-inner {
+    width: unset;
+}*/
+
+.workspace .mod-root .workspace-tab-header-inner::after {
+    width: 0px;
+}
+
+body {
+    --tab-outline-color: unset;
+}
+
+
+
+/* --------------multiple tab rows--------------------*/
+
+
+.workspace .mod-root .workspace-tab-header-container {
+  display: table;
+  height: unset;
+}
+
+.workspace .mod-root .workspace-tab-header-container-inner {
+  flex-wrap: wrap;
+  margin: unset;
+  padding: unset;
+}
+
+/* wrapping rows */
+.workspace .mod-root .workspace-tab-header {
+    flex: none !important;
+}
+
+/* styling on new tab button */
+.titlebar .workspace-tab-header-new-tab,
+.mod-root .workspace-tab-header-new-tab {
+/*     flex-wrap: wrap; */
+/* display: unset; */
+    display: table-cell;
+    padding: unset;
+/*     padding: var(--size-4-2) 0 var(--size-2-3); /* 8 and 7 px*/
+/*   padding: 0 0 0; */
+/*   margin: unset; */
+/*   height: unset; */
+}
+
+
+/* hide tab list button */
+.titlebar .workspace-tab-header-tab-list,
+.mod-root .workspace-tab-header-tab-list
+{
+    display: none;
+}
+
+
+/* keep close button at all times */
+/* .workspace .mod-root .workspace-tab-header:not(.is-active) .workspace-tab-header-inner-close-button {
+    display: flex;
+} */
+
+
+/* hide close button at all times */
+/* .workspace .mod-root .workspace-tab-header.is-active:hover .workspace-tab-header-inner-close-button, .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner-close-button {
+  display: none;
+} */
+
+/* hide inactive close button */
+.workspace .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:not(.is-active) .workspace-tab-header-inner-close-button {
+  display: none;
+}
+
+/* hide active close button */
+.workspace .mod-root .workspace-tab-header.is-active:hover .workspace-tab-header-inner-close-button, .workspace .mod-root .workspace-tab-header.is-active .workspace-tab-header-inner-close-button {
+  display: none;
+  /* width: 0;
+  height: 0;
+  padding: 0 0 0 0; */
+}
+
+/* another rule to override the app trying to make it flex */
+.workspace .mod-root .workspace-tabs:not(.mod-stacked) .workspace-tab-header:hover .workspace-tab-header-inner-close-button {
+  display: none;
+}

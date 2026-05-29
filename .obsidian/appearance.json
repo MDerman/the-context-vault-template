@@ -1,0 +1,8 @@
+{
+  "cssTheme": "Primary",
+  "accentColor": "#94a0ff",
+  "translucency": true,
+  "enabledCssSnippets": [
+    "tasknotes-swimlanes"
+  ]
+}

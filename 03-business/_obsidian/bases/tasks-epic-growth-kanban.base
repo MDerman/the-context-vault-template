@@ -1,0 +1,39 @@
+# 03-business Epic Kanban - Growth
+generated: true
+generated_at: 2026-05-15T16:43:12
+managed_by: "managed-by: master/system/scripts/generate_epic_kanban_views.py"
+
+filters:
+  and:
+    - file.hasTag("task")
+    - 'epic == link("03-business/_obsidian/epics/Growth")'
+
+views:
+  - type: tasknotesKanban
+    name: "Growth Kanban"
+    order:
+      - status
+      - priority
+      - due
+      - scheduled
+      - projects
+      - contexts
+      - epic
+      - file.tags
+      - blockedBy
+      - file.name
+      - recurrence
+      - complete_instances
+      - file.tasks
+    sort:
+      - column: tasknotes_manual_order
+        direction: DESC
+    groupBy:
+      property: status
+      direction: ASC
+    swimLane: note.projects
+    options:
+      columnWidth: 280
+      maxSwimlaneHeight: 99999
+      hideEmptyColumns: false
+    columnOrder: '{"note.status":["backlog","up-next","to-be-resumed","ongoing","in-progress","done","archived"]}'

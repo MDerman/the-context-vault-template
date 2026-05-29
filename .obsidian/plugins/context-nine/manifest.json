@@ -1,0 +1,9 @@
+{
+  "id": "context-nine",
+  "name": "Context Nine",
+  "version": "1.0.0",
+  "minAppVersion": "1.7.0",
+  "description": "TaskNotes capture, context routing, vault command cockpit, and attachment cleanup tools.",
+  "author": "Matthew Derman",
+  "isDesktopOnly": true
+}

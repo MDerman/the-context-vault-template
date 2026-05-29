@@ -1,0 +1,11 @@
+{
+  "brain_dump_ingest": {
+    "enabled": true,
+    "note_name": "Brain Dump",
+    "output_path": "master/system/inbox/BRAIN_DUMP.md",
+    "attachments_path": "master/system/inbox/BRAIN_DUMP_ATTACHMENTS",
+    "copy_attachments": true,
+    "clear_after_ingest": true,
+    "cleared_note_body": "<div><br></div>"
+  }
+}

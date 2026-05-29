@@ -1,0 +1,9 @@
+{
+  "enabled": false,
+  "timezone": "UTC",
+  "anchor_date": "2026-05-11",
+  "window_weeks": 4,
+  "schedule_format": "publicationThenByWeek",
+  "publication_order": [],
+  "publications": {}
+}

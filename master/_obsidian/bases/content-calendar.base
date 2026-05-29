@@ -1,0 +1,183 @@
+filters:
+  and:
+    - type == "content"
+    - or:
+        - file.inFolder("02-personal-brand/_obsidian/content/items")
+        - file.inFolder("03-business/_obsidian/content/items")
+views:
+  - type: calendar
+    name: All Content Calendar
+    order:
+      - file.name
+      - entity
+      - platform
+      - publication
+      - status
+      - content_kind
+      - cta
+      - conversion_goal
+    startDate: publish_date
+    weekStartDay: monday
+  - type: calendar
+    name: 02-personal-brand Calendar
+    filters:
+      and:
+        - entity == "02-personal-brand"
+    order:
+      - file.name
+      - entity
+      - platform
+      - publication
+      - status
+      - content_kind
+      - cta
+      - conversion_goal
+    startDate: publish_date
+    weekStartDay: monday
+  - type: calendar
+    name: 03-business Calendar
+    filters:
+      and:
+        - entity == "03-business"
+    order:
+      - file.name
+      - entity
+      - platform
+      - publication
+      - status
+      - content_kind
+      - cta
+      - conversion_goal
+    startDate: publish_date
+    weekStartDay: monday
+  - type: calendar
+    name: Blog
+    filters:
+      and:
+        - platform == "blog"
+    order:
+      - file.name
+      - entity
+      - platform
+      - publication
+      - status
+      - content_kind
+      - cta
+      - conversion_goal
+    startDate: publish_date
+    weekStartDay: monday
+  - type: calendar
+    name: Newsletter
+    filters:
+      or:
+        - platform == "newsletter"
+        - content_kind == "newsletter-issue"
+    order:
+      - file.name
+      - entity
+      - platform
+      - publication
+      - status
+      - content_kind
+      - cta
+      - conversion_goal
+    startDate: publish_date
+    weekStartDay: monday
+  - type: calendar
+    name: YouTube
+    filters:
+      and:
+        - platform == "youtube"
+    order:
+      - file.name
+      - entity
+      - platform
+      - publication
+      - status
+      - content_kind
+      - cta
+      - conversion_goal
+    startDate: publish_date
+    weekStartDay: monday
+  - type: calendar
+    name: LinkedIn
+    filters:
+      or:
+        - platform == "linkedin"
+        - publication == "linkedin"
+    order:
+      - file.name
+      - entity
+      - platform
+      - publication
+      - status
+      - content_kind
+      - cta
+      - conversion_goal
+    startDate: publish_date
+    weekStartDay: monday
+  - type: calendar
+    name: X
+    filters:
+      or:
+        - platform == "x"
+        - publication == "x"
+    order:
+      - file.name
+      - entity
+      - platform
+      - publication
+      - status
+      - content_kind
+      - cta
+      - conversion_goal
+    startDate: publish_date
+    weekStartDay: monday
+  - type: calendar
+    name: Substack
+    filters:
+      or:
+        - platform == "substack"
+        - publication == "substack-notes"
+    order:
+      - file.name
+      - entity
+      - platform
+      - publication
+      - status
+      - content_kind
+      - cta
+      - conversion_goal
+    startDate: publish_date
+    weekStartDay: monday
+  - type: calendar
+    name: Social
+    filters:
+      and:
+        - platform == "social"
+    order:
+      - file.name
+      - entity
+      - platform
+      - publication
+      - status
+      - content_kind
+      - cta
+      - conversion_goal
+    startDate: publish_date
+    weekStartDay: monday
+  - type: table
+    name: Publish Dates
+    order:
+      - publish_date
+      - file.name
+      - entity
+      - status
+      - platform
+      - publication
+      - content_kind
+      - cta
+      - conversion_goal
+    sort:
+      - property: publish_date
+        direction: ASC

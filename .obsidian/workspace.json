@@ -1,0 +1,435 @@
+{
+  "main": {
+    "id": "54a89e5649bcfb7b",
+    "type": "split",
+    "children": [
+      {
+        "id": "bb7e594664b21dd4",
+        "type": "tabs",
+        "dimension": 62.84974093264248,
+        "children": [
+          {
+            "id": "bb7530061b9870b4",
+            "type": "leaf",
+            "state": {
+              "type": "bases",
+              "state": {
+                "file": "03-business/_obsidian/bases/tasks-epic-growth-kanban.base",
+                "viewName": "Growth Kanban"
+              },
+              "icon": "tasknotes-simple",
+              "title": "tasks-epic-growth-kanban"
+            }
+          },
+          {
+            "id": "2c8a0e5903840fcd",
+            "type": "leaf",
+            "state": {
+              "type": "bases",
+              "state": {
+                "file": "03-business/_obsidian/bases/tasks-epic-focus-kanban.base",
+                "viewName": "Focus Kanban"
+              },
+              "icon": "tasknotes-simple",
+              "title": "tasks-epic-focus-kanban"
+            }
+          },
+          {
+            "id": "489c6fdc4bdb75a2",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "02-personal-brand/Post Inspo.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Post Inspo"
+            }
+          },
+          {
+            "id": "3b2d31f0fa143d58",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "01-personal/_obsidian/periodic/weekly/2026-W22.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "2026-W22"
+            }
+          },
+          {
+            "id": "8c2d607a86bf4cb0",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "master/03-Momentum.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "03-Momentum"
+            }
+          },
+          {
+            "id": "eeeb8dd960b863bf",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "master/Dashboard.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Dashboard"
+            }
+          },
+          {
+            "id": "2a0330a96e26206e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "AGENTS.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "AGENTS"
+            }
+          },
+          {
+            "id": "e1b13b57e9e5b3a0",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "03-business/Leads/people.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "people"
+            }
+          }
+        ],
+        "currentTab": 6
+      },
+      {
+        "id": "3cdff202baa90a62",
+        "type": "tabs",
+        "dimension": 37.15025906735751,
+        "children": [
+          {
+            "id": "57cae75ccb037b0f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "master/system/inbox/BRAIN_DUMP.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "BRAIN_DUMP"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "30aa34700bea13c7",
+    "type": "split",
+    "children": [
+      {
+        "id": "5b978711000ded9b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "12a3aa81c232d265",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "7a9be93eb12a38b4",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "tag:#03-business",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "7c3e12f009394223",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 349
+  },
+  "right": {
+    "id": "c5da0292b2670f3d",
+    "type": "split",
+    "children": [
+      {
+        "id": "f5407bdcfb351c87",
+        "type": "tabs",
+        "dimension": 52.21101629169899,
+        "children": [
+          {
+            "id": "54e1657f30973278",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "406e2cfcbe92a3df",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "master/system/inbox/BRAIN_DUMP.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from BRAIN_DUMP"
+            }
+          },
+          {
+            "id": "f807c5adeba6634f",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "cabdb4a78a2d1736",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "80dd5b6b0a54906e",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "01-personal/_obsidian/periodic/weekly/2026-W21.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of 2026-W21"
+            }
+          },
+          {
+            "id": "5b39cd67ce0e96ab",
+            "type": "leaf",
+            "state": {
+              "type": "system3-sync-status",
+              "state": {},
+              "icon": "satellite",
+              "title": "Sync status"
+            }
+          }
+        ],
+        "currentTab": 1
+      },
+      {
+        "id": "21f8b3b76e2a4780",
+        "type": "tabs",
+        "dimension": 15.51590380139643,
+        "children": [
+          {
+            "id": "9b5af85820951a6f",
+            "type": "leaf",
+            "state": {
+              "type": "vault-cockpit-view",
+              "state": {},
+              "icon": "square-terminal",
+              "title": "Vault Command Center"
+            }
+          }
+        ]
+      },
+      {
+        "id": "d876f1e5ee5dd993",
+        "type": "tabs",
+        "dimension": 32.27307990690458,
+        "children": [
+          {
+            "id": "1ffc5fcaa195eeb3",
+            "type": "leaf",
+            "state": {
+              "type": "calendar",
+              "state": {},
+              "icon": "calendar-with-checkmark",
+              "title": "Calendar"
+            }
+          },
+          {
+            "id": "5c5b7ec025f90eb3",
+            "type": "leaf",
+            "state": {
+              "type": "tasknotes-pomodoro-view",
+              "state": {},
+              "icon": "lucide-ghost",
+              "title": "tasknotes-pomodoro-view"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 244
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "context-nine:Open vault command center": false,
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "workspaces:Manage workspace layouts": false,
+      "obsidian-excalidraw-plugin:New drawing": false,
+      "obsidian-importer:Open Importer": false,
+      "templater-obsidian:Templater": false,
+      "obsidian-textgenerator-plugin:Generate Text!": false,
+      "obsidian-textgenerator-plugin:Text Generator: Templates Packages Manager": false,
+      "tasknotes:Open mini calendar view": false,
+      "tasknotes:Open calendar view": false,
+      "tasknotes:Open tasks view": false,
+      "tasknotes:Open agenda view": false,
+      "tasknotes:Open kanban board": false,
+      "tasknotes:Open pomodoro timer": false,
+      "tasknotes:Open pomodoro statistics": false,
+      "tasknotes:Create new task": false,
+      "obsidian42-brat:BRAT": false,
+      "omnisearch:Omnisearch": false,
+      "obsidian-full-calendar:Open Full Calendar": false,
+      "terminal:Open terminal": false,
+      "system3-relay:Relay": false,
+      "periodic-notes:Open today": false
+    }
+  },
+  "active": "57cae75ccb037b0f",
+  "lastOpenFiles": [
+    "master/system/bootstrap/vault-bootstrap/release.json",
+    "master/system/bootstrap/vault-bootstrap/policy.json",
+    "master/system/bootstrap/vault-bootstrap",
+    "master/system/scripts/__pycache__/brain_dump.cpython-310.pyc",
+    "master/system/bootstrap/README.md",
+    "master/system/bootstrap/__pycache__/generate_agents.cpython-310.pyc",
+    "master/system/bootstrap/init_vault.sh",
+    "master/system/bootstrap/init-vault-config.json",
+    "master/system/bootstrap/generate_agents.py",
+    "master/system/bootstrap/AGENTS.template.md",
+    "AGENTS.md",
+    "master/Dashboard.md",
+    "03-business/Leads/people.md",
+    "02-personal-brand/_obsidian/content-schedules/Content Calendar for 2026-05-11 to 2026-06-07.md",
+    "01-personal/HOME.md",
+    "master/system/context/01-Context.md",
+    "01-personal/_obsidian/periodic/weekly/2026-W22.md",
+    "master/agents/backups/skill-sync/20260529-095029",
+    "master/agents/skills/personal-folder-structure-code-workflow/SKILL.md",
+    "master/agents/skills/personal-folder-structure-code-workflow",
+    "master/system/scripts/__pycache__/context.cpython-310.pyc",
+    "03-business/_private/Partners Co-founers/Co-founders, strategic partners & FAST etc/Matt joining Notus Agreement Discussion/THE BELOW AGREEMENTS ARE NOT FINAL.md",
+    "03-business/_private/Partners Co-founers/Co-founders, strategic partners & FAST etc/Matt joining Notus Agreement Discussion.md",
+    "03-business/_private/Partners Co-founers/Co-founder agreements/FI_FAST_v2.docx.md",
+    "03-business/_private/Partners Co-founers/chat-summary.md",
+    "03-business/_private/Partners Co-founers/Typeway Partnership Options.md",
+    "03-business/_private/Partners Co-founers/Stefan (The Brand & Growth Engine).md",
+    "03-business/_private/Partners Co-founers/Lucas Wolf.md",
+    "03-business/_private/Partners Co-founers/Lucas (Product & Migration Partner).md",
+    "03-business/_private/Partners Co-founers/Influencer Partnership Playbook.md",
+    "03-business/_private/Partners Co-founers/LightGTM (Whitelabel Partner).md",
+    "03-business/_private/Partners Co-founers/Impression Partners Co-founers.md",
+    "03-business/_private/Partners Co-founers/FI_FAST_v2.docx.md",
+    "03-business/Content/SEO-and-Blogs-for-Impression.md",
+    "03-business/Archive/Lots of ideas here/Mike/Mike.md",
+    "03-business/Archive/Lots of ideas here/Mike/LinkedIn Idea for Mike.md",
+    "master/tools-and-scripts/invoice-generation/output/invoice-boring-studios.jpg",
+    "master/agents/backups/skill-sync/20260513-151720/codex-skills-dir/pdf/assets/pdf.png",
+    "master/agents/skills/pdf/assets/pdf.png",
+    "04-dev/_obsidian/attachments/Pasted image 20260526205648.png",
+    "04-dev/_obsidian/attachments/Pasted image 20260526205641.png",
+    "04-dev/_obsidian/attachments/Pasted image 20260526205620.png",
+    "04-dev/_obsidian/attachments/Pasted image 20260526205606.png",
+    "03-business/_obsidian/attachments/Pasted image 20260524213852.png",
+    "03-business/_obsidian/attachments/Pasted image 20260524213830.png",
+    "03-business/_obsidian/attachments/Pasted image 20260524213815.png",
+    "master/system/obsidian_notes/potential_ideas/Canvas/Habit Tracking Dashboard.canvas",
+    "master/system/obsidian_notes/pkm_reference/Canvas/Habit Tracking Dashboard.canvas",
+    "master/system/obsidian_notes/pkm_reference/Canvas/Habit Tracking Dashboard.canvas",
+    "master/system/obsidian_notes/pkm_reference/Canvas/Habit Tracking Dashboard.canvas",
+    "Untitled 1.canvas",
+    "Untitled.canvas"
+  ]
+}

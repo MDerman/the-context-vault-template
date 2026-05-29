@@ -1,0 +1,20 @@
+# 02-personal-brand UCT Brainfood
+
+filters:
+  and:
+    - or:
+        - file.inFolder("Learning/UCT - Student Dashboard/Brainfood")
+        - file.inFolder("Learning/UCT - Student Dashboard/Brainfood No Courses")
+    - 'type == "learning-note"'
+
+views:
+  - type: table
+    name: "Brainfood"
+    order:
+      - file.name
+      - course
+      - subject
+      - topic
+      - confidence
+      - created
+      - file.folder

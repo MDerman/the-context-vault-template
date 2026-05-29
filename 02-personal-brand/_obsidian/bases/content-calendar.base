@@ -1,0 +1,37 @@
+# 02-personal-brand Content Calendar
+generated: true
+generated_at: 2026-05-14T09:38:58
+managed_by: "managed-by: master/system/bootstrap/bootstrap_vault.py"
+
+filters:
+  and:
+    - 'type == "content"'
+    - file.inFolder("02-personal-brand/_obsidian/content/items")
+
+views:
+  - type: calendar
+    name: "Publish Calendar"
+    order:
+      - file.name
+      - platform
+      - publication
+      - status
+      - content_kind
+      - cta
+      - conversion_goal
+    startDate: publish_date
+    weekStartDay: monday
+  - type: table
+    name: "Publish Dates"
+    order:
+      - publish_date
+      - file.name
+      - status
+      - platform
+      - publication
+      - content_kind
+      - cta
+      - conversion_goal
+    sort:
+      - column: publish_date
+        direction: ASC
