@@ -74,11 +74,12 @@ Correct wording: Export includes plugin metadata/styles and non-sensitive settin
 
 Public install script:
 
-- expects Homebrew installed first;
+- installs Homebrew if it is missing, then checks Homebrew-managed dependencies;
 - clones `MDerman/the-context-vault-template` into the default target `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault`, or a first-argument target override;
 - creates the target directory if it is missing and refuses only when the target exists and is non-empty;
 - refuses when the target path exists as a file;
 - stores upstream bootstrap Git state outside iCloud under `~/Library/Application Support/context-nine-vault-bootstrap`;
+- runs from README via `sudo bash`, resolves the original sudo user, and writes the vault/state as that user;
 - removes the public-repo `.git` pointer from the vault;
 - runs `master/system/bootstrap/init_vault.sh --no-git`.
 
