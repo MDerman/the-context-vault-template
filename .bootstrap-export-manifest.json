@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29T11:43:25+00:00",
+  "generated_at": "2026-05-29T11:51:18+00:00",
   "paths": [
     ".agents",
     ".agents/skills",
@@ -568,6 +568,7 @@
     "AGENTS.md",
     "CLAUDE.md",
     "README.md",
+    "install.sh",
     "library",
     "master",
     "master/00-StartHere.md",
@@ -943,6 +944,7 @@
     "master/system/bootstrap/generate_agents.py",
     "master/system/bootstrap/init-vault-config.json",
     "master/system/bootstrap/init_vault.sh",
+    "master/system/bootstrap/install.sh",
     "master/system/bootstrap/install_dependencies.sh",
     "master/system/bootstrap/install_vault_command.py",
     "master/system/bootstrap/sync-agent-skills.sh",

@@ -24,6 +24,10 @@
       "target": "README.md"
     },
     {
+      "source": "master/system/bootstrap/install.sh",
+      "target": "install.sh"
+    },
+    {
       "source": "master/system/bootstrap/vault-bootstrap/policy.json",
       "target": ".vault-bootstrap/policy.json"
     },

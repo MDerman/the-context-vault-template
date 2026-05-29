@@ -5,6 +5,7 @@ This note is the internal source of truth for how the public vault bootstrap cur
 ## Public README Source
 
 `master/system/bootstrap/README-bootstrap.md` is exported as the public root `README.md`.
+`master/system/bootstrap/install.sh` is exported as the public root `install.sh`.
 
 The export mapping lives in `master/system/bootstrap/bootstrap-export.json` under `root_files`:
 
@@ -12,10 +13,14 @@ The export mapping lives in `master/system/bootstrap/bootstrap-export.json` unde
 {
   "source": "master/system/bootstrap/README-bootstrap.md",
   "target": "README.md"
+},
+{
+  "source": "master/system/bootstrap/install.sh",
+  "target": "install.sh"
 }
 ```
 
-Keep public setup instructions in `README-bootstrap.md`. Keep implementation notes, edge cases, and maintenance details in this file.
+Keep public setup instructions in `README-bootstrap.md`, but keep install implementation in `install.sh`. Keep implementation notes, edge cases, and maintenance details in this file.
 
 ## Internal Docs Stay Split
 
@@ -65,7 +70,7 @@ Correct wording: Export includes plugin metadata/styles and non-sensitive settin
 
 ## First Install Flow
 
-Public README install script:
+Public install script:
 
 - expects Homebrew installed first;
 - clones `MDerman/the-context-vault-template` into the default target `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault`, or a first-argument target override;
@@ -74,6 +79,8 @@ Public README install script:
 - stores upstream bootstrap Git state outside iCloud under `~/Library/Application Support/context-nine-vault-bootstrap`;
 - removes the public-repo `.git` pointer from the vault;
 - runs `master/system/bootstrap/init_vault.sh --no-git`.
+
+Public README invokes root `install.sh` through the GitHub raw URL and shows only the default command plus a custom-target example.
 
 User Git is optional and separate. Users can run `master/system/bootstrap/init_vault.sh --enable-git` later if they want personal Git/LFS for their own vault.
 
