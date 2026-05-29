@@ -21,10 +21,17 @@ from script_utils import resolve_vault_root
 
 
 DEFAULT_REPO_URL = "https://github.com/MDerman/the-context-vault-template.git"
-INSTALL_PATH = Path(".vault-bootstrap/install.json")
-POLICY_PATH = Path(".vault-bootstrap/policy.json")
-RELEASE_PATH = Path(".vault-bootstrap/release.json")
-REPORT_ROOT = Path(".vault-upgrade")
+BOOTSTRAP_STATE = Path("master/system/bootstrap/state")
+INSTALL_PATH = BOOTSTRAP_STATE / "install.json"
+POLICY_PATH = BOOTSTRAP_STATE / "policy.json"
+RELEASE_PATH = BOOTSTRAP_STATE / "release.json"
+REPORT_ROOT = BOOTSTRAP_STATE / "upgrade-reports"
+EXPORT_MANIFEST_PATH = BOOTSTRAP_STATE / "export-manifest.json"
+LEGACY_INSTALL_PATH = Path(".vault-bootstrap/install.json")
+LEGACY_POLICY_PATH = Path(".vault-bootstrap/policy.json")
+LEGACY_RELEASE_PATH = Path(".vault-bootstrap/release.json")
+LEGACY_REPORT_ROOT = Path(".vault-upgrade")
+LEGACY_EXPORT_MANIFEST_PATH = Path(".bootstrap-export-manifest.json")
 STATE_BASE = Path.home() / "Library/Application Support/context-nine-vault-bootstrap"
 
 
@@ -43,6 +50,18 @@ def read_json(path: Path, default: dict[str, Any] | None = None) -> dict[str, An
     if not path.exists():
         return {} if default is None else default
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def read_first_json(
+    root: Path,
+    paths: list[Path],
+    default: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    for rel_path in paths:
+        path = root / rel_path
+        if path.exists():
+            return read_json(path, default)
+    return {} if default is None else default
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
@@ -90,11 +109,11 @@ def app_state_dir(install_id: str) -> Path:
 
 
 def load_install(root: Path) -> dict[str, Any]:
-    return read_json(root / INSTALL_PATH)
+    return read_first_json(root, [INSTALL_PATH, LEGACY_INSTALL_PATH])
 
 
 def load_release(root: Path) -> dict[str, Any]:
-    return read_json(root / RELEASE_PATH)
+    return read_first_json(root, [RELEASE_PATH, LEGACY_RELEASE_PATH])
 
 
 def install_paths(root: Path, install: dict[str, Any]) -> tuple[Path, Path]:
@@ -108,7 +127,7 @@ def ensure_install_state(root: Path) -> tuple[dict[str, Any], Path, Path]:
     install = load_install(root)
     if not install:
         raise SystemExit(
-            "Missing .vault-bootstrap/install.json. Run `vault upgrade doctor` or `vault upgrade init-state --from-current`."
+            f"Missing {INSTALL_PATH}. Run `vault upgrade doctor` or `vault upgrade init-state --from-current`."
         )
     state_dir, upstream_git_dir = install_paths(root, install)
     if not upstream_git_dir.exists():
@@ -126,16 +145,28 @@ def git_show_text(root: Path, git_dir: Path, rev: str, path: str) -> str | None:
     return result.stdout
 
 
+def git_show_first_text(root: Path, git_dir: Path, rev: str, paths: list[Path]) -> str | None:
+    for path in paths:
+        text = git_show_text(root, git_dir, rev, path.as_posix())
+        if text:
+            return text
+    return None
+
+
 def load_policy(root: Path, git_dir: Path | None = None, rev: str | None = None) -> dict[str, Any]:
     if git_dir and rev:
-        text = git_show_text(root, git_dir, rev, POLICY_PATH.as_posix())
+        text = git_show_first_text(root, git_dir, rev, [POLICY_PATH, LEGACY_POLICY_PATH])
         if text:
             return json.loads(text)
-    return read_json(root / POLICY_PATH, {"schema_version": 1, "default_action": "preserve", "actions": {}})
+    return read_first_json(
+        root,
+        [POLICY_PATH, LEGACY_POLICY_PATH],
+        {"schema_version": 1, "default_action": "preserve", "actions": {}},
+    )
 
 
 def latest_release(root: Path, git_dir: Path, rev: str) -> dict[str, Any]:
-    text = git_show_text(root, git_dir, rev, RELEASE_PATH.as_posix())
+    text = git_show_first_text(root, git_dir, rev, [RELEASE_PATH, LEGACY_RELEASE_PATH])
     if not text:
         return {}
     return json.loads(text)
@@ -216,6 +247,87 @@ def remove_path(path: Path) -> None:
         path.unlink()
     else:
         shutil.rmtree(path)
+
+
+def remove_empty_parent(path: Path, stop_at: Path) -> None:
+    current = path
+    stop_at = stop_at.resolve()
+    while current.exists() and current.is_dir():
+        try:
+            if any(current.iterdir()):
+                return
+            current.rmdir()
+        except OSError:
+            return
+        if current.resolve() == stop_at:
+            return
+        current = current.parent
+
+
+def move_legacy_file(root: Path, legacy: Path, current: Path) -> dict[str, Any] | None:
+    legacy_path = root / legacy
+    current_path = root / current
+    if not legacy_path.exists() and not legacy_path.is_symlink():
+        return None
+    result: dict[str, Any] = {"legacy_path": legacy.as_posix(), "current_path": current.as_posix()}
+    current_path.parent.mkdir(parents=True, exist_ok=True)
+    if current_path.exists() or current_path.is_symlink():
+        remove_path(legacy_path)
+        result["result"] = "removed_legacy_duplicate"
+    else:
+        shutil.move(str(legacy_path), str(current_path))
+        result["result"] = "moved"
+    remove_empty_parent(legacy_path.parent, root)
+    return result
+
+
+def move_legacy_reports(root: Path) -> dict[str, Any] | None:
+    legacy_root = root / LEGACY_REPORT_ROOT
+    if not legacy_root.exists():
+        return None
+    report_root = root / REPORT_ROOT
+    report_root.mkdir(parents=True, exist_ok=True)
+    moved: list[dict[str, str]] = []
+    if legacy_root.is_dir():
+        for item in sorted(legacy_root.iterdir(), key=lambda path: path.name):
+            target = report_root / item.name
+            if target.exists() or target.is_symlink():
+                target = report_root / f"legacy-{utc_stamp()}-{item.name}"
+            shutil.move(str(item), str(target))
+            moved.append({"from": item.relative_to(root).as_posix(), "to": target.relative_to(root).as_posix()})
+        shutil.rmtree(legacy_root)
+    else:
+        target = report_root / legacy_root.name
+        if target.exists() or target.is_symlink():
+            target = report_root / f"legacy-{utc_stamp()}-{legacy_root.name}"
+        shutil.move(str(legacy_root), str(target))
+        moved.append({"from": LEGACY_REPORT_ROOT.as_posix(), "to": target.relative_to(root).as_posix()})
+    return {"legacy_path": LEGACY_REPORT_ROOT.as_posix(), "current_path": REPORT_ROOT.as_posix(), "moved": moved}
+
+
+def migrate_legacy_state(root: Path) -> list[dict[str, Any]]:
+    migrations: list[dict[str, Any]] = []
+    for legacy, current in [
+        (LEGACY_INSTALL_PATH, INSTALL_PATH),
+        (LEGACY_EXPORT_MANIFEST_PATH, EXPORT_MANIFEST_PATH),
+    ]:
+        moved = move_legacy_file(root, legacy, current)
+        if moved:
+            migrations.append(moved)
+    for legacy in [LEGACY_POLICY_PATH, LEGACY_RELEASE_PATH]:
+        legacy_path = root / legacy
+        if legacy_path.exists() or legacy_path.is_symlink():
+            remove_path(legacy_path)
+            migrations.append({"legacy_path": legacy.as_posix(), "result": "removed_legacy_export_file"})
+    moved_reports = move_legacy_reports(root)
+    if moved_reports:
+        migrations.append(moved_reports)
+    legacy_bootstrap = root / ".vault-bootstrap"
+    if legacy_bootstrap.exists() and legacy_bootstrap.is_dir():
+        if not any(legacy_bootstrap.iterdir()):
+            legacy_bootstrap.rmdir()
+            migrations.append({"legacy_path": ".vault-bootstrap", "result": "removed_empty_dir"})
+    return migrations
 
 
 def write_from_git(root: Path, git_dir: Path, rev: str, rel_path: str) -> None:
@@ -317,11 +429,12 @@ def run_migrations(root: Path, policy: dict[str, Any], report_dir: Path, apply: 
 
 
 def latest_report(root: Path) -> Path | None:
-    report_root = root / REPORT_ROOT
-    if not report_root.exists():
-        return None
-    reports = sorted(report_root.glob("*/report.json"))
-    return reports[-1] if reports else None
+    reports: list[Path] = []
+    for rel_root in [REPORT_ROOT, LEGACY_REPORT_ROOT]:
+        report_root = root / rel_root
+        if report_root.exists():
+            reports.extend(report_root.glob("*/report.json"))
+    return sorted(reports)[-1] if reports else None
 
 
 def write_report(root: Path, payload: dict[str, Any]) -> Path:
@@ -373,6 +486,7 @@ def run_upgrade(root: Path, apply: bool) -> int:
         "backup_root": backup_root.as_posix(),
         "changes": entries,
         "migrations": [],
+        "state_migration": [],
     }
     report_path = write_report(root, report_payload)
 
@@ -384,6 +498,7 @@ def run_upgrade(root: Path, apply: bool) -> int:
         install["installed_version"] = release.get("version") or install.get("installed_version")
         install["last_upgrade_report"] = str(report_path.relative_to(root))
         write_install(root, install)
+        report_payload["state_migration"] = migrate_legacy_state(root)
     else:
         migrations = run_migrations(root, policy, report_path.parent, apply=False)
 
@@ -413,19 +528,25 @@ def doctor(root: Path) -> int:
     ok = True
     install = load_install(root)
     release = load_release(root)
-    policy = read_json(root / POLICY_PATH)
+    policy = read_first_json(root, [POLICY_PATH, LEGACY_POLICY_PATH])
     print(f"vault root: {root}")
     if install:
-        print(f"install.json: ok ({root / INSTALL_PATH})")
+        install_path = INSTALL_PATH if (root / INSTALL_PATH).exists() else LEGACY_INSTALL_PATH
+        print(f"install.json: ok ({root / install_path})")
     else:
         print("install.json: missing")
         ok = False
     if policy:
-        print(f"policy: ok ({root / POLICY_PATH})")
+        policy_path = POLICY_PATH if (root / POLICY_PATH).exists() else LEGACY_POLICY_PATH
+        print(f"policy: ok ({root / policy_path})")
     else:
         print("policy: missing")
         ok = False
     print(f"release version: {release.get('version') or 'unknown'}")
+    if (root / LEGACY_INSTALL_PATH).exists() or (root / LEGACY_REPORT_ROOT).exists() or (root / LEGACY_EXPORT_MANIFEST_PATH).exists():
+        print(f"legacy root state: present; next `vault upgrade --apply` migrates it to {BOOTSTRAP_STATE}")
+    else:
+        print(f"bootstrap state: {root / BOOTSTRAP_STATE}")
     if install:
         _state_dir, upstream_git_dir = install_paths(root, install)
         print(f"hidden upstream git: {upstream_git_dir}")
@@ -500,6 +621,7 @@ def init_state(root: Path, from_current: bool, repo_url: str | None) -> int:
         }
     )
     write_install(root, install)
+    migrate_legacy_state(root)
     print(f"Hidden upstream state initialized: {upstream_git_dir}")
     return 0
 

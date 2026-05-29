@@ -40,7 +40,7 @@ Generated copies under `master/system/context/*.md` are agent-readable outputs f
 The exporter:
 
 - copies root agent wiring, selected root files, root `.obsidian` profile files with configured exclusions, `master` minus generated/private outputs, empty `library`, `wiki/AGENTS.md`, and configured context folder scaffolds;
-- writes `.bootstrap-export-manifest.json` so future exports can remove stale export-owned files;
+- writes `master/system/bootstrap/state/export-manifest.json` so future exports can remove stale export-owned files;
 - preserves repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, and contribution docs;
 - refuses to export inside the source vault.
 
@@ -79,6 +79,7 @@ Public install script:
 - creates the target directory if it is missing and refuses only when the target exists and is non-empty;
 - refuses when the target path exists as a file;
 - stores upstream bootstrap Git state outside iCloud under `~/Library/Application Support/context-nine-vault-bootstrap`;
+- stores vault-local bootstrap metadata under `master/system/bootstrap/state`;
 - runs from README via `sudo bash`, resolves the original sudo user, and writes the vault/state as that user;
 - removes the public-repo `.git` pointer from the vault;
 - runs `master/system/bootstrap/init_vault.sh`; user Git is off by default.
@@ -93,5 +94,6 @@ User Git is optional and separate. Users can run `master/system/bootstrap/init_v
 - Existing target file: public install script refuses to continue.
 - Missing target folder: public install script creates it before clone.
 - Export root already has a Git repo: exporter preserves repo metadata and mirrors only export-owned content.
+- Legacy root state paths (`.vault-bootstrap`, `.vault-upgrade`, `.bootstrap-export-manifest.json`) are not part of new installs. Upgrade keeps legacy fallbacks and migrates old install/report state into `master/system/bootstrap/state`.
 - Plugin config: excluded plugin config means users must sign in/configure local integrations after install.
 - Upgrade command: README currently documents planned `vault upgrade` commands; keep this only if the command exists or is intentionally being previewed before implementation.

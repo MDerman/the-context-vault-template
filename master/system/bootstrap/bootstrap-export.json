@@ -1,6 +1,6 @@
 {
   "export_root": "~/Code/vault-public",
-  "manifest_name": ".bootstrap-export-manifest.json",
+  "manifest_name": "master/system/bootstrap/state/export-manifest.json",
   "copy_obsidian": "exact",
   "master_env_mode": "empty-directory",
   "context_folders": [
@@ -26,14 +26,6 @@
     {
       "source": "master/system/bootstrap/install.sh",
       "target": "install.sh"
-    },
-    {
-      "source": "master/system/bootstrap/vault-bootstrap/policy.json",
-      "target": ".vault-bootstrap/policy.json"
-    },
-    {
-      "source": "master/system/bootstrap/vault-bootstrap/release.json",
-      "target": ".vault-bootstrap/release.json"
     }
   ],
   "root_symlinks": {

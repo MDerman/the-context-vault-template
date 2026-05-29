@@ -16,7 +16,7 @@ from script_utils import resolve_vault_root
 
 
 DEFAULT_CONFIG = "master/system/bootstrap/bootstrap-export.json"
-DEFAULT_MANIFEST_NAME = ".bootstrap-export-manifest.json"
+DEFAULT_MANIFEST_NAME = "master/system/bootstrap/state/export-manifest.json"
 MANIFEST_VERSION = 1
 
 

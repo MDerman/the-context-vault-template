@@ -59,6 +59,7 @@ Result:
 
 - Vault lives at `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault` unless you pass a custom target path as the first script argument.
 - Public upstream Git state lives outside iCloud under `~/Library/Application Support/context-nine-vault-bootstrap/`.
+- Vault-local bootstrap metadata lives under `master/system/bootstrap/state/`.
 - The installer runs with `sudo`, but writes the vault and bootstrap state as the user who invoked sudo.
 - Vault folder has no public-repo `.git` pointer after install.
 - `init_vault.sh` installs/checks command dependencies, asks context-folder questions, generates agent files, and installs `vault`.

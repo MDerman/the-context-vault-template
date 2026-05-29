@@ -1,7 +1,0 @@
-{
-  "schema_version": 1,
-  "version": "2026.05.29",
-  "repo_url": "https://github.com/MDerman/the-context-vault-template.git",
-  "channel": "public-bootstrap",
-  "notes": "Initial public bootstrap release with hidden upstream upgrade state."
-}

@@ -5,8 +5,8 @@
     "preserve": [
       ".git",
       ".git/**",
-      ".vault-bootstrap/install.json",
-      ".vault-upgrade/**",
+      "master/system/bootstrap/state/install.json",
+      "master/system/bootstrap/state/upgrade-reports/**",
       "*/DECLARATION.md",
       "*/DECLARATION/**",
       "*/_obsidian/tasks/**",
@@ -38,6 +38,7 @@
       "CLAUDE.md",
       ".agents/**",
       ".claude/**",
+      ".bootstrap-export-manifest.json",
       ".vault-bootstrap/policy.json",
       ".vault-bootstrap/release.json",
       ".obsidian/app.json",

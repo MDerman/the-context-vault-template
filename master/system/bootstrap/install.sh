@@ -3,6 +3,7 @@ set -euo pipefail
 
 REPO_URL="https://github.com/MDerman/the-context-vault-template.git"
 DEFAULT_TARGET_RELATIVE="Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault"
+BOOTSTRAP_STATE_RELATIVE="master/system/bootstrap/state"
 
 INSTALL_USER="$(id -un)"
 if [[ "${EUID}" -eq 0 && -n "${SUDO_USER:-}" && "${SUDO_USER}" != "root" ]]; then
@@ -79,7 +80,7 @@ UPSTREAM_GIT="${STATE_DIR}/upstream.git"
 run_as_install_user mkdir -p "${STATE_DIR}"
 run_as_install_user "${GIT_BIN}" clone --separate-git-dir "${UPSTREAM_GIT}" "${REPO_URL}" "${TARGET}"
 installed_commit="$(run_as_install_user "${GIT_BIN}" --git-dir "${UPSTREAM_GIT}" --work-tree "${TARGET}" rev-parse HEAD)"
-installed_version="$(sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "${TARGET}/.vault-bootstrap/release.json" | head -1)"
+installed_version="$(sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "${TARGET}/${BOOTSTRAP_STATE_RELATIVE}/release.json" | head -1)"
 
 json_escape() {
   local value="$1"
@@ -88,7 +89,7 @@ json_escape() {
   printf '%s' "${value}"
 }
 
-run_as_install_user mkdir -p "${TARGET}/.vault-bootstrap"
+run_as_install_user mkdir -p "${TARGET}/${BOOTSTRAP_STATE_RELATIVE}"
 install_json="$(cat <<EOF
 {
   "schema_version": 1,
@@ -102,8 +103,10 @@ install_json="$(cat <<EOF
 EOF
 )"
 
-printf '%s\n' "${install_json}" | run_as_install_user tee "${TARGET}/.vault-bootstrap/install.json" >/dev/null
+printf '%s\n' "${install_json}" | run_as_install_user tee "${TARGET}/${BOOTSTRAP_STATE_RELATIVE}/install.json" >/dev/null
 
 run_as_install_user rm -f "${TARGET}/.git"
+run_as_install_user rm -rf "${TARGET}/.vault-bootstrap" "${TARGET}/.vault-upgrade"
+run_as_install_user rm -f "${TARGET}/.bootstrap-export-manifest.json"
 cd "${TARGET}"
 run_as_install_user /bin/bash master/system/bootstrap/init_vault.sh
