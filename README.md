@@ -103,7 +103,7 @@ Result:
 - `init_vault.sh` installs/checks command dependencies, asks context-folder questions, generates agent files, and installs `vault`.
 - Run `master/system/bootstrap/init_vault.sh --enable-git` later only if you want optional personal Git/LFS for your own vault.
 
-Export includes plugin metadata/styles, but excludes plugin bundles and local plugin data/config. Install or configure plugins locally after setup.
+Export includes plugin metadata/styles and non-sensitive settings, ships source bundles only for Context Nine and Relay, and excludes known sensitive/local plugin config. Install third-party plugin code locally after setup.
 
 ## Upgrade Installed Vault
 

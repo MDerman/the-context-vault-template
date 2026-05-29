@@ -39,21 +39,29 @@ The exporter:
 
 ## Plugin Code
 
-Plugin code does not ship in public export. Plugin directories keep only public metadata and styles:
+Most plugin code does not ship in public export. Plugin directories keep public metadata, styles, and non-sensitive settings:
 
 - `manifest.json`
 - `styles.css`
+- `data.json` unless denylisted
 
-Code and config are intentionally excluded for safety:
+Plugin code is intentionally excluded for third-party plugins:
 
 - `main.js` excluded
-- `data.json` excluded
 - plugin backup/migration/helper files excluded
+
+Two local plugins ship their bundles because they are source-of-truth vault behavior:
+
+- `context-nine/main.js`
+- `system3-relay/main.js`
+
+Sensitive/local plugin config is still excluded:
+
 - `system3-relay/data.json` excluded
 - `context-nine/data.json` excluded
 - other integration-ish plugin config excluded too
 
-Correct wording: Export includes plugin metadata/styles, but excludes plugin bundles and local plugin data/config. Users install or configure plugins locally after setup.
+Correct wording: Export includes plugin metadata/styles and non-sensitive settings, ships source bundles only for Context Nine and Relay, and excludes known sensitive/local plugin config. Users install third-party plugin code locally after setup.
 
 ## First Install Flow
 

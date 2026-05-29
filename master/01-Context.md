@@ -165,7 +165,7 @@ Fastest setup for joining the same Relay workspace:
 8. Reload Obsidian.
 9. Check the Relay sync status panel.
 
-Bootstrap export includes plugin metadata/styles, but excludes plugin bundles and local plugin data/config. Users install or configure plugins locally after setup.
+Bootstrap export includes plugin metadata/styles and non-sensitive settings, ships source bundles only for Context Nine and Relay, and excludes known sensitive/local plugin config. Users install third-party plugin code locally after setup.
 
 Entity operating-system answers live in `DECLARATION.md` rather than `HOME.md`. `HOME.md` explains what each local folder is for and where to store or find information. Master system notes under `master/02-Identity.md` and `master/03-Momentum.md` use Sync Embeds to show enabled declaration sections. Declarations keep one file-title H1 and use H2 for embeddable sections such as `Identity` and `Momentum`, because Sync Embeds section isolation is more reliable below H1. Social Selling uses an H3 under Momentum for personal-brand entities.
 
@@ -669,7 +669,7 @@ The export copies root agent wiring, root `.obsidian` profile files with configu
 
 The root public `README.md` is exported from `master/system/bootstrap/README-bootstrap.md`. It documents the new-machine clone-to-iCloud flow. Internal bootstrap/export mechanics live in `master/system/bootstrap/bootstrapdocs.md`. `--force` mirrors export-owned content into `~/Code/vault-public` without deleting the export root or repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, or contribution docs. Export ownership is tracked in `.bootstrap-export-manifest.json`; legacy exports without a manifest are cleaned at the export-root child level while preserving repo metadata.
 
-Root `.obsidian` is exported through the bootstrap exporter with sensitive path-name exclusions. Plugin directories export only public metadata/styles; plugin bundles and integration config files that may contain local settings or credentials are excluded from public export.
+Root `.obsidian` is exported through the bootstrap exporter with sensitive path-name exclusions. Plugin directories export public metadata/styles and non-sensitive settings; Context Nine and Relay also export their bundles. Third-party plugin bundles and integration config files that may contain local settings or credentials are excluded from public export.
 
 Public installs run `init_vault.sh --no-git` by default. Their installer stores upstream public repo Git state outside iCloud under `~/Library/Application Support/matt-vault-bootstrap/<install-id>/upstream.git`, removes the vault `.git` pointer, and writes `.vault-bootstrap/install.json`. Future setup updates use:
 

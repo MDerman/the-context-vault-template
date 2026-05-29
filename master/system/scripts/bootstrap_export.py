@@ -67,6 +67,7 @@ class BootstrapExporter:
         self.text_rewrite_suffixes = set(config.get("text_rewrite_suffixes", []))
         self.repo_preserve_names = set(config.get("repo_preserve_names", []))
         self.obsidian_exclude_globs = list(config.get("obsidian_exclude_globs", []))
+        self.obsidian_plugin_full_copy_plugins = set(config.get("obsidian_plugin_full_copy_plugins", []))
         self.obsidian_plugin_public_files = set(
             config.get("obsidian_plugin_public_files", ["manifest.json", "styles.css"])
         )
@@ -242,6 +243,9 @@ class BootstrapExporter:
         if len(parts) < 3 or parts[0] != ".obsidian" or parts[1] != "plugins":
             return False
         if item.is_dir():
+            return False
+        plugin_name = parts[2]
+        if plugin_name in self.obsidian_plugin_full_copy_plugins:
             return False
         if len(parts) != 4:
             return True
