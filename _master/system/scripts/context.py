@@ -514,7 +514,7 @@ def dashboard_markdown(
         obsidian_link(agent_periodics["quarterly"], periods["quarterly"]),
         obsidian_link(agent_periodics["daily"], periods["daily"]),
     ]
-    inbox_lines = ["[[BRAIN_DUMP]]"]
+    inbox_lines = [obsidian_link("_master/system/inbox/BRAIN_DUMP.md", "BRAIN_DUMP")]
     base_lines = [
         obsidian_link("_master/_obsidian/bases/tasks-kanban-v1.base", "Tasks Kanban"),
         obsidian_link("_master/_obsidian/bases/content-kanban.base", "Content Kanban"),

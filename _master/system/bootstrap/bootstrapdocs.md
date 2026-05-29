@@ -57,7 +57,7 @@ Plugin code is intentionally excluded for third-party plugins:
 - `main.js` excluded
 - plugin backup/migration/helper files excluded
 
-Two local plugins ship their bundles because they are source-of-truth vault behavior:
+Two local plugins ship their bundles exactly because they are source-of-truth vault behavior:
 
 - `context-nine/main.js`
 - `system3-relay/main.js`
@@ -68,7 +68,11 @@ Sensitive/local plugin config is still excluded:
 - `context-nine/data.json` excluded
 - other integration-ish plugin config excluded too
 
-Correct wording: Export includes plugin metadata/styles and non-sensitive settings, ships source bundles only for Context Nine and Relay, and excludes known sensitive/local plugin config. Users install third-party plugin code locally after setup.
+Exact-copy plugin files are scanned for high-confidence secrets before export. Export aborts if a copied plugin bundle appears to contain private keys, API keys, or token literals.
+
+`_master/system/bootstrap/install_plugins.py` installs third-party active plugin bundles during setup and upgrade. It reads `.obsidian/community-plugins.json`, skips exact-copy plugins from `obsidian_plugin_exact_copy_plugins`, resolves each remaining plugin through Obsidian's community plugin registry, and downloads `main.js`, `manifest.json`, and optional `styles.css` from the GitHub release matching the exported plugin manifest version.
+
+Correct wording: Export includes plugin metadata/styles and non-sensitive settings, ships source bundles only for Context Nine and Relay, downloads active third-party plugin bundles during setup/upgrade, and excludes known sensitive/local plugin config.
 
 ## First Install Flow
 
@@ -83,6 +87,7 @@ Public install script:
 - runs from README via `sudo bash`, resolves the original sudo user, and writes the vault/state as that user;
 - removes the public-repo `.git` pointer from the vault;
 - runs `_master/system/bootstrap/init_vault.sh`, which asks for three exact context-folder slugs; user Git is off by default.
+- downloads active third-party Obsidian plugin bundles, while Context Nine and Relay are already shipped in the vault export.
 
 Public README invokes root `install.sh` through the GitHub raw URL and shows only the default command plus a custom-target example.
 

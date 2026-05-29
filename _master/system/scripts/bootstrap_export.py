@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 import fnmatch
 import json
 import os
+import re
 import shutil
 from pathlib import Path
 from typing import Any
@@ -18,6 +19,21 @@ from script_utils import resolve_vault_root
 DEFAULT_CONFIG = "_master/system/bootstrap/bootstrap-export.json"
 DEFAULT_MANIFEST_NAME = "_master/system/bootstrap/state/export-manifest.json"
 MANIFEST_VERSION = 1
+SECRET_PATTERNS = [
+    ("private key", re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")),
+    ("GitHub token", re.compile(r"\bgh[pousr]_[A-Za-z0-9_]{30,}\b")),
+    ("OpenAI key", re.compile(r"\bsk-[A-Za-z0-9_-]{32,}\b")),
+    ("AWS access key", re.compile(r"\bAKIA[0-9A-Z]{16}\b")),
+    ("Google API key", re.compile(r"\bAIza[0-9A-Za-z_-]{35}\b")),
+    ("Slack token", re.compile(r"\bxox[baprs]-[0-9A-Za-z-]{20,}\b")),
+    (
+        "assigned secret",
+        re.compile(
+            r"(?i)\b(?:api[_-]?key|access[_-]?token|auth[_-]?token|client[_-]?secret|secret[_-]?key)\b"
+            r"\s*[:=]\s*['\"][A-Za-z0-9_./+=-]{24,}['\"]"
+        ),
+    ),
+]
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -67,7 +83,10 @@ class BootstrapExporter:
         self.text_rewrite_suffixes = set(config.get("text_rewrite_suffixes", []))
         self.repo_preserve_names = set(config.get("repo_preserve_names", []))
         self.obsidian_exclude_globs = list(config.get("obsidian_exclude_globs", []))
-        self.obsidian_plugin_full_copy_plugins = set(config.get("obsidian_plugin_full_copy_plugins", []))
+        self.obsidian_plugin_full_copy_plugins = set(
+            config.get("obsidian_plugin_exact_copy_plugins")
+            or config.get("obsidian_plugin_full_copy_plugins", [])
+        )
         self.obsidian_plugin_public_files = set(
             config.get("obsidian_plugin_public_files", ["manifest.json", "styles.css"])
         )
@@ -358,6 +377,7 @@ class BootstrapExporter:
     def copy_file(self, source: Path, target: Path) -> None:
         if not source.exists():
             raise SystemExit(f"Missing file: {source}")
+        self.scan_exact_plugin_file(source)
         self.ensure_dir(target.parent)
         self.record_export_path(target)
         self.log(f"copy {self.rel(source)} -> {target}")
@@ -376,6 +396,26 @@ class BootstrapExporter:
 
     def should_rewrite_text(self, source: Path) -> bool:
         return source.suffix in self.text_rewrite_suffixes
+
+    def scan_exact_plugin_file(self, source: Path) -> None:
+        try:
+            relative = source.relative_to(self.root)
+        except ValueError:
+            return
+        parts = relative.parts
+        if len(parts) < 4 or parts[0] != ".obsidian" or parts[1] != "plugins":
+            return
+        if parts[2] not in self.obsidian_plugin_full_copy_plugins:
+            return
+        if source.suffix.lower() not in {".js", ".json", ".css"}:
+            return
+        try:
+            text = source.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            return
+        for label, pattern in SECRET_PATTERNS:
+            if pattern.search(text):
+                raise SystemExit(f"Refusing to export possible {label} in exact-copy plugin file: {posix(relative)}")
 
     def rewrite_text(self, text: str) -> str:
         for source, target in self.rewrite_pairs:

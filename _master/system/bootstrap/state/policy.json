@@ -57,5 +57,9 @@
       "_master/**"
     ]
   },
-  "migrations": []
+  "migrations": [
+    {
+      "path": "_master/system/bootstrap/install_plugins.py"
+    }
+  ]
 }

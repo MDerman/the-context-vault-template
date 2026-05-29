@@ -445,6 +445,11 @@ main() {
   }
 
   run_with_optional_dry_run "${SCRIPT_DIR}/install_dependencies.sh"
+  if [[ "${DRY_RUN}" -eq 1 ]]; then
+    run_dry_capable "${PYTHON_BIN}" "${SCRIPT_DIR}/install_plugins.py" --root "${VAULT_ROOT}" --dry-run
+  else
+    run_dry_capable "${PYTHON_BIN}" "${SCRIPT_DIR}/install_plugins.py" --root "${VAULT_ROOT}" --apply
+  fi
   collect_config
 
   run_with_optional_dry_run "${PYTHON_BIN}" "${SCRIPT_DIR}/bootstrap_vault.py" \

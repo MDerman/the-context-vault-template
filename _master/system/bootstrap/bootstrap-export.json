@@ -79,7 +79,7 @@
     ".obsidian/plugins/terminal/data.json",
     ".obsidian/plugins/todoist-sync-plugin/data.json"
   ],
-  "obsidian_plugin_full_copy_plugins": [
+  "obsidian_plugin_exact_copy_plugins": [
     "context-nine",
     "system3-relay"
   ],

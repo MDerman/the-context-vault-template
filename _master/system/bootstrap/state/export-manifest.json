@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29T13:32:11+00:00",
+  "generated_at": "2026-05-29T14:33:52+00:00",
   "paths": [
     ".agents",
     ".agents/skills",
@@ -554,6 +554,7 @@
     "_master/system/bootstrap/init_vault.sh",
     "_master/system/bootstrap/install.sh",
     "_master/system/bootstrap/install_dependencies.sh",
+    "_master/system/bootstrap/install_plugins.py",
     "_master/system/bootstrap/install_vault_command.py",
     "_master/system/bootstrap/state",
     "_master/system/bootstrap/state/export-manifest.json",

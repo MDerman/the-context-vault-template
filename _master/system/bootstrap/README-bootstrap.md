@@ -65,7 +65,7 @@ Result:
 - `init_vault.sh` installs/checks command dependencies, asks for three exact context-folder slugs, generates agent files, and installs `vault`.
 - Run `_master/system/bootstrap/init_vault.sh --enable-git` later only if you want optional personal Git/LFS for your own vault.
 
-Export includes plugin metadata/styles and non-sensitive settings, ships source bundles only for Context Nine and Relay, and excludes known sensitive/local plugin config. Install third-party plugin code locally after setup.
+Export includes plugin metadata/styles and non-sensitive settings, ships source bundles only for Context Nine and Relay, downloads active third-party plugin bundles during setup, and excludes known sensitive/local plugin config. When Obsidian first opens the vault, approve community plugins if Obsidian asks to trust the vault.
 
 ## Upgrade Installed Vault
 
