@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
+if [[ "${EUID}" -eq 0 ]]; then
+  if [[ -n "${SUDO_USER:-}" && "${SUDO_USER}" != "root" ]]; then
+    sudo_home=""
+    if command -v dscl >/dev/null 2>&1; then
+      sudo_home="$(dscl . -read "/Users/${SUDO_USER}" NFSHomeDirectory 2>/dev/null | awk '{print $2; exit}' || true)"
+    fi
+    if [[ -z "${sudo_home}" ]]; then
+      sudo_home="$(eval "printf '%s' ~${SUDO_USER}")"
+    fi
+    exec sudo -u "${SUDO_USER}" env HOME="${sudo_home}" /bin/bash "$0" "$@"
+  fi
+  echo "Do not run init_vault.sh as root. Run it as your user, or use sudo from your user so it can drop privileges." >&2
+  exit 1
+fi
+
 ENABLE_GIT=0
 DRY_RUN=0
 NON_INTERACTIVE=0
