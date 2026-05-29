@@ -28,6 +28,7 @@ COMMANDS = {
     "gcal": SCRIPT_DIR / "gcal.py",
     "git-maintenance": SCRIPT_DIR / "git_maintenance.py",
     "mobile-profile": SCRIPT_DIR / "mobile_profile.py",
+    "profile": SCRIPT_DIR / "profile.py",
     "path-audit": SCRIPT_DIR / "path_audit.py",
     "triage": ROOT / "_master/agents/skills/brain-dump-organizer/scripts/triage.py",
     "upgrade": SCRIPT_DIR / "upgrade.py",
@@ -56,6 +57,7 @@ Common commands:
   gcal         Read/write Google Calendar time blocks and task date mirrors.
   git-maintenance  Keep local Git history shallow and prune local objects.
   mobile-profile  Create/update .obsidian-mobile with safe mobile plugins and theme settings.
+  profile      Preview/apply Obsidian profile, theme, hotkey, and plugin upgrades.
   path-audit   Find persisted vault-root paths that make the vault non-portable.
   triage       Prepare/apply Brain Dump organizer proposals.
   upgrade      Preview/apply public bootstrap vault upgrades.
@@ -73,6 +75,7 @@ Examples:
   vault gcal list --days 7 --calendar all --json
   vault git-maintenance
   vault mobile-profile
+  vault profile upgrade --dry-run
   vault path-audit
   vault triage prepare
   vault upgrade --dry-run

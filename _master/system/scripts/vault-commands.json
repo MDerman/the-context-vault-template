@@ -78,6 +78,18 @@
     "args": ["mobile-profile"]
   },
   {
+    "id": "profile-upgrade-dry-run",
+    "label": "Profile Upgrade Dry Run",
+    "description": "Preview Obsidian profile updates only: plugins, theme, hotkeys, snippets, and safe profile settings.",
+    "args": ["profile", "upgrade", "--dry-run"]
+  },
+  {
+    "id": "profile-upgrade-apply",
+    "label": "Profile Upgrade Apply",
+    "description": "Apply Obsidian profile updates only and install active plugin bundles without touching vault content.",
+    "args": ["profile", "upgrade", "--apply"]
+  },
+  {
     "id": "path-audit",
     "label": "Path Audit",
     "description": "Find persisted vault-root paths that would break after moving the vault.",

@@ -81,6 +81,12 @@ Apply public setup updates:
 vault upgrade --apply
 ```
 
+Apply only Obsidian profile, theme, hotkey, and plugin updates:
+
+```bash
+vault profile upgrade --apply
+```
+
 Repair/inspect upgrade state:
 
 ```bash

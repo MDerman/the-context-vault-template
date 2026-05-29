@@ -93,6 +93,12 @@ Public README invokes root `install.sh` through the GitHub raw URL and shows onl
 
 User Git is optional and separate. Users can run `_master/system/bootstrap/init_vault.sh --enable-git` later if they want personal Git/LFS for their own vault.
 
+## Profile Upgrade Flow
+
+`vault profile upgrade --dry-run` and `vault profile upgrade --apply` use the same hidden upstream Git state as `vault upgrade`, but only apply root `.obsidian` profile files for plugins, theme, hotkeys, snippets, and safe profile settings. Workspace/open-tab layout files are skipped unless the user passes `--include-workspace`.
+
+Profile upgrade does not advance the installed public commit. A later full `vault upgrade --apply` still sees all non-profile public updates.
+
 ## Edge Cases
 
 - Existing non-empty target vault folder: public install script refuses to continue.
