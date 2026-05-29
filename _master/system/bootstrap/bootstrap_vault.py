@@ -564,12 +564,17 @@ class Bootstrap:
 
     def run_generators(self) -> None:
         import importlib.util
+        import sys
 
-        periodic_path = self.root / "_master/system/scripts/periodic.py"
-        agent_path = self.root / "_master/system/scripts/context.py"
+        scripts_dir = self.root / "_master/system/scripts"
+        periodic_path = scripts_dir / "periodic.py"
+        agent_path = scripts_dir / "context.py"
         if self.dry_run:
             self.log("skip generators in dry-run")
             return
+        scripts_dir_text = str(scripts_dir)
+        if scripts_dir_text not in sys.path:
+            sys.path.insert(0, scripts_dir_text)
         for path, module_name in [
             (periodic_path, "periodic"),
             (agent_path, "context"),
