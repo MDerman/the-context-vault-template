@@ -20,13 +20,14 @@ For Relay collaboration, read `master/01-Context.md` after setup.
 
 Paste this from any terminal directory:
 
+When this is saved or run through `bash -s --`, pass a custom target path as the first argument.
+
 ```bash
 set -euo pipefail
 
 REPO_URL="https://github.com/MDerman/the-context-vault-template.git"
-ICLOUD_DOCS="${HOME}/Library/Mobile Documents/iCloud~md~obsidian/Documents"
-TARGET="${ICLOUD_DOCS}/Obsidian/Vault"
-STATE_BASE="${HOME}/Library/Application Support/matt-vault-bootstrap"
+TARGET="${1:-${HOME}/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault}"
+STATE_BASE="${HOME}/Library/Application Support/context-nine-vault-bootstrap"
 
 if ! command -v brew >/dev/null 2>&1; then
   echo "Installing Homebrew..."
@@ -48,18 +49,17 @@ if ! command -v git >/dev/null 2>&1; then
   brew install git
 fi
 
-if [[ ! -d "${ICLOUD_DOCS}" ]]; then
-  echo "iCloud Obsidian folder missing: ${ICLOUD_DOCS}" >&2
-  echo "Install/open Obsidian with iCloud enabled, then rerun this script." >&2
+if [[ -e "${TARGET}" ]] && [[ ! -d "${TARGET}" ]]; then
+  echo "Target path exists and is not a directory: ${TARGET}" >&2
   exit 1
 fi
 
-if [[ -e "${TARGET}" ]] && [[ -n "$(find "${TARGET}" -mindepth 1 -maxdepth 1 -print -quit)" ]]; then
+if [[ -d "${TARGET}" ]] && [[ -n "$(find "${TARGET}" -mindepth 1 -maxdepth 1 -print -quit)" ]]; then
   echo "Target vault folder already exists and is not empty: ${TARGET}" >&2
   exit 1
 fi
 
-mkdir -p "$(dirname "${TARGET}")"
+mkdir -p "${TARGET}"
 
 install_id="$(date -u +%Y%m%dT%H%M%SZ)-$(uuidgen | tr '[:upper:]' '[:lower:]')"
 STATE_DIR="${STATE_BASE}/${install_id}"
@@ -97,8 +97,8 @@ master/system/bootstrap/init_vault.sh --no-git
 
 Result:
 
-- Vault lives at `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault`.
-- Public upstream Git state lives outside iCloud under `~/Library/Application Support/matt-vault-bootstrap/`.
+- Vault lives at `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault` unless you pass a custom target path as the first script argument.
+- Public upstream Git state lives outside iCloud under `~/Library/Application Support/context-nine-vault-bootstrap/`.
 - Vault folder has no public-repo `.git` pointer after install.
 - `init_vault.sh` installs/checks command dependencies, asks context-folder questions, generates agent files, and installs `vault`.
 - Run `master/system/bootstrap/init_vault.sh --enable-git` later only if you want optional personal Git/LFS for your own vault.

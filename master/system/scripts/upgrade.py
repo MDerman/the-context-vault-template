@@ -25,7 +25,7 @@ INSTALL_PATH = Path(".vault-bootstrap/install.json")
 POLICY_PATH = Path(".vault-bootstrap/policy.json")
 RELEASE_PATH = Path(".vault-bootstrap/release.json")
 REPORT_ROOT = Path(".vault-upgrade")
-STATE_BASE = Path.home() / "Library/Application Support/matt-vault-bootstrap"
+STATE_BASE = Path.home() / "Library/Application Support/context-nine-vault-bootstrap"
 
 
 @dataclass

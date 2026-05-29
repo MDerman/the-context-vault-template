@@ -68,8 +68,10 @@ Correct wording: Export includes plugin metadata/styles and non-sensitive settin
 Public README install script:
 
 - expects Homebrew installed first;
-- clones `MDerman/the-context-vault-template` into `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault`;
-- stores upstream bootstrap Git state outside iCloud under `~/Library/Application Support/matt-vault-bootstrap`;
+- clones `MDerman/the-context-vault-template` into the default target `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault`, or a first-argument target override;
+- creates the target directory if it is missing and refuses only when the target exists and is non-empty;
+- refuses when the target path exists as a file;
+- stores upstream bootstrap Git state outside iCloud under `~/Library/Application Support/context-nine-vault-bootstrap`;
 - removes the public-repo `.git` pointer from the vault;
 - runs `master/system/bootstrap/init_vault.sh --no-git`.
 
@@ -78,7 +80,8 @@ User Git is optional and separate. Users can run `master/system/bootstrap/init_v
 ## Edge Cases
 
 - Existing non-empty target vault folder: public install script refuses to continue.
-- Missing iCloud Obsidian Documents folder: public install script tells user to install/open Obsidian with iCloud enabled first.
+- Existing target file: public install script refuses to continue.
+- Missing target folder: public install script creates it before clone.
 - Export root already has a Git repo: exporter preserves repo metadata and mirrors only export-owned content.
 - Plugin config: excluded plugin config means users must sign in/configure local integrations after install.
 - Upgrade command: README currently documents planned `vault upgrade` commands; keep this only if the command exists or is intentionally being previewed before implementation.
