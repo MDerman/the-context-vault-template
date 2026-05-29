@@ -62,7 +62,7 @@ Result:
 - Vault-local bootstrap metadata lives under `master/system/bootstrap/state/`.
 - The installer runs with `sudo`, but writes the vault and bootstrap state as the user who invoked sudo.
 - Vault folder has no public-repo `.git` pointer after install.
-- `init_vault.sh` installs/checks command dependencies, asks context-folder questions, generates agent files, and installs `vault`.
+- `init_vault.sh` installs/checks command dependencies, asks for three exact `NN-slug` context-folder names, generates agent files, and installs `vault`.
 - Run `master/system/bootstrap/init_vault.sh --enable-git` later only if you want optional personal Git/LFS for your own vault.
 
 Export includes plugin metadata/styles and non-sensitive settings, ships source bundles only for Context Nine and Relay, and excludes known sensitive/local plugin config. Install third-party plugin code locally after setup.

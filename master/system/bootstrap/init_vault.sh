@@ -69,44 +69,6 @@ join_by_comma() {
   echo "$*"
 }
 
-contains_item() {
-  local needle="$1"
-  shift
-  local item
-  for item in "$@"; do
-    [[ "$item" == "$needle" ]] && return 0
-  done
-  return 1
-}
-
-prompt_line() {
-  local label="$1"
-  local default="$2"
-  local answer
-  read -r -p "${label} [${default}]: " answer
-  echo "${answer:-$default}"
-}
-
-prompt_yes_no() {
-  local label="$1"
-  local default="$2"
-  local answer suffix
-  if [[ "$default" == "yes" ]]; then
-    suffix="Y/n"
-  else
-    suffix="y/N"
-  fi
-  while true; do
-    read -r -p "${label} [${suffix}]: " answer
-    answer="${answer:-$default}"
-    case "$(printf '%s' "$answer" | tr '[:upper:]' '[:lower:]')" in
-      y|yes|true|1) return 0 ;;
-      n|no|false|0) return 1 ;;
-      *) echo "Please answer yes or no." ;;
-    esac
-  done
-}
-
 while [[ "$#" -gt 0 ]]; do
   arg="$1"
   case "$arg" in
@@ -164,36 +126,60 @@ if [[ -z "${LOCAL_GIT_NAME}" ]]; then
 fi
 LOCAL_GIT_DIR="${LOCAL_GIT_ROOT}/${LOCAL_GIT_NAME}"
 
-normalize_names() {
-  "${PYTHON_BIN}" - "$1" <<'PY'
-import re
-import sys
+is_context_slug() {
+  [[ "$1" =~ ^[0-9][0-9]-[a-z0-9][a-z0-9-]*$ ]]
+}
 
-raw = sys.argv[1]
-items = [item.strip() for item in raw.split(",") if item.strip()]
-if not items:
-    raise SystemExit("At least one context folder is required.")
+print_context_intro() {
+  cat <<'EOF'
 
-def slugify(value: str) -> str:
-    value = value.strip().lower()
-    value = re.sub(r"^\d\d-", "", value)
-    value = re.sub(r"[^a-z0-9]+", "-", value)
-    value = value.strip("-")
-    if not value:
-        raise SystemExit(f"Could not slugify context folder name: {value!r}")
-    return value
+###############################################################################
+#                                                                             #
+#                            SET UP YOUR VAULTS                                #
+#                                                                             #
+###############################################################################
 
-seen = set()
-for index, item in enumerate(items, 1):
-    if re.match(r"^\d\d-[a-z0-9][a-z0-9-]*$", item):
-        name = item
-    else:
-        name = f"{index:02d}-{slugify(item)}"
-    if name in seen:
-        raise SystemExit(f"Duplicate context folder name: {name}")
-    seen.add(name)
-    print(name)
-PY
+We first need to choose which entities you want to operate.
+These are also known as context folders.
+
+This starter vault creates three context folders:
+
+  01-personal         personal life, admin, health, relationships
+  02-personal-brand   your public voice, writing, media, audience
+  03-business         company or client work
+
+You can delete, add, or rename context folders later. For setup, keep three.
+
+Input rules:
+
+  - Press Enter to keep the value shown in brackets.
+  - If you type a value, type the exact folder slug.
+  - Do not include square brackets.
+  - Do not type comma-separated lists.
+  - Format must be: NN-slug
+
+Examples:
+
+  01-personal
+  02-jane-smith
+  03-acme-studio
+
+EOF
+}
+
+prompt_context_slug() {
+  local label="$1"
+  local default="$2"
+  local answer
+  while true; do
+    read -r -p "${label} [${default}]: " answer
+    answer="${answer:-$default}"
+    if is_context_slug "${answer}"; then
+      echo "${answer}"
+      return 0
+    fi
+    echo "Use exact NN-slug format, without brackets. Example: ${default}" >&2
+  done
 }
 
 load_config() {
@@ -278,75 +264,44 @@ collect_config() {
     return 0
   fi
 
-  cat <<'EOF'
+  local existing_array=()
+  IFS=',' read -r -a existing_array <<<"${CONTEXT_FOLDERS}"
 
-Context folders are entity home directories inside this vault.
-Use one for yourself, one for a personal brand, one for a business, or any
-set of entities you want to operate separately.
+  local personal_default="${existing_array[0]:-01-personal}"
+  local brand_default="${existing_array[1]:-02-personal-brand}"
+  local business_default="${existing_array[2]:-03-business}"
 
-Enter names as exact `NN-slug` folders or plain names. Plain names become
-numbered folders, for example `business` becomes `03-business`.
-EOF
+  is_context_slug "${personal_default}" || personal_default="01-personal"
+  is_context_slug "${brand_default}" || brand_default="02-personal-brand"
+  is_context_slug "${business_default}" || business_default="03-business"
 
-  local names_input
-  names_input="$(prompt_line "Context folders, comma-separated" "${CONTEXT_FOLDERS}")"
-  local context_array=()
-  while IFS= read -r normalized_name; do
-    context_array+=("${normalized_name}")
-  done < <(normalize_names "${names_input}")
+  print_context_intro
 
-  local active_array=()
-  local content_array=()
-  local name active_default content_default
-  IFS=',' read -r -a existing_active <<<"${ACTIVE_CONTEXT_FOLDERS}"
-  IFS=',' read -r -a existing_content <<<"${CONTENT_CONTEXT_FOLDERS}"
+  local personal_context brand_context business_context
+  personal_context="$(prompt_context_slug "Rename 01-personal? Personal context folder" "${personal_default}")"
+  brand_context="$(prompt_context_slug "Rename 02-personal-brand? Example: 02-your-name" "${brand_default}")"
+  business_context="$(prompt_context_slug "Rename 03-business? Example: 03-kpmg" "${business_default}")"
 
-  echo ""
-  echo "Active context folders appear in default dashboards, agent rollups, and routing."
-  for name in "${context_array[@]}"; do
-    active_default="no"
-    contains_item "$name" "${existing_active[@]}" && active_default="yes"
-    if prompt_yes_no "Make ${name} active?" "${active_default}"; then
-      active_array+=("$name")
-    fi
-  done
-
-  if [[ "${#active_array[@]}" -eq 0 ]]; then
-    die "At least one active context folder is required."
+  if [[ "${personal_context}" == "${brand_context}" || "${personal_context}" == "${business_context}" || "${brand_context}" == "${business_context}" ]]; then
+    die "Context folder slugs must be unique."
   fi
 
-  echo ""
-  echo "Content-enabled folders get content items, publication definitions, schedules, and content views."
-  for name in "${context_array[@]}"; do
-    content_default="no"
-    contains_item "$name" "${existing_content[@]}" && content_default="yes"
-    if prompt_yes_no "Enable content system for ${name}?" "${content_default}"; then
-      content_array+=("$name")
-    fi
-  done
+  CONTEXT_FOLDERS="$(join_by_comma "${personal_context}" "${brand_context}" "${business_context}")"
+  ACTIVE_CONTEXT_FOLDERS="${CONTEXT_FOLDERS}"
+  CONTENT_CONTEXT_FOLDERS="$(join_by_comma "${brand_context}" "${business_context}")"
+  DEFAULT_CONTEXT_FOLDER="${personal_context}"
 
-  echo ""
-  echo "Default capture folder receives unspecific tasks and periodic capture."
-  local default_prompt default_choice valid_default
-  default_prompt="${DEFAULT_CONTEXT_FOLDER}"
-  contains_item "$default_prompt" "${active_array[@]}" || default_prompt="${active_array[0]}"
-  while true; do
-    default_choice="$(prompt_line "Default capture context folder" "${default_prompt}")"
-    valid_default=0
-    for name in "${active_array[@]}"; do
-      if [[ "$default_choice" == "$name" ]]; then
-        valid_default=1
-        break
-      fi
-    done
-    [[ "$valid_default" -eq 1 ]] && break
-    echo "Choose one active context folder: $(join_by_comma "${active_array[@]}")"
-  done
+  cat <<EOF
 
-  CONTEXT_FOLDERS="$(join_by_comma "${context_array[@]}")"
-  ACTIVE_CONTEXT_FOLDERS="$(join_by_comma "${active_array[@]}")"
-  CONTENT_CONTEXT_FOLDERS="$(join_by_comma "${content_array[@]}")"
-  DEFAULT_CONTEXT_FOLDER="${default_choice}"
+Setup choices:
+
+  Context folders: ${CONTEXT_FOLDERS}
+  Active folders:  ${ACTIVE_CONTEXT_FOLDERS}
+  Content system:  ${CONTENT_CONTEXT_FOLDERS}
+  Default capture: ${DEFAULT_CONTEXT_FOLDER}
+
+EOF
+
   save_config "${CONTEXT_FOLDERS}" "${ACTIVE_CONTEXT_FOLDERS}" "${CONTENT_CONTEXT_FOLDERS}" "${DEFAULT_CONTEXT_FOLDER}"
 }
 

@@ -82,7 +82,7 @@ Public install script:
 - stores vault-local bootstrap metadata under `master/system/bootstrap/state`;
 - runs from README via `sudo bash`, resolves the original sudo user, and writes the vault/state as that user;
 - removes the public-repo `.git` pointer from the vault;
-- runs `master/system/bootstrap/init_vault.sh`; user Git is off by default.
+- runs `master/system/bootstrap/init_vault.sh`, which asks for three exact `NN-slug` context-folder names; user Git is off by default.
 
 Public README invokes root `install.sh` through the GitHub raw URL and shows only the default command plus a custom-target example.
 
