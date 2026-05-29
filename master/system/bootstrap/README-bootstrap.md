@@ -4,21 +4,40 @@ The goal of this vault is to have one Obsidian vault where everything related to
 
 This is made possible by a custom plugin called Context Nine and by the Relay plugin and many others. Relay lets team members collaborate on selected folders into their vault. This assumes everyone on your team will be using this vault setup.
 
-## Where To Learn The Vault
+## How To Use The Vault
 
-After setup, start here:
+This vault is one command center with numbered context folders as source-of-truth workspaces. System notes describe how the vault is structured, what each workspace is trying to become, and how tasks, calendar blocks, periodic notes, and agents keep work moving.
 
-- `master/00-StartHere.md`: first read and daily operating flow.
+Start here after opening the vault:
+
 - `master/01-Context.md`: folder model, context folders, private/user-owned content, tasks, projects, epics, content, dashboards, and Relay collaboration.
+- `master/system/context/02-Identity.md`: identity answers for each active workspace.
+- `master/system/context/03-Momentum.md`: cadence, tasks, calendar, accountability, and social selling answers.
 - `master/system/context/OBSIDIAN-PROFILE.md`: Obsidian plugins, settings, templates, UI, and profile details.
 - `master/system/context/SCRIPTS.md`: `vault` commands and normal workflows.
 - `master/system/bootstrap/bootstrapdocs.md`: bootstrap/export internals.
 
-For Relay collaboration, read `master/01-Context.md` after setup.
+For Relay collaboration, read `master/01-Context.md`.
+
+Default workspace map:
+
+- `01-personal`: personal life, health, relationships, finances, default capture, and personal accountability.
+- `02-personal-brand`: personal brand, writing, media, audience, authority, and social selling.
+- `03-business`: product and business execution.
+
+Daily flow:
+
+1. Run `vault refresh`.
+2. Open `master/system/context/CONTEXT.md`.
+3. Open today's agent daily rollup under `master/system/context/`.
+4. Check `master/_obsidian/bases/tasks-today.base` and `master/_obsidian/bases/tasks-home.base`.
+5. Check `master/_obsidian/bases/content-kanban.base` when content is part of the day.
+
+Content-enabled workspaces use `_obsidian/content/publications`, `_obsidian/content/items`, `_obsidian/content/ideas`, and `_obsidian/content-schedules`. Tasks still live in `_obsidian/tasks`; a content note becomes work only when it has a real next action, status, date, blocker, or project.
 
 ## Install On New Mac
 
-Paste this from any terminal directory:
+First run the install script from any terminal directory:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/MDerman/the-context-vault-template/main/install.sh | bash
@@ -29,6 +48,12 @@ To install somewhere else, pass a target path:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/MDerman/the-context-vault-template/main/install.sh | bash -s -- "/custom/Vault/path"
 ```
+
+Then open it in Obsidian:
+
+1. Open Obsidian.
+2. Choose "Open folder as vault".
+3. Select the vault folder, usually `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault`.
 
 Result:
 

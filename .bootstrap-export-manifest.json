@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-29T11:51:18+00:00",
+  "generated_at": "2026-05-29T11:53:26+00:00",
   "paths": [
     ".agents",
     ".agents/skills",
@@ -571,7 +571,6 @@
     "install.sh",
     "library",
     "master",
-    "master/00-StartHere.md",
     "master/01-Context.md",
     "master/02-Identity.md",
     "master/03-Momentum.md",

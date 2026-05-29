@@ -43,6 +43,7 @@
   },
   "generated_exclude_paths": [
     "master/Dashboard.md",
+    "master/00-StartHere.md",
     "master/system/context/00-StartHere.md",
     "master/system/context/01-Context.md",
     "master/system/context/02-Identity.md",
