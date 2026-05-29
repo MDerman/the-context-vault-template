@@ -33,6 +33,7 @@
     ],
     "replace": [
       "README.md",
+      "install.sh",
       "AGENTS.md",
       "CLAUDE.md",
       ".agents/**",
