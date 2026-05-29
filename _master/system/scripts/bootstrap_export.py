@@ -19,6 +19,7 @@ from script_utils import resolve_vault_root
 DEFAULT_CONFIG = "_master/system/bootstrap/bootstrap-export.json"
 DEFAULT_MANIFEST_NAME = "_master/system/bootstrap/state/export-manifest.json"
 MANIFEST_VERSION = 1
+GLOBAL_EXCLUDE_SUFFIXES = (".bak",)
 SECRET_PATTERNS = [
     ("private key", re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")),
     ("GitHub token", re.compile(r"\bgh[pousr]_[A-Za-z0-9_]{30,}\b")),
@@ -244,7 +245,7 @@ class BootstrapExporter:
                 self.copy_file(item, target)
 
     def should_skip_obsidian(self, relative: Path, item: Path) -> bool:
-        if item.name in self.global_exclude_names or self.is_sensitive_path(relative):
+        if self.is_global_exclude_path(relative) or self.is_sensitive_path(relative):
             self.log(f"skip sensitive/config {posix(relative)}")
             return True
         if self.is_blocked_plugin_file(relative, item):
@@ -288,8 +289,7 @@ class BootstrapExporter:
 
     def should_skip_master_shared(self, relative: Path, is_dir: bool) -> bool:
         rel = posix(relative)
-        name = relative.name
-        if name in self.global_exclude_names or any(part in self.global_exclude_names for part in relative.parts):
+        if self.is_global_exclude_path(relative):
             return True
         if self.is_sensitive_path(relative):
             return True
@@ -308,6 +308,13 @@ class BootstrapExporter:
                 if rel == base or rel.startswith(base + "/"):
                     return True
         return False
+
+    def is_global_exclude_path(self, relative: Path) -> bool:
+        return any(
+            part in self.global_exclude_names
+            or part.endswith(GLOBAL_EXCLUDE_SUFFIXES)
+            for part in relative.parts
+        )
 
     def is_sensitive_path(self, relative: Path) -> bool:
         parts = [part.lower() for part in relative.parts]
@@ -335,7 +342,7 @@ class BootstrapExporter:
         self.ensure_dir(target_root)
         for item in sorted(source_root.rglob("*")):
             relative = item.relative_to(source_root)
-            if item.name in self.global_exclude_names or self.is_sensitive_path(relative):
+            if self.is_global_exclude_path(relative) or self.is_sensitive_path(relative):
                 continue
             target = target_root / relative
             if item.is_symlink():
@@ -350,7 +357,7 @@ class BootstrapExporter:
         for item in sorted(source_root.rglob("*")):
             relative = item.relative_to(source_root)
             target = target_root / relative
-            if item.name in self.global_exclude_names or self.is_sensitive_path(relative):
+            if self.is_global_exclude_path(relative) or self.is_sensitive_path(relative):
                 continue
             if item.is_symlink():
                 continue
