@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eo pipefail
 
 ENABLE_GIT=0
 DRY_RUN=0
@@ -275,7 +275,10 @@ EOF
 
   local names_input
   names_input="$(prompt_line "Context folders, comma-separated" "${CONTEXT_FOLDERS}")"
-  mapfile -t context_array < <(normalize_names "${names_input}")
+  local context_array=()
+  while IFS= read -r normalized_name; do
+    context_array+=("${normalized_name}")
+  done < <(normalize_names "${names_input}")
 
   local active_array=()
   local content_array=()
@@ -448,25 +451,27 @@ setup_git() {
 }
 
 main() {
-  local dry_arg=()
-  if [[ "${DRY_RUN}" -eq 1 ]]; then
-    dry_arg=(--dry-run)
-  fi
+  run_with_optional_dry_run() {
+    if [[ "${DRY_RUN}" -eq 1 ]]; then
+      run_dry_capable "$@" --dry-run
+    else
+      run_dry_capable "$@"
+    fi
+  }
 
-  run_dry_capable "${SCRIPT_DIR}/install_dependencies.sh" "${dry_arg[@]}"
+  run_with_optional_dry_run "${SCRIPT_DIR}/install_dependencies.sh"
   collect_config
 
-  run_dry_capable "${PYTHON_BIN}" "${SCRIPT_DIR}/bootstrap_vault.py" \
+  run_with_optional_dry_run "${PYTHON_BIN}" "${SCRIPT_DIR}/bootstrap_vault.py" \
     --root "${VAULT_ROOT}" \
     --context-folders "${CONTEXT_FOLDERS}" \
     --active-context-folders "${ACTIVE_CONTEXT_FOLDERS}" \
     --content-context-folders "${CONTENT_CONTEXT_FOLDERS}" \
     --default-context-folder "${DEFAULT_CONTEXT_FOLDER}" \
     --skip-install-vault-command \
-    --skip-generate-agents \
-    "${dry_arg[@]}"
+    --skip-generate-agents
 
-  run_dry_capable "${PYTHON_BIN}" "${SCRIPT_DIR}/generate_agents.py" --root "${VAULT_ROOT}" "${dry_arg[@]}"
+  run_with_optional_dry_run "${PYTHON_BIN}" "${SCRIPT_DIR}/generate_agents.py" --root "${VAULT_ROOT}"
 
   if [[ "${DRY_RUN}" -eq 1 ]]; then
     run_dry_capable "${SCRIPT_DIR}/sync-agent-skills.sh" --dry-run
@@ -474,7 +479,7 @@ main() {
     run_dry_capable "${SCRIPT_DIR}/sync-agent-skills.sh" --apply
   fi
 
-  run_dry_capable "${PYTHON_BIN}" "${SCRIPT_DIR}/install_vault_command.py" --root "${VAULT_ROOT}" "${dry_arg[@]}"
+  run_with_optional_dry_run "${PYTHON_BIN}" "${SCRIPT_DIR}/install_vault_command.py" --root "${VAULT_ROOT}"
 
   if [[ "${ENABLE_GIT}" -eq 1 ]]; then
     setup_git
