@@ -416,6 +416,7 @@ class BootstrapExporter:
 
     def write_public_workspace(self, source: Path, target: Path) -> None:
         data = json.loads(source.read_text(encoding="utf-8"))
+        self.sanitize_main_workspace(data)
         self.sanitize_workspace_node(data)
         rendered = json.dumps(data, indent=2) + "\n"
         for source_name, target_name in self.rewrite_pairs:
@@ -424,6 +425,48 @@ class BootstrapExporter:
             raise SystemExit("Refusing to export workspace.json with private file history.")
         target.write_text(rendered, encoding="utf-8")
         shutil.copystat(source, target)
+
+    def sanitize_main_workspace(self, data: Any) -> None:
+        if not isinstance(data, dict):
+            return
+        main = data.get("main")
+        if not isinstance(main, dict):
+            return
+        main["type"] = "tabs"
+        main["children"] = [self.public_readme_leaf(self.first_leaf_id(main))]
+        main["currentTab"] = 0
+        main.pop("direction", None)
+
+    def public_readme_leaf(self, leaf_id: str | None = None) -> dict[str, Any]:
+        return {
+            "id": leaf_id or "public-readme",
+            "type": "leaf",
+            "state": {
+                "type": "markdown",
+                "state": {
+                    "file": PUBLIC_WORKSPACE_FILE,
+                    "mode": "source",
+                    "source": False,
+                },
+                "icon": "lucide-file",
+                "title": "README",
+            },
+        }
+
+    def first_leaf_id(self, value: Any) -> str | None:
+        if isinstance(value, dict):
+            if value.get("type") == "leaf" and isinstance(value.get("id"), str):
+                return value["id"]
+            for child in value.values():
+                found = self.first_leaf_id(child)
+                if found:
+                    return found
+        elif isinstance(value, list):
+            for child in value:
+                found = self.first_leaf_id(child)
+                if found:
+                    return found
+        return None
 
     def sanitize_workspace_node(self, value: Any) -> None:
         if isinstance(value, dict):
@@ -434,12 +477,7 @@ class BootstrapExporter:
             if value.get("type") == "leaf" and isinstance(state, dict):
                 inner_state = state.get("state")
                 if isinstance(inner_state, dict) and isinstance(inner_state.get("file"), str):
-                    state["type"] = "markdown"
-                    state["state"] = {
-                        "file": PUBLIC_WORKSPACE_FILE,
-                        "mode": "source",
-                        "source": False,
-                    }
+                    inner_state["file"] = PUBLIC_WORKSPACE_FILE
                     state["icon"] = "lucide-file"
                     state["title"] = "README"
 
