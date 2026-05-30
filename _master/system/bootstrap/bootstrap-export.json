@@ -74,6 +74,7 @@
     ".obsidian/plugins/obsidian-textgenerator-plugin/data.json",
     ".obsidian/plugins/share-note/data.json",
     ".obsidian/plugins/system3-relay/data.json",
+    ".obsidian/plugins/system3-relay/relay.log*",
     ".obsidian/plugins/terminal/data.json",
     ".obsidian/plugins/todoist-sync-plugin/data.json"
   ],
