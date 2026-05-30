@@ -58,6 +58,32 @@ def is_relative_to(path: Path, parent: Path) -> bool:
         return False
 
 
+def split_yaml_frontmatter(text: str) -> tuple[str, str]:
+    lines = text.splitlines(keepends=True)
+    if not lines or lines[0].strip() != "---":
+        return "", text
+    for index, line in enumerate(lines[1:], start=1):
+        if line.strip() == "---":
+            return "".join(lines[: index + 1]).rstrip() + "\n", "".join(lines[index + 1 :])
+    return "", text
+
+
+def join_frontmatter_and_body(frontmatter: str, body: str) -> str:
+    body = body.strip() + "\n" if body.strip() else ""
+    if not frontmatter:
+        return body
+    if not body:
+        return frontmatter.rstrip() + "\n"
+    return frontmatter.rstrip() + "\n\n" + body
+
+
+def public_description_text(description: list[str]) -> str:
+    lines = [line.strip() for line in description if isinstance(line, str) and line.strip()]
+    if not lines:
+        return "Use this folder for notes, tasks, projects, and reference material for this area."
+    return "\n\n".join(lines)
+
+
 class BootstrapExporter:
     def __init__(
         self,
@@ -73,9 +99,10 @@ class BootstrapExporter:
         self.export_root = (export_root or Path(config["export_root"])).expanduser().resolve()
         self.force = force
         self.dry_run = dry_run
+        self.context_configs = config.get("context_folders", [])
         self.context_pairs = [
             (item["source"], item["target"])
-            for item in config.get("context_folders", [])
+            for item in self.context_configs
         ]
         self.rewrite_pairs = sorted(self.context_pairs, key=lambda pair: len(pair[0]), reverse=True)
         self.generated_exclude_paths = set(config.get("generated_exclude_paths", []))
@@ -324,20 +351,64 @@ class BootstrapExporter:
         return any(part.startswith(".env") for part in parts)
 
     def copy_context_folders(self) -> None:
-        for source_name, target_name in self.context_pairs:
+        for item in self.context_configs:
+            source_name = item["source"]
+            target_name = item["target"]
             source = self.root / source_name
             target = self.export_root / target_name
             self.ensure_dir(target)
-            for root_file in ["HOME.md", "DECLARATION.md"]:
-                path = source / root_file
-                if path.exists():
-                    self.copy_file(path, target / root_file)
-            declaration_dir = source / "DECLARATION"
-            if declaration_dir.is_dir():
-                self.copy_tree_all(declaration_dir, target / "DECLARATION")
+            home_path = source / "HOME.md"
+            if home_path.exists():
+                self.write_public_home(
+                    home_path,
+                    target / "HOME.md",
+                    target_name,
+                    item.get("public_home_description", []),
+                )
+            declaration_path = source / "DECLARATION.md"
+            if declaration_path.exists():
+                self.write_public_declaration(
+                    declaration_path,
+                    target / "DECLARATION.md",
+                )
             obsidian = source / "_obsidian"
             if obsidian.is_dir():
                 self.copy_context_obsidian(obsidian, target / "_obsidian")
+
+    def write_public_home(
+        self,
+        source: Path,
+        target: Path,
+        target_name: str,
+        description: list[str],
+    ) -> None:
+        text = source.read_text(encoding="utf-8")
+        frontmatter, _body = split_yaml_frontmatter(text)
+        body = f"# {target_name}\n\n{public_description_text(description)}\n"
+        rendered = join_frontmatter_and_body(frontmatter, body)
+        self.write_generated_text(target, rendered, f"write public HOME {target}")
+
+    def write_public_declaration(self, source: Path, target: Path) -> None:
+        text = source.read_text(encoding="utf-8")
+        frontmatter, body = split_yaml_frontmatter(text)
+        heading_lines = [
+            line.rstrip()
+            for line in body.splitlines()
+            if line.startswith("# ") or line.startswith("## ")
+        ]
+        rendered_body = "\n\n".join(heading_lines)
+        if rendered_body:
+            rendered_body += "\n"
+        rendered = join_frontmatter_and_body(frontmatter, rendered_body)
+        self.write_generated_text(target, rendered, f"write public DECLARATION {target}")
+
+    def write_generated_text(self, target: Path, text: str, message: str) -> None:
+        self.ensure_dir(target.parent)
+        self.record_export_path(target)
+        self.log(message)
+        if self.dry_run:
+            return
+        target.write_text(self.rewrite_text(text), encoding="utf-8")
 
     def copy_tree_all(self, source_root: Path, target_root: Path) -> None:
         self.ensure_dir(target_root)

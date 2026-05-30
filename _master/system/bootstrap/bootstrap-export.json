@@ -5,15 +5,27 @@
   "context_folders": [
     {
       "source": "personal",
-      "target": "personal"
+      "target": "personal",
+      "public_home_description": [
+        "This is your personal home for goals, tasks, routines, reflection, and durable life notes.",
+        "Use it to keep personal plans and reference material separate from public brand or business work."
+      ]
     },
     {
       "source": "personal-brand",
-      "target": "personal-brand"
+      "target": "personal-brand",
+      "public_home_description": [
+        "This is your personal-brand home for content ideas, audience notes, brand strategy, offers, CRM context, and publishing plans.",
+        "Use it to keep public-facing strategy and creative work separate from private personal notes."
+      ]
     },
     {
       "source": "business",
-      "target": "business"
+      "target": "business",
+      "public_home_description": [
+        "This is your business home for tasks, projects, team notes, leads, resources, and operating docs.",
+        "Use it for company work that needs structure without mixing into personal or personal-brand material."
+      ]
     }
   ],
   "root_files": [
