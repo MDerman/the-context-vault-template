@@ -1,13 +1,14 @@
 ---
-type: declaration
-entity: personal-brand
-entity_type: personal-brand
-status: enabled
+status: active
+context_type: personal-brand
+content_enabled: false
+default_capture: false
 generated: true
-generated_at: 2026-05-14T09:38:58
+generated_at: 2026-05-30T20:40:35
 managed_by: "managed-by: _master/system/bootstrap/bootstrap_vault.py"
 ---
-# personal-brand Declaration
+
+# personal-brand
 
 ## Identity
 
@@ -26,3 +27,4 @@ managed_by: "managed-by: _master/system/bootstrap/bootstrap_vault.py"
 #### Method
 
 #### Proof Sources
+

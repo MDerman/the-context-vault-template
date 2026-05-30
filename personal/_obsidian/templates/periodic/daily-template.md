@@ -11,7 +11,7 @@ generated: false
 - [[Dashboard]]
 - [[_master/_obsidian/bases/tasks-kanban.base|tasks-kanban]]
 - [[Daily What To Do]]
-- [[DECLARATION#Momentum|Personal Momentum]]
+- [[personal#Momentum|Personal Momentum]]
 - [[Keep in minds]]
 
 # Super-alignment

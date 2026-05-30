@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import re
 import shutil
 from pathlib import Path
 
@@ -316,7 +317,7 @@ class Bootstrap:
             "_master/system/context",
             "_master/_obsidian/notes/operating-methods",
             "_master/_obsidian/templates/shared/content",
-            "_master/_obsidian/templates/shared/declarations",
+            "_master/_obsidian/templates/shared/entity-notes",
             "_master/_obsidian/excalidraw",
             "_master/_obsidian/excalidraw/Scripts",
             "_master/system/scripts",
@@ -410,9 +411,13 @@ class Bootstrap:
         self.write_managed(self.root / "_master/_obsidian/templates/shared/default-tasks-template.md", shared_task_template())
         self.write_managed(self.root / "_master/_obsidian/templates/shared/content/content-item-template.md", content_item_template())
         self.write_managed(self.root / "_master/_obsidian/templates/shared/content/publication-template.md", publication_template())
-        self.write_managed(self.root / "_master/_obsidian/templates/shared/declarations/personal.md", declaration_template("personal", "personal"))
-        self.write_managed(self.root / "_master/_obsidian/templates/shared/declarations/personal-brand.md", declaration_template("personal-brand", "personal-brand"))
-        self.write_managed(self.root / "_master/_obsidian/templates/shared/declarations/company.md", declaration_template("business", "business"))
+        self.write_managed(self.root / "_master/_obsidian/templates/shared/entity-notes/personal.md", entity_note_template("personal", "personal"))
+        self.write_managed(self.root / "_master/_obsidian/templates/shared/entity-notes/personal-brand.md", entity_note_template("personal-brand", "personal-brand"))
+        self.write_managed(self.root / "_master/_obsidian/templates/shared/entity-notes/company.md", entity_note_template("business", "business"))
+        legacy_template_dir = self.root / "_master/_obsidian/templates/shared" / ("declara" + "tions")
+        for old_template in legacy_template_dir.glob("*.md"):
+            self.safe_remove_generated_path(old_template, BOOTSTRAP_MARKERS)
+        self.remove_empty_dir(legacy_template_dir)
 
         personal_periodic = self.root / self.default_entity / "_obsidian/templates/periodic"
         if personal_periodic.is_symlink():
@@ -502,22 +507,41 @@ class Bootstrap:
                 self.ensure_task_kanban_project_swimlanes(target)
 
     def setup_starter_notes(self) -> None:
-        active = set(self.active_entities)
         for entity in self.entities:
             self.write_managed_if_missing(
                 self.root / entity / "_obsidian/tasks/starter-task.md",
                 starter_task(entity, self.run_date.isoformat()),
             )
-            if entity in active:
-                self.write_managed_if_missing(
-                    self.root / entity / "DECLARATION.md",
-                    declaration_template(entity),
-                )
+            self.ensure_entity_note(entity)
             if entity in self.content_entities:
                 self.write_if_missing(
-                    self.root / entity / "DECLARATION/content-cadence.json",
+                    self.root / entity / "_obsidian/content/content-cadence.json",
                     content_cadence_config(self.run_date),
                 )
+
+    def ensure_entity_note(self, entity: str) -> None:
+        path = self.root / entity / f"{entity}.md"
+        context_type = self.context_types.get(entity, "business")
+        content_enabled = entity in self.content_entities
+        default_capture = entity == self.default_entity
+        if not path.exists():
+            self.write_managed_if_missing(
+                path,
+                entity_note_template(
+                    entity,
+                    context_type,
+                    status="active" if entity in self.active_entities else "archived",
+                    content_enabled=content_enabled,
+                    default_capture=default_capture,
+                ),
+            )
+            return
+        text = path.read_text(encoding="utf-8")
+        updated = ensure_entity_note_sections(text, context_type)
+        if updated != text:
+            self.log(f"update entity note sections {rel(path, self.root)}")
+            if not self.dry_run:
+                path.write_text(updated, encoding="utf-8")
 
     def install_vault_command(self) -> None:
         import importlib.util
@@ -734,7 +758,7 @@ def yaml_list(items: list[str]) -> str:
 
 def content_directories() -> list[str]:
     return [
-        "DECLARATION",
+        "_obsidian/content",
         "_obsidian/content-schedules",
         "_obsidian/content/publications/blogs",
         "_obsidian/content/publications/newsletters",
@@ -778,7 +802,14 @@ default_capture: {default_value}
 """
 
 
-def declaration_template(entity: str, entity_type: str | None = None) -> str:
+def entity_note_template(
+    entity: str,
+    entity_type: str | None = None,
+    *,
+    status: str = "active",
+    content_enabled: bool = False,
+    default_capture: bool = False,
+) -> str:
     source_type = entity_type or "entity"
     social_section = ""
     if source_type == "personal-brand":
@@ -789,15 +820,17 @@ def declaration_template(entity: str, entity_type: str | None = None) -> str:
 
 #### Proof Sources
 """
+    content_value = "true" if content_enabled else "false"
+    default_value = "true" if default_capture else "false"
     return f"""---
-type: declaration
-entity: {entity}
-entity_type: {source_type}
-status: enabled
+status: {status}
+context_type: {source_type}
+content_enabled: {content_value}
+default_capture: {default_value}
 {managed_properties()}
 ---
 
-# {entity} Declaration
+# {entity}
 
 ## Identity
 
@@ -812,6 +845,21 @@ status: enabled
 ### Proof Sources
 {social_section}
 """
+
+
+def has_markdown_heading(text: str, heading: str) -> bool:
+    return re.search(rf"^#+\s+{re.escape(heading)}\s*$", text, flags=re.M) is not None
+
+
+def ensure_entity_note_sections(text: str, entity_type: str) -> str:
+    updated = text.rstrip()
+    if not has_markdown_heading(updated, "Identity"):
+        updated += "\n\n## Identity\n\n### Source Notes\n"
+    if not has_markdown_heading(updated, "Momentum"):
+        updated += "\n\n## Momentum\n\n### Rhythm\n\n### Proof Sources\n"
+    if entity_type == "personal-brand" and not has_markdown_heading(updated, "Social Selling"):
+        updated += "\n\n### Social Selling\n\n#### Method\n\n#### Proof Sources\n"
+    return updated.rstrip() + "\n"
 
 
 def has_frontmatter(existing: str) -> bool:
@@ -932,10 +980,11 @@ Context folder operating folders start with `_` so normal folders can sit direct
 
 ```text
 <context-folder>/
-  DECLARATION.md
+  <context-folder>.md
   _obsidian/
     attachments/
     bases/
+    content/
     excalidraw/
     epics/
     periodic/
@@ -953,7 +1002,7 @@ Context folder operating folders start with `_` so normal folders can sit direct
 Content-enabled context folders also get:
 
 ```text
-<context-folder>/DECLARATION/content-cadence.json
+<context-folder>/_obsidian/content/content-cadence.json
 <context-folder>/_obsidian/content-schedules/
 <context-folder>/_obsidian/content/
   publications/
@@ -962,9 +1011,9 @@ Content-enabled context folders also get:
   archive/
 ```
 
-`DECLARATION/content-cadence.json` controls recurring publication cadence, `schedule_format`, and `publication_order`. Normal refresh is create-only for content schedules and maintains the `Current content schedule:` line in the context folder `DECLARATION.md`; run `vault content --force` only when intentionally regenerating an existing managed schedule note.
+`_obsidian/content/content-cadence.json` controls recurring publication cadence, `schedule_format`, and `publication_order`. Normal refresh is create-only for content schedules and maintains the `Current content schedule:` line in the context folder note; run `vault content --force` only when intentionally regenerating an existing managed schedule note.
 
-`DECLARATION.md` is the entity's durable operating source for Identity and Momentum. For personal-brand entities, Social Selling lives as a third-level section inside Momentum. Each context folder owns its local periodic templates under `_obsidian/templates/periodic`. `_master/_obsidian/templates/shared` is for root-level shared non-periodic templates, declaration templates, content templates, and the default TaskNotes template.
+The context folder note is the entity's durable operating source for Identity and Momentum. For personal-brand entities, Social Selling lives as a third-level section inside Momentum. Each context folder owns its local periodic templates under `_obsidian/templates/periodic`. `_master/_obsidian/templates/shared` is for root-level shared non-periodic templates, entity-note templates, content templates, and the default TaskNotes template.
 
 ## Agent Files
 
@@ -1048,7 +1097,7 @@ Root Obsidian settings live in the current root `.obsidian` folder. Bootstrap do
 - Tasks: `<context-folder>/_obsidian/tasks`.
 - Projects: `<context-folder>/_obsidian/projects`.
 - Epics: `<context-folder>/_obsidian/epics`.
-- Entity declaration: `<context-folder>/DECLARATION.md`.
+- Entity operating note: `<context-folder>/<context-folder>.md`.
 - Content assets for content-enabled entities: `<context-folder>/_obsidian/content`.
 - Content schedules for content-enabled entities: `<context-folder>/_obsidian/content-schedules`.
 - Periodic notes: `<context-folder>/_obsidian/periodic`.

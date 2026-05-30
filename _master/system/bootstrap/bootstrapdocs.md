@@ -55,9 +55,10 @@ Plugin code is intentionally excluded for third-party plugins:
 - `main.js` excluded
 - plugin backup/migration/helper files excluded
 
-Two local plugins ship their bundles exactly because they are source-of-truth vault behavior:
+Local or patched plugins ship their bundles exactly because they are source-of-truth vault behavior:
 
 - `context-nine/main.js`
+- `simple-folder-note/main.js`
 - `system3-relay/main.js`
 
 Sensitive/local plugin config is still excluded:
@@ -70,7 +71,7 @@ Exact-copy plugin files are scanned for high-confidence secrets before export. E
 
 `_master/system/bootstrap/install_plugins.py` installs third-party active plugin bundles during setup and upgrade. It reads `.obsidian/community-plugins.json`, skips exact-copy plugins from `obsidian_plugin_exact_copy_plugins`, resolves each remaining plugin through Obsidian's community plugin registry, and downloads `main.js`, `manifest.json`, and optional `styles.css` from the GitHub release matching the exported plugin manifest version.
 
-Correct wording: Export includes plugin metadata/styles and non-sensitive settings, ships source bundles only for Context Nine and Relay, downloads active third-party plugin bundles during setup/upgrade, and excludes known sensitive/local plugin config.
+Correct wording: Export includes plugin metadata/styles and non-sensitive settings, ships source bundles only for Context Nine, Simple Folder Note, and Relay, downloads active third-party plugin bundles during setup/upgrade, and excludes known sensitive/local plugin config.
 
 ## First Install Flow
 

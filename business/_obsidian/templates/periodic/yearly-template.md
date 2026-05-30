@@ -7,7 +7,7 @@ generated: false
 ---
 # Impression Yearly
 
-[[DECLARATION#Identity|Identity]]
+[[business#Identity|Identity]]
 
 ## Review
 

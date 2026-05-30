@@ -7,8 +7,8 @@ generated: false
 ---
 # Matt Derman Daily
 
-[[DECLARATION#Momentum|Momentum]]
-[[DECLARATION#Social Selling|Social Selling]]
+[[personal-brand#Momentum|Momentum]]
+[[personal-brand#Social Selling|Social Selling]]
 
 ## Content Schedule
 

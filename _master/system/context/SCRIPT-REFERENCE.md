@@ -11,7 +11,7 @@ This is the fuller script reference. Use `_master/system/context/SCRIPTS.md` for
 - `vault.py`: terminal dispatcher installed as `vault` in `~/.local/bin`; forwards subcommands to the scripts below.
 - `refresh.py`: runs the vault refresh pipeline; by default it ingests the Brain Dump Apple Note, runs the Google Calendar task mirror, regenerates agent context, updates `_master/Dashboard.md`, and removes stale generated agent periodic rollups unless `--keep-agent-periodic-history` is passed.
 - `context.py`: generates compact agent-readable state, `_master/Dashboard.md`, current content schedules, realized system notes, and current periodic rollups.
-- `content.py`: generates fixed 4-week content schedule notes from enabled `DECLARATION/content-cadence.json` files and maintains the `Current content schedule:` line in each enabled context folder `DECLARATION.md`. Supports `schedule_format`, `publication_order`, and `--force` to regenerate existing managed schedule notes.
+- `content.py`: generates fixed 4-week content schedule notes from enabled `_obsidian/content/content-cadence.json` files and maintains the `Current content schedule:` line in each enabled context folder note. Supports `schedule_format`, `publication_order`, and `--force` to regenerate existing managed schedule notes.
 - `periodic.py`: generates current daily, weekly, quarterly, and yearly flat agent rollups under `_master/system/context/`.
 - `brain_dump.py`: imports the Brain Dump Apple Note into its single vault import file, copies attachments, and can clear the source note.
 - `_master/agents/skills/brain-dump-organizer/scripts/triage.py`: creates Brain Dump organizer backups/proposals, maintains the triage Base, clears the import file, and applies approved proposals.

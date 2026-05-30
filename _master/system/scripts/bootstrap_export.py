@@ -159,9 +159,10 @@ class BootstrapExporter:
 
     def prepare_export_root(self) -> None:
         if is_nonempty_dir(self.export_root):
-            if not self.force:
+            if not self.force and not self.dry_run:
                 raise SystemExit(f"Export directory is not empty; pass --force to replace it: {self.export_root}")
-            self.clean_existing_export()
+            if self.force or self.dry_run:
+                self.clean_existing_export()
         self.ensure_dir(self.export_root)
 
     def collect_explicit_root_names(self) -> set[str]:
@@ -365,12 +366,6 @@ class BootstrapExporter:
                     target_name,
                     item.get("public_home_description", []),
                 )
-            declaration_path = source / "DECLARATION.md"
-            if declaration_path.exists():
-                self.write_public_declaration(
-                    declaration_path,
-                    target / "DECLARATION.md",
-                )
             obsidian = source / "_obsidian"
             if obsidian.is_dir():
                 self.copy_context_obsidian(obsidian, target / "_obsidian")
@@ -383,24 +378,19 @@ class BootstrapExporter:
         description: list[str],
     ) -> None:
         text = source.read_text(encoding="utf-8")
-        frontmatter, _body = split_yaml_frontmatter(text)
-        body = f"# {target_name}\n\n{public_description_text(description)}\n"
-        rendered = join_frontmatter_and_body(frontmatter, body)
-        self.write_generated_text(target, rendered, f"write public context folder note {target}")
-
-    def write_public_declaration(self, source: Path, target: Path) -> None:
-        text = source.read_text(encoding="utf-8")
         frontmatter, body = split_yaml_frontmatter(text)
+        public_headings = {"## Identity", "## Momentum", "### Social Selling"}
         heading_lines = [
             line.rstrip()
             for line in body.splitlines()
-            if line.startswith("# ") or line.startswith("## ")
+            if line.rstrip() in public_headings
         ]
-        rendered_body = "\n\n".join(heading_lines)
-        if rendered_body:
-            rendered_body += "\n"
+        rendered_body = f"# {target_name}\n\n{public_description_text(description)}"
+        if heading_lines:
+            rendered_body += "\n\n" + "\n\n".join(heading_lines)
+        rendered_body += "\n"
         rendered = join_frontmatter_and_body(frontmatter, rendered_body)
-        self.write_generated_text(target, rendered, f"write public DECLARATION {target}")
+        self.write_generated_text(target, rendered, f"write public context folder note {target}")
 
     def write_generated_text(self, target: Path, text: str, message: str) -> None:
         self.ensure_dir(target.parent)

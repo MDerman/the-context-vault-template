@@ -81,11 +81,11 @@ Each context folder uses this internal `_obsidian` operating structure:
 ```text
 <context-folder>/
   <context-folder>.md
-  DECLARATION.md
   _obsidian/
     attachments/
     bases/
     excalidraw/
+    content/ # content-enabled folders only
     content-schedules/ # content-enabled folders only
     epics/
     periodic/
@@ -103,7 +103,7 @@ Each context folder uses this internal `_obsidian` operating structure:
 Content-enabled context folders also use:
 
 ```text
-<context-folder>/DECLARATION/content-cadence.json
+<context-folder>/_obsidian/content/content-cadence.json
 <context-folder>/_obsidian/content-schedules/
 <context-folder>/_obsidian/content/
   publications/
@@ -119,7 +119,7 @@ Content-enabled context folders also use:
   archive/
 ```
 
-`DECLARATION/content-cadence.json` is the source of truth for recurring publication cadence. `content.py` creates the current fixed 4-week planning note under `_obsidian/content-schedules` from enabled cadence JSON and maintains the `Current content schedule:` line in the context folder `DECLARATION.md`. Normal refresh is create-only and does not overwrite existing content schedule notes.
+`_obsidian/content/content-cadence.json` is the source of truth for recurring publication cadence. `content.py` creates the current fixed 4-week planning note under `_obsidian/content-schedules` from enabled cadence JSON and maintains the `Current content schedule:` line in the context folder note. Normal refresh is create-only and does not overwrite existing content schedule notes.
 
 Content schedule config supports `schedule_format` values:
 
@@ -137,17 +137,17 @@ Context folder-owned operating folders live under `_obsidian` so ordinary work f
 
 Note attachments should live under the owning top-level root folder's `_obsidian/attachments` directory. For example, attachments used by `_library/...` notes belong under `_library/_obsidian/attachments`, and attachments used by `business/...` notes belong under `business/_obsidian/attachments`. Obsidian's built-in paste destination is the temporary inbox `_master/_obsidian/attachments/_inbox`; run `attachments.py` to route inbox and imported attachments into the correct root folder.
 
-`_obsidian/tasks`, `_obsidian/projects`, `_obsidian/epics`, and root `DECLARATION.md` are the standard operating surfaces:
+`_obsidian/tasks`, `_obsidian/projects`, `_obsidian/epics`, and the context folder note are the standard operating surfaces:
 
 - `_obsidian/tasks`: TaskNotes task notes.
 - `_obsidian/projects`: ordinary project notes.
 - `_obsidian/epics`: ordinary epic notes.
-- `DECLARATION.md`: entity-specific answers for Identity and Momentum. Social Selling lives inside Momentum when relevant.
+- `<context-folder>.md`: entity-specific answers for Identity and Momentum. Social Selling lives inside Momentum when relevant.
 - `_obsidian/content`: owned content assets, publication definitions, and content views for content-enabled entities only.
 
 Context folders are for actual operating information: current source-of-truth notes, docs, assets, tasks, periodic notes, SOPs, internal training, decisions, and material actively used by that context folder. They are not for samples, downloaded templates, general learning notes, course notes, research dumps, or notes about learning. Learning material belongs in `_library`; durable synthesis belongs in `_wiki`. Non-entity random thoughts belong in `_library/thoughts`.
 
-If something learned in `_library` or `_wiki` should become part of a context folder, promote it deliberately into that context folder as an operating artifact, such as an SOP, keep-in-mind note, employee training note, checklist, policy, decision record, declaration update, or active reference.
+If something learned in `_library` or `_wiki` should become part of a context folder, promote it deliberately into that context folder as an operating artifact, such as an SOP, keep-in-mind note, employee training note, checklist, policy, decision record, entity-note update, or active reference.
 
 ## Relay Collaboration
 
@@ -167,7 +167,7 @@ Fastest setup for joining the same Relay workspace:
 
 Bootstrap export includes plugin metadata/styles and non-sensitive settings, ships source bundles only for Context Nine and Relay, and excludes known sensitive/local plugin config. Users install third-party plugin code locally after setup.
 
-Entity operating-system answers live in `DECLARATION.md` rather than the context folder note. The context folder note explains what each local folder is for and where to store or find information. Master system notes under `_master/02-Identity.md` and `_master/03-Momentum.md` use Sync Embeds to show enabled declaration sections. Declarations keep one file-title H1 and use H2 for embeddable sections such as `Identity` and `Momentum`, because Sync Embeds section isolation is more reliable below H1. Social Selling uses an H3 under Momentum for personal-brand entities.
+Entity operating-system answers live in the context folder note, alongside its local routing map. Master system notes under `_master/02-Identity.md` and `_master/03-Momentum.md` use Sync Embeds to show enabled entity-note sections. Entity notes keep one file-title H1 and use H2 for embeddable sections such as `Identity` and `Momentum`, because Sync Embeds section isolation is more reliable below H1. Social Selling uses an H3 under Momentum for personal-brand entities.
 
 Reusable cross-context assets, agent skills, Mac automation, scripts, generated outputs, and utility files live under `_master`.
 
@@ -583,13 +583,13 @@ In the master vault:
 
 Periodic templates can include `{{current_content_schedule_sync_embed}}`. The periodic generator replaces it with a Sync Embeds block pointing at the active 4-week content schedule when that context folder has enabled cadence JSON.
 
-Shared declaration templates live in:
+Shared entity-note templates live in:
 
 ```text
-_master/_obsidian/templates/shared/declarations/
+_master/_obsidian/templates/shared/entity-notes/
 ```
 
-They are copied or adapted into each active entity's root `DECLARATION.md`.
+They are copied or adapted into each active entity's context folder note.
 
 Each context folder has local `_obsidian/templates` for context-specific periodic templates. Shared non-periodic templates stay under `_master/_obsidian/templates/shared`.
 
@@ -665,7 +665,7 @@ personal-brand -> personal-brand
 business -> business
 ```
 
-The export copies root agent wiring, root `.obsidian` profile files with configured exclusions, `_master` minus generated outputs, empty `_library`, and `_wiki/AGENTS.md`. Context exports create public folder notes named after the target folder, copy sanitized `DECLARATION.md`, omit `DECLARATION/`, and copy public `_obsidian` Bases and templates.
+The export copies root agent wiring, root `.obsidian` profile files with configured exclusions, `_master` minus generated outputs, empty `_library`, and `_wiki/AGENTS.md`. Context exports create sanitized public folder notes named after the target folder and copy public `_obsidian` Bases and templates.
 
 The root public `README.md` is exported from `_master/system/bootstrap/README-bootstrap.md`. It documents the new-machine clone-to-iCloud flow. Internal bootstrap/export mechanics live in `_master/system/bootstrap/bootstrapdocs.md`. `--force` mirrors export-owned content into `~/Code/vault-public` without deleting the export root or repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, or contribution docs. Export ownership is tracked in `.bootstrap-export-manifest.json`; legacy exports without a manifest are cleaned at the export-root child level while preserving repo metadata.
 
@@ -679,7 +679,7 @@ vault upgrade --apply
 vault upgrade doctor
 ```
 
-Upgrade behavior is controlled by `.vault-bootstrap/policy.json`: scripts/tools/plugin code/root wiring are replaced from upstream, user notes/tasks/declarations are preserved, and versioned migrations under `_master/system/migrations/` handle user-owned schema changes when a release enables them. The `vault-upgrade-repair` skill is the fallback for failed migrations or report-driven manual fixes.
+Upgrade behavior is controlled by `.vault-bootstrap/policy.json`: scripts/tools/plugin code/root wiring are replaced from upstream, user notes/tasks/entity operating notes are preserved, and versioned migrations under `_master/system/migrations/` handle user-owned schema changes when a release enables them. The `vault-upgrade-repair` skill is the fallback for failed migrations or report-driven manual fixes.
 
 Add a new context folder with:
 

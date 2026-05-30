@@ -1,12 +1,18 @@
+# Content Calendar
+generated: true
+generated_at: 2026-05-30T20:40:35
+managed_by: "managed-by: _master/system/bootstrap/bootstrap_vault.py"
+
 filters:
   and:
-    - type == "content"
+    - 'type == "content"'
     - or:
-        - file.inFolder("personal-brand/_obsidian/content/items")
-        - file.inFolder("business/_obsidian/content/items")
+      - file.inFolder("business/_obsidian/content/items")
+      - file.inFolder("personal-brand/_obsidian/content/items")
+
 views:
   - type: calendar
-    name: All Content Calendar
+    name: "All Content Calendar"
     order:
       - file.name
       - entity
@@ -19,10 +25,11 @@ views:
     startDate: publish_date
     weekStartDay: monday
   - type: calendar
-    name: personal-brand Calendar
+    name: "business Calendar"
     filters:
       and:
-        - entity == "personal-brand"
+        - 'entity == "business"'
+
     order:
       - file.name
       - entity
@@ -35,10 +42,11 @@ views:
     startDate: publish_date
     weekStartDay: monday
   - type: calendar
-    name: business Calendar
+    name: "personal-brand Calendar"
     filters:
       and:
-        - entity == "business"
+        - 'entity == "personal-brand"'
+
     order:
       - file.name
       - entity
@@ -51,10 +59,11 @@ views:
     startDate: publish_date
     weekStartDay: monday
   - type: calendar
-    name: Blog
+    name: "Blog"
     filters:
       and:
-        - platform == "blog"
+        - 'platform == "blog"'
+
     order:
       - file.name
       - entity
@@ -67,11 +76,12 @@ views:
     startDate: publish_date
     weekStartDay: monday
   - type: calendar
-    name: Newsletter
+    name: "Newsletter"
     filters:
       or:
-        - platform == "newsletter"
-        - content_kind == "newsletter-issue"
+        - 'platform == "newsletter"'
+        - 'content_kind == "newsletter-issue"'
+
     order:
       - file.name
       - entity
@@ -84,10 +94,11 @@ views:
     startDate: publish_date
     weekStartDay: monday
   - type: calendar
-    name: YouTube
+    name: "YouTube"
     filters:
       and:
-        - platform == "youtube"
+        - 'platform == "youtube"'
+
     order:
       - file.name
       - entity
@@ -100,11 +111,12 @@ views:
     startDate: publish_date
     weekStartDay: monday
   - type: calendar
-    name: LinkedIn
+    name: "LinkedIn"
     filters:
       or:
-        - platform == "linkedin"
-        - publication == "linkedin"
+        - 'platform == "linkedin"'
+        - 'publication == "linkedin"'
+
     order:
       - file.name
       - entity
@@ -117,11 +129,12 @@ views:
     startDate: publish_date
     weekStartDay: monday
   - type: calendar
-    name: X
+    name: "X"
     filters:
       or:
-        - platform == "x"
-        - publication == "x"
+        - 'platform == "x"'
+        - 'publication == "x"'
+
     order:
       - file.name
       - entity
@@ -134,11 +147,12 @@ views:
     startDate: publish_date
     weekStartDay: monday
   - type: calendar
-    name: Substack
+    name: "Substack"
     filters:
       or:
-        - platform == "substack"
-        - publication == "substack-notes"
+        - 'platform == "substack"'
+        - 'publication == "substack-notes"'
+
     order:
       - file.name
       - entity
@@ -151,10 +165,11 @@ views:
     startDate: publish_date
     weekStartDay: monday
   - type: calendar
-    name: Social
+    name: "Social"
     filters:
       and:
-        - platform == "social"
+        - 'platform == "social"'
+
     order:
       - file.name
       - entity
@@ -167,7 +182,7 @@ views:
     startDate: publish_date
     weekStartDay: monday
   - type: table
-    name: Publish Dates
+    name: "Publish Dates"
     order:
       - publish_date
       - file.name
@@ -179,5 +194,5 @@ views:
       - cta
       - conversion_goal
     sort:
-      - property: publish_date
+      - column: publish_date
         direction: ASC

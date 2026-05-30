@@ -8,7 +8,7 @@ status: enabled
 
 Momentum is how identity becomes action. It explains the broad rhythm, task routing, calendar behavior, cadence, and social selling routines.
 
-Recurring daily, weekly, quarterly, and yearly checklists belong in periodic templates, not in declarations. Social Selling lives under each relevant entity's Momentum section.
+Recurring daily, weekly, quarterly, and yearly checklists belong in periodic templates, not in entity notes. Social Selling lives under each relevant entity's Momentum section.
 
 #### Typically I need to schedule time for
 
@@ -32,17 +32,17 @@ Recurring daily, weekly, quarterly, and yearly checklists belong in periodic tem
 ## personal
 
 ```sync
-![[personal/DECLARATION#Momentum]]
+![[personal/personal#Momentum]]
 ```
 
 ## personal-brand
 
 ```sync
-![[personal-brand/DECLARATION#Momentum]]
+![[personal-brand/personal-brand#Momentum]]
 ```
 
 ## business
 
 ```sync
-![[business/DECLARATION#Momentum]]
+![[business/business#Momentum]]
 ```

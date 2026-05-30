@@ -1,13 +1,14 @@
 ---
-type: declaration
-entity: personal
-entity_type: personal
-status: enabled
+status: active
+context_type: business
+content_enabled: false
+default_capture: false
 generated: true
-generated_at: 2026-05-14T09:38:58
+generated_at: 2026-05-30T20:40:35
 managed_by: "managed-by: _master/system/bootstrap/bootstrap_vault.py"
 ---
-# personal Declaration
+
+# business
 
 ## Identity
 
@@ -20,3 +21,4 @@ managed_by: "managed-by: _master/system/bootstrap/bootstrap_vault.py"
 ### Rhythm
 
 ### Proof Sources
+

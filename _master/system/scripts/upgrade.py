@@ -582,7 +582,7 @@ Inputs:
 
 Tasks:
 - Read report JSON and unresolved migration logs.
-- Preserve user-owned notes/tasks/declarations unless report says migration should update them.
+- Preserve user-owned notes/tasks/entity operating notes unless report says migration should update them.
 - Repair failed migrations or skipped/conflicting files.
 - Run `vault upgrade doctor`.
 - Summarize remaining manual work."""

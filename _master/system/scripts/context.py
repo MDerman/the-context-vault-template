@@ -389,7 +389,7 @@ def context_markdown(
         f"`{schedule['path']}` ({schedule['schedule_start']} to {schedule['schedule_end']})"
         for schedule in content_schedules
     ]
-    declaration_lines = [f"`{entity}/DECLARATION.md`" for entity in selected_entities]
+    entity_note_lines = [f"`{entity}/{entity}.md`" for entity in selected_entities]
     content_view_lines = [
         "`_master/_obsidian/bases/content-calendar.base`",
         "`_master/_obsidian/bases/content-kanban.base`",
@@ -428,9 +428,9 @@ managed_by: "{MARKER}"
 Folder-specific content views live under `<context-folder>/_obsidian/bases/content-*.base`.
 Use the master content kanban grouped by `status` to see content by status: `idea`, `cogs-are-turning`, `draft`, `planning-scripting`, `scheduled`, `published`, `cancelled`.
 
-## Entity Declarations
+## Entity Notes
 
-{markdown_list(declaration_lines)}
+{markdown_list(entity_note_lines)}
 
 ## Agent System Files
 
@@ -468,7 +468,7 @@ Use `<context-folder>/_obsidian/periodic/<daily|weekly|quarterly|yearly>/<period
 
 - `AGENTS.md`
 - `_master/01-Context.md`
-- relevant `<context-folder>/DECLARATION.md`
+- relevant `<context-folder>/<context-folder>.md`
 - `_master/system/context/CONTEXT.md`
 - `_master/_obsidian/bases/tasks-today.base`
 - `_master/_obsidian/bases/content-calendar.base`
@@ -637,10 +637,7 @@ def main(argv: list[str] | None = None) -> None:
         "content_schedules": content_schedules,
         "operating_system_notes": SYSTEM_NOTES,
         "agent_system_notes": system_packets,
-        "entity_declarations": {
-            entity: f"{entity}/DECLARATION.md" for entity in selected_entities
-        },
-        "context_folder_notes": {
+        "entity_notes": {
             entity: f"{entity}/{entity}.md" for entity in selected_entities
         },
         "agent_periodic_notes": {

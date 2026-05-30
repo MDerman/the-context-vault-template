@@ -1,20 +1,26 @@
+# Content Kanban
+generated: true
+generated_at: 2026-05-30T20:40:35
+managed_by: "managed-by: _master/system/bootstrap/bootstrap_vault.py"
+
 filters:
   and:
-    - type == "content"
+    - 'type == "content"'
     - or:
-        - file.inFolder("personal-brand/_obsidian/content")
-        - file.inFolder("business/_obsidian/content")
+      - file.inFolder("business/_obsidian/content")
+      - file.inFolder("personal-brand/_obsidian/content")
+
 formulas:
-  statusRank: if(status=="idea",1,if(status=="cogs-are-turning",2,if(status=="draft",3,if(status=="planning-scripting",4,if(status=="scheduled",5,if(status=="published",6,if(status=="cancelled",99,999)))))))
-  platformBadge: if(publication=="linkedin" || platform=="linkedin","💼 LinkedIn",if(publication=="x" || platform=="x","𝕏 X",if(publication=="substack-notes" || platform=="substack","📝 Substack",if(platform=="youtube","▶ YouTube",if(platform=="blog","✍ Blog",if(platform=="newsletter" || content_kind=="newsletter-issue","✉ Newsletter",if(platform=="social","◇ Social",platform)))))))
+  statusRank: 'if(status=="idea",1,if(status=="cogs-are-turning",2,if(status=="draft",3,if(status=="planning-scripting",4,if(status=="scheduled",5,if(status=="published",6,if(status=="cancelled",99,999)))))))'
+  platformBadge: 'if(publication=="linkedin" || platform=="linkedin","💼 LinkedIn",if(publication=="x" || platform=="x","𝕏 X",if(publication=="substack-notes" || platform=="substack","📝 Substack",if(platform=="youtube","▶ YouTube",if(platform=="blog","✍ Blog",if(platform=="newsletter" || content_kind=="newsletter-issue","✉ Newsletter",if(platform=="social","◇ Social",platform)))))))'
+
 properties:
   formula.platformBadge:
     displayName: Platform
+
 views:
   - type: kanban-view
-    name: All Content Board
-    order:
-      - formula.platformBadge
+    name: "All Content Board"
     groupByProperty: status
     columnOrders:
       note.status:
@@ -34,14 +40,15 @@ views:
         scheduled: cyan
         published: green
         cancelled: red
+    order:
+      - formula.platformBadge
     wrapPropertyValues: false
   - type: kanban-view
-    name: Blog
+    name: "Blog"
     filters:
       and:
-        - platform == "blog"
-    order:
-      - formula.platformBadge
+        - 'platform == "blog"'
+
     groupByProperty: status
     columnOrders:
       note.status:
@@ -61,15 +68,16 @@ views:
         scheduled: cyan
         published: green
         cancelled: red
+    order:
+      - formula.platformBadge
     wrapPropertyValues: false
   - type: kanban-view
-    name: Newsletter
+    name: "Newsletter"
     filters:
       or:
-        - platform == "newsletter"
-        - content_kind == "newsletter-issue"
-    order:
-      - formula.platformBadge
+        - 'platform == "newsletter"'
+        - 'content_kind == "newsletter-issue"'
+
     groupByProperty: status
     columnOrders:
       note.status:
@@ -89,14 +97,15 @@ views:
         scheduled: cyan
         published: green
         cancelled: red
+    order:
+      - formula.platformBadge
     wrapPropertyValues: false
   - type: kanban-view
-    name: YouTube
+    name: "YouTube"
     filters:
       and:
-        - platform == "youtube"
-    order:
-      - formula.platformBadge
+        - 'platform == "youtube"'
+
     groupByProperty: status
     columnOrders:
       note.status:
@@ -116,15 +125,16 @@ views:
         scheduled: cyan
         published: green
         cancelled: red
+    order:
+      - formula.platformBadge
     wrapPropertyValues: false
   - type: kanban-view
-    name: LinkedIn
+    name: "LinkedIn"
     filters:
       or:
-        - platform == "linkedin"
-        - publication == "linkedin"
-    order:
-      - formula.platformBadge
+        - 'platform == "linkedin"'
+        - 'publication == "linkedin"'
+
     groupByProperty: status
     columnOrders:
       note.status:
@@ -144,15 +154,16 @@ views:
         scheduled: cyan
         published: green
         cancelled: red
+    order:
+      - formula.platformBadge
     wrapPropertyValues: false
   - type: kanban-view
-    name: X
+    name: "X"
     filters:
       or:
-        - platform == "x"
-        - publication == "x"
-    order:
-      - formula.platformBadge
+        - 'platform == "x"'
+        - 'publication == "x"'
+
     groupByProperty: status
     columnOrders:
       note.status:
@@ -172,15 +183,16 @@ views:
         scheduled: cyan
         published: green
         cancelled: red
+    order:
+      - formula.platformBadge
     wrapPropertyValues: false
   - type: kanban-view
-    name: Substack
+    name: "Substack"
     filters:
       or:
-        - platform == "substack"
-        - publication == "substack-notes"
-    order:
-      - formula.platformBadge
+        - 'platform == "substack"'
+        - 'publication == "substack-notes"'
+
     groupByProperty: status
     columnOrders:
       note.status:
@@ -200,14 +212,15 @@ views:
         scheduled: cyan
         published: green
         cancelled: red
+    order:
+      - formula.platformBadge
     wrapPropertyValues: false
   - type: kanban-view
-    name: Social
+    name: "Social"
     filters:
       and:
-        - platform == "social"
-    order:
-      - formula.platformBadge
+        - 'platform == "social"'
+
     groupByProperty: status
     columnOrders:
       note.status:
@@ -227,4 +240,6 @@ views:
         scheduled: cyan
         published: green
         cancelled: red
+    order:
+      - formula.platformBadge
     wrapPropertyValues: false

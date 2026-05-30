@@ -7,8 +7,8 @@ generated: false
 ---
 # Impression Quarterly
 
-[[DECLARATION#Identity|Identity]]
-[[DECLARATION#Momentum|Momentum]]
+[[business#Identity|Identity]]
+[[business#Momentum|Momentum]]
 
 ## Strategic Direction
 

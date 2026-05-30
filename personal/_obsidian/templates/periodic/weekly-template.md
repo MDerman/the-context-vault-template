@@ -7,7 +7,7 @@ generated: false
 ---
 # Planning
 
-[[DECLARATION#Momentum|Personal Momentum]]
+[[personal#Momentum|Personal Momentum]]
 
 ## What do I want to achieve / do this week?
 

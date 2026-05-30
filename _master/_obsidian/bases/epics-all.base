@@ -1,13 +1,20 @@
+# All Epics
+generated: true
+generated_at: 2026-05-30T20:40:35
+managed_by: "managed-by: _master/system/bootstrap/bootstrap_vault.py"
+
 filters:
   and:
-    - type == "epic"
+    - 'type == "epic"'
     - or:
-        - file.inFolder("personal/_obsidian/epics")
-        - file.inFolder("personal-brand/_obsidian/epics")
-        - file.inFolder("business/_obsidian/epics")
+      - file.inFolder("ctx9/_obsidian/epics")
+      - file.inFolder("business/_obsidian/epics")
+      - file.inFolder("personal-brand/_obsidian/epics")
+      - file.inFolder("personal/_obsidian/epics")
+
 views:
   - type: table
-    name: Active Epics
+    name: "Active Epics"
     order:
       - file.name
       - status

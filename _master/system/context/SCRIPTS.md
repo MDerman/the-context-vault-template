@@ -239,7 +239,7 @@ _master/system/context/*.md
 _master/Dashboard.md
 ```
 
-It also creates current 4-week content schedule notes for content-enabled context folders with enabled `DECLARATION/content-cadence.json`.
+It also creates current 4-week content schedule notes for content-enabled context folders with enabled `_obsidian/content/content-cadence.json`.
 By default it removes stale generated agent periodic rollups; pass `--keep-agent-periodic-history` through `refresh.py` or `context.py` to preserve them.
 
 Implementation script: `_master/system/scripts/context.py`.
@@ -284,7 +284,7 @@ Generate current content schedule notes directly:
 vault content
 ```
 
-Content schedule notes live in `<context-folder>/_obsidian/content-schedules/` and normal refresh is create-only. `DECLARATION/content-cadence.json` controls `schedule_format` and `publication_order`. The generator also keeps the `Current content schedule:` line in the context folder `DECLARATION.md`.
+Content schedule notes live in `<context-folder>/_obsidian/content-schedules/` and normal refresh is create-only. `_obsidian/content/content-cadence.json` controls `schedule_format` and `publication_order`. The generator also keeps the `Current content schedule:` line in the context folder note.
 
 Supported `schedule_format` values:
 

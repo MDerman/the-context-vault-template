@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate fixed-window content schedule notes from declaration cadence JSON."""
+"""Generate fixed-window content schedule notes from entity cadence JSON."""
 
 from __future__ import annotations
 
@@ -24,11 +24,11 @@ DEFAULT_ENTITIES = [
 MARKER = "managed-by: _master/system/scripts/content.py"
 OLD_MARKERS = ("managed-by: _master/system/scripts/generate_content_schedules.py",)
 MANAGED_MARKERS = (MARKER, *OLD_MARKERS)
-CONFIG_RELATIVE_PATH = Path("DECLARATION/content-cadence.json")
+CONFIG_RELATIVE_PATH = Path("_obsidian/content/content-cadence.json")
 SCHEDULE_DIR = Path("_obsidian/content-schedules")
 DEFAULT_SCHEDULE_FORMAT = "publicationThenByWeek"
 VALID_SCHEDULE_FORMATS = {"weekly", "weeklyThenByPublication", "publicationThenByWeek"}
-DECLARATION_CURRENT_SCHEDULE_PREFIX = "Current content schedule:"
+ENTITY_NOTE_CURRENT_SCHEDULE_PREFIX = "Current content schedule:"
 
 
 @dataclass(frozen=True)
@@ -185,16 +185,16 @@ def current_schedule_obsidian_link(root: Path, path: Path) -> str:
     return f"[[{link}|{path.stem}]]"
 
 
-def declaration_current_schedule_line(root: Path, path: Path) -> str:
-    return f"{DECLARATION_CURRENT_SCHEDULE_PREFIX} {current_schedule_obsidian_link(root, path)}."
+def entity_note_current_schedule_line(root: Path, path: Path) -> str:
+    return f"{ENTITY_NOTE_CURRENT_SCHEDULE_PREFIX} {current_schedule_obsidian_link(root, path)}."
 
 
-def ensure_declaration_current_schedule_link(root: Path, entity: str, path: Path) -> None:
-    declaration_path = root / entity / "DECLARATION.md"
-    if not declaration_path.exists():
+def ensure_entity_note_current_schedule_link(root: Path, entity: str, path: Path) -> None:
+    entity_note_path = context_folder_note_path(root / entity)
+    if not entity_note_path.exists():
         return
-    text = declaration_path.read_text(encoding="utf-8")
-    line = declaration_current_schedule_line(root, path)
+    text = entity_note_path.read_text(encoding="utf-8")
+    line = entity_note_current_schedule_line(root, path)
     marker_pattern = "|".join(re.escape(marker) for marker in MANAGED_MARKERS)
     old_block_start = rf"<!-- (?:{marker_pattern}):current-content-schedule:start -->"
     old_block_end = rf"<!-- (?:{marker_pattern}):current-content-schedule:end -->"
@@ -214,8 +214,8 @@ def ensure_declaration_current_schedule_link(root: Path, entity: str, path: Path
         else:
             updated = text.rstrip() + "\n\n" + line + "\n"
     if updated != text:
-        declaration_path.write_text(updated, encoding="utf-8")
-        print(f"wrote {declaration_path}")
+        entity_note_path.write_text(updated, encoding="utf-8")
+        print(f"wrote {entity_note_path}")
 
 
 def split_cron_list(value: Any) -> list[str]:
@@ -457,7 +457,7 @@ def render_schedule_note(entity: str, config: dict[str, Any], window: ContentSch
         f"schedule_end: {window.end.isoformat()}",
         f"timezone: {config.get('timezone', 'UTC')}",
         f"schedule_format: {selected_format}",
-        f"source: {entity}/DECLARATION/content-cadence.json",
+        f"source: {entity}/_obsidian/content/content-cadence.json",
         "generated: true",
         f"generated_at: {generated_at}",
         f'managed_by: "{MARKER}"',
@@ -507,7 +507,7 @@ def ensure_content_schedule(
             if updated != existing:
                 path.write_text(updated, encoding="utf-8")
                 print(f"wrote {path}")
-        ensure_declaration_current_schedule_link(root, entity, path)
+        ensure_entity_note_current_schedule_link(root, entity, path)
         return {
             "entity": entity,
             "path": str(path.relative_to(root)),
@@ -517,7 +517,7 @@ def ensure_content_schedule(
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(render_schedule_note(entity, config, window, generated_at), encoding="utf-8")
     print(f"wrote {path}")
-    ensure_declaration_current_schedule_link(root, entity, path)
+    ensure_entity_note_current_schedule_link(root, entity, path)
     return {
         "entity": entity,
         "path": str(path.relative_to(root)),

@@ -7,7 +7,7 @@ generated: false
 ---
 # Matt Derman Yearly
 
-[[DECLARATION#Identity|Identity]]
+[[personal-brand#Identity|Identity]]
 
 ## Review
 

@@ -31,7 +31,7 @@ vault refresh --skip-brain-dump --skip-gcal --skip-git-maintenance
 
 ## Rules
 
-- Preserve user-owned notes by default: tasks, projects, epics, content items, declarations, periodic notes, and normal Markdown notes.
+- Preserve user-owned notes by default: tasks, projects, epics, content items, entity operating notes, periodic notes, and normal Markdown notes.
 - Do not restore public upstream Git into the vault folder. Hidden upstream state belongs outside iCloud.
 - Do not run destructive Git commands in the user vault.
 - Use `.vault-bootstrap/policy.json` as source of truth for replace/create/preserve behavior.

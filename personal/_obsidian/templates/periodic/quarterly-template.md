@@ -7,8 +7,8 @@ generated: false
 ---
 # Plan
 
-[[DECLARATION#Identity|Personal Identity]]
-[[DECLARATION#Momentum|Personal Momentum]]
+[[personal#Identity|Personal Identity]]
+[[personal#Momentum|Personal Momentum]]
 
 ## What are my top ~3 goals for this quarter/season?
 - 
