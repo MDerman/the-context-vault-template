@@ -9,7 +9,7 @@ import shutil
 import sys
 from pathlib import Path
 
-from script_utils import resolve_vault_root
+from script_utils import context_folder_note_path, resolve_vault_root
 from context_folder_rename import rename_context_folder, validate_slug
 
 
@@ -61,7 +61,7 @@ def read_context_registered(path: Path) -> bool:
 
 def set_frontmatter_value(path: Path, key: str, value: str, dry_run: bool) -> None:
     if not path.exists():
-        raise SystemExit(f"Missing HOME.md: {path}")
+        raise SystemExit(f"Missing context folder note: {path}")
     text = path.read_text(encoding="utf-8")
     if not text.startswith("---\n"):
         rendered = f"---\n{key}: {value}\n---\n{text}"
@@ -92,7 +92,7 @@ def set_frontmatter_value(path: Path, key: str, value: str, dry_run: bool) -> No
         path.write_text(rendered, encoding="utf-8")
 
 
-def write_home(path: Path, status: str, context_type: str, content_enabled: bool) -> None:
+def write_context_folder_note(path: Path, status: str, context_type: str, content_enabled: bool) -> None:
     value = "" if status == "none" else status
     content_value = "true" if content_enabled else "false"
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -149,8 +149,8 @@ def discover_entities(root: Path, excluded: set[str] | None = None) -> list[str]
             continue
         if path.name.startswith("_"):
             continue
-        home = path / "HOME.md"
-        if home.exists() and read_context_registered(home):
+        note = context_folder_note_path(path)
+        if note.exists() and read_context_registered(note):
             entities.append(path.name)
     return entities
 
@@ -199,14 +199,14 @@ def parse_create_args(argv: list[str], *, register_mode: bool) -> argparse.Names
         "--status",
         required=not register_mode,
         choices=sorted(VALID_STATUSES),
-        help="Context folder status. Register mode defaults to HOME.md status, then active.",
+        help="Context folder status. Register mode defaults to folder-note status, then active.",
     )
     parser.add_argument("--root", default=None, help="Vault root. Defaults to auto-discovery from the current directory or script location.")
     parser.add_argument("--default-context-folder", dest="default_entity", metavar="CONTEXT_FOLDER", default=None, help="Default capture context folder. Defaults to current root TaskNotes setting or personal.")
     parser.add_argument("--default-sub-vault", dest="default_entity", help=argparse.SUPPRESS)
     parser.add_argument("--default-entity", dest="default_entity", help=argparse.SUPPRESS)
     parser.add_argument("--content-enabled", action="store_true", default=None if register_mode else False, help="Create/register this context folder with content_enabled: true.")
-    parser.add_argument("--context-type", choices=sorted(VALID_CONTEXT_TYPES), default=None if register_mode else "business", help="Context folder type. Register mode defaults to HOME.md context_type, then business.")
+    parser.add_argument("--context-type", choices=sorted(VALID_CONTEXT_TYPES), default=None if register_mode else "business", help="Context folder type. Register mode defaults to folder-note context_type, then business.")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
     if register_mode:
@@ -226,17 +226,18 @@ def create_main(argv: list[str], *, register_mode: bool = False) -> None:
     if entity_root.exists() and not entity_root.is_dir():
         raise SystemExit(f"Context folder path exists and is not a directory: {entity_root}")
 
-    existing_status = read_status(entity_root / "HOME.md")
-    existing_context_type = read_context_type(entity_root / "HOME.md")
-    existing_content_enabled = read_content_enabled(entity_root / "HOME.md")
+    entity_note = context_folder_note_path(entity_root)
+    existing_status = read_status(entity_note)
+    existing_context_type = read_context_type(entity_note)
+    existing_content_enabled = read_content_enabled(entity_note)
     status = args.status or existing_status or "active"
     context_type = args.context_type or existing_context_type or "business"
     content_enabled = args.content_enabled if args.content_enabled is not None else existing_content_enabled
 
     if args.dry_run:
-        print(f"[dry-run] write {entity_root / 'HOME.md'}")
+        print(f"[dry-run] write {entity_note}")
     else:
-        write_home(entity_root / "HOME.md", status, context_type, content_enabled)
+        write_context_folder_note(entity_note, status, context_type, content_enabled)
 
     bootstrap_module = load_bootstrap(root)
     entities = discover_entities(root)
@@ -247,7 +248,7 @@ def create_main(argv: list[str], *, register_mode: bool = False) -> None:
     active_entities = [
         entity
         for entity in entities
-        if read_status(root / entity / "HOME.md") == "active"
+        if read_status(context_folder_note_path(root / entity)) == "active"
     ]
     if status == "active" and name not in active_entities:
         active_entities.append(name)
@@ -255,13 +256,13 @@ def create_main(argv: list[str], *, register_mode: bool = False) -> None:
     content_entities = [
         entity
         for entity in entities
-        if read_content_enabled(root / entity / "HOME.md")
+        if read_content_enabled(context_folder_note_path(root / entity))
     ]
     if content_enabled and name not in content_entities:
         content_entities.append(name)
         content_entities.sort()
     context_types = {
-        entity: read_context_type(root / entity / "HOME.md")
+        entity: read_context_type(context_folder_note_path(root / entity))
         for entity in entities
     }
     context_types[name] = context_type
@@ -316,15 +317,15 @@ def rerun_bootstrap(root: Path, dry_run: bool, excluded: set[str] | None = None)
     active_entities = [
         entity
         for entity in entities
-        if read_status(root / entity / "HOME.md") == "active"
+        if read_status(context_folder_note_path(root / entity)) == "active"
     ]
     content_entities = [
         entity
         for entity in entities
-        if read_content_enabled(root / entity / "HOME.md")
+        if read_content_enabled(context_folder_note_path(root / entity))
     ]
     context_types = {
-        entity: read_context_type(root / entity / "HOME.md")
+        entity: read_context_type(context_folder_note_path(root / entity))
         for entity in entities
     }
     bootstrap = bootstrap_module.Bootstrap(
@@ -353,10 +354,10 @@ def unregister_main(argv: list[str]) -> None:
     root = resolve_vault_root(args.root, __file__)
     name = validate_slug(args.name, "context folder name")
     context_root = root / name
-    home = context_root / "HOME.md"
-    if not context_root.is_dir() or not home.exists():
+    note = context_folder_note_path(context_root)
+    if not context_root.is_dir() or not note.exists():
         raise SystemExit(f"Context folder not found: {name}")
-    set_frontmatter_value(home, "context_registered", "false", args.dry_run)
+    set_frontmatter_value(note, "context_registered", "false", args.dry_run)
     rerun_bootstrap(root, args.dry_run, excluded={name} if args.dry_run else None)
 
 

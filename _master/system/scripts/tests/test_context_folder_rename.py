@@ -64,7 +64,7 @@ Do not rewrite grow your business here.
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root / "business").mkdir()
-            (root / "business" / "HOME.md").write_text(
+            (root / "business" / "business.md").write_text(
                 "---\nentity: business\ncontext_type: business\n---\n[[business/foo]]\n",
                 encoding="utf-8",
             )
@@ -84,10 +84,11 @@ Do not rewrite grow your business here.
             self.assertTrue(result.moved)
             self.assertFalse((root / "business").exists())
             self.assertTrue((root / "studio").is_dir())
-            home = (root / "studio" / "HOME.md").read_text(encoding="utf-8")
-            self.assertIn("entity: studio", home)
-            self.assertIn("context_type: business", home)
-            self.assertIn("[[studio/foo]]", home)
+            context_note = (root / "studio" / "studio.md").read_text(encoding="utf-8")
+            self.assertFalse((root / "studio" / "business.md").exists())
+            self.assertIn("entity: studio", context_note)
+            self.assertIn("context_type: business", context_note)
+            self.assertIn("[[studio/foo]]", context_note)
             tasknotes = json.loads((root / ".obsidian/plugins/tasknotes/data.json").read_text(encoding="utf-8"))
             self.assertEqual(tasknotes["taskCreationDefaults"]["defaultContexts"], "studio")
             context = (root / "_master" / "01-Context.md").read_text(encoding="utf-8")

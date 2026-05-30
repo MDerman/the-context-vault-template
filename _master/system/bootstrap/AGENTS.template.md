@@ -22,7 +22,7 @@ Root workspace is one Obsidian vault with context folders. `CLAUDE.md` is a syml
 ## First Read
 
 1. Read `_master/system/context/CONTEXT.md` | current generated vault state, active periods, tasks, schedules, first-look files.
-2. Read relevant context folder `HOME.md` before routing or storing info.
+2. Read relevant context folder note, for example `business/business.md`, before routing or storing info.
 3. Read relevant `<context-folder>/DECLARATION.md` before changing entity operating rules.
 4. Open detail docs only when needed: `_master/01-Context.md`, `_master/system/context/SCRIPTS.md` | normal vault commands and refresh workflows, `_master/system/context/SCRIPT-REFERENCE.md` | full script inventory and one-time script cautions, `_master/system/context/OBSIDIAN-PROFILE.md` | Obsidian profile, plugins, UI settings, templates, Sync Embeds.
 5. For public bootstrap/export docs, read `_master/system/bootstrap/README-bootstrap.md` (public README source) and `_master/system/bootstrap/bootstrapdocs.md` (internal bootstrap mechanics).
@@ -39,7 +39,7 @@ Root workspace is one Obsidian vault with context folders. `CLAUDE.md` is a syml
 - `_wiki/`: synthesized reusable knowledge.
 - `other/`: archive/holding area for old, excess, uncertain, or random dumps. Only used if explicitly asked.
 
-Use each context folder's `HOME.md` for local routing. Use `_master/01-Context.md` for exact folder shapes, content schemas, TaskNotes details, attachments, and Obsidian profile model.
+Use each context folder's inside-folder note for local routing. Use `_master/01-Context.md` for exact folder shapes, content schemas, TaskNotes details, attachments, and Obsidian profile model.
 
 ## Routing Cheats
 

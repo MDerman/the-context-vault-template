@@ -9,7 +9,7 @@ import re
 import sys
 from pathlib import Path
 
-from script_utils import configured_context_folders, resolve_vault_root
+from script_utils import configured_context_folders, context_folder_note_path, resolve_vault_root
 
 
 DEFAULT_ENTITIES = [
@@ -57,7 +57,7 @@ def parse_frontmatter(text: str) -> dict[str, str]:
 
 
 def entity_status(root: Path, entity: str) -> str:
-    path = root / entity / "HOME.md"
+    path = context_folder_note_path(root / entity)
     if not path.exists():
         return ""
     return parse_frontmatter(path.read_text(encoding="utf-8")).get("status", "").strip().lower()

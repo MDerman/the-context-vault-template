@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T15:45:38+00:00",
+  "generated_at": "2026-05-30T16:04:35+00:00",
   "paths": [
     ".agents",
     ".agents/skills",
@@ -554,6 +554,7 @@
     "_master/system/context/SCRIPTS.md",
     "_master/system/migrations",
     "_master/system/migrations/2026_05_29_tasknotes_duration_to_time_estimate.py",
+    "_master/system/migrations/2026_05_30_context_folder_notes.py",
     "_master/system/migrations/README.md",
     "_master/system/obsidian_notes",
     "_master/system/obsidian_notes/beta_plugins_docs",
@@ -691,6 +692,7 @@
     "_master/system/scripts/task.py",
     "_master/system/scripts/tests",
     "_master/system/scripts/tests/test_bootstrap_export_public_context.py",
+    "_master/system/scripts/tests/test_context_folder_notes_migration.py",
     "_master/system/scripts/tests/test_context_folder_rename.py",
     "_master/system/scripts/upgrade.py",
     "_master/system/scripts/vault-commands.json",
@@ -699,7 +701,6 @@
     "_wiki/AGENTS.md",
     "business",
     "business/DECLARATION.md",
-    "business/HOME.md",
     "business/_obsidian",
     "business/_obsidian/attachments",
     "business/_obsidian/attachments/Archive",
@@ -799,11 +800,11 @@
     "business/_obsidian/templates/periodic/quarterly-template.md",
     "business/_obsidian/templates/periodic/weekly-template.md",
     "business/_obsidian/templates/periodic/yearly-template.md",
+    "business/business.md",
     "install.sh",
     "personal",
     "personal-brand",
     "personal-brand/DECLARATION.md",
-    "personal-brand/HOME.md",
     "personal-brand/_obsidian",
     "personal-brand/_obsidian/attachments",
     "personal-brand/_obsidian/attachments/Matt writing etc",
@@ -935,8 +936,8 @@
     "personal-brand/_obsidian/templates/periodic/quarterly-template.md",
     "personal-brand/_obsidian/templates/periodic/weekly-template.md",
     "personal-brand/_obsidian/templates/periodic/yearly-template.md",
+    "personal-brand/personal-brand.md",
     "personal/DECLARATION.md",
-    "personal/HOME.md",
     "personal/_obsidian",
     "personal/_obsidian/attachments",
     "personal/_obsidian/attachments/Finance & Biz",
@@ -1020,6 +1021,7 @@
     "personal/_obsidian/templates/periodic/daily-template.md",
     "personal/_obsidian/templates/periodic/quarterly-template.md",
     "personal/_obsidian/templates/periodic/weekly-template.md",
-    "personal/_obsidian/templates/periodic/yearly-template.md"
+    "personal/_obsidian/templates/periodic/yearly-template.md",
+    "personal/personal.md"
   ]
 }

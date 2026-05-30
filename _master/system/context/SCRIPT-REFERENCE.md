@@ -26,7 +26,7 @@ This is the fuller script reference. Use `_master/system/context/SCRIPTS.md` for
 
 - `_master/system/bootstrap/init_vault.sh`: first-run fresh/exported vault setup entrypoint.
 - `_master/system/bootstrap/bootstrap_vault.py`: scaffolds/reconciles context folders, templates, Bases, starter notes, and generated setup docs.
-- `_master/system/bootstrap/generate_agents.py`: renders root `AGENTS.md` from `AGENTS.template.md` and discovered context folders with `HOME.md` frontmatter.
+- `_master/system/bootstrap/generate_agents.py`: renders root `AGENTS.md` from `AGENTS.template.md` and discovered context folders with folder-note frontmatter.
 - `_master/system/bootstrap/install_dependencies.sh`: installs/checks local CLI dependencies.
 - `_master/system/bootstrap/install_vault_command.py`: installs the `vault` dispatcher symlink.
 - `_master/system/bootstrap/sync-agent-skills.sh`: links local coding-agent skill folders to `_master/agents/skills`.

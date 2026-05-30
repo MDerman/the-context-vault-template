@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from script_utils import resolve_vault_root
+from script_utils import context_folder_note_path, resolve_vault_root
 
 
 DEFAULT_TASK_STATUSES = {"backlog", "up-next", "to-be-resumed", "ongoing", "in-progress", "done", "archived"}
@@ -88,10 +88,10 @@ def unique_path(folder: Path, title: str) -> Path:
 
 
 def ensure_context(root: Path, context: str) -> None:
-    home = root / context / "HOME.md"
-    if not home.exists():
+    note = context_folder_note_path(root / context)
+    if not note.exists():
         raise SystemExit(f"Context not found: {context}. Run `vault inventory`.")
-    metadata = frontmatter(home.read_text(encoding="utf-8", errors="replace"))
+    metadata = frontmatter(note.read_text(encoding="utf-8", errors="replace"))
     if str(metadata.get("context_registered", "true")).strip().lower() in {"false", "no", "0"}:
         raise SystemExit(f"Context is unregistered: {context}. Run `vault folder register {context}`.")
 

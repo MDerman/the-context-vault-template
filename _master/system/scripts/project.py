@@ -8,7 +8,7 @@ import datetime as dt
 from pathlib import Path
 from typing import Any
 
-from script_utils import resolve_vault_root
+from script_utils import context_folder_note_path, resolve_vault_root
 
 
 def clean_scalar(value: str) -> str:
@@ -56,10 +56,10 @@ def safe_filename(title: str) -> str:
 
 def ensure_context(root: Path, context: str) -> Path:
     path = root / context
-    home = path / "HOME.md"
-    if not home.exists():
+    note = context_folder_note_path(path)
+    if not note.exists():
         raise SystemExit(f"Context not found: {context}. Run `vault inventory`.")
-    metadata = frontmatter(home.read_text(encoding="utf-8", errors="replace"))
+    metadata = frontmatter(note.read_text(encoding="utf-8", errors="replace"))
     if str(metadata.get("context_registered", "true")).strip().lower() in {"false", "no", "0"}:
         raise SystemExit(f"Context is unregistered: {context}. Run `vault folder register {context}`.")
     return path
@@ -129,10 +129,10 @@ def list_projects(root: Path, context: str | None) -> int:
     contexts = [context] if context else []
     if not contexts:
         for child in sorted(root.iterdir()):
-            home = child / "HOME.md"
-            if not child.is_dir() or not home.exists():
+            note = context_folder_note_path(child)
+            if not child.is_dir() or not note.exists():
                 continue
-            metadata = frontmatter(home.read_text(encoding="utf-8", errors="replace"))
+            metadata = frontmatter(note.read_text(encoding="utf-8", errors="replace"))
             if str(metadata.get("context_registered", "true")).strip().lower() in {"false", "no", "0"}:
                 continue
             contexts.append(child.name)

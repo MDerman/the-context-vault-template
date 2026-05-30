@@ -7,9 +7,16 @@ import argparse
 import datetime as dt
 import re
 import shlex
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+SCRIPT_DIR = Path(__file__).resolve().parents[1] / "scripts"
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+from script_utils import context_folder_note_path  # noqa: E402
 
 
 MARKER = "managed-by: _master/system/bootstrap/generate_agents.py"
@@ -61,10 +68,10 @@ def discover_context_folders(root: Path) -> list[ContextFolder]:
     for child in sorted(root.iterdir()):
         if not child.is_dir() or child.name.startswith(".") or child.name.startswith("_"):
             continue
-        home = child / "HOME.md"
-        if not home.exists():
+        note = context_folder_note_path(child)
+        if not note.exists():
             continue
-        metadata = simple_frontmatter(home.read_text(encoding="utf-8", errors="replace"))
+        metadata = simple_frontmatter(note.read_text(encoding="utf-8", errors="replace"))
         if not (metadata.get("status") or metadata.get("context_type")):
             continue
         contexts.append(

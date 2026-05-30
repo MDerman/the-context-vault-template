@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from script_utils import resolve_vault_root
+from script_utils import context_folder_note_path, resolve_vault_root
 
 
 DEFAULT_TASK_STATUSES = ["backlog", "up-next", "to-be-resumed", "ongoing", "in-progress", "done", "archived"]
@@ -81,10 +81,10 @@ def discover_contexts(root: Path) -> list[dict[str, Any]]:
     for child in sorted(root.iterdir()):
         if not child.is_dir() or child.name.startswith(".") or child.name.startswith("_"):
             continue
-        home = child / "HOME.md"
-        if not home.exists():
+        note = context_folder_note_path(child)
+        if not note.exists():
             continue
-        metadata = frontmatter(home.read_text(encoding="utf-8", errors="replace"))
+        metadata = frontmatter(note.read_text(encoding="utf-8", errors="replace"))
         if str(metadata.get("context_registered", "true")).strip().lower() in {"false", "no", "0"}:
             continue
         contexts.append(

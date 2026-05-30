@@ -13,7 +13,7 @@ import shutil
 from pathlib import Path
 from typing import Any
 
-from script_utils import resolve_vault_root
+from script_utils import context_folder_note_path, resolve_vault_root
 
 
 DEFAULT_CONFIG = "_master/system/bootstrap/bootstrap-export.json"
@@ -357,11 +357,11 @@ class BootstrapExporter:
             source = self.root / source_name
             target = self.export_root / target_name
             self.ensure_dir(target)
-            home_path = source / "HOME.md"
-            if home_path.exists():
-                self.write_public_home(
-                    home_path,
-                    target / "HOME.md",
+            folder_note_path = context_folder_note_path(source)
+            if folder_note_path.exists():
+                self.write_public_context_folder_note(
+                    folder_note_path,
+                    target / f"{target_name}.md",
                     target_name,
                     item.get("public_home_description", []),
                 )
@@ -375,7 +375,7 @@ class BootstrapExporter:
             if obsidian.is_dir():
                 self.copy_context_obsidian(obsidian, target / "_obsidian")
 
-    def write_public_home(
+    def write_public_context_folder_note(
         self,
         source: Path,
         target: Path,
@@ -386,7 +386,7 @@ class BootstrapExporter:
         frontmatter, _body = split_yaml_frontmatter(text)
         body = f"# {target_name}\n\n{public_description_text(description)}\n"
         rendered = join_frontmatter_and_body(frontmatter, body)
-        self.write_generated_text(target, rendered, f"write public HOME {target}")
+        self.write_generated_text(target, rendered, f"write public context folder note {target}")
 
     def write_public_declaration(self, source: Path, target: Path) -> None:
         text = source.read_text(encoding="utf-8")

@@ -24,7 +24,9 @@
       "*/_obsidian/tasks/**/*.md"
     ],
     "create_if_missing": [
-      "*/HOME.md",
+      "personal/personal.md",
+      "personal-brand/personal-brand.md",
+      "business/business.md",
       "*/_obsidian/bases/*.base",
       "*/_obsidian/bases/**/*.base",
       "*/_obsidian/templates/*.md",
@@ -60,6 +62,9 @@
   "migrations": [
     {
       "path": "_master/system/bootstrap/install_plugins.py"
+    },
+    {
+      "path": "_master/system/migrations/2026_05_30_context_folder_notes.py"
     }
   ]
 }

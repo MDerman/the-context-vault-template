@@ -21,9 +21,9 @@ vault triage prepare
 3. Read `_master/agents/skills/brain-dump-organizer/references/triage-prompt.md`.
 4. Inspect the active routing docs before classifying:
    - `_master/system/context/CONTEXT.md`
-   - `personal/HOME.md`
-   - `personal-brand/HOME.md`
-   - `business/HOME.md`
+   - `personal/personal.md`
+   - `personal-brand/personal-brand.md`
+   - `business/business.md`
    - relevant existing `_obsidian/tasks`
 5. Edit each proposal note for the run:
    - set `route`, `target_context`, `target_kind`, `apply_action`, `priority`, `task_status`, `target_path`, and `confidence`;

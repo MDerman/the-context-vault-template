@@ -42,7 +42,7 @@ Configured context folders:
 - `dev`: development, contracting, software projects, job applications, technical work. Archived by default.
 - `claudeche`: Claudeche workspace. Archived by default.
 
-Each context folder has a `HOME.md` file. Its `status` property controls whether that context folder appears in default generated agent periodic rollups:
+Each context folder has an inside-folder note named after the folder, for example `business/business.md`. Its `status` property controls whether that context folder appears in default generated agent periodic rollups:
 
 - `status: active`: included when the generator is run with no context folder arguments.
 - `status: archived`: still available, but excluded from default rollups.
@@ -62,7 +62,7 @@ The default active working set is `personal`, `personal-brand`, and `business`.
 
 The content-enabled working set is `personal-brand` and `business`.
 
-`HOME.md` is the context folder's local routing map. Its frontmatter is the control panel:
+The context folder note is the local routing map. Its frontmatter is the control panel:
 
 ```yaml
 ---
@@ -80,7 +80,7 @@ Each context folder uses this internal `_obsidian` operating structure:
 
 ```text
 <context-folder>/
-  HOME.md
+  <context-folder>.md
   DECLARATION.md
   _obsidian/
     attachments/
@@ -167,7 +167,7 @@ Fastest setup for joining the same Relay workspace:
 
 Bootstrap export includes plugin metadata/styles and non-sensitive settings, ships source bundles only for Context Nine and Relay, and excludes known sensitive/local plugin config. Users install third-party plugin code locally after setup.
 
-Entity operating-system answers live in `DECLARATION.md` rather than `HOME.md`. `HOME.md` explains what each local folder is for and where to store or find information. Master system notes under `_master/02-Identity.md` and `_master/03-Momentum.md` use Sync Embeds to show enabled declaration sections. Declarations keep one file-title H1 and use H2 for embeddable sections such as `Identity` and `Momentum`, because Sync Embeds section isolation is more reliable below H1. Social Selling uses an H3 under Momentum for personal-brand entities.
+Entity operating-system answers live in `DECLARATION.md` rather than the context folder note. The context folder note explains what each local folder is for and where to store or find information. Master system notes under `_master/02-Identity.md` and `_master/03-Momentum.md` use Sync Embeds to show enabled declaration sections. Declarations keep one file-title H1 and use H2 for embeddable sections such as `Identity` and `Momentum`, because Sync Embeds section isolation is more reliable below H1. Social Selling uses an H3 under Momentum for personal-brand entities.
 
 Reusable cross-context assets, agent skills, Mac automation, scripts, generated outputs, and utility files live under `_master`.
 
@@ -204,7 +204,7 @@ Important paths:
 - `_master/system/scripts/attachments.py`: dry-run, apply, and verify note attachment routing across root folders. Reports and quarantine output go to `~/Downloads/vault-generated/`.
 - `_master/system/scripts/context.py`: creates compact agent-readable context.
 - `_master/system/scripts/folder.py`: creates/registers a new context folder from the scaffold template.
-- `_master/Dashboard.md`: generated refresh dashboard with current periodic, content schedule, context home, and key Base links.
+- `_master/Dashboard.md`: generated refresh dashboard with current periodic, content schedule, context folder note, and key Base links.
 - `_master/_obsidian/bases`: master dashboards.
 - `_master/system/context/*.md`: generated agent-readable system packets and periodic rollups.
 - `_master/_obsidian/bases`: master TaskNotes command views.
@@ -665,7 +665,7 @@ personal-brand -> personal-brand
 business -> business
 ```
 
-The export copies root agent wiring, root `.obsidian` profile files with configured exclusions, `_master` minus generated outputs, empty `_library`, and `_wiki/AGENTS.md`. Context exports copy `HOME.md`, `DECLARATION.md`, `DECLARATION/`, `_obsidian` folder structure, `_obsidian/bases/**/*.base`, and `_obsidian/templates/**/*.md`.
+The export copies root agent wiring, root `.obsidian` profile files with configured exclusions, `_master` minus generated outputs, empty `_library`, and `_wiki/AGENTS.md`. Context exports create public folder notes named after the target folder, copy sanitized `DECLARATION.md`, omit `DECLARATION/`, and copy public `_obsidian` Bases and templates.
 
 The root public `README.md` is exported from `_master/system/bootstrap/README-bootstrap.md`. It documents the new-machine clone-to-iCloud flow. Internal bootstrap/export mechanics live in `_master/system/bootstrap/bootstrapdocs.md`. `--force` mirrors export-owned content into `~/Code/vault-public` without deleting the export root or repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, or contribution docs. Export ownership is tracked in `.bootstrap-export-manifest.json`; legacy exports without a manifest are cleaned at the export-root child level while preserving repo metadata.
 
@@ -688,7 +688,7 @@ vault folder -n new-context-folder -s active
 vault folder -n new-context-folder -s archived
 ```
 
-The add-context-folder script creates the context folder structure directly, writes a status-only `HOME.md`, creates local templates/shared-template links, and reruns bootstrap with the discovered context folder list.
+The add-context-folder script creates the context folder structure directly, writes the context folder note, creates local templates/shared-template links, and reruns bootstrap with the discovered context folder list.
 
 Root `.obsidian` is the live Obsidian profile source. Bootstrap does not copy or patch Obsidian profile settings.
 
@@ -748,7 +748,7 @@ Regenerate them with:
 vault context
 ```
 
-Agents should read context folder `HOME.md` status before assuming a context folder belongs in the default working set.
+Agents should read context folder note status before assuming a context folder belongs in the default working set.
 
 ## Migration Rule
 

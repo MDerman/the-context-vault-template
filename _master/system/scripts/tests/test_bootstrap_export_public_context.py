@@ -16,7 +16,7 @@ from bootstrap_export import BootstrapExporter  # noqa: E402
 
 
 class PublicContextExportTests(unittest.TestCase):
-    def test_context_home_and_declaration_are_sanitized(self) -> None:
+    def test_context_folder_note_and_declaration_are_sanitized(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "source"
             export_root = Path(tmp) / "public"
@@ -26,7 +26,7 @@ class PublicContextExportTests(unittest.TestCase):
                 "{}\n",
                 encoding="utf-8",
             )
-            (source_context / "HOME.md").write_text(
+            (source_context / "business.md").write_text(
                 """---
 status: active
 context_type: business
@@ -86,12 +86,13 @@ Private purpose detail should not be exported.
             )
             exporter.copy_context_folders()
 
-            home = (export_root / "business" / "HOME.md").read_text(encoding="utf-8")
-            self.assertIn("status: active", home)
-            self.assertIn("# business", home)
-            self.assertIn("This is your business home.", home)
-            self.assertNotIn("Start Here", home)
-            self.assertNotIn("Private routing map", home)
+            context_note = (export_root / "business" / "business.md").read_text(encoding="utf-8")
+            self.assertIn("status: active", context_note)
+            self.assertIn("# business", context_note)
+            self.assertIn("This is your business home.", context_note)
+            self.assertNotIn("Start Here", context_note)
+            self.assertNotIn("Private routing map", context_note)
+            self.assertFalse((export_root / "business" / "HOME.md").exists())
 
             declaration = (export_root / "business" / "DECLARATION.md").read_text(
                 encoding="utf-8",

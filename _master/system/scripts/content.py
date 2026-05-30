@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from script_utils import configured_context_folders, resolve_vault_root
+from script_utils import configured_context_folders, context_folder_note_path, resolve_vault_root
 
 
 DEFAULT_ENTITIES = [
@@ -100,14 +100,14 @@ def strip_generated_marker_comment(text: str) -> str:
 
 
 def entity_status(root: Path, entity: str) -> str:
-    path = root / entity / "HOME.md"
+    path = context_folder_note_path(root / entity)
     if not path.exists():
         return ""
     return str(simple_frontmatter(path.read_text(encoding="utf-8")).get("status", "")).strip().lower()
 
 
 def entity_content_enabled(root: Path, entity: str) -> bool:
-    path = root / entity / "HOME.md"
+    path = context_folder_note_path(root / entity)
     if not path.exists():
         return False
     return bool(simple_frontmatter(path.read_text(encoding="utf-8")).get("content_enabled", False))
@@ -131,7 +131,7 @@ def resolve_entities(root: Path, configured: list[str], explicit: list[str], inc
         if include_all or entity_status(root, entity) == "active":
             selected.append(entity)
     if not selected:
-        raise SystemExit("No context folders selected. Mark a HOME.md as status: active, pass --context-folders, or use --all.")
+        raise SystemExit("No context folders selected. Mark a context folder note as status: active, pass --context-folders, or use --all.")
     return selected
 
 

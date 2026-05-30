@@ -54,13 +54,26 @@ def simple_frontmatter(text: str) -> dict[str, str]:
     return data
 
 
+def context_folder_note_path(context_root: Path) -> Path:
+    """Return the inside-folder note path used as a context folder control panel."""
+    return context_root / f"{context_root.name}.md"
+
+
+def context_note_path(root: Path, context: str) -> Path:
+    return context_folder_note_path(root / context)
+
+
+def context_folder_metadata(context_root: Path) -> dict[str, str]:
+    note = context_folder_note_path(context_root)
+    if not note.is_file():
+        return {}
+    return simple_frontmatter(note.read_text(encoding="utf-8", errors="replace"))
+
+
 def is_context_folder(path: Path) -> bool:
     if not path.is_dir() or path.name.startswith(".") or path.name.startswith("_"):
         return False
-    home = path / "HOME.md"
-    if not home.is_file():
-        return False
-    metadata = simple_frontmatter(home.read_text(encoding="utf-8", errors="replace"))
+    metadata = context_folder_metadata(path)
     registered = str(metadata.get("context_registered", "true")).strip().lower()
     if registered in {"false", "no", "0"}:
         return False
@@ -68,7 +81,7 @@ def is_context_folder(path: Path) -> bool:
 
 
 def discover_context_folders(root: Path) -> list[str]:
-    """Return configured context folders discovered from HOME.md metadata."""
+    """Return configured context folders discovered from folder-note metadata."""
     contexts: list[str] = []
     for child in sorted(root.iterdir()):
         if is_context_folder(child):

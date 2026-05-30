@@ -9,7 +9,7 @@ import re
 import sys
 from pathlib import Path
 
-from script_utils import configured_context_folders, resolve_vault_root
+from script_utils import configured_context_folders, context_folder_note_path, resolve_vault_root
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
@@ -94,7 +94,7 @@ def agent_periodic_path(root: Path, period_id: str) -> Path:
 
 
 def entity_status(root: Path, entity: str) -> str:
-    path = root / entity / "HOME.md"
+    path = context_folder_note_path(root / entity)
     if not path.exists():
         return ""
     return parse_frontmatter(path.read_text(encoding="utf-8")).get("status", "").strip().lower()
@@ -126,7 +126,7 @@ def resolve_entities(root: Path, configured: list[str], explicit: list[str], inc
             selected.append(entity)
 
     if not selected:
-        raise SystemExit("No context folders selected. Mark a context folder HOME.md as status: active, pass --context-folders, or use --all.")
+        raise SystemExit("No context folders selected. Mark a context folder note as status: active, pass --context-folders, or use --all.")
     return selected
 
 

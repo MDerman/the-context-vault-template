@@ -259,9 +259,9 @@ class Bootstrap:
         if not self.dry_run:
             path.write_text(content, encoding="utf-8")
 
-    def write_entity_home(self, entity: str, status: str, context_type: str, content_enabled: bool, default_capture: bool) -> None:
-        path = self.root / entity / "HOME.md"
-        content = entity_home(status, context_type, content_enabled, default_capture)
+    def write_context_folder_note(self, entity: str, status: str, context_type: str, content_enabled: bool, default_capture: bool) -> None:
+        path = context_folder_note_path(self.root, entity)
+        content = context_folder_note(status, context_type, content_enabled, default_capture)
         if not path.exists():
             self.ensure_dir(path.parent)
             self.log(f"write {rel(path, self.root)}")
@@ -272,7 +272,7 @@ class Bootstrap:
         if not any(marker in existing for marker in BOOTSTRAP_MARKERS) and not has_frontmatter(existing):
             self.log(f"skip existing non-managed file {rel(path, self.root)}")
             return
-        content = update_entity_home(existing, status, context_type, content_enabled, default_capture)
+        content = update_context_folder_note(existing, status, context_type, content_enabled, default_capture)
         if existing == content:
             return
         self.log(f"write {rel(path, self.root)}")
@@ -360,13 +360,13 @@ class Bootstrap:
                 MANAGED_MARKERS,
             )
 
-    def setup_entity_homes(self) -> None:
+    def setup_context_folder_notes(self) -> None:
         active = set(self.active_entities)
         content = set(self.content_entities)
         for entity in self.entities:
             status = "active" if entity in active else "archived"
             context_type = self.context_types.get(entity, "business")
-            self.write_entity_home(entity, status, context_type, entity in content, entity == self.default_entity)
+            self.write_context_folder_note(entity, status, context_type, entity in content, entity == self.default_entity)
 
     def setup_agent_infrastructure(self) -> None:
         if self.coding_agents:
@@ -600,7 +600,7 @@ class Bootstrap:
     def run(self) -> None:
         self.setup_directories()
         self.cleanup_retired_monthly_periodics()
-        self.setup_entity_homes()
+        self.setup_context_folder_notes()
         self.setup_agent_infrastructure()
         self.cleanup_obsolete_context_folder_workspace_artifacts()
         self.setup_context_template_dirs()
@@ -618,6 +618,10 @@ def rel(path: Path, root: Path) -> str:
         return str(path.relative_to(root))
     except ValueError:
         return str(path)
+
+
+def context_folder_note_path(root: Path, entity: str) -> Path:
+    return root / entity / f"{entity}.md"
 
 
 def add_or_update_task_kanban_option(
@@ -762,7 +766,7 @@ def inline_code_list(items: list[str]) -> str:
     return ", ".join(f"`{item}`" for item in items)
 
 
-def entity_home(status: str, context_type: str, content_enabled: bool = False, default_capture: bool = False) -> str:
+def context_folder_note(status: str, context_type: str, content_enabled: bool = False, default_capture: bool = False) -> str:
     content_value = "true" if content_enabled else "false"
     default_value = "true" if default_capture else "false"
     return f"""---
@@ -826,7 +830,7 @@ def split_frontmatter(existing: str) -> tuple[list[str], str]:
     return existing[4:end].splitlines(), body
 
 
-def update_entity_home(existing: str, status: str, context_type: str, content_enabled: bool, default_capture: bool) -> str:
+def update_context_folder_note(existing: str, status: str, context_type: str, content_enabled: bool, default_capture: bool) -> str:
     lines, body = split_frontmatter(existing)
     desired = {
         "status": status,
@@ -897,7 +901,7 @@ Default active context folders:
 
 {active_lines}
 
-Each context folder has a `HOME.md` file. Its `status` property controls the default agent periodic rollups:
+Each context folder has an inside-folder note named after the folder, for example `business/business.md`. Its `status` property controls the default agent periodic rollups:
 
 - `status: active`: included when you run the periodic generator with no context folder args.
 - `status: archived`: kept available but excluded from default rollups.
@@ -914,7 +918,7 @@ Content-enabled context folders:
 
 {content_lines}
 
-`HOME.md` can keep a short body, but the frontmatter is the control panel:
+The context folder note can keep a short body, but the frontmatter is the control panel:
 
 ```yaml
 ---
@@ -1018,7 +1022,7 @@ vault periodic --context-folders dev,claudeche
 
 `context.py` calls this generator and the content schedule generator for the default refresh path, so one context refresh updates context, current 4-week content schedules, realized system notes, and current agent periodic rollups.
 
-No args means active context folders from `HOME.md`. `--all` means all configured context folders. `--context-folders` means only that one-off context folder list.
+No args means active context folders from context folder notes. `--all` means all configured context folders. `--context-folders` means only that one-off context folder list.
 
 Periodic cleanup:
 
@@ -1835,10 +1839,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--context-folders", dest="entities", metavar="CONTEXT_FOLDERS", help="Comma-separated context folders.")
     parser.add_argument("--sub-vaults", dest="entities", help=argparse.SUPPRESS)
     parser.add_argument("--entities", dest="entities", help=argparse.SUPPRESS)
-    parser.add_argument("--active-context-folders", dest="active_entities", metavar="CONTEXT_FOLDERS", help="Comma-separated context folders to mark active in HOME.md.")
+    parser.add_argument("--active-context-folders", dest="active_entities", metavar="CONTEXT_FOLDERS", help="Comma-separated context folders to mark active in folder notes.")
     parser.add_argument("--active-sub-vaults", dest="active_entities", help=argparse.SUPPRESS)
     parser.add_argument("--active-entities", dest="active_entities", help=argparse.SUPPRESS)
-    parser.add_argument("--content-context-folders", dest="content_entities", metavar="CONTEXT_FOLDERS", help="Comma-separated context folders to mark content_enabled in HOME.md.")
+    parser.add_argument("--content-context-folders", dest="content_entities", metavar="CONTEXT_FOLDERS", help="Comma-separated context folders to mark content_enabled in folder notes.")
     parser.add_argument("--content-sub-vaults", dest="content_entities", help=argparse.SUPPRESS)
     parser.add_argument("--content-entities", dest="content_entities", help=argparse.SUPPRESS)
     parser.add_argument("--context-types", dest="context_types", metavar="CONTEXT_TYPES", help="Comma-separated folder:type entries. Types: personal, personal-brand, business.")

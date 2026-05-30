@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
-from script_utils import resolve_vault_root
+from script_utils import context_folder_note_path, resolve_vault_root
 
 
 API_ROOT = "https://www.googleapis.com/calendar/v3"
@@ -651,10 +651,10 @@ def active_context_folders(root: Path) -> list[Path]:
     for folder in sorted(root.iterdir()):
         if not folder.is_dir() or folder.name.startswith(".") or folder.name.startswith("_"):
             continue
-        home = folder / "HOME.md"
-        if not home.exists():
+        note = context_folder_note_path(folder)
+        if not note.exists():
             continue
-        text = home.read_text(encoding="utf-8")
+        text = note.read_text(encoding="utf-8")
         parsed = parse_frontmatter(text)
         if parsed and parsed[1].get("context_registered", "true").strip().lower() in {"false", "no", "0"}:
             continue

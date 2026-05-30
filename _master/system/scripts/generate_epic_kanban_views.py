@@ -16,7 +16,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from script_utils import resolve_vault_root
+from script_utils import context_folder_note_path, resolve_vault_root
 
 
 MANAGED_MARKER = "managed-by: _master/system/scripts/generate_epic_kanban_views.py"
@@ -97,10 +97,10 @@ def frontmatter(text: str) -> dict[str, str]:
 
 
 def context_folder_status(context_root: Path) -> str:
-    home = context_root / "HOME.md"
-    if not home.exists():
+    note = context_folder_note_path(context_root)
+    if not note.exists():
         return ""
-    metadata = frontmatter(home.read_text(encoding="utf-8", errors="replace"))
+    metadata = frontmatter(note.read_text(encoding="utf-8", errors="replace"))
     if str(metadata.get("context_registered", "true")).strip().lower() in {"false", "no", "0"}:
         return ""
     return metadata.get("status", "")
@@ -114,7 +114,7 @@ def discover_context_folders(root: Path, requested: str | None, include_archived
     for child in sorted(root.iterdir()):
         if not child.is_dir() or child.name.startswith(".") or child.name.startswith("_"):
             continue
-        if not (child / "HOME.md").is_file():
+        if not context_folder_note_path(child).is_file():
             continue
         status = context_folder_status(child)
         if include_archived or status == "active":

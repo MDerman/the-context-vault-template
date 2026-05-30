@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from script_utils import configured_context_folders, resolve_vault_root
+from script_utils import configured_context_folders, context_folder_note_path, resolve_vault_root
 
 
 DEFAULT_ENTITIES = [
@@ -207,28 +207,28 @@ def cleanup_legacy_agent_system_notes(root: Path) -> None:
 
 
 def entity_status(root: Path, entity: str) -> str:
-    path = root / entity / "HOME.md"
+    path = context_folder_note_path(root / entity)
     if not path.exists():
         return ""
     return str(simple_frontmatter(path.read_text(encoding="utf-8")).get("status", "")).strip().lower()
 
 
 def entity_content_enabled(root: Path, entity: str) -> bool:
-    path = root / entity / "HOME.md"
+    path = context_folder_note_path(root / entity)
     if not path.exists():
         return False
     return bool(simple_frontmatter(path.read_text(encoding="utf-8")).get("content_enabled", False))
 
 
 def entity_context_type(root: Path, entity: str) -> str:
-    path = root / entity / "HOME.md"
+    path = context_folder_note_path(root / entity)
     if not path.exists():
         return ""
     return str(simple_frontmatter(path.read_text(encoding="utf-8")).get("context_type", "")).strip().lower()
 
 
 def entity_default_capture(root: Path, entity: str) -> bool:
-    path = root / entity / "HOME.md"
+    path = context_folder_note_path(root / entity)
     if not path.exists():
         return False
     return bool(simple_frontmatter(path.read_text(encoding="utf-8")).get("default_capture", False))
@@ -498,7 +498,7 @@ def dashboard_markdown(
         obsidian_link(schedule["path"], schedule["path"].rsplit("/", 1)[-1].removesuffix(".md"))
         for schedule in content_schedules
     ]
-    home_lines = [obsidian_link(f"{entity}/HOME.md", entity) for entity in selected_entities]
+    context_note_lines = [obsidian_link(f"{entity}/{entity}.md", entity) for entity in selected_entities]
     agent_periodics = agent_periodic_paths(periods)
     standing_lines = [
         obsidian_link("_master/system/context/01-Context.md", "01-Context"),
@@ -536,10 +536,9 @@ Periodic
 Inbox
 {markdown_list(inbox_lines)}
 
-#### Home Folders
-a.k.a context folders
+#### Context Folder Notes
 
-{markdown_list(home_lines)}
+{markdown_list(context_note_lines)}
 
 {chr(10).join(context_lines).rstrip() if context_lines else "- None"}
 """
@@ -640,6 +639,9 @@ def main(argv: list[str] | None = None) -> None:
         "agent_system_notes": system_packets,
         "entity_declarations": {
             entity: f"{entity}/DECLARATION.md" for entity in selected_entities
+        },
+        "context_folder_notes": {
+            entity: f"{entity}/{entity}.md" for entity in selected_entities
         },
         "agent_periodic_notes": {
             period: path for period, path in agent_periodic_paths(periods).items()

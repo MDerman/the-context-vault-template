@@ -178,6 +178,26 @@ def move_or_merge_folder(root: Path, old: str, new: str, dry_run: bool, missing_
     return False, True
 
 
+def rename_inside_folder_note(root: Path, old: str, new: str, dry_run: bool) -> None:
+    context_root = root / (old if dry_run else new)
+    source = context_root / f"{old}.md"
+    target = root / new / f"{new}.md"
+    if source.exists():
+        if target.exists() and source.resolve() != target.resolve():
+            raise SystemExit(
+                "Cannot rename context folder note because target already exists.\n"
+                f"Source: {rel(root, source)}\n"
+                f"Target: {rel(root, target)}"
+            )
+        print(f"move {rel(root, source)} -> {rel(root, target)}")
+        if not dry_run:
+            source.rename(target)
+        return
+
+    if not target.exists():
+        raise SystemExit(f"Context folder note missing after rename: {rel(root, target)}")
+
+
 def replace_common_structured(text: str, old: str, new: str) -> str:
     escaped = re.escape(old)
     text = re.sub(rf"(!?\[\[){escaped}(?=([/#|\]]))", rf"\1{new}", text)
@@ -302,6 +322,7 @@ def rename_context_folder(root: Path, old: str, new: str, dry_run: bool = False,
         print(f"no-op context rename: {old}")
         return RenameResult(moved=False, merged=False, rewritten_files=())
     moved, merged = move_or_merge_folder(root, old, new, dry_run, missing_ok)
+    rename_inside_folder_note(root, old, new, dry_run)
     rewritten_files = rewrite_structured_references(root, old, new, dry_run)
     if dry_run:
         print(f"[dry-run] {len(rewritten_files)} files would be rewritten")
