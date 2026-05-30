@@ -8,7 +8,7 @@ default_capture: false
 
 ## Add This Shared Folder To Another Vault
 
-If this folder was shared into another bootstrap vault through Relay, run from that vault root:
+If this folder was shared into another bootstrap vault through Relay, run `Vault Folder Register` from the Obsidian command palette and enter `business`, or run this from that vault root:
 
 ```bash
 cd "$(vault root)"

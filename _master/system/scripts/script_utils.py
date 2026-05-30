@@ -61,6 +61,9 @@ def is_context_folder(path: Path) -> bool:
     if not home.is_file():
         return False
     metadata = simple_frontmatter(home.read_text(encoding="utf-8", errors="replace"))
+    registered = str(metadata.get("context_registered", "true")).strip().lower()
+    if registered in {"false", "no", "0"}:
+        return False
     return bool(metadata.get("status") or metadata.get("context_type"))
 
 

@@ -85,6 +85,8 @@ def discover_contexts(root: Path) -> list[dict[str, Any]]:
         if not home.exists():
             continue
         metadata = frontmatter(home.read_text(encoding="utf-8", errors="replace"))
+        if str(metadata.get("context_registered", "true")).strip().lower() in {"false", "no", "0"}:
+            continue
         contexts.append(
             {
                 "name": child.name,

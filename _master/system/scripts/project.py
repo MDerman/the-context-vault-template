@@ -56,8 +56,12 @@ def safe_filename(title: str) -> str:
 
 def ensure_context(root: Path, context: str) -> Path:
     path = root / context
-    if not (path / "HOME.md").exists():
+    home = path / "HOME.md"
+    if not home.exists():
         raise SystemExit(f"Context not found: {context}. Run `vault inventory`.")
+    metadata = frontmatter(home.read_text(encoding="utf-8", errors="replace"))
+    if str(metadata.get("context_registered", "true")).strip().lower() in {"false", "no", "0"}:
+        raise SystemExit(f"Context is unregistered: {context}. Run `vault folder register {context}`.")
     return path
 
 
@@ -122,9 +126,16 @@ def create_project(root: Path, context: str, title: str, status: str, epic_name:
 
 
 def list_projects(root: Path, context: str | None) -> int:
-    contexts = [context] if context else [
-        child.name for child in sorted(root.iterdir()) if child.is_dir() and (child / "HOME.md").exists()
-    ]
+    contexts = [context] if context else []
+    if not contexts:
+        for child in sorted(root.iterdir()):
+            home = child / "HOME.md"
+            if not child.is_dir() or not home.exists():
+                continue
+            metadata = frontmatter(home.read_text(encoding="utf-8", errors="replace"))
+            if str(metadata.get("context_registered", "true")).strip().lower() in {"false", "no", "0"}:
+                continue
+            contexts.append(child.name)
     for context_name in contexts:
         folder = root / context_name / "_obsidian" / "projects"
         print(f"{context_name}:")

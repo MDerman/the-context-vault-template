@@ -79,6 +79,24 @@ vault folder register business
 
 `register` is an alias for the create/register path. It preserves the existing folder contents, reads status, context type, and content settings from `HOME.md`, regenerates context-aware Obsidian bases/templates, and refreshes generated agent files.
 
+Unregister a context folder while keeping its files:
+
+```bash
+vault folder unregister business --dry-run
+vault folder unregister business
+```
+
+Unregister writes `context_registered: false` to the folder's `HOME.md`, then regenerates vault context wiring so dashboards, agent files, and default script discovery ignore it. Re-register later with `vault folder register business`.
+
+Remove a context folder from disk:
+
+```bash
+vault folder remove business --dry-run
+vault folder remove business --apply
+```
+
+`remove` is dry-run by default and only deletes files with `--apply`.
+
 Root `AGENTS.md` is generated from:
 
 ```text

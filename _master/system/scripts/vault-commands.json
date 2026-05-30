@@ -3,7 +3,22 @@
     "id": "refresh",
     "label": "Refresh",
     "description": "Ingest configured Brain Dump, then regenerate agent context, the dashboard, content schedules, and current agent periodic rollups.",
-    "args": ["refresh"]
+    "args": ["refresh"],
+    "palette": true
+  },
+  {
+    "id": "folder-register",
+    "label": "Folder Register",
+    "description": "Register an existing context folder and regenerate vault wiring.",
+    "args": ["folder", "register"],
+    "palette": true,
+    "promptArgs": [
+      {
+        "label": "Context folder",
+        "placeholder": "business",
+        "argName": "name"
+      }
+    ]
   },
   {
     "id": "sync",
@@ -112,6 +127,13 @@
     "label": "Upgrade Dry Run",
     "description": "Preview public bootstrap vault updates using hidden upstream Git state and write an upgrade report.",
     "args": ["upgrade", "--dry-run"]
+  },
+  {
+    "id": "upgrade-apply",
+    "label": "Upgrade",
+    "description": "Apply public bootstrap vault updates using hidden upstream Git state.",
+    "args": ["upgrade", "--apply"],
+    "palette": true
   },
   {
     "id": "upgrade-doctor",

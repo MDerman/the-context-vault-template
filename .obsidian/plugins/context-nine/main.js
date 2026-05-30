@@ -1258,63 +1258,31 @@ var DEFAULT_SETTINGS = {
 // src/vault-cockpit.ts
 var import_obsidian5 = require("obsidian");
 
-// src/vault-args.ts
-function parseAdditionalArgs(input) {
-  const args = [];
-  let current = "";
-  let quote = null;
-  let escaping = false;
-  for (const char of input) {
-    if (escaping) {
-      current += char;
-      escaping = false;
-      continue;
-    }
-    if (char === "\\") {
-      escaping = true;
-      continue;
-    }
-    if (quote) {
-      if (char === quote) {
-        quote = null;
-      } else {
-        current += char;
-      }
-      continue;
-    }
-    if (char === "'" || char === '"') {
-      quote = char;
-      continue;
-    }
-    if (/\s/.test(char)) {
-      if (current.length > 0) {
-        args.push(current);
-        current = "";
-      }
-      continue;
-    }
-    current += char;
-  }
-  if (escaping) {
-    current += "\\";
-  }
-  if (quote) {
-    return { args: [], error: `Unterminated ${quote} quote.` };
-  }
-  if (current.length > 0) {
-    args.push(current);
-  }
-  return { args };
-}
-
 // src/vault-command-metadata.ts
-var VAULT_COMMAND_METADATA_PATH = "master/system/scripts/vault-commands.json";
+var VAULT_COMMAND_METADATA_PATH = "_master/system/scripts/vault-commands.json";
+var LEGACY_VAULT_COMMAND_METADATA_PATH = "master/system/scripts/vault-commands.json";
 var FALLBACK_VAULT_COMMANDS = [
   {
     id: "refresh",
     label: "Refresh",
     description: "Ingest configured Apple Notes, then regenerate agent context.",
-    args: ["refresh"]
+    args: ["refresh"],
+    palette: true
+  },
+  {
+    id: "folder-register",
+    label: "Folder Register",
+    description: "Register an existing context folder and regenerate vault wiring.",
+    args: ["folder", "register"],
+    palette: true,
+    promptArgs: [{ label: "Context folder", placeholder: "impression", argName: "name" }]
+  },
+  {
+    id: "upgrade",
+    label: "Upgrade",
+    description: "Apply public bootstrap vault updates.",
+    args: ["upgrade", "--apply"],
+    palette: true
   },
   {
     id: "sync",
@@ -1394,10 +1362,15 @@ async function loadVaultCommandMetadata(app) {
     const json = await app.vault.adapter.read(VAULT_COMMAND_METADATA_PATH);
     return parseVaultCommandMetadata(json);
   } catch (error) {
-    return {
-      commands: FALLBACK_VAULT_COMMANDS,
-      warning: `Could not read ${VAULT_COMMAND_METADATA_PATH}: ${messageForError(error)}`
-    };
+    try {
+      const json = await app.vault.adapter.read(LEGACY_VAULT_COMMAND_METADATA_PATH);
+      return parseVaultCommandMetadata(json);
+    } catch (e) {
+      return {
+        commands: FALLBACK_VAULT_COMMANDS,
+        warning: `Could not read ${VAULT_COMMAND_METADATA_PATH}: ${messageForError(error)}`
+      };
+    }
   }
 }
 function normalizeCommand(value) {
@@ -1410,16 +1383,40 @@ function normalizeCommand(value) {
   if (value.aliases !== void 0 && (!Array.isArray(value.aliases) || !value.aliases.every((alias) => typeof alias === "string"))) {
     return null;
   }
+  if (value.cockpit !== void 0 && typeof value.cockpit !== "boolean") {
+    return null;
+  }
+  if (value.palette !== void 0 && typeof value.palette !== "boolean") {
+    return null;
+  }
+  if (value.promptArgs !== void 0 && (!Array.isArray(value.promptArgs) || !value.promptArgs.every(isPromptArg))) {
+    return null;
+  }
   return {
     id: value.id,
     label: value.label,
     description: value.description,
     args: value.args,
-    aliases: value.aliases
+    aliases: value.aliases,
+    cockpit: value.cockpit,
+    palette: value.palette,
+    promptArgs: value.promptArgs
   };
 }
 function isRecord(value) {
   return typeof value === "object" && value !== null;
+}
+function isPromptArg(value) {
+  if (!isRecord(value) || typeof value.label !== "string") {
+    return false;
+  }
+  if (value.placeholder !== void 0 && typeof value.placeholder !== "string") {
+    return false;
+  }
+  if (value.argName !== void 0 && typeof value.argName !== "string") {
+    return false;
+  }
+  return true;
 }
 function messageForError(error) {
   return error instanceof Error ? error.message : String(error);
@@ -1440,7 +1437,7 @@ var VaultCommandRunner = class {
       return false;
     }
     const startedAt = /* @__PURE__ */ new Date();
-    const resolvedCommand = command === "vault" ? (0, import_path.join)(cwd, "master/system/scripts/vault.py") : command;
+    const resolvedCommand = command === "vault" ? (0, import_path.join)(cwd, "_master/system/scripts/vault.py") : command;
     events.onStart({ spec, command: resolvedCommand, cwd, startedAt });
     const child = (0, import_child_process.spawn)(resolvedCommand, spec.args, {
       cwd,
@@ -1487,7 +1484,6 @@ var VaultCockpitView = class extends import_obsidian5.ItemView {
     this.plugin = plugin;
     this.runner = new VaultCommandRunner();
     this.commands = FALLBACK_VAULT_COMMANDS;
-    this.metadataWarning = null;
     this.status = "idle";
     this.activeCommandId = null;
     this.actionsExpanded = false;
@@ -1506,12 +1502,10 @@ var VaultCockpitView = class extends import_obsidian5.ItemView {
     return "square-terminal";
   }
   async onOpen() {
-    var _a;
     const result = await loadVaultCommandMetadata(this.app);
     this.commands = result.commands;
-    this.metadataWarning = (_a = result.warning) != null ? _a : null;
-    if (this.metadataWarning) {
-      this.logEntries.push({ stream: "system", text: `Warning: ${this.metadataWarning}
+    if (result.warning) {
+      this.logEntries.push({ stream: "system", text: `Warning: ${result.warning}
 ` });
     }
     this.render();
@@ -1533,27 +1527,12 @@ var VaultCockpitView = class extends import_obsidian5.ItemView {
     }
     this.statusEl = primaryRow.createDiv({ cls: "omp-vault-cockpit-status", text: labelForStatus(this.status) });
     this.statusEl.dataset.status = this.status;
-    const commitButton = primaryRow.createEl("button", {
-      cls: "omp-vault-cockpit-actions-toggle",
-      attr: {
-        "aria-label": "Git commit",
-        title: "Git commit"
-      }
-    });
-    commitButton.createSpan({
-      cls: "omp-vault-cockpit-actions-toggle-icon",
-      text: "\u2713"
-    });
-    commitButton.addEventListener("click", () => {
-      this.runGitCommit();
-    });
-    this.buttons.set("git-commit", commitButton);
     const actionsToggle = primaryRow.createEl("button", {
       cls: "omp-vault-cockpit-actions-toggle",
       attr: {
-        "aria-label": this.actionsExpanded ? "Hide vault actions" : "Show vault actions",
+        "aria-label": this.actionsExpanded ? "Hide console controls" : "Show console controls",
         "aria-expanded": String(this.actionsExpanded),
-        title: this.actionsExpanded ? "Hide vault actions" : "Show vault actions"
+        title: this.actionsExpanded ? "Hide console controls" : "Show console controls"
       }
     });
     actionsToggle.createSpan({
@@ -1565,11 +1544,12 @@ var VaultCockpitView = class extends import_obsidian5.ItemView {
       this.render();
     });
     if (this.actionsExpanded) {
-      this.renderCommandSections(containerEl);
+      this.logContainerEl = containerEl.createDiv({ cls: "omp-vault-cockpit-output" });
+      this.renderOutput();
+    } else {
+      this.logEl = null;
     }
-    this.logContainerEl = containerEl.createDiv({ cls: "omp-vault-cockpit-output" });
     this.renderStatus();
-    this.renderOutput();
   }
   createCommandButton(parent, command, extraClass = "") {
     const button = parent.createEl("button", {
@@ -1580,16 +1560,13 @@ var VaultCockpitView = class extends import_obsidian5.ItemView {
         "aria-label": command.description
       }
     });
-    button.addEventListener("click", (event) => {
-      if (event.metaKey) {
-        new VaultArgsModal(this.app, command, (extraArgs) => {
-          this.runCommand(command, extraArgs);
-        }).open();
-        return;
-      }
+    button.addEventListener("click", () => {
       this.runCommand(command);
     });
     return button;
+  }
+  findCommand(id) {
+    return this.commands.find((command) => command.id === id);
   }
   runGitCommit() {
     if (this.runner.running) {
@@ -1637,54 +1614,6 @@ $ git add -A && git commit -m ${shellQuote(message)}
     if (!started) {
       new import_obsidian5.Notice("A vault command is already running.");
     }
-  }
-  renderCommandSections(containerEl) {
-    var _a;
-    const sections = [
-      {
-        title: "Maintenance",
-        commands: ["sync", "context", "content"]
-      },
-      {
-        title: "Attachments",
-        commands: ["attachments-dry-run", "attachments-apply"]
-      },
-      {
-        title: "System",
-        commands: ["profile"]
-      }
-    ];
-    const commandList = containerEl.createDiv({ cls: "omp-vault-cockpit-actions" });
-    const primaryCommand = (_a = this.findCommand("refresh")) != null ? _a : this.commands[0];
-    const renderedIds = new Set(primaryCommand ? [primaryCommand.id] : []);
-    for (const section of sections) {
-      const commands = section.commands.map((id) => this.findCommand(id)).filter((command) => Boolean(command));
-      if (commands.length === 0) {
-        continue;
-      }
-      const sectionEl2 = commandList.createDiv({ cls: "omp-vault-cockpit-section" });
-      sectionEl2.createDiv({ cls: "omp-vault-cockpit-section-title", text: section.title });
-      const grid2 = sectionEl2.createDiv({ cls: "omp-vault-cockpit-grid" });
-      for (const command of commands) {
-        const button = this.createCommandButton(grid2, command);
-        this.buttons.set(command.id, button);
-        renderedIds.add(command.id);
-      }
-    }
-    const uncategorized = this.commands.filter((command) => !renderedIds.has(command.id));
-    if (uncategorized.length === 0) {
-      return;
-    }
-    const sectionEl = commandList.createDiv({ cls: "omp-vault-cockpit-section" });
-    sectionEl.createDiv({ cls: "omp-vault-cockpit-section-title", text: "Other" });
-    const grid = sectionEl.createDiv({ cls: "omp-vault-cockpit-grid" });
-    for (const command of uncategorized) {
-      const button = this.createCommandButton(grid, command);
-      this.buttons.set(command.id, button);
-    }
-  }
-  findCommand(id) {
-    return this.commands.find((command) => command.id === id);
   }
   runCommand(command, extraArgs = []) {
     if (this.runner.running) {
@@ -1758,21 +1687,16 @@ $ ${event.command} ${event.spec.args.join(" ")}
     for (const [id, button] of this.buttons) {
       button.disabled = this.status === "running" && id === this.activeCommandId;
     }
-    this.renderOutput();
   }
   renderOutput() {
     if (!this.logContainerEl) {
       return;
     }
     this.logContainerEl.empty();
-    if (!this.actionsExpanded) {
-      this.logEl = null;
-      return;
-    }
     const row = this.logContainerEl.createDiv({ cls: "omp-vault-cockpit-output-row" });
     const toggle = row.createEl("button", {
       cls: "omp-vault-cockpit-output-toggle",
-      text: `${this.outputExpanded ? "Hide" : "Show"} Output`,
+      text: `${this.outputExpanded ? "Hide" : "Show"} Console Output`,
       attr: {
         "aria-expanded": String(this.outputExpanded)
       }
@@ -1781,12 +1705,12 @@ $ ${event.command} ${event.spec.args.join(" ")}
       this.outputExpanded = !this.outputExpanded;
       this.renderOutput();
     });
-    if (this.metadataWarning) {
-      this.warningEl = this.logContainerEl.createDiv({
-        cls: "omp-vault-cockpit-warning",
-        text: this.metadataWarning
-      });
-    }
+    const commitButton = row.createEl("button", { cls: "omp-vault-cockpit-git-commit", text: "Git Commit" });
+    commitButton.disabled = this.status === "running";
+    commitButton.addEventListener("click", () => this.runGitCommit());
+    this.buttons.set("git-commit", commitButton);
+    this.statusEl = row.createDiv({ cls: "omp-vault-cockpit-status", text: labelForStatus(this.status) });
+    this.statusEl.dataset.status = this.status;
     if (!this.outputExpanded) {
       this.logEl = null;
       return;
@@ -1807,47 +1731,6 @@ $ ${event.command} ${event.spec.args.join(" ")}
       line.setText(entry.text);
     }
     this.logEl.scrollTop = this.logEl.scrollHeight;
-  }
-};
-var VaultArgsModal = class extends import_obsidian5.Modal {
-  constructor(app, command, onSubmit) {
-    super(app);
-    this.command = command;
-    this.onSubmit = onSubmit;
-    this.value = "";
-  }
-  onOpen() {
-    this.contentEl.empty();
-    this.containerEl.addClass("omp-modal");
-    this.titleEl.setText(`${this.command.label} arguments`);
-    this.contentEl.createEl("p", {
-      text: `Base command: vault ${this.command.args.join(" ")}`
-    });
-    new import_obsidian5.Setting(this.contentEl).setName("Additional arguments").addText((text) => {
-      text.setPlaceholder("--flag value").onChange((value) => {
-        this.value = value;
-      });
-      text.inputEl.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-          event.preventDefault();
-          this.submit();
-        }
-      });
-    });
-    const buttons = this.contentEl.createDiv({ cls: "omp-button-row" });
-    buttons.createEl("button", { text: "Cancel" }).addEventListener("click", () => this.close());
-    const run = buttons.createEl("button", { text: "Run" });
-    run.addClass("mod-cta");
-    run.addEventListener("click", () => this.submit());
-  }
-  submit() {
-    const parsed = parseAdditionalArgs(this.value);
-    if (parsed.error) {
-      new import_obsidian5.Notice(parsed.error);
-      return;
-    }
-    this.close();
-    this.onSubmit(parsed.args);
   }
 };
 function labelForStatus(status) {
@@ -3148,6 +3031,7 @@ var ContextNinePlugin = class extends import_obsidian9.Plugin {
         void this.openVaultCockpit();
       }
     });
+    await this.registerVaultPaletteCommands();
     this.addCommand({
       id: "focus-main-pane-1",
       name: "Focus first main pane",
@@ -3286,21 +3170,58 @@ var ContextNinePlugin = class extends import_obsidian9.Plugin {
     return (_b = (_a = adapter.getBasePath) == null ? void 0 : _a.call(adapter)) != null ? _b : "";
   }
   getVaultCommand(command, cwd) {
-    return command === "vault" ? (0, import_path2.join)(cwd, "master/system/scripts/vault.py") : command;
+    return command === "vault" ? (0, import_path2.join)(cwd, "_master/system/scripts/vault.py") : command;
   }
   async openVaultCockpit() {
+    await this.getVaultCockpitView();
+  }
+  async getVaultCockpitView() {
     const existing = this.app.workspace.getLeavesOfType(VAULT_COCKPIT_VIEW_TYPE)[0];
     if (existing) {
       await this.app.workspace.revealLeaf(existing);
-      return;
+      return existing.view instanceof VaultCockpitView ? existing.view : null;
     }
     const leaf = this.app.workspace.getRightLeaf(false);
     if (!leaf) {
       new import_obsidian9.Notice("Could not open the right sidebar.");
-      return;
+      return null;
     }
     await leaf.setViewState({ type: VAULT_COCKPIT_VIEW_TYPE, active: true });
     await this.app.workspace.revealLeaf(leaf);
+    return leaf.view instanceof VaultCockpitView ? leaf.view : null;
+  }
+  async registerVaultPaletteCommands() {
+    const result = await loadVaultCommandMetadata(this.app);
+    if (result.warning) {
+      console.warn(`[Context Nine] ${result.warning}`);
+    }
+    for (const command of result.commands.filter((item) => item.palette)) {
+      this.addCommand({
+        id: `vault-${command.id}`,
+        name: `Vault ${command.label}`,
+        callback: () => {
+          void this.runPaletteVaultCommand(command);
+        }
+      });
+    }
+  }
+  async runPaletteVaultCommand(command) {
+    var _a;
+    if ((_a = command.promptArgs) == null ? void 0 : _a.length) {
+      new VaultPromptArgsModal(this.app, command, (extraArgs) => {
+        void this.runVaultCommandInCockpit(command, extraArgs);
+      }).open();
+      return;
+    }
+    await this.runVaultCommandInCockpit(command);
+  }
+  async runVaultCommandInCockpit(command, extraArgs = []) {
+    const view = await this.getVaultCockpitView();
+    if (!view) {
+      new import_obsidian9.Notice("Could not open the vault command center.");
+      return;
+    }
+    view.runCommand(command, extraArgs);
   }
   async focusMainPane(index, createIfMissing = false) {
     const leaves = this.getMainPaneLeaves();
@@ -3427,6 +3348,55 @@ var ContextNinePlugin = class extends import_obsidian9.Plugin {
         console.warn(`[Context Nine] gcal sync exited with ${exitCode}`);
       }
     });
+  }
+};
+var VaultPromptArgsModal = class extends import_obsidian9.Modal {
+  constructor(app, command, onSubmit) {
+    var _a, _b;
+    super(app);
+    this.command = command;
+    this.onSubmit = onSubmit;
+    this.values = new Array((_b = (_a = command.promptArgs) == null ? void 0 : _a.length) != null ? _b : 0).fill("");
+  }
+  onOpen() {
+    var _a;
+    this.contentEl.empty();
+    this.containerEl.addClass("omp-modal");
+    this.titleEl.setText(this.command.label);
+    const promptArgs = (_a = this.command.promptArgs) != null ? _a : [];
+    promptArgs.forEach((promptArg, index) => {
+      new import_obsidian9.Setting(this.contentEl).setName(promptArg.label).addText((text) => {
+        var _a2;
+        text.setPlaceholder((_a2 = promptArg.placeholder) != null ? _a2 : "").onChange((value) => {
+          this.values[index] = value.trim();
+        });
+        text.inputEl.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            this.submit();
+          }
+        });
+        if (index === 0) {
+          window.setTimeout(() => text.inputEl.focus(), 0);
+        }
+      });
+    });
+    const buttons = this.contentEl.createDiv({ cls: "omp-button-row" });
+    buttons.createEl("button", { text: "Cancel" }).addEventListener("click", () => this.close());
+    const run = buttons.createEl("button", { text: "Run" });
+    run.addClass("mod-cta");
+    run.addEventListener("click", () => this.submit());
+  }
+  submit() {
+    var _a;
+    const promptArgs = (_a = this.command.promptArgs) != null ? _a : [];
+    const missing = promptArgs.find((_, index) => !this.values[index]);
+    if (missing) {
+      new import_obsidian9.Notice(`${missing.label} required.`);
+      return;
+    }
+    this.close();
+    this.onSubmit(this.values);
   }
 };
 var ObsidianMasterSettingTab = class extends import_obsidian9.PluginSettingTab {

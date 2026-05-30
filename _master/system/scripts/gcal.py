@@ -656,6 +656,8 @@ def active_context_folders(root: Path) -> list[Path]:
             continue
         text = home.read_text(encoding="utf-8")
         parsed = parse_frontmatter(text)
+        if parsed and parsed[1].get("context_registered", "true").strip().lower() in {"false", "no", "0"}:
+            continue
         status = parsed[1].get("status") if parsed else None
         if status == "active":
             folders.append(folder)

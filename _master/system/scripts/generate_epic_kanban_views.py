@@ -100,7 +100,10 @@ def context_folder_status(context_root: Path) -> str:
     home = context_root / "HOME.md"
     if not home.exists():
         return ""
-    return frontmatter(home.read_text(encoding="utf-8", errors="replace")).get("status", "")
+    metadata = frontmatter(home.read_text(encoding="utf-8", errors="replace"))
+    if str(metadata.get("context_registered", "true")).strip().lower() in {"false", "no", "0"}:
+        return ""
+    return metadata.get("status", "")
 
 
 def discover_context_folders(root: Path, requested: str | None, include_archived: bool) -> list[Path]:

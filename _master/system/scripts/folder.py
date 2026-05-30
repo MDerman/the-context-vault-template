@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import importlib.util
+import shutil
 import sys
 from pathlib import Path
 
@@ -51,6 +52,46 @@ def read_context_type(path: Path) -> str:
     return value.strip().lower() or "business"
 
 
+def read_context_registered(path: Path) -> bool:
+    if not path.exists():
+        return True
+    value = parse_frontmatter(path.read_text(encoding="utf-8")).get("context_registered", "true")
+    return value.strip().lower() not in {"false", "no", "0"}
+
+
+def set_frontmatter_value(path: Path, key: str, value: str, dry_run: bool) -> None:
+    if not path.exists():
+        raise SystemExit(f"Missing HOME.md: {path}")
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---\n"):
+        rendered = f"---\n{key}: {value}\n---\n{text}"
+    else:
+        end = text.find("\n---", 4)
+        if end == -1:
+            rendered = f"---\n{key}: {value}\n---\n{text}"
+        else:
+            body_start = end + len("\n---")
+            body = text[body_start + 1 :] if body_start < len(text) and text[body_start] == "\n" else text[body_start:]
+            lines = text[4:end].splitlines()
+            out: list[str] = []
+            seen = False
+            for line in lines:
+                if ":" in line and not line.startswith(" "):
+                    existing_key = line.split(":", 1)[0].strip()
+                    if existing_key == key:
+                        out.append(f"{key}: {value}")
+                        seen = True
+                        continue
+                out.append(line)
+            if not seen:
+                out.append(f"{key}: {value}")
+            rendered = "---\n" + "\n".join(out) + "\n---\n" + body
+    if dry_run:
+        print(f"[dry-run] set {key}: {value} in {path}")
+    else:
+        path.write_text(rendered, encoding="utf-8")
+
+
 def write_home(path: Path, status: str, context_type: str, content_enabled: bool) -> None:
     value = "" if status == "none" else status
     content_value = "true" if content_enabled else "false"
@@ -80,6 +121,10 @@ def write_home(path: Path, status: str, context_type: str, content_enabled: bool
                             out.append(f"context_type: {context_type}")
                             seen.add(key)
                             continue
+                        if key == "context_registered":
+                            out.append("context_registered: true")
+                            seen.add(key)
+                            continue
                     out.append(line)
                 if "status" not in seen:
                     out.append(f"status: {value}")
@@ -87,19 +132,25 @@ def write_home(path: Path, status: str, context_type: str, content_enabled: bool
                     out.append(f"context_type: {context_type}")
                 if "content_enabled" not in seen:
                     out.append(f"content_enabled: {content_value}")
+                if "context_registered" not in seen:
+                    out.append("context_registered: true")
                 path.write_text("---\n" + "\n".join(out) + "\n---\n" + body, encoding="utf-8")
                 return
-    path.write_text(f"---\nstatus: {value}\ncontext_type: {context_type}\ncontent_enabled: {content_value}\n---\n", encoding="utf-8")
+    path.write_text(f"---\nstatus: {value}\ncontext_type: {context_type}\ncontent_enabled: {content_value}\ncontext_registered: true\n---\n", encoding="utf-8")
 
 
-def discover_entities(root: Path) -> list[str]:
+def discover_entities(root: Path, excluded: set[str] | None = None) -> list[str]:
+    excluded = excluded or set()
     entities = []
     for path in sorted(root.iterdir()):
+        if path.name in excluded:
+            continue
         if not path.is_dir() or path.name.startswith("."):
             continue
         if path.name.startswith("_"):
             continue
-        if (path / "HOME.md").exists():
+        home = path / "HOME.md"
+        if home.exists() and read_context_registered(home):
             entities.append(path.name)
     return entities
 
@@ -242,10 +293,108 @@ def create_main(argv: list[str], *, register_mode: bool = False) -> None:
     bootstrap.run()
 
 
+def default_context_folder(root: Path, entities: list[str]) -> str:
+    default_entity = "personal"
+    tasknotes = root / ".obsidian/plugins/tasknotes/data.json"
+    if tasknotes.exists():
+        import json
+
+        data = json.loads(tasknotes.read_text(encoding="utf-8"))
+        default_entity = data.get("taskCreationDefaults", {}).get("defaultContexts") or default_entity
+    if default_entity in entities:
+        return default_entity
+    if "personal" in entities:
+        return "personal"
+    if entities:
+        return entities[0]
+    raise SystemExit("No registered context folders remain.")
+
+
+def rerun_bootstrap(root: Path, dry_run: bool, excluded: set[str] | None = None) -> None:
+    bootstrap_module = load_bootstrap(root)
+    entities = discover_entities(root, excluded=excluded)
+    active_entities = [
+        entity
+        for entity in entities
+        if read_status(root / entity / "HOME.md") == "active"
+    ]
+    content_entities = [
+        entity
+        for entity in entities
+        if read_content_enabled(root / entity / "HOME.md")
+    ]
+    context_types = {
+        entity: read_context_type(root / entity / "HOME.md")
+        for entity in entities
+    }
+    bootstrap = bootstrap_module.Bootstrap(
+        root=root,
+        entities=entities,
+        active_entities=active_entities,
+        default_entity=default_context_folder(root, entities),
+        context_types=context_types,
+        coding_agents=discover_coding_agents(root),
+        content_entities=content_entities,
+        install_vault_command_enabled=True,
+        generate_agents_enabled=True,
+        dry_run=dry_run,
+        run_date=bootstrap_module.parse_date(None),
+    )
+    bootstrap.run()
+
+
+def unregister_main(argv: list[str]) -> None:
+    parser = argparse.ArgumentParser(description="Unregister a context folder while keeping its files.")
+    parser.add_argument("name", help="Context folder slug.")
+    parser.add_argument("--root", default=None, help="Vault root. Defaults to auto-discovery.")
+    parser.add_argument("--dry-run", action="store_true")
+    args = parser.parse_args(argv)
+
+    root = resolve_vault_root(args.root, __file__)
+    name = validate_slug(args.name, "context folder name")
+    context_root = root / name
+    home = context_root / "HOME.md"
+    if not context_root.is_dir() or not home.exists():
+        raise SystemExit(f"Context folder not found: {name}")
+    set_frontmatter_value(home, "context_registered", "false", args.dry_run)
+    rerun_bootstrap(root, args.dry_run, excluded={name} if args.dry_run else None)
+
+
+def remove_main(argv: list[str]) -> None:
+    parser = argparse.ArgumentParser(description="Remove a context folder from disk and regenerate vault context wiring.")
+    parser.add_argument("name", help="Context folder slug.")
+    parser.add_argument("--root", default=None, help="Vault root. Defaults to auto-discovery.")
+    parser.add_argument("--apply", action="store_true", help="Actually delete the folder. Without this, only prints planned changes.")
+    parser.add_argument("--dry-run", action="store_true", help="Print planned changes without deleting files.")
+    args = parser.parse_args(argv)
+
+    root = resolve_vault_root(args.root, __file__)
+    name = validate_slug(args.name, "context folder name")
+    context_root = root / name
+    if not context_root.exists():
+        raise SystemExit(f"Context folder not found: {name}")
+    if not context_root.is_dir() or context_root.is_symlink():
+        raise SystemExit(f"Context folder path is not a normal directory: {context_root}")
+
+    dry_run = args.dry_run or not args.apply
+    if dry_run:
+        print(f"[dry-run] remove {context_root}")
+    else:
+        shutil.rmtree(context_root)
+        print(f"removed {context_root}")
+    rerun_bootstrap(root, dry_run, excluded={name} if dry_run else None)
+
+
 def main(argv: list[str] | None = None) -> None:
     args = list(sys.argv[1:] if argv is None else argv)
     if args and args[0] == "rename":
         rename_main(args[1:])
+        return
+    if args and args[0] == "unregister":
+        unregister_main(args[1:])
+        return
+    if args and args[0] in {"remove", "delete"}:
+        remove_main(args[1:])
         return
     register_mode = bool(args and args[0] == "register")
     if args and args[0] in {"create", "register"}:

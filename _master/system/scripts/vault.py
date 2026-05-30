@@ -72,6 +72,8 @@ Examples:
   vault attachments --verify-only
   vault bootstrap-export --dry-run
   vault folder register business
+  vault folder unregister business --dry-run
+  vault folder remove business --dry-run
   vault folder rename business studio --dry-run
   vault epic create business "New Epic"
   vault gcal list --days 7 --calendar all --json

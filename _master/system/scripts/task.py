@@ -88,8 +88,12 @@ def unique_path(folder: Path, title: str) -> Path:
 
 
 def ensure_context(root: Path, context: str) -> None:
-    if not (root / context / "HOME.md").exists():
+    home = root / context / "HOME.md"
+    if not home.exists():
         raise SystemExit(f"Context not found: {context}. Run `vault inventory`.")
+    metadata = frontmatter(home.read_text(encoding="utf-8", errors="replace"))
+    if str(metadata.get("context_registered", "true")).strip().lower() in {"false", "no", "0"}:
+        raise SystemExit(f"Context is unregistered: {context}. Run `vault folder register {context}`.")
 
 
 def find_note(root: Path, context: str, folder_name: str, label: str) -> Path:

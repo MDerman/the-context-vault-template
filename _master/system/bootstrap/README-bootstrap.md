@@ -89,6 +89,8 @@ Apply public setup updates:
 vault upgrade --apply
 ```
 
+You can also run `Vault Upgrade` from the Obsidian command palette. It applies the same public setup update as `vault upgrade --apply`.
+
 Apply only Obsidian profile, theme, hotkey, and plugin updates:
 
 ```bash
