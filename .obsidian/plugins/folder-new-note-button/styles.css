@@ -1,0 +1,52 @@
+.folder-new-note-button {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: 6px;
+  padding: 1px 5px;
+  height: 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: var(--radius-s);
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.nav-folder-title:hover .folder-new-note-button,
+.nav-folder-title:focus-within .folder-new-note-button {
+  display: inline-flex;
+}
+
+.folder-new-note-button:hover,
+.folder-new-note-button:focus-visible {
+  color: var(--text-normal);
+  background-color: var(--background-modifier-hover);
+}
+
+.folder-new-note-button:focus-visible {
+  outline: 1px solid var(--interactive-accent);
+  outline-offset: 1px;
+}
+
+/* Mobile adjustments */
+body.is-mobile .nav-folder-title {
+  position: relative;
+}
+
+/* Push the count left to make room for the button */
+body.is-mobile .nav-folder-title[data-count]::after {
+  margin-right: 18px;
+}
+
+body.is-mobile .folder-new-note-button {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+  opacity: 1;
+  display: inline-flex;
+}

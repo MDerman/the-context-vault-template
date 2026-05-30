@@ -115,6 +115,21 @@ Shared non-periodic templates live in:
 _master/_obsidian/templates/shared/
 ```
 
+## File Explorer Note Creation
+
+Folder New Note Button adds a hover `+` button beside folders in the File Explorer. Click it to create a new note directly inside that folder.
+
+Simple Folder Note treats a note with the same name as its folder as that folder's index note and opens it when the folder is clicked.
+
+Installed plugin IDs:
+
+```text
+folder-new-note-button
+simple-folder-note
+```
+
+`create-note-in-folder` is intentionally not installed.
+
 ## Bases, Calendars, And Kanban
 
 Bases are dashboards over files and properties.

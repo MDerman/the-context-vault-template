@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T15:22:21+00:00",
+  "generated_at": "2026-05-30T15:45:38+00:00",
   "paths": [
     ".agents",
     ".agents/skills",
@@ -38,6 +38,9 @@
     ".obsidian/plugins/dataview/data.json",
     ".obsidian/plugins/dataview/manifest.json",
     ".obsidian/plugins/dataview/styles.css",
+    ".obsidian/plugins/folder-new-note-button",
+    ".obsidian/plugins/folder-new-note-button/manifest.json",
+    ".obsidian/plugins/folder-new-note-button/styles.css",
     ".obsidian/plugins/kanban-bases-view",
     ".obsidian/plugins/kanban-bases-view/manifest.json",
     ".obsidian/plugins/kanban-bases-view/styles.css",
@@ -107,6 +110,8 @@
     ".obsidian/plugins/share-note",
     ".obsidian/plugins/share-note/manifest.json",
     ".obsidian/plugins/share-note/styles.css",
+    ".obsidian/plugins/simple-folder-note",
+    ".obsidian/plugins/simple-folder-note/manifest.json",
     ".obsidian/plugins/sync-embeds",
     ".obsidian/plugins/sync-embeds.patched.20260519-083828",
     ".obsidian/plugins/sync-embeds.patched.20260519-083828/data.json",
