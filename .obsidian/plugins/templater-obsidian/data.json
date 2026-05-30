@@ -75,8 +75,64 @@
       "template": "_master/_obsidian/templates/shared/default-tasks-template.md"
     },
     {
-      "folder": "business/One-on-Ones",
+      "folder": "business/meetings/1-on-1s",
       "template": "business/_obsidian/templates/one-on-ones/one-on-one-template.md"
+    },
+    {
+      "folder": "business/meetings/general-meetings",
+      "template": "business/_obsidian/templates/general-meeting-template.md"
+    },
+    {
+      "folder": "business/meetings/customer-calls",
+      "template": "business/_obsidian/templates/customer-call-template.md"
+    },
+    {
+      "folder": "business/meetings/founder-notes",
+      "template": "business/_obsidian/templates/founder-note-template.md"
+    },
+    {
+      "folder": "business/product/specs",
+      "template": "business/_obsidian/templates/feature-spec-template.md"
+    },
+    {
+      "folder": "business/product/decisions",
+      "template": "business/_obsidian/templates/product-decision-template.md"
+    },
+    {
+      "folder": "business/product/experiments",
+      "template": "business/_obsidian/templates/experiment-template.md"
+    },
+    {
+      "folder": "business/product/user-signals",
+      "template": "business/_obsidian/templates/user-signal-template.md"
+    },
+    {
+      "folder": "business/gtm/campaigns",
+      "template": "business/_obsidian/templates/campaign-template.md"
+    },
+    {
+      "folder": "business/gtm/offers",
+      "template": "business/_obsidian/templates/offer-template.md"
+    },
+    {
+      "folder": "business/gtm/icp",
+      "template": "business/_obsidian/templates/icp-template.md"
+    },
+    {
+      "folder": "business/gtm/competitors",
+      "template": "business/_obsidian/templates/competitor-template.md"
+    },
+    {
+      "folder": "business/ops/metrics-snapshots",
+      "template": "business/_obsidian/templates/metrics-snapshot-template.md"
+    },
+    {
+      "folder": "business/ops/sops",
+      "template": "business/_obsidian/templates/sop-template.md"
+    },
+    {
+      "folder": "business/skills",
+      "template": "business/_obsidian/templates/local-skill-template.md"
     },
     {
       "folder": "dev/_obsidian/periodic/daily",

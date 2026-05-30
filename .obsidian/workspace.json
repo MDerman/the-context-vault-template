@@ -72,7 +72,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 352
+    "width": 353
   },
   "right": {
     "id": "c5da0292b2670f3d",
@@ -160,7 +160,7 @@
             }
           },
           {
-            "id": "6c7f9a194123d3aa",
+            "id": "916807d5a7e18618",
             "type": "leaf",
             "state": {
               "type": "system3-sync-status",
@@ -252,7 +252,7 @@
       "periodic-notes:Open today": false
     }
   },
-  "active": "406e2cfcbe92a3df",
+  "active": "12a3aa81c232d265",
   "lastOpenFiles": [
     "README.md"
   ]

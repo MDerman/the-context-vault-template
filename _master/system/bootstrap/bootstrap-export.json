@@ -28,6 +28,25 @@
       ]
     }
   ],
+  "public_context_scaffold_dirs": {
+    "business": [
+      "meetings/1-on-1s",
+      "meetings/general-meetings",
+      "meetings/customer-calls",
+      "meetings/founder-notes",
+      "product/specs",
+      "product/decisions",
+      "product/experiments",
+      "product/user-signals",
+      "gtm/campaigns",
+      "gtm/offers",
+      "gtm/icp",
+      "gtm/competitors",
+      "ops/metrics-snapshots",
+      "ops/sops",
+      "skills"
+    ]
+  },
   "root_files": [
     "AGENTS.md",
     {

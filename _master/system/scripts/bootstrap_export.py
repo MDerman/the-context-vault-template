@@ -104,6 +104,7 @@ class BootstrapExporter:
             (item["source"], item["target"])
             for item in self.context_configs
         ]
+        self.public_context_scaffold_dirs = config.get("public_context_scaffold_dirs", {})
         self.rewrite_pairs = sorted(self.context_pairs, key=lambda pair: len(pair[0]), reverse=True)
         self.generated_exclude_paths = set(config.get("generated_exclude_paths", []))
         self.generated_exclude_globs = list(config.get("generated_exclude_globs", []))
@@ -369,6 +370,7 @@ class BootstrapExporter:
             obsidian = source / "_obsidian"
             if obsidian.is_dir():
                 self.copy_context_obsidian(obsidian, target / "_obsidian")
+            self.write_public_context_scaffold(target_name, target)
 
     def write_public_context_folder_note(
         self,
@@ -434,6 +436,19 @@ class BootstrapExporter:
             )
             if keep_file and item.is_file():
                 self.copy_file(item, target)
+
+    def write_public_context_scaffold(self, target_name: str, target_root: Path) -> None:
+        dirs = self.public_context_scaffold_dirs.get(target_name, [])
+        if not isinstance(dirs, list):
+            return
+        for rel_dir in dirs:
+            if not isinstance(rel_dir, str) or not rel_dir.strip():
+                continue
+            relative = Path(rel_dir)
+            if relative.is_absolute() or ".." in relative.parts:
+                raise SystemExit(f"Unsafe public scaffold path for {target_name}: {rel_dir}")
+            marker = target_root / relative / ".gitkeep"
+            self.write_generated_text(marker, "", f"write public scaffold {marker}")
 
     def create_library_and_wiki(self) -> None:
         self.ensure_dir(self.export_root / "_library")
