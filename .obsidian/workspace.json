@@ -6,46 +6,48 @@
       {
         "id": "bb7e594664b21dd4",
         "type": "tabs",
-        "dimension": 62.84974093264248,
+        "dimension": 65.73745565129245,
         "children": [
           {
             "id": "bb7530061b9870b4",
             "type": "leaf",
             "state": {
-              "type": "bases",
+              "type": "markdown",
               "state": {
-                "file": "business/_obsidian/bases/tasks-epic-growth-kanban.base",
-                "viewName": "Growth Kanban"
+                "file": "README.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "tasknotes-simple",
-              "title": "tasks-epic-growth-kanban"
+              "icon": "lucide-file",
+              "title": "README"
             }
           },
           {
             "id": "2c8a0e5903840fcd",
             "type": "leaf",
             "state": {
-              "type": "bases",
-              "state": {
-                "file": "business/_obsidian/bases/tasks-epic-focus-kanban.base",
-                "viewName": "Focus Kanban"
-              },
-              "icon": "tasknotes-simple",
-              "title": "tasks-epic-focus-kanban"
-            }
-          },
-          {
-            "id": "489c6fdc4bdb75a2",
-            "type": "leaf",
-            "state": {
               "type": "markdown",
               "state": {
-                "file": "personal-brand/Post Inspo.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Post Inspo"
+              "title": "README"
+            }
+          },
+          {
+            "id": "200d1bc0d5086acc",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "README.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "README"
             }
           },
           {
@@ -54,26 +56,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "personal/_obsidian/periodic/weekly/2026-W22.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2026-W22"
+              "title": "README"
             }
           },
           {
-            "id": "8c2d607a86bf4cb0",
+            "id": "a6802abd4c21b517",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_master/03-Momentum.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "03-Momentum"
+              "title": "README"
             }
           },
           {
@@ -82,26 +84,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_master/Dashboard.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Dashboard"
-            }
-          },
-          {
-            "id": "2a0330a96e26206e",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "AGENTS.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "AGENTS"
+              "title": "README"
             }
           },
           {
@@ -110,21 +98,21 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "business/Leads/people.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "people"
+              "title": "README"
             }
           }
         ],
-        "currentTab": 6
+        "currentTab": 4
       },
       {
         "id": "3cdff202baa90a62",
         "type": "tabs",
-        "dimension": 37.15025906735751,
+        "dimension": 34.26254434870755,
         "children": [
           {
             "id": "57cae75ccb037b0f",
@@ -132,12 +120,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_master/system/inbox/BRAIN_DUMP.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "BRAIN_DUMP"
+              "title": "README"
             }
           }
         ]
@@ -197,7 +185,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 349
+    "width": 352
   },
   "right": {
     "id": "c5da0292b2670f3d",
@@ -206,7 +194,7 @@
       {
         "id": "f5407bdcfb351c87",
         "type": "tabs",
-        "dimension": 52.21101629169899,
+        "dimension": 57.771469127040454,
         "children": [
           {
             "id": "54e1657f30973278",
@@ -230,14 +218,14 @@
             "id": "406e2cfcbe92a3df",
             "type": "leaf",
             "state": {
-              "type": "outgoing-link",
+              "type": "markdown",
               "state": {
-                "file": "_master/system/inbox/BRAIN_DUMP.md",
-                "linksCollapsed": false,
-                "unlinkedCollapsed": true
+                "file": "README.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "links-going-out",
-              "title": "Outgoing links from BRAIN_DUMP"
+              "icon": "lucide-file",
+              "title": "README"
             }
           },
           {
@@ -273,19 +261,18 @@
             "id": "80dd5b6b0a54906e",
             "type": "leaf",
             "state": {
-              "type": "outline",
+              "type": "markdown",
               "state": {
-                "file": "personal/_obsidian/periodic/weekly/2026-W21.md",
-                "followCursor": false,
-                "showSearch": false,
-                "searchQuery": ""
+                "file": "README.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-list",
-              "title": "Outline of 2026-W21"
+              "icon": "lucide-file",
+              "title": "README"
             }
           },
           {
-            "id": "5b39cd67ce0e96ab",
+            "id": "99af113d26e7ebdd",
             "type": "leaf",
             "state": {
               "type": "system3-sync-status",
@@ -300,7 +287,7 @@
       {
         "id": "21f8b3b76e2a4780",
         "type": "tabs",
-        "dimension": 15.51590380139643,
+        "dimension": 14.194464158977999,
         "children": [
           {
             "id": "9b5af85820951a6f",
@@ -317,7 +304,7 @@
       {
         "id": "d876f1e5ee5dd993",
         "type": "tabs",
-        "dimension": 32.27307990690458,
+        "dimension": 28.03406671398155,
         "children": [
           {
             "id": "1ffc5fcaa195eeb3",
@@ -343,7 +330,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 244
+    "width": 251
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -377,59 +364,8 @@
       "periodic-notes:Open today": false
     }
   },
-  "active": "57cae75ccb037b0f",
+  "active": "406e2cfcbe92a3df",
   "lastOpenFiles": [
-    "_master/system/bootstrap/vault-bootstrap/release.json",
-    "_master/system/bootstrap/vault-bootstrap/policy.json",
-    "_master/system/bootstrap/vault-bootstrap",
-    "_master/system/scripts/__pycache__/brain_dump.cpython-310.pyc",
-    "_master/system/bootstrap/README.md",
-    "_master/system/bootstrap/__pycache__/generate_agents.cpython-310.pyc",
-    "_master/system/bootstrap/init_vault.sh",
-    "_master/system/bootstrap/init-vault-config.json",
-    "_master/system/bootstrap/generate_agents.py",
-    "_master/system/bootstrap/AGENTS.template.md",
-    "AGENTS.md",
-    "_master/Dashboard.md",
-    "business/Leads/people.md",
-    "personal-brand/_obsidian/content-schedules/Content Calendar for 2026-05-11 to 2026-06-07.md",
-    "personal/HOME.md",
-    "_master/system/context/01-Context.md",
-    "personal/_obsidian/periodic/weekly/2026-W22.md",
-    "_master/agents/backups/skill-sync/20260529-095029",
-    "_master/agents/skills/personal-folder-structure-code-workflow/SKILL.md",
-    "_master/agents/skills/personal-folder-structure-code-workflow",
-    "_master/system/scripts/__pycache__/context.cpython-310.pyc",
-    "business/_private/Partners Co-founers/Co-founders, strategic partners & FAST etc/Matt joining Notus Agreement Discussion/THE BELOW AGREEMENTS ARE NOT FINAL.md",
-    "business/_private/Partners Co-founers/Co-founders, strategic partners & FAST etc/Matt joining Notus Agreement Discussion.md",
-    "business/_private/Partners Co-founers/Co-founder agreements/FI_FAST_v2.docx.md",
-    "business/_private/Partners Co-founers/chat-summary.md",
-    "business/_private/Partners Co-founers/Typeway Partnership Options.md",
-    "business/_private/Partners Co-founers/Stefan (The Brand & Growth Engine).md",
-    "business/_private/Partners Co-founers/Lucas Wolf.md",
-    "business/_private/Partners Co-founers/Lucas (Product & Migration Partner).md",
-    "business/_private/Partners Co-founers/Influencer Partnership Playbook.md",
-    "business/_private/Partners Co-founers/LightGTM (Whitelabel Partner).md",
-    "business/_private/Partners Co-founers/Impression Partners Co-founers.md",
-    "business/_private/Partners Co-founers/FI_FAST_v2.docx.md",
-    "business/Content/SEO-and-Blogs-for-Impression.md",
-    "business/Archive/Lots of ideas here/Mike/Mike.md",
-    "business/Archive/Lots of ideas here/Mike/LinkedIn Idea for Mike.md",
-    "_master/tools-and-scripts/invoice-generation/output/invoice-boring-studios.jpg",
-    "_master/agents/backups/skill-sync/20260513-151720/codex-skills-dir/pdf/assets/pdf.png",
-    "_master/agents/skills/pdf/assets/pdf.png",
-    "dev/_obsidian/attachments/Pasted image 20260526205648.png",
-    "dev/_obsidian/attachments/Pasted image 20260526205641.png",
-    "dev/_obsidian/attachments/Pasted image 20260526205620.png",
-    "dev/_obsidian/attachments/Pasted image 20260526205606.png",
-    "business/_obsidian/attachments/Pasted image 20260524213852.png",
-    "business/_obsidian/attachments/Pasted image 20260524213830.png",
-    "business/_obsidian/attachments/Pasted image 20260524213815.png",
-    "_master/system/obsidian_notes/potential_ideas/Canvas/Habit Tracking Dashboard.canvas",
-    "_master/system/obsidian_notes/pkm_reference/Canvas/Habit Tracking Dashboard.canvas",
-    "_master/system/obsidian_notes/pkm_reference/Canvas/Habit Tracking Dashboard.canvas",
-    "_master/system/obsidian_notes/pkm_reference/Canvas/Habit Tracking Dashboard.canvas",
-    "Untitled 1.canvas",
-    "Untitled.canvas"
+    "README.md"
   ]
 }

@@ -18,6 +18,7 @@ from script_utils import resolve_vault_root
 
 DEFAULT_CONFIG = "_master/system/bootstrap/bootstrap-export.json"
 DEFAULT_MANIFEST_NAME = "_master/system/bootstrap/state/export-manifest.json"
+PUBLIC_WORKSPACE_FILE = "README.md"
 MANIFEST_VERSION = 1
 GLOBAL_EXCLUDE_SUFFIXES = (".bak",)
 SECRET_PATTERNS = [
@@ -390,6 +391,9 @@ class BootstrapExporter:
         self.log(f"copy {self.rel(source)} -> {target}")
         if self.dry_run:
             return
+        if self.should_sanitize_workspace(source):
+            self.write_public_workspace(source, target)
+            return
         if self.should_rewrite_text(source):
             try:
                 text = source.read_text(encoding="utf-8")
@@ -403,6 +407,47 @@ class BootstrapExporter:
 
     def should_rewrite_text(self, source: Path) -> bool:
         return source.suffix in self.text_rewrite_suffixes
+
+    def should_sanitize_workspace(self, source: Path) -> bool:
+        try:
+            return posix(source.relative_to(self.root)) == ".obsidian/workspace.json"
+        except ValueError:
+            return False
+
+    def write_public_workspace(self, source: Path, target: Path) -> None:
+        data = json.loads(source.read_text(encoding="utf-8"))
+        self.sanitize_workspace_node(data)
+        rendered = json.dumps(data, indent=2) + "\n"
+        for source_name, target_name in self.rewrite_pairs:
+            rendered = rendered.replace(source_name, target_name)
+        if "_private" in rendered:
+            raise SystemExit("Refusing to export workspace.json with private file history.")
+        target.write_text(rendered, encoding="utf-8")
+        shutil.copystat(source, target)
+
+    def sanitize_workspace_node(self, value: Any) -> None:
+        if isinstance(value, dict):
+            if isinstance(value.get("lastOpenFiles"), list):
+                value["lastOpenFiles"] = [PUBLIC_WORKSPACE_FILE]
+
+            state = value.get("state")
+            if value.get("type") == "leaf" and isinstance(state, dict):
+                inner_state = state.get("state")
+                if isinstance(inner_state, dict) and isinstance(inner_state.get("file"), str):
+                    state["type"] = "markdown"
+                    state["state"] = {
+                        "file": PUBLIC_WORKSPACE_FILE,
+                        "mode": "source",
+                        "source": False,
+                    }
+                    state["icon"] = "lucide-file"
+                    state["title"] = "README"
+
+            for child in value.values():
+                self.sanitize_workspace_node(child)
+        elif isinstance(value, list):
+            for child in value:
+                self.sanitize_workspace_node(child)
 
     def scan_exact_plugin_file(self, source: Path) -> None:
         try:
