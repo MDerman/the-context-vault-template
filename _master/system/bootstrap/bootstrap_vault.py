@@ -538,6 +538,7 @@ class Bootstrap:
             "vault",
             self.dry_run,
             False,
+            True,
         )
         if result != 0:
             raise RuntimeError("Failed to install vault command")

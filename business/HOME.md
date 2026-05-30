@@ -6,6 +6,15 @@ default_capture: false
 ---
 # business
 
+## Add This Shared Folder To Another Vault
+
+If this folder was shared into another bootstrap vault through Relay, run from that vault root:
+
+```bash
+cd "$(vault root)"
+vault folder register business
+```
+
 Impression business workspace for product, clients, leads, content, records, team, resources, partners, and strategic ideas.
 
 ## Start Here

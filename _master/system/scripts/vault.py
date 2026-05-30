@@ -53,7 +53,7 @@ Common commands:
   epic         Create, rename, delete, list epics and sync epic task Bases.
   project      Create and list project notes.
   task         Create TaskNotes tasks with validated project/epic links.
-  folder       Create/register a context folder.
+  folder       Create, register, or rename a context folder.
   gcal         Read/write Google Calendar time blocks and task date mirrors.
   git-maintenance  Keep local Git history shallow and prune local objects.
   mobile-profile  Create/update .obsidian-mobile with safe mobile plugins and theme settings.
@@ -71,6 +71,8 @@ Examples:
   vault project create business "New Project" --epic "Growth"
   vault attachments --verify-only
   vault bootstrap-export --dry-run
+  vault folder register business
+  vault folder rename business studio --dry-run
   vault epic create business "New Epic"
   vault gcal list --days 7 --calendar all --json
   vault git-maintenance

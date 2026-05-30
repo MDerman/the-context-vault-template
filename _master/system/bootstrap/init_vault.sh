@@ -343,111 +343,31 @@ remap_starter_context_folders() {
   brand_target="$(context_folder_for_type "personal-brand" "personal-brand")"
   business_target="$(context_folder_for_type "business" "business")"
 
-  STARTER_CONTEXT_REMAP="personal:${personal_target},personal-brand:${brand_target},business:${business_target}" \
-    DRY_RUN_VALUE="${DRY_RUN}" \
-    "${PYTHON_BIN}" - "${VAULT_ROOT}" <<'PY'
-import os
-import shutil
-import sys
-from pathlib import Path
+  rename_starter_context_folder "personal" "${personal_target}"
+  rename_starter_context_folder "personal-brand" "${brand_target}"
+  rename_starter_context_folder "business" "${business_target}"
+}
 
-root = Path(sys.argv[1])
-dry_run = os.environ["DRY_RUN_VALUE"] == "1"
-mapping = []
-for item in os.environ["STARTER_CONTEXT_REMAP"].split(","):
-    if not item:
-        continue
-    source, target = item.split(":", 1)
-    mapping.append((source, target))
-
-
-def rel(path: Path) -> str:
-    try:
-        return str(path.relative_to(root))
-    except ValueError:
-        return str(path)
-
-
-def conflicts_for_merge(source: Path, target: Path) -> list[tuple[Path, Path]]:
-    conflicts: list[tuple[Path, Path]] = []
-    for item in sorted(source.rglob("*")):
-        destination = target / item.relative_to(source)
-        if item.is_dir() and not item.is_symlink():
-            if destination.exists() and not destination.is_dir():
-                conflicts.append((item, destination))
-            continue
-        if not destination.exists():
-            continue
-        if item.is_symlink():
-            if destination.is_dir() and not destination.is_symlink():
-                conflicts.append((item, destination))
-            continue
-        if item.is_file():
-            if not destination.is_file():
-                conflicts.append((item, destination))
-            continue
-        if destination.exists():
-            conflicts.append((item, destination))
-    return conflicts
-
-
-def copy_missing(source: Path, target: Path) -> None:
-    for item in sorted(source.rglob("*"), key=lambda path: (len(path.parts), str(path))):
-        destination = target / item.relative_to(source)
-        if item.is_dir() and not item.is_symlink():
-            if not dry_run:
-                destination.mkdir(parents=True, exist_ok=True)
-            continue
-        if destination.exists():
-            continue
-        print(f"copy {rel(item)} -> {rel(destination)}")
-        if dry_run:
-            continue
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        if item.is_symlink():
-            destination.symlink_to(os.readlink(item))
-        else:
-            shutil.copy2(item, destination)
-
-
-for source_name, target_name in mapping:
-    if source_name == target_name:
-        continue
-    source = root / source_name
-    target = root / target_name
-    if not source.exists():
-        continue
-    if not source.is_dir() or source.is_symlink():
-        raise SystemExit(f"starter context path is not a directory: {rel(source)}")
-    if target.exists() and (not target.is_dir() or target.is_symlink()):
-        raise SystemExit(f"context remap target is not a directory: {rel(target)}")
-    if not target.exists():
-        print(f"move {rel(source)} -> {rel(target)}")
-        if not dry_run:
-            source.rename(target)
-        continue
-
-    conflicts = conflicts_for_merge(source, target)
-    if conflicts:
-        shown = "\n".join(
-            f"  - {rel(src)} conflicts with {rel(dst)}"
-            for src, dst in conflicts[:20]
-        )
-        suffix = "" if len(conflicts) <= 20 else f"\n  ... and {len(conflicts) - 20} more"
-        raise SystemExit(
-            "Cannot safely merge starter context folder into renamed context folder.\n"
-            f"Source: {rel(source)}\n"
-            f"Target: {rel(target)}\n"
-            "Move or remove conflicting files manually, then rerun init.\n"
-            f"{shown}{suffix}"
-        )
-
-    print(f"merge {rel(source)} -> {rel(target)}")
-    copy_missing(source, target)
-    print(f"remove {rel(source)}")
-    if not dry_run:
-        shutil.rmtree(source)
-PY
+rename_starter_context_folder() {
+  local source="$1"
+  local target="$2"
+  if [[ "${source}" == "${target}" ]]; then
+    return 0
+  fi
+  if [[ "${DRY_RUN}" -eq 1 ]]; then
+    run_dry_capable "${PYTHON_BIN}" "${VAULT_ROOT}/_master/system/scripts/context_folder_rename.py" \
+      --root "${VAULT_ROOT}" \
+      --dry-run \
+      --missing-ok \
+      "${source}" \
+      "${target}"
+  else
+    run_dry_capable "${PYTHON_BIN}" "${VAULT_ROOT}/_master/system/scripts/context_folder_rename.py" \
+      --root "${VAULT_ROOT}" \
+      --missing-ok \
+      "${source}" \
+      "${target}"
+  fi
 }
 
 require_command() {

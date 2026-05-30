@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-05-30T08:49:46+00:00",
+  "generated_at": "2026-05-30T14:11:34+00:00",
   "paths": [
     ".agents",
     ".agents/skills",
@@ -661,6 +661,7 @@
     "_master/system/scripts/brain_dump.py",
     "_master/system/scripts/content.py",
     "_master/system/scripts/context.py",
+    "_master/system/scripts/context_folder_rename.py",
     "_master/system/scripts/delete_master_periodic_notes_for_now.py",
     "_master/system/scripts/epic.py",
     "_master/system/scripts/folder.py",
@@ -683,6 +684,8 @@
     "_master/system/scripts/script_utils.py",
     "_master/system/scripts/setup_tabs_css.py",
     "_master/system/scripts/task.py",
+    "_master/system/scripts/tests",
+    "_master/system/scripts/tests/test_context_folder_rename.py",
     "_master/system/scripts/upgrade.py",
     "_master/system/scripts/vault-commands.json",
     "_master/system/scripts/vault.py",

@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""Add or register a context folder in the master Obsidian workspace."""
+"""Create, register, or rename context folders in the master Obsidian workspace."""
 
 from __future__ import annotations
 
 import argparse
 import importlib.util
-import re
+import sys
 from pathlib import Path
 
 from script_utils import resolve_vault_root
+from context_folder_rename import rename_context_folder, validate_slug
 
 
-VALID_NAME = re.compile(r"^[a-z0-9][a-z0-9_-]*$")
 VALID_STATUSES = {"active", "archived", "none"}
 VALID_CONTEXT_TYPES = {"personal", "personal-brand", "business"}
 
@@ -124,38 +124,68 @@ def load_bootstrap(root: Path):
     return module
 
 
-def main(argv: list[str] | None = None) -> None:
-    parser = argparse.ArgumentParser(description="Add a context folder to the master workspace.")
-    parser.add_argument("-n", "--name", required=True, help="Context folder name, for example new-context-folder.")
+def rename_main(argv: list[str]) -> None:
+    parser = argparse.ArgumentParser(description="Rename a context folder and rewrite structured references.")
+    parser.add_argument("old_slug", help="Existing context folder slug.")
+    parser.add_argument("new_slug", help="New context folder slug.")
+    parser.add_argument("--root", default=None, help="Vault root. Defaults to auto-discovery.")
+    parser.add_argument("--dry-run", action="store_true")
+    args = parser.parse_args(argv)
+
+    root = resolve_vault_root(args.root, __file__)
+    rename_context_folder(root, args.old_slug, args.new_slug, args.dry_run)
+
+
+def parse_create_args(argv: list[str], *, register_mode: bool) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Create or register a context folder in the master workspace.")
+    if register_mode:
+        parser.add_argument("name", nargs="?", help="Existing shared context folder name.")
+        parser.add_argument("-n", "--name", dest="name_flag", help="Existing shared context folder name.")
+    else:
+        parser.add_argument("-n", "--name", required=True, help="Context folder name, for example new-context-folder.")
     parser.add_argument(
         "-s",
         "--status",
-        required=True,
+        required=not register_mode,
         choices=sorted(VALID_STATUSES),
-        help="Context folder status: active, archived, or none.",
+        help="Context folder status. Register mode defaults to HOME.md status, then active.",
     )
     parser.add_argument("--root", default=None, help="Vault root. Defaults to auto-discovery from the current directory or script location.")
     parser.add_argument("--default-context-folder", dest="default_entity", metavar="CONTEXT_FOLDER", default=None, help="Default capture context folder. Defaults to current root TaskNotes setting or personal.")
     parser.add_argument("--default-sub-vault", dest="default_entity", help=argparse.SUPPRESS)
     parser.add_argument("--default-entity", dest="default_entity", help=argparse.SUPPRESS)
-    parser.add_argument("--content-enabled", action="store_true", help="Create this context folder with content_enabled: true.")
-    parser.add_argument("--context-type", choices=sorted(VALID_CONTEXT_TYPES), default="business", help="Context folder type.")
+    parser.add_argument("--content-enabled", action="store_true", default=None if register_mode else False, help="Create/register this context folder with content_enabled: true.")
+    parser.add_argument("--context-type", choices=sorted(VALID_CONTEXT_TYPES), default=None if register_mode else "business", help="Context folder type. Register mode defaults to HOME.md context_type, then business.")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
+    if register_mode:
+        args.name = args.name_flag or args.name
+        if not args.name:
+            parser.error("register requires a context folder name")
+    return args
+
+
+def create_main(argv: list[str], *, register_mode: bool = False) -> None:
+    args = parse_create_args(argv, register_mode=register_mode)
 
     root = resolve_vault_root(args.root, __file__)
-    name = args.name.strip()
-    if "/" in name or "\\" in name or not VALID_NAME.match(name):
-        raise SystemExit("Context folder name must be lowercase and contain only letters, numbers, underscores, and hyphens.")
+    name = validate_slug(args.name, "context folder name")
 
     entity_root = root / name
     if entity_root.exists() and not entity_root.is_dir():
         raise SystemExit(f"Context folder path exists and is not a directory: {entity_root}")
 
+    existing_status = read_status(entity_root / "HOME.md")
+    existing_context_type = read_context_type(entity_root / "HOME.md")
+    existing_content_enabled = read_content_enabled(entity_root / "HOME.md")
+    status = args.status or existing_status or "active"
+    context_type = args.context_type or existing_context_type or "business"
+    content_enabled = args.content_enabled if args.content_enabled is not None else existing_content_enabled
+
     if args.dry_run:
         print(f"[dry-run] write {entity_root / 'HOME.md'}")
     else:
-        write_home(entity_root / "HOME.md", args.status, args.context_type, args.content_enabled)
+        write_home(entity_root / "HOME.md", status, context_type, content_enabled)
 
     bootstrap_module = load_bootstrap(root)
     entities = discover_entities(root)
@@ -168,7 +198,7 @@ def main(argv: list[str] | None = None) -> None:
         for entity in entities
         if read_status(root / entity / "HOME.md") == "active"
     ]
-    if args.status == "active" and name not in active_entities:
+    if status == "active" and name not in active_entities:
         active_entities.append(name)
         active_entities.sort()
     content_entities = [
@@ -176,14 +206,14 @@ def main(argv: list[str] | None = None) -> None:
         for entity in entities
         if read_content_enabled(root / entity / "HOME.md")
     ]
-    if args.content_enabled and name not in content_entities:
+    if content_enabled and name not in content_entities:
         content_entities.append(name)
         content_entities.sort()
     context_types = {
         entity: read_context_type(root / entity / "HOME.md")
         for entity in entities
     }
-    context_types[name] = args.context_type
+    context_types[name] = context_type
 
     default_entity = args.default_entity or "personal"
     tasknotes = root / ".obsidian/plugins/tasknotes/data.json"
@@ -210,6 +240,17 @@ def main(argv: list[str] | None = None) -> None:
         run_date=bootstrap_module.parse_date(None),
     )
     bootstrap.run()
+
+
+def main(argv: list[str] | None = None) -> None:
+    args = list(sys.argv[1:] if argv is None else argv)
+    if args and args[0] == "rename":
+        rename_main(args[1:])
+        return
+    register_mode = bool(args and args[0] == "register")
+    if args and args[0] in {"create", "register"}:
+        args = args[1:]
+    create_main(args, register_mode=register_mode)
 
 
 if __name__ == "__main__":
