@@ -10,7 +10,7 @@ Use the terminal command first:
 vault --help
 ```
 
-It is installed by `_master/system/bootstrap/install_vault_command.py` into `~/.local/bin/vault`.
+It is installed by `_master/system/bootstrap/install_vault_command.py` into `~/.local/bin/vault`. The installer adds `~/.local/bin` to zsh startup files. The one-line `sudo bash` bootstrap also installs `/usr/local/bin/vault` so fresh terminals can run `vault` without PATH repairs.
 
 Main script implementations live in:
 

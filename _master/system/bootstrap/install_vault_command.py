@@ -28,6 +28,7 @@ def install_command(
     command_name: str,
     dry_run: bool,
     force: bool,
+    update_shell_path: bool,
 ) -> int:
     target = root / "_master/system/scripts/vault.py"
     link = bin_dir / command_name
@@ -38,6 +39,8 @@ def install_command(
     if link.exists() or link.is_symlink():
         if same_target(link, target):
             print(f"{link} already points to {target}")
+            if update_shell_path:
+                ensure_shell_path(bin_dir, dry_run)
             return 0
         if not force:
             print(
@@ -58,7 +61,40 @@ def install_command(
     bin_dir.mkdir(parents=True, exist_ok=True)
     link.symlink_to(target)
     os.chmod(target, target.stat().st_mode | 0o755)
+    if update_shell_path:
+        ensure_shell_path(bin_dir, dry_run)
     return 0
+
+
+def shell_path_entry(bin_dir: Path) -> str:
+    home = Path.home()
+    try:
+        rel = bin_dir.resolve().relative_to(home.resolve())
+        return f"$HOME/{rel.as_posix()}"
+    except ValueError:
+        return bin_dir.as_posix()
+
+
+def ensure_shell_path(bin_dir: Path, dry_run: bool) -> None:
+    entry = shell_path_entry(bin_dir)
+    marker = "# context-nine-vault-bootstrap PATH"
+    block = (
+        "\n"
+        f"{marker}\n"
+        f'case ":$PATH:" in\n'
+        f'  *":{entry}:"*) ;;\n'
+        f'  *) export PATH="{entry}:$PATH" ;;\n'
+        f"esac\n"
+    )
+    for rc_name in (".zprofile", ".zshrc"):
+        rc_path = Path.home() / rc_name
+        existing = rc_path.read_text(encoding="utf-8") if rc_path.exists() else ""
+        if marker in existing or entry in existing:
+            continue
+        print(f"add {entry} to {rc_path}")
+        if not dry_run:
+            with rc_path.open("a", encoding="utf-8") as handle:
+                handle.write(block)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -68,6 +104,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--command-name", default="vault", help="Command name to install.")
     parser.add_argument("--dry-run", action="store_true", help="Print actions without changing files.")
     parser.add_argument("--force", action="store_true", help="Replace an existing unrelated command symlink/file.")
+    parser.add_argument("--no-shell-path", action="store_true", help="Do not add the command directory to zsh startup files.")
     args = parser.parse_args(argv)
 
     return install_command(
@@ -76,6 +113,7 @@ def main(argv: list[str] | None = None) -> int:
         args.command_name,
         args.dry_run,
         args.force,
+        not args.no_shell_path,
     )
 
 

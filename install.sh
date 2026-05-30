@@ -110,3 +110,20 @@ run_as_install_user rm -rf "${TARGET}/.vault-bootstrap" "${TARGET}/.vault-upgrad
 run_as_install_user rm -f "${TARGET}/.bootstrap-export-manifest.json"
 cd "${TARGET}"
 run_as_install_user /bin/bash _master/system/bootstrap/init_vault.sh
+
+PYTHON_BIN="$(command -v python3)"
+if [[ "${EUID}" -eq 0 ]]; then
+  mkdir -p /usr/local/bin
+  "${PYTHON_BIN}" "${TARGET}/_master/system/bootstrap/install_vault_command.py" \
+    --root "${TARGET}" \
+    --bin-dir /usr/local/bin \
+    --force \
+    --no-shell-path
+  echo "Installed global vault command: /usr/local/bin/vault"
+else
+  echo "Global vault command skipped because installer is not running as root."
+fi
+
+echo ""
+echo "Install complete."
+echo "Vault: ${TARGET}"

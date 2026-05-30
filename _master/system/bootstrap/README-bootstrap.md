@@ -62,7 +62,8 @@ Result:
 - Vault-local bootstrap metadata lives under `_master/system/bootstrap/state/`.
 - The installer runs with `sudo`, but writes the vault and bootstrap state as the user who invoked sudo.
 - Vault folder has no public-repo `.git` pointer after install.
-- `init_vault.sh` installs/checks command dependencies, asks for three exact context-folder slugs, generates agent files, and installs `vault`.
+- `init_vault.sh` installs/checks command dependencies, asks for three exact context-folder slugs, generates agent files, installs `vault` to `~/.local/bin/vault`, and adds that directory to zsh startup files.
+- The one-line `sudo bash` installer also installs `/usr/local/bin/vault`, so `vault` works even before a new shell has loaded `~/.local/bin`.
 - Run `_master/system/bootstrap/init_vault.sh --enable-git` later only if you want optional personal Git/LFS for your own vault.
 
 Export includes plugin metadata/styles and non-sensitive settings, ships source bundles only for Context Nine and Relay, downloads active third-party plugin bundles during setup, and excludes known sensitive/local plugin config. When Obsidian first opens the vault, approve community plugins if Obsidian asks to trust the vault.
