@@ -105,7 +105,8 @@ Profile upgrade does not advance the installed public commit. A later full `vaul
 - Existing non-empty target vault folder: public install script refuses to continue.
 - Existing target file: public install script refuses to continue.
 - Missing target folder: public install script creates it before clone.
-- Quoted custom target like `"~/Downloads/obsidian"`: installer expands it to the invoking user's home, not a literal `~/` folder.
+- Quoted custom target like `"~/Documents/Obsidian/vault"`: installer expands it to the invoking user's home, not a literal `~/` folder.
+- Transient GitHub registry or release-asset download failures are retried before install fails.
 - Export root already has a Git repo: exporter preserves repo metadata and mirrors only export-owned content.
 - Legacy root state paths (`.vault-bootstrap`, `.vault-upgrade`, `.bootstrap-export-manifest.json`) are not part of new installs. Upgrade keeps legacy fallbacks and migrates old install/report state into `_master/system/bootstrap/state`.
 - Plugin config: excluded plugin config means users must sign in/configure local integrations after install.

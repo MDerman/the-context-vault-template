@@ -5,8 +5,12 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
+import http.client
 import json
 from pathlib import Path
+import socket
+import sys
+import time
 import urllib.error
 import urllib.request
 from typing import Any
@@ -16,6 +20,9 @@ REGISTRY_URL = "https://raw.githubusercontent.com/obsidianmd/obsidian-releases/m
 REQUIRED_ASSETS = ("main.js", "manifest.json")
 OPTIONAL_ASSETS = ("styles.css",)
 DEFAULT_CONFIG = "_master/system/bootstrap/bootstrap-export.json"
+REQUEST_TIMEOUT_SECONDS = 120
+DOWNLOAD_ATTEMPTS = 4
+TRANSIENT_HTTP_STATUS = {408, 425, 429, 500, 502, 503, 504}
 
 
 def default_root() -> Path:
@@ -31,6 +38,35 @@ def write_json(path: Path, payload: Any) -> None:
     path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
 
+def retry_delay(attempt: int) -> float:
+    return min(2 ** (attempt - 1), 10)
+
+
+def transient_error(exc: BaseException) -> bool:
+    if isinstance(exc, urllib.error.HTTPError):
+        return exc.code in TRANSIENT_HTTP_STATUS
+    if isinstance(exc, urllib.error.URLError):
+        return isinstance(exc.reason, (TimeoutError, socket.timeout, ConnectionResetError, OSError))
+    return isinstance(exc, (TimeoutError, socket.timeout, http.client.IncompleteRead, ConnectionResetError))
+
+
+def with_retries(description: str, operation):
+    for attempt in range(1, DOWNLOAD_ATTEMPTS + 1):
+        try:
+            return operation()
+        except Exception as exc:
+            if attempt >= DOWNLOAD_ATTEMPTS or not transient_error(exc):
+                raise
+            delay = retry_delay(attempt)
+            print(
+                f"retry {description} after {type(exc).__name__}: {exc} "
+                f"({attempt}/{DOWNLOAD_ATTEMPTS})",
+                file=sys.stderr,
+            )
+            time.sleep(delay)
+    raise RuntimeError(f"unreachable retry state for {description}")
+
+
 def urlopen_json(url: str) -> Any:
     request = urllib.request.Request(
         url,
@@ -39,24 +75,34 @@ def urlopen_json(url: str) -> Any:
             "User-Agent": "context-nine-vault-bootstrap",
         },
     )
-    with urllib.request.urlopen(request, timeout=60) as response:
-        return json.load(response)
+
+    def load() -> Any:
+        with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
+            return json.load(response)
+
+    return with_retries(url, load)
 
 
 def download_bytes(url: str) -> bytes:
     request = urllib.request.Request(url, headers={"User-Agent": "context-nine-vault-bootstrap"})
-    with urllib.request.urlopen(request, timeout=120) as response:
-        return response.read()
+
+    def download() -> bytes:
+        with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
+            return response.read()
+
+    return with_retries(url, download)
 
 
 def url_exists(url: str) -> bool:
     request = urllib.request.Request(url, headers={"User-Agent": "context-nine-vault-bootstrap"}, method="HEAD")
     try:
-        with urllib.request.urlopen(request, timeout=60):
-            return True
+        return with_retries(
+            url,
+            lambda: urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS).close() is None,
+        )
     except urllib.error.HTTPError:
         return False
-    except urllib.error.URLError:
+    except (urllib.error.URLError, TimeoutError, socket.timeout, http.client.IncompleteRead, ConnectionResetError):
         return False
 
 
