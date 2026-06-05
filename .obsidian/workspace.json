@@ -72,7 +72,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 353
+    "width": 386
   },
   "right": {
     "id": "c5da0292b2670f3d",
@@ -81,7 +81,7 @@
       {
         "id": "f5407bdcfb351c87",
         "type": "tabs",
-        "dimension": 57.771469127040454,
+        "dimension": 36.22963537626067,
         "children": [
           {
             "id": "54e1657f30973278",
@@ -160,7 +160,7 @@
             }
           },
           {
-            "id": "916807d5a7e18618",
+            "id": "0dfb3af3c2de342c",
             "type": "leaf",
             "state": {
               "type": "system3-sync-status",
@@ -175,7 +175,7 @@
       {
         "id": "21f8b3b76e2a4780",
         "type": "tabs",
-        "dimension": 14.194464158977999,
+        "dimension": 35.76415826221878,
         "children": [
           {
             "id": "9b5af85820951a6f",
@@ -192,7 +192,7 @@
       {
         "id": "d876f1e5ee5dd993",
         "type": "tabs",
-        "dimension": 28.034066713981545,
+        "dimension": 28.006206361520558,
         "children": [
           {
             "id": "1ffc5fcaa195eeb3",
@@ -252,7 +252,7 @@
       "periodic-notes:Open today": false
     }
   },
-  "active": "12a3aa81c232d265",
+  "active": "60418e06a5cf5a59",
   "lastOpenFiles": [
     "README.md"
   ]

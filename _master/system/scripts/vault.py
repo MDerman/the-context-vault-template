@@ -54,7 +54,7 @@ Common commands:
   project      Create and list project notes.
   task         Create TaskNotes tasks with validated project/epic links.
   folder       Create, register, or rename a context folder.
-  gcal         Read/write Google Calendar time blocks and task date mirrors.
+  gcal         Read/write Google Calendar events, time blocks, and task date mirrors.
   git-maintenance  Keep local Git history shallow and prune local objects.
   mobile-profile  Create/update .obsidian-mobile with safe mobile plugins and theme settings.
   profile      Preview/apply Obsidian profile, theme, hotkey, and plugin upgrades.

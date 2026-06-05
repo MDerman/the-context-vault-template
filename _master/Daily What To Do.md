@@ -1,14 +1,11 @@
 
 1. Refresh the vault.
-2. Fill in the daily note until I have at 2-5 goals for today
+2. Fill personal daily note
 3. Check all tasks, urgent/due tasks, and calendar.
-4. Choose the day theme:
-   - marketing / outreach
-   - coding / building
-1. Run the 3-block day.
-2. Capture loose thoughts in BRAIN_DUMP. 
-3. End the day by looking at daily note. run the skill to calendar block tomorrow if i open tomorrows daily note now, and fill it out before tomorrow.
-4. optionally weekly planning, quarterly note etc. 
+4. Choose the day theme / and block out 3 time blocks.
+5. Capture loose thoughts in BRAIN_DUMP.
+6. End the day by looking at daily note. run the skill to calendar block tomorrow if i open tomorrows daily note now, and fill it out before tomorrow.
+7. optionally weekly planning, quarterly note etc.
 
 [[Dashboard]]
 [[_master/system/context/03-Momentum|03-Momentum]]

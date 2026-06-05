@@ -25,7 +25,7 @@ DEFAULT_CONFIG = {
     "attachments_path": "_master/system/inbox/BRAIN_DUMP_ATTACHMENTS",
     "copy_attachments": True,
     "clear_after_ingest": False,
-    "cleared_note_body": "<div><br></div>",
+    "cleared_note_body": "<div>{note_name}</div><div><br></div>",
 }
 
 
@@ -224,6 +224,9 @@ on run argv
     set noteBody to body of targetNote
     if shouldClear is "true" then
       set body of targetNote to clearBody
+      try
+        set name of targetNote to noteTitle
+      end try
     end if
     return noteBody
   end tell
@@ -242,7 +245,13 @@ end run
 
 
 def clear_body_for_note(template: str, note_name: str) -> str:
-    return template.format(note_name=html.escape(note_name))
+    escaped_name = html.escape(note_name)
+    rendered = template.format(note_name=escaped_name)
+    markdown, _used_links = html_to_markdown(rendered)
+    first_line = markdown.splitlines()[0].lstrip("#").strip() if markdown.splitlines() else ""
+    if first_line.casefold() == note_name.strip().casefold():
+        return rendered
+    return f"<div>{escaped_name}</div>{rendered}"
 
 
 def save_brain_dump_attachments(note_name: str, attachments_dir: Path, import_id: str) -> list[dict[str, str]]:

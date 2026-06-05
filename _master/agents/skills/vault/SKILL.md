@@ -51,6 +51,18 @@ vault folder --name 06-new-context --status active
 
 After changing tasks/projects/epics/contexts, run `vault context` when agent-readable rollups should refresh.
 
+## Google Calendar
+
+Create specific calendar events on the default Google Calendar:
+
+```bash
+vault gcal create-event --title "Event title" --start "2026-06-02T19:30" --end "2026-06-02T20:30" --apply
+```
+
+Use `vault gcal create-event` for appointments, travel, meetings, reservations, and other concrete dated events. It writes to `primary` unless `--calendar` or `GOOGLE_CALENDAR_DEFAULT_EVENT_CALENDAR` says otherwise.
+
+Use `vault gcal create-block` only when user explicitly asks for time blocking or broad planning blocks on `Time Blocks`.
+
 ## Skills
 
 Active shared agent skills live in `_master/agents/skills`, symlinked to `.agents/skills`.

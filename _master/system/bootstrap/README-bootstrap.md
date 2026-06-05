@@ -11,8 +11,10 @@ tmp="$(mktemp)" && curl -fsSL https://raw.githubusercontent.com/MDerman/the-cont
 To install somewhere else, pass a target path:
 
 ```bash
-tmp="$(mktemp)" && curl -fsSL https://raw.githubusercontent.com/MDerman/the-context-vault-template/main/install.sh -o "$tmp" && sudo bash "$tmp" "/custom/Vault/path" && rm -f "$tmp"
+tmp="$(mktemp)" && curl -fsSL https://raw.githubusercontent.com/MDerman/the-context-vault-template/main/install.sh -o "$tmp" && sudo bash "$tmp" "~/Documents/Obsidian/vault" && rm -f "$tmp"
 ```
+
+Quoted `~` paths work too, for example `"~/Documents/Obsidian/vault"`.
 
 Then open it in Obsidian:
 

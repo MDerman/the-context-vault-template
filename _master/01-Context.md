@@ -241,7 +241,18 @@ From the master vault, Periodic Notes defaults to `personal`. Opening today's da
 personal/_obsidian/periodic/daily/YYYY-MM-DD.md
 ```
 
-Generated agent periodic rollups live separately:
+Generated master periodic rollups for Obsidian live separately:
+
+```text
+_master/_obsidian/periodic/daily/YYYY-MM-DD.md
+_master/_obsidian/periodic/weekly/YYYY-Www.md
+_master/_obsidian/periodic/quarterly/YYYY-Qn.md
+_master/_obsidian/periodic/yearly/YYYY.md
+```
+
+Those master notes are script-generated Sync Embeds over the selected context folder source notes. `_master/Dashboard.md` links to these master notes for daily, weekly, quarterly, and yearly navigation.
+
+Generated agent periodic rollups also live separately:
 
 ```text
 _master/system/context/YYYY-MM-DD.md
@@ -258,7 +269,7 @@ Those agent notes are script-generated composed views. They inline the selected 
 _Source: `business/_obsidian/periodic/quarterly/2026-Q2.md`_
 ````
 
-Context folder periodic notes remain the editable source of truth. The agent rollups are generated read-only files for agents that cannot rely on Obsidian plugin rendering. Sync Embeds reference notes are still kept here for older Obsidian-facing rollups and system notes:
+Context folder periodic notes remain the editable source of truth. The agent rollups are generated read-only files for agents that cannot rely on Obsidian plugin rendering. Sync Embeds reference notes live here:
 
 ```text
 _master/system/obsidian_notes/beta_plugins_docs/README-sync-embeds.md
@@ -266,7 +277,7 @@ _master/system/obsidian_notes/beta_plugins_docs/README-sync-embeds.md
 
 The generator creates missing context folder periodic notes from each context folder's own local `_obsidian/templates/periodic/<period>-template.md` file, which is the same template path configured in Obsidian. `personal` has filled-in starter templates. The other context folders intentionally have blank periodic template files until I customize them.
 
-Generate agent rollups with:
+Generate master and agent rollups with:
 
 ```bash
 vault periodic
@@ -274,7 +285,7 @@ vault periodic --all
 vault periodic --context-folders dev,claudeche
 ```
 
-`context.py` calls this generator for the default refresh path, so one agent-context refresh updates context, realized system notes, and current agent periodic rollups.
+`context.py` calls this generator for the default refresh path, so one agent-context refresh updates context, realized system notes, current master periodic rollups, and current agent periodic rollups.
 
 Clean current generated master periodic rollups with:
 
@@ -366,7 +377,8 @@ Google Calendar task mirrors:
 - `Scheduled Tasks`: two-way mirror of TaskNotes `scheduled` values.
 - `Due Tasks`: two-way mirror of TaskNotes `due` values.
 - Use `vault gcal list --days 7 --calendar all --json` when agents need low-context calendar awareness.
-- Agents may create/edit `Time Blocks` through `vault gcal create-block`, but must not create arbitrary events on personal or business calendars.
+- Use `vault gcal create-event` for concrete appointments, travel, meetings, reservations, and dated personal or business events; it writes to the default calendar (`primary`) unless `--calendar` or `GOOGLE_CALENDAR_DEFAULT_EVENT_CALENDAR` says otherwise.
+- Use `vault gcal create-block` only when the user explicitly asks for time blocking or broad planning blocks on `Time Blocks`.
 - Broad work planning should usually use `Time Blocks`; avoid adding `scheduled` to ordinary tasks unless the task truly needs a specific work date/time.
 - Native TaskNotes Google export should stay disabled unless intentionally replacing the vault mirror, because the custom mirror owns the separate `Scheduled Tasks` and `Due Tasks` calendars.
 - `vault gcal calendars ensure --apply` sets default popup reminders: `Time Blocks` at event start, `Scheduled Tasks` at event start, and `Due Tasks` at event start plus 25 minutes before. The Google Calendar API does not expose the UI-only all-day default reminder time; set "0 days before at 9:00 AM" manually in Google Calendar if needed.

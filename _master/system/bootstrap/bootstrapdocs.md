@@ -79,6 +79,8 @@ Public install script:
 
 - installs Homebrew if it is missing, then checks Homebrew-managed dependencies;
 - clones `MDerman/the-context-vault-template` into the default target `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault`, or a first-argument target override;
+- expands quoted `~`, `~/...`, and `~user/...` target overrides before creating the target directory;
+- resolves relative target overrides from the directory where the installer was launched;
 - creates the target directory if it is missing and refuses only when the target exists and is non-empty;
 - refuses when the target path exists as a file;
 - stores upstream bootstrap Git state outside iCloud under `~/Library/Application Support/context-nine-vault-bootstrap`;
@@ -103,6 +105,7 @@ Profile upgrade does not advance the installed public commit. A later full `vaul
 - Existing non-empty target vault folder: public install script refuses to continue.
 - Existing target file: public install script refuses to continue.
 - Missing target folder: public install script creates it before clone.
+- Quoted custom target like `"~/Downloads/obsidian"`: installer expands it to the invoking user's home, not a literal `~/` folder.
 - Export root already has a Git repo: exporter preserves repo metadata and mirrors only export-owned content.
 - Legacy root state paths (`.vault-bootstrap`, `.vault-upgrade`, `.bootstrap-export-manifest.json`) are not part of new installs. Upgrade keeps legacy fallbacks and migrates old install/report state into `_master/system/bootstrap/state`.
 - Plugin config: excluded plugin config means users must sign in/configure local integrations after install.

@@ -10,12 +10,9 @@ generated: false
 [[business#Identity|Identity]]
 [[business#Momentum|Momentum]]
 
-## Strategic Direction
+## Planning &  Direction
 
-- Product bet:
-- Customer/user bet:
-- Revenue/conversion bet:
-- Main risk:
+
 
 ## WIG
 

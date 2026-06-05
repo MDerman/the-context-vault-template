@@ -96,7 +96,8 @@ Read `_master/system/context/SCRIPTS.md` before refresh/setup commands. Read `_m
 - Link projects and epics when obvious.
 - Use native dates: `scheduled` = start/surface/work date; `due` = deadline. Do not add dates unless explicitly asked or clearly needed.
 - Use native time fields: `timeEstimate`, `timeEntries`, `pomodoros`. Do not use `duration`.
-- Use Google Calendar `Time Blocks` for broad planning blocks. Do not create arbitrary events on personal/business calendars.
+- Use `vault gcal create-event` for concrete appointments, travel, meetings, reservations, and dated personal/business events; default calendar is `primary` unless user names another calendar.
+- Use Google Calendar `Time Blocks` / `vault gcal create-block` only for explicit time blocking or broad planning blocks.
 - `Scheduled Tasks` and `Due Tasks` mirror TaskNotes `scheduled`/`due`; use `vault gcal sync-tasks` to mirror.
 - Agents may read calendars with `vault gcal list --days 7 --calendar all --json`.
 - Missed cadence: create one recovery task or recommendation, not repeated guilt tasks.

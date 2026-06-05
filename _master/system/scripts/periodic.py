@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Generate agent-readable periodic notes for the current active context folder set."""
+"""Generate master and agent-readable periodic notes for active context folders."""
 
 from __future__ import annotations
 
 import argparse
+import calendar
 import datetime as dt
 import re
 import sys
@@ -40,9 +41,12 @@ MANAGED_ENTITY_MARKERS = (
     OLD_BOOTSTRAP_MARKER,
     OLD_BOOTSTRAP_MARKER_LONG_PATH,
 )
+MASTER_PERIODIC_DIR = Path("_master/_obsidian/periodic")
 AGENT_DIR = Path("_master/system/context")
 LEGACY_AGENT_PERIODIC_DIR = Path("_master/system/context/periodic")
 CURRENT_CONTENT_SCHEDULE_PLACEHOLDER = "{{current_content_schedule_sync_embed}}"
+TEMPLATER_DATE_NOW_RE = re.compile(r"<%\s*tp\.date\.now\((.*?)\)\s*%>")
+TEMPLATER_CURSOR_RE = re.compile(r"<%\s*tp\.file\.cursor\(\)\s*%>")
 
 
 def active_periods(day: dt.date) -> dict[str, str]:
@@ -83,10 +87,163 @@ def parse_frontmatter(text: str) -> dict[str, str]:
     return data
 
 
+def split_templater_args(value: str) -> list[str]:
+    args: list[str] = []
+    current: list[str] = []
+    quote: str | None = None
+    escaped = False
+    for char in value:
+        if escaped:
+            current.append(char)
+            escaped = False
+            continue
+        if char == "\\" and quote:
+            current.append(char)
+            escaped = True
+            continue
+        if quote:
+            current.append(char)
+            if char == quote:
+                quote = None
+            continue
+        if char in {"'", '"'}:
+            current.append(char)
+            quote = char
+            continue
+        if char == ",":
+            args.append("".join(current).strip())
+            current = []
+            continue
+        current.append(char)
+    if current or value.endswith(","):
+        args.append("".join(current).strip())
+    return args
+
+
+def unquote_templater_arg(value: str) -> str:
+    value = value.strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+        return value[1:-1]
+    return value
+
+
+def clamp_day(year: int, month: int, day: int) -> int:
+    return min(day, calendar.monthrange(year, month)[1])
+
+
+def add_months(day: dt.date, months: int) -> dt.date:
+    month_index = day.month - 1 + months
+    year = day.year + month_index // 12
+    month = month_index % 12 + 1
+    return day.replace(year=year, month=month, day=clamp_day(year, month, day.day))
+
+
+def add_years(day: dt.date, years: int) -> dt.date:
+    year = day.year + years
+    return day.replace(year=year, day=clamp_day(year, day.month, day.day))
+
+
+def parse_offset(value: str | None) -> tuple[int, int, int]:
+    if not value:
+        return 0, 0, 0
+    value = unquote_templater_arg(value).strip()
+    if re.fullmatch(r"[+-]?\d+", value):
+        return 0, 0, int(value)
+    match = re.fullmatch(
+        r"([+-])?P(?:(?P<years>[+-]?\d+)Y)?(?:(?P<months>[+-]?\d+)M)?(?:(?P<weeks>[+-]?\d+)W)?(?:(?P<days>[+-]?\d+)D)?",
+        value,
+    )
+    if not match:
+        raise ValueError(f"unsupported Templater date offset: {value}")
+    sign = -1 if match.group(1) == "-" else 1
+    years = int(match.group("years") or 0) * sign
+    months = int(match.group("months") or 0) * sign
+    days = (int(match.group("weeks") or 0) * 7 + int(match.group("days") or 0)) * sign
+    return years, months, days
+
+
+def parse_moment_date(value: str, fmt: str) -> dt.date:
+    value = value.strip()
+    if fmt == "YYYY-MM-DD":
+        return dt.date.fromisoformat(value)
+    if fmt == "GGGG-[W]WW":
+        match = re.fullmatch(r"(\d{4})-W(\d{2})", value)
+        if match:
+            return dt.date.fromisocalendar(int(match.group(1)), int(match.group(2)), 1)
+    if fmt == "YYYY-[Q]Q":
+        match = re.fullmatch(r"(\d{4})-Q([1-4])", value)
+        if match:
+            return dt.date(int(match.group(1)), (int(match.group(2)) - 1) * 3 + 1, 1)
+    return dt.date.fromisoformat(value)
+
+
+def format_moment_date(day: dt.date, fmt: str) -> str:
+    output: list[str] = []
+    i = 0
+    while i < len(fmt):
+        if fmt[i] == "[":
+            end = fmt.find("]", i + 1)
+            if end != -1:
+                output.append(fmt[i + 1 : end])
+                i = end + 1
+                continue
+        if fmt.startswith("YYYY", i):
+            output.append(f"{day.year:04d}")
+            i += 4
+        elif fmt.startswith("GGGG", i):
+            output.append(f"{day.isocalendar().year:04d}")
+            i += 4
+        elif fmt.startswith("WW", i):
+            output.append(f"{day.isocalendar().week:02d}")
+            i += 2
+        elif fmt.startswith("MM", i):
+            output.append(f"{day.month:02d}")
+            i += 2
+        elif fmt.startswith("DD", i):
+            output.append(f"{day.day:02d}")
+            i += 2
+        elif fmt.startswith("Q", i):
+            output.append(str(((day.month - 1) // 3) + 1))
+            i += 1
+        else:
+            output.append(fmt[i])
+            i += 1
+    return "".join(output)
+
+
+def render_templater_date_now(expression_args: str, period_id: str, day: dt.date) -> str:
+    args = split_templater_args(expression_args)
+    if not args:
+        return ""
+    output_format = unquote_templater_arg(args[0])
+    offset_arg = args[1] if len(args) >= 2 else None
+    if len(args) >= 3:
+        reference = period_id if args[2].strip() == "tp.file.title" else unquote_templater_arg(args[2])
+        reference_format = unquote_templater_arg(args[3]) if len(args) >= 4 else "YYYY-MM-DD"
+        base_day = parse_moment_date(reference, reference_format)
+    else:
+        base_day = day
+    years, months, days = parse_offset(offset_arg)
+    rendered_day = add_years(base_day, years)
+    rendered_day = add_months(rendered_day, months)
+    rendered_day = rendered_day + dt.timedelta(days=days)
+    return format_moment_date(rendered_day, output_format)
+
+
 def is_generated_agent_periodic_note(path: Path) -> bool:
     text = path.read_text(encoding="utf-8", errors="replace")
     props = parse_frontmatter(text)
     return props.get("type") == "agent-periodic" and props.get("generated", "").lower() == "true"
+
+
+def is_generated_master_periodic_note(path: Path) -> bool:
+    text = path.read_text(encoding="utf-8", errors="replace")
+    props = parse_frontmatter(text)
+    return props.get("type") == "master-periodic" and props.get("generated", "").lower() == "true"
+
+
+def master_periodic_path(root: Path, period: str, period_id: str) -> Path:
+    return root / MASTER_PERIODIC_DIR / period / f"{period_id}.md"
 
 
 def agent_periodic_path(root: Path, period_id: str) -> Path:
@@ -135,6 +292,8 @@ def render_template(root: Path, template: str, entity: str, period_id: str, day:
     rendered = rendered.replace("<% tp.file.title %>", period_id)
     rendered = rendered.replace("<% tp.file.folder(true).split('/')[0] %>", entity)
     rendered = rendered.replace('<% tp.file.folder(true).split("/")[0] %>', entity)
+    rendered = TEMPLATER_DATE_NOW_RE.sub(lambda match: render_templater_date_now(match.group(1), period_id, day), rendered)
+    rendered = TEMPLATER_CURSOR_RE.sub("", rendered)
     rendered = rendered.replace(CURRENT_CONTENT_SCHEDULE_PLACEHOLDER, current_schedule_sync_embed(root, entity, day))
     return rendered
 
@@ -193,6 +352,42 @@ source_context_folders:
 """
 
 
+def master_periodic_note(root: Path, entities: list[str], period: str, period_id: str, generated_at: str) -> str:
+    sections = "\n\n".join(
+        f"## {entity}\n\n```sync\n![[{entity}/_obsidian/periodic/{period}/{period_id}]]\n```"
+        for entity in entities
+    )
+    return f"""---
+type: master-periodic
+period: {period}
+period_id: {period_id}
+generated: true
+source_context_folders:
+{yaml_list(entities)}
+generated_at: {generated_at}
+managed_by: "{MARKER}"
+---
+# {period_id} master {period}
+
+{sections}
+"""
+
+
+def write_master_periodic_note(root: Path, entities: list[str], period: str, period_id: str, generated_at: str) -> None:
+    path = master_periodic_path(root, period, period_id)
+    content = master_periodic_note(root, entities, period, period_id, generated_at)
+    if path.exists():
+        existing = path.read_text(encoding="utf-8")
+        if not is_generated_master_periodic_note(path) and not any(marker in existing for marker in MANAGED_ENTITY_MARKERS):
+            print(f"skip non-managed master periodic note: {path}")
+            return
+        if existing == content:
+            return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
+    print(f"wrote {path}")
+
+
 def write_agent_periodic_note(root: Path, entities: list[str], period: str, period_id: str, generated_at: str) -> None:
     path = agent_periodic_path(root, period_id)
     content = agent_periodic_note(root, entities, period, period_id, generated_at)
@@ -244,6 +439,7 @@ def generate_periodic_notes(
     for period, period_id in periods.items():
         for entity in entities:
             ensure_entity_note(root, entity, period, period_id, day)
+        write_master_periodic_note(root, entities, period, period_id, generated_at)
         write_agent_periodic_note(root, entities, period, period_id, generated_at)
         current_paths.add(agent_periodic_path(root, period_id))
     if not keep_agent_periodic_history:
@@ -251,7 +447,7 @@ def generate_periodic_notes(
     return entities, periods
 
 def main(argv: list[str] | None = None) -> None:
-    parser = argparse.ArgumentParser(description="Generate agent periodic notes for now.")
+    parser = argparse.ArgumentParser(description="Generate master and agent periodic notes for now.")
     parser.add_argument("--root", default=None, help="Vault root. Defaults to auto-discovery from the current directory or script location.")
     parser.add_argument("--configured-context-folders", dest="configured_entities", metavar="CONTEXT_FOLDERS")
     parser.add_argument("--configured-sub-vaults", dest="configured_entities", help=argparse.SUPPRESS)

@@ -6,6 +6,6 @@
     "attachments_path": "_master/system/inbox/BRAIN_DUMP_ATTACHMENTS",
     "copy_attachments": true,
     "clear_after_ingest": true,
-    "cleared_note_body": "<div><br></div>"
+    "cleared_note_body": "<div>{note_name}</div><div><br></div>"
   }
 }

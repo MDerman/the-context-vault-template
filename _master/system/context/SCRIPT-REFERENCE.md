@@ -16,7 +16,7 @@ This is the fuller script reference. Use `_master/system/context/SCRIPTS.md` for
 - `brain_dump.py`: imports the Brain Dump Apple Note into its single vault import file, copies attachments, and can clear the source note.
 - `_master/agents/skills/brain-dump-organizer/scripts/triage.py`: creates Brain Dump organizer backups/proposals, maintains the triage Base, clears the import file, and applies approved proposals.
 - `epic.py`: creates, renames, deletes, lists, and syncs context folder epics; keeps task links, per-epic TaskNotes Kanban Bases, and managed master task kanban epic views in sync.
-- `gcal.py`: authorizes Google Calendar, creates required vault calendars, lists calendar events for agents, creates `Time Blocks`, and two-way mirrors TaskNotes `scheduled`/`due` dates to `Scheduled Tasks`/`Due Tasks`.
+- `gcal.py`: authorizes Google Calendar, creates required vault calendars, lists calendar events for agents, creates specific default-calendar events, creates `Time Blocks`, and two-way mirrors TaskNotes `scheduled`/`due` dates to `Scheduled Tasks`/`Due Tasks`.
 - `folder.py`: creates/registers a context folder from the scaffold template.
 - `attachments.py`: dry-runs, applies, and verifies attachment cleanup so note attachments live under each owning top-level root folder's `_obsidian/attachments` directory. Reports and quarantined import leftovers are written outside the vault under `~/Downloads/vault-generated/`.
 - `backup.py`: backs up root `.obsidian` under `_master/system/backup/`.

@@ -30,13 +30,38 @@ run_as_install_user() {
   fi
 }
 
+resolve_target_path() {
+  local target="$1"
+  if [[ "${target}" == "~" ]]; then
+    target="${INSTALL_HOME}"
+  elif [[ "${target}" == "~/"* ]]; then
+    target="${INSTALL_HOME}/${target:2}"
+  elif [[ "${target}" =~ ^~([^/]+)(/.*)?$ ]]; then
+    local target_user="${BASH_REMATCH[1]}"
+    local suffix="${BASH_REMATCH[2]:-}"
+    local target_home=""
+    target_home="$(resolve_user_home "${target_user}")"
+    if [[ -z "${target_home}" || "${target_home}" == "~${target_user}" || ! -d "${target_home}" ]]; then
+      echo "Could not resolve home directory for target path user: ${target_user}" >&2
+      exit 1
+    fi
+    target="${target_home}${suffix}"
+  fi
+
+  if [[ "${target}" != /* ]]; then
+    target="$(pwd -P)/${target}"
+  fi
+
+  printf '%s' "${target}"
+}
+
 INSTALL_HOME="$(resolve_user_home "${INSTALL_USER}")"
 if [[ -z "${INSTALL_HOME}" || ! -d "${INSTALL_HOME}" ]]; then
   echo "Could not resolve home directory for install user: ${INSTALL_USER}" >&2
   exit 1
 fi
 
-TARGET="${1:-${INSTALL_HOME}/${DEFAULT_TARGET_RELATIVE}}"
+TARGET="$(resolve_target_path "${1:-${INSTALL_HOME}/${DEFAULT_TARGET_RELATIVE}}")"
 STATE_BASE="${INSTALL_HOME}/Library/Application Support/context-nine-vault-bootstrap"
 
 if ! command -v brew >/dev/null 2>&1; then

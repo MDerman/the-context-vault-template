@@ -4,5 +4,6 @@
   "attachmentFolderPath": "_master/_obsidian/attachments/_inbox",
   "alwaysUpdateLinks": true,
   "newFileLocation": "current",
-  "focusNewTab": false
+  "focusNewTab": false,
+  "readableLineLength": true
 }

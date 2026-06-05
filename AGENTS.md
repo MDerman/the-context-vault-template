@@ -1,6 +1,6 @@
 ---
 generated: true
-generated_at: 2026-05-30T20:40:36
+generated_at: 2026-06-01T11:54:31
 managed_by: "managed-by: _master/system/bootstrap/generate_agents.py"
 ---
 If editing this agent file, edit `_master/system/bootstrap/AGENTS.template.md`, then rerun `python3 _master/system/bootstrap/generate_agents.py`.
@@ -29,8 +29,8 @@ Root workspace is one Obsidian vault with context folders. `CLAUDE.md` is a syml
 
 ## Map
 
-- Active context folders: `ctx9`, `business`, `personal-brand`, `personal`.
-- Archived context folders: `claudeche`, `dev`.
+- Active context folders: `business`, `personal-brand`, `personal`.
+- Archived context folders: `claudeche`, `ctx9`, `dev`.
 - Configured context folders: `claudeche`, `ctx9`, `dev`, `business`, `personal-brand`, `personal`.
 - Content-enabled context folders: `business`, `personal-brand`.
 - Default task/periodic note capture context folder: `personal`.
@@ -65,8 +65,8 @@ Common queries:
 
 ```bash
 rg -l '^\s*epic:.*Current dev' personal/_obsidian/tasks
-rg -l '^status: in-progress$' ctx9/_obsidian/tasks business/_obsidian/tasks personal-brand/_obsidian/tasks personal/_obsidian/tasks | head -5
-for s in in-progress ongoing to-be-resumed up-next backlog; do rg -l "^status: $s$" ctx9/_obsidian/tasks business/_obsidian/tasks personal-brand/_obsidian/tasks personal/_obsidian/tasks; done | head -50
+rg -l '^status: in-progress$' business/_obsidian/tasks personal-brand/_obsidian/tasks personal/_obsidian/tasks | head -5
+for s in in-progress ongoing to-be-resumed up-next backlog; do rg -l "^status: $s$" business/_obsidian/tasks personal-brand/_obsidian/tasks personal/_obsidian/tasks; done | head -50
 rg -l '^status: (idea|cogs-are-turning|draft|planning-scripting|scheduled)$' business/_obsidian/content/items personal-brand/_obsidian/content/items 2>/dev/null | head -50
 ```
 
@@ -92,11 +92,12 @@ Read `_master/system/context/SCRIPTS.md` before refresh/setup commands. Read `_m
 ## Task Rules
 
 - Create TaskNotes tasks only for executable next actions, reminders, or decisions needing follow-up.
-- Route tasks by context: `ctx9`, `business`, `personal-brand`, `personal` unless user names another context.
+- Route tasks by context: `business`, `personal-brand`, `personal` unless user names another context.
 - Link projects and epics when obvious.
 - Use native dates: `scheduled` = start/surface/work date; `due` = deadline. Do not add dates unless explicitly asked or clearly needed.
 - Use native time fields: `timeEstimate`, `timeEntries`, `pomodoros`. Do not use `duration`.
-- Use Google Calendar `Time Blocks` for broad planning blocks. Do not create arbitrary events on personal/business calendars.
+- Use `vault gcal create-event` for concrete appointments, travel, meetings, reservations, and dated personal/business events; default calendar is `primary` unless user names another calendar.
+- Use Google Calendar `Time Blocks` / `vault gcal create-block` only for explicit time blocking or broad planning blocks.
 - `Scheduled Tasks` and `Due Tasks` mirror TaskNotes `scheduled`/`due`; use `vault gcal sync-tasks` to mirror.
 - Agents may read calendars with `vault gcal list --days 7 --calendar all --json`.
 - Missed cadence: create one recovery task or recommendation, not repeated guilt tasks.

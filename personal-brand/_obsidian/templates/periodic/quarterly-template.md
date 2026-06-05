@@ -11,18 +11,14 @@ generated: false
 [[personal-brand#Momentum|Momentum]]
 [[personal-brand#Social Selling|Social Selling]]
 
-## Direction
+## Planning & Direction
 
-- What should the personal brand become this quarter?
-- What audience signal matters most?
-- What offer, CTA, or product path should the content support?
 
 ## WIG
 
 - Wildly important goal:
 - Lead measure:
 - Lag measure:
-- Cadence of accountability:
 
 ## Stop / Start / Keep
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Google Calendar helpers for vault time blocks and TaskNotes date mirrors."""
+"""Google Calendar helpers for vault events, time blocks, and TaskNotes date mirrors."""
 
 from __future__ import annotations
 
@@ -108,6 +108,15 @@ class Env:
         raw = self.get("GOOGLE_CALENDAR_BLOCK_DEFAULT_DURATION_MINUTES", "240")
         return max(1, int(raw))
 
+    @property
+    def default_event_duration(self) -> int:
+        raw = self.get("GOOGLE_CALENDAR_EVENT_DEFAULT_DURATION_MINUTES", "60")
+        return max(1, int(raw))
+
+    @property
+    def default_event_calendar(self) -> str:
+        return self.get("GOOGLE_CALENDAR_DEFAULT_EVENT_CALENDAR", "primary")
+
 
 @dataclass
 class TaskNote:
@@ -143,7 +152,21 @@ def parse_args() -> argparse.Namespace:
     list_parser.add_argument("--calendar", default="all", help="Calendar name, id, or all.")
     list_parser.add_argument("--json", action="store_true", help="Emit JSON.")
 
-    block = subparsers.add_parser("create-block", help="Create a Time Blocks event.")
+    event = subparsers.add_parser("create-event", help="Create a specific event on the default calendar.")
+    event.add_argument("--title", required=True)
+    event.add_argument("--start", required=True, help="Local datetime, e.g. 2026-05-18T09:00.")
+    event.add_argument("--end", default=None, help="Local datetime. Defaults to event duration.")
+    event.add_argument("--description", default="")
+    event.add_argument(
+        "--calendar",
+        default=None,
+        help="Calendar name, id, primary, or default. Defaults to GOOGLE_CALENDAR_DEFAULT_EVENT_CALENDAR or primary.",
+    )
+    event.add_argument("--dry-run", action="store_true")
+    event.add_argument("--apply", action="store_true")
+    event.add_argument("--json", action="store_true")
+
+    block = subparsers.add_parser("create-block", help="Create a planning block on Time Blocks.")
     block.add_argument("--title", required=True)
     block.add_argument("--start", required=True, help="Local datetime, e.g. 2026-05-18T09:00.")
     block.add_argument("--end", default=None, help="Local datetime. Defaults to block duration.")
@@ -491,6 +514,8 @@ def rfc3339_range(env: Env, from_date: str | None, days: int) -> tuple[str, str]
 
 
 def resolve_calendar_ids(env: Env, selector: str) -> list[tuple[str, str]]:
+    if selector in {"primary", "default"}:
+        return [("Default", "primary")]
     calendars = list_calendars(env)
     if selector == "all":
         return [(item.get("summary", item["id"]), item["id"]) for item in calendars]
@@ -510,6 +535,13 @@ def resolve_calendar_ids(env: Env, selector: str) -> list[tuple[str, str]]:
     if selector in ids:
         return [(ids[selector], selector)]
     raise GCalError(f"Calendar not found: {selector}")
+
+
+def resolve_write_calendar_id(env: Env, selector: str) -> tuple[str, str]:
+    matches = resolve_calendar_ids(env, selector)
+    if len(matches) != 1:
+        raise GCalError(f"Calendar selector must resolve to one calendar: {selector}")
+    return matches[0]
 
 
 def list_events(env: Env, calendar_id: str, time_min: str, time_max: str) -> list[dict[str, Any]]:
@@ -567,9 +599,11 @@ def event_payload(
     env: Env,
     description: str = "",
     private: dict[str, str] | None = None,
+    duration_minutes: int | None = None,
 ) -> dict[str, Any]:
     start = parse_local_datetime(start_value, env)
-    end = parse_local_datetime(end_value, env) if end_value else start + dt.timedelta(minutes=env.default_block_duration)
+    duration = duration_minutes if duration_minutes is not None else env.default_event_duration
+    end = parse_local_datetime(end_value, env) if end_value else start + dt.timedelta(minutes=duration)
     payload: dict[str, Any] = {
         "summary": title,
         "description": description,
@@ -579,6 +613,32 @@ def event_payload(
     if private:
         payload["extendedProperties"] = {"private": private}
     return payload
+
+
+def command_create_event(env: Env, args: argparse.Namespace) -> int:
+    apply = bool(args.apply)
+    if not apply and not args.dry_run:
+        print("Defaulting to dry run. Pass --apply to create the default-calendar event.")
+    calendar_selector = args.calendar or env.default_event_calendar
+    payload = event_payload(
+        args.title,
+        args.start,
+        args.end,
+        env,
+        description=args.description,
+        private={"syncOwner": "vault-gcal-event", "vaultRoot": str(env.root)},
+        duration_minutes=env.default_event_duration,
+    )
+    if not apply:
+        result = {"calendar": calendar_selector, "event": payload}
+    else:
+        _, calendar_id = resolve_write_calendar_id(env, calendar_selector)
+        result = create_event(env, calendar_id, payload)
+    if args.json:
+        print(json.dumps(result, indent=2, sort_keys=True))
+    else:
+        print(json.dumps(result, indent=2, sort_keys=True))
+    return 0
 
 
 def command_create_block(env: Env, args: argparse.Namespace) -> int:
@@ -594,6 +654,7 @@ def command_create_block(env: Env, args: argparse.Namespace) -> int:
         env,
         description=args.description,
         private={"syncOwner": "vault-gcal-time-block", "vaultRoot": str(env.root)},
+        duration_minutes=env.default_block_duration,
     )
     if not apply:
         result = {"calendar": calendar_name(env, "time-blocks"), "event": payload}
@@ -940,6 +1001,8 @@ def main() -> int:
             return command_calendars(env, args)
         if args.command == "list":
             return command_list(env, args)
+        if args.command == "create-event":
+            return command_create_event(env, args)
         if args.command == "create-block":
             return command_create_block(env, args)
         if args.command == "sync-tasks":

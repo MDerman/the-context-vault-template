@@ -23,6 +23,7 @@ DEFAULT_ENTITIES = [
 
 MARKER = "managed-by: _master/system/scripts/context.py"
 AGENT_DIR = Path("_master/system/context")
+MASTER_PERIODIC_DIR = Path("_master/_obsidian/periodic")
 AGENT_CONTEXT_MARKDOWN_PATH = AGENT_DIR / "CONTEXT.md"
 LEGACY_AGENT_CONTEXT_MARKDOWN_PATH = AGENT_DIR / ("context" + ".md")
 LEGACY_AGENT_SYSTEM_DIR = Path("_master/system/context/system")
@@ -362,6 +363,13 @@ def agent_periodic_paths(periods: dict[str, str]) -> dict[str, str]:
     return {period: str(AGENT_DIR / f"{period_id}.md") for period, period_id in periods.items()}
 
 
+def master_periodic_paths(periods: dict[str, str]) -> dict[str, str]:
+    return {
+        period: str(MASTER_PERIODIC_DIR / period / f"{period_id}.md")
+        for period, period_id in periods.items()
+    }
+
+
 def context_markdown(
     entities: list[str],
     selected_entities: list[str],
@@ -499,24 +507,24 @@ def dashboard_markdown(
         for schedule in content_schedules
     ]
     context_note_lines = [obsidian_link(f"{entity}/{entity}.md", entity) for entity in selected_entities]
-    agent_periodics = agent_periodic_paths(periods)
+    master_periodics = master_periodic_paths(periods)
     standing_lines = [
         obsidian_link("_master/system/context/01-Context.md", "01-Context"),
         obsidian_link("_master/system/context/02-Identity.md", "02-Identity"),
         obsidian_link("_master/system/context/03-Momentum.md", "03-Momentum"),
     ]
     periodic_lines = [
-        obsidian_link(agent_periodics["yearly"], periods["yearly"]),
-        obsidian_link(agent_periodics["weekly"], periods["weekly"]),
-        obsidian_link(agent_periodics["quarterly"], periods["quarterly"]),
-        obsidian_link(agent_periodics["daily"], periods["daily"]),
+        obsidian_link(master_periodics["yearly"], periods["yearly"]),
+        obsidian_link(master_periodics["weekly"], periods["weekly"]),
+        obsidian_link(master_periodics["quarterly"], periods["quarterly"]),
+        obsidian_link(master_periodics["daily"], periods["daily"]),
     ]
     inbox_lines = [obsidian_link("_master/system/inbox/BRAIN_DUMP.md", "BRAIN_DUMP")]
     base_lines = [
         obsidian_link("_master/_obsidian/bases/tasks-kanban-v1.base", "Tasks Kanban"),
         obsidian_link("_master/_obsidian/bases/content-kanban.base", "Content Kanban"),
     ]
-    action_lines = [*base_lines, *schedule_lines]
+    action_lines = [*base_lines, *schedule_lines, *inbox_lines, "[[Daily What To Do]]"]
     return f"""---
 type: dashboard
 generated: true
@@ -527,16 +535,13 @@ managed_by: "{MARKER}"
 
 {markdown_list(action_lines)}
 
-#### Context
-
 Standing
 {markdown_list(standing_lines)}
+
 Periodic
 {markdown_list(periodic_lines)}
-Inbox
-{markdown_list(inbox_lines)}
 
-#### Context Folder Notes
+#### Home Pages (contexts)
 
 {markdown_list(context_note_lines)}
 
@@ -642,6 +647,9 @@ def main(argv: list[str] | None = None) -> None:
         },
         "agent_periodic_notes": {
             period: path for period, path in agent_periodic_paths(periods).items()
+        },
+        "master_periodic_notes": {
+            period: path for period, path in master_periodic_paths(periods).items()
         },
         "content_views": {
             "content_calendar": "_master/_obsidian/bases/content-calendar.base",
