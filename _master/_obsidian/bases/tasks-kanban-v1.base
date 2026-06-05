@@ -47,6 +47,7 @@ views:
     groupBy:
       property: status
       direction: ASC
+    swimLane: note.projects
     order:
       - status
       - due
@@ -62,6 +63,7 @@ views:
       - property: tasknotes_manual_order
         direction: DESC
     options:
+      maxSwimlaneHeight: 99999
       columnWidth: 280
       hideEmptyColumns: false
     columnOrder: '{"note.status":["backlog","up-next","to-be-resumed","ongoing","in-progress","done","archived"]}'
@@ -76,6 +78,7 @@ views:
     groupBy:
       property: status
       direction: ASC
+    swimLane: note.projects
     order:
       - status
       - due
@@ -90,7 +93,6 @@ views:
     sort:
       - property: tasknotes_manual_order
         direction: DESC
-    swimLane: note.projects
     options:
       maxSwimlaneHeight: 99999
       columnWidth: 280
@@ -107,6 +109,7 @@ views:
     groupBy:
       property: status
       direction: ASC
+    swimLane: note.projects
     order:
       - status
       - due
@@ -121,7 +124,6 @@ views:
     sort:
       - property: tasknotes_manual_order
         direction: DESC
-    swimLane: note.projects
     options:
       maxSwimlaneHeight: 99999
       columnWidth: 280
@@ -138,6 +140,7 @@ views:
     groupBy:
       property: status
       direction: ASC
+    swimLane: note.projects
     order:
       - status
       - due
@@ -152,7 +155,6 @@ views:
     sort:
       - property: tasknotes_manual_order
         direction: DESC
-    swimLane: note.projects
     options:
       maxSwimlaneHeight: 99999
       columnWidth: 280
@@ -168,6 +170,7 @@ views:
     groupBy:
       property: status
       direction: ASC
+    swimLane: note.projects
     order:
       - status
       - due
@@ -182,7 +185,6 @@ views:
     sort:
       - property: tasknotes_manual_order
         direction: DESC
-    swimLane: note.projects
     options:
       maxSwimlaneHeight: 99999
       columnWidth: 280
@@ -190,8 +192,9 @@ views:
     columnOrder: '{"note.status":["backlog","up-next","to-be-resumed","ongoing","in-progress","done","archived"]}'
     enableSearch: true
     consolidateStatusIcon: true
+  # BEGIN managed-by: _master/system/bootstrap/bootstrap_vault.py: task context views
   - type: tasknotesKanban
-    name: Personal
+    name: "Personal"
     filters:
       and:
         - file.inFolder("personal/_obsidian/tasks")
@@ -212,6 +215,8 @@ views:
     sort:
       - property: tasknotes_manual_order
         direction: DESC
+      - property: file.ctime
+        direction: DESC
     swimLane: note.projects
     options:
       maxSwimlaneHeight: 99999
@@ -221,7 +226,7 @@ views:
     enableSearch: true
     consolidateStatusIcon: true
   - type: tasknotesKanban
-    name: Matt Brand
+    name: "Personal Brand"
     filters:
       and:
         - file.inFolder("personal-brand/_obsidian/tasks")
@@ -242,6 +247,8 @@ views:
     sort:
       - property: tasknotes_manual_order
         direction: DESC
+      - property: file.ctime
+        direction: DESC
     swimLane: note.projects
     options:
       maxSwimlaneHeight: 99999
@@ -251,7 +258,7 @@ views:
     enableSearch: true
     consolidateStatusIcon: true
   - type: tasknotesKanban
-    name: Impression
+    name: "Business"
     filters:
       and:
         - file.inFolder("business/_obsidian/tasks")
@@ -282,156 +289,4 @@ views:
     columnOrder: '{"note.status":["backlog","up-next","to-be-resumed","ongoing","in-progress","done","archived"]}'
     enableSearch: true
     consolidateStatusIcon: true
-  - type: tasknotesKanban
-    name: Dev
-    filters:
-      and:
-        - file.inFolder("dev/_obsidian/tasks")
-    groupBy:
-      property: status
-      direction: ASC
-    order:
-      - status
-      - due
-      - scheduled
-      - contexts
-      - file.tags
-      - blockedBy
-      - file.tasks
-      - projects
-      - complete_instances
-      - recurrence
-    sort:
-      - property: tasknotes_manual_order
-        direction: DESC
-    swimLane: note.projects
-    options:
-      maxSwimlaneHeight: 99999
-      columnWidth: 280
-      hideEmptyColumns: false
-    columnOrder: '{"note.status":["backlog","up-next","to-be-resumed","ongoing","in-progress","done","archived"]}'
-    enableSearch: true
-    consolidateStatusIcon: true
-  - type: tasknotesKanban
-    name: Claudeche
-    filters:
-      and:
-        - file.inFolder("claudeche/_obsidian/tasks")
-    groupBy:
-      property: status
-      direction: ASC
-    order:
-      - status
-      - due
-      - scheduled
-      - contexts
-      - file.tags
-      - blockedBy
-      - file.tasks
-      - projects
-      - complete_instances
-      - recurrence
-    sort:
-      - property: tasknotes_manual_order
-        direction: DESC
-    swimLane: note.projects
-    options:
-      maxSwimlaneHeight: 99999
-      columnWidth: 280
-      hideEmptyColumns: false
-    columnOrder: '{"note.status":["backlog","up-next","to-be-resumed","ongoing","in-progress","done","archived"]}'
-    enableSearch: true
-    consolidateStatusIcon: true
-  - type: tasknotesKanban
-    name: Impression - Backlog
-    filters:
-      and:
-        - epic == link("business/_obsidian/epics/Backlog")
-    groupBy:
-      property: status
-      direction: ASC
-    order:
-      - status
-      - due
-      - scheduled
-      - contexts
-      - file.tags
-      - blockedBy
-      - file.tasks
-      - projects
-      - complete_instances
-      - recurrence
-      - epic
-    sort:
-      - property: tasknotes_manual_order
-        direction: DESC
-    swimLane: note.projects
-    options:
-      columnWidth: 280
-      maxSwimlaneHeight: 99999
-      hideEmptyColumns: false
-    columnOrder: '{"note.status":["backlog","up-next","to-be-resumed","ongoing","in-progress","done","archived"]}'
-    enableSearch: true
-    consolidateStatusIcon: true
-  - type: tasknotesKanban
-    name: Impression - Focus
-    filters:
-      and:
-        - epic == link("business/_obsidian/epics/Focus")
-    groupBy:
-      property: status
-      direction: ASC
-    order:
-      - status
-      - due
-      - scheduled
-      - contexts
-      - file.tags
-      - blockedBy
-      - file.tasks
-      - projects
-      - complete_instances
-      - recurrence
-      - epic
-    sort:
-      - property: tasknotes_manual_order
-        direction: DESC
-    swimLane: note.projects
-    options:
-      columnWidth: 280
-      maxSwimlaneHeight: 99999
-      hideEmptyColumns: false
-    columnOrder: '{"note.status":["backlog","up-next","to-be-resumed","ongoing","in-progress","done","archived"]}'
-    enableSearch: true
-    consolidateStatusIcon: true
-  - type: tasknotesKanban
-    name: Impression - Growth
-    filters:
-      and:
-        - epic == link("business/_obsidian/epics/Growth")
-    groupBy:
-      property: status
-      direction: ASC
-    order:
-      - status
-      - due
-      - scheduled
-      - contexts
-      - file.tags
-      - blockedBy
-      - file.tasks
-      - projects
-      - complete_instances
-      - recurrence
-      - epic
-    sort:
-      - property: tasknotes_manual_order
-        direction: DESC
-    swimLane: note.projects
-    options:
-      columnWidth: 280
-      maxSwimlaneHeight: 99999
-      hideEmptyColumns: false
-    columnOrder: '{"note.status":["backlog","up-next","to-be-resumed","ongoing","in-progress","done","archived"]}'
-    enableSearch: true
-    consolidateStatusIcon: true
+  # END managed-by: _master/system/bootstrap/bootstrap_vault.py: task context views

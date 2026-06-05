@@ -28,6 +28,7 @@ AGENT_CONTEXT_MARKDOWN_PATH = AGENT_DIR / "CONTEXT.md"
 LEGACY_AGENT_CONTEXT_MARKDOWN_PATH = AGENT_DIR / ("context" + ".md")
 LEGACY_AGENT_SYSTEM_DIR = Path("_master/system/context/system")
 DASHBOARD_PATH = Path("_master/Dashboard.md")
+PRIVATE_DASHBOARD_ACTION_LINKS_PATH = Path("_master/system/local/dashboard-action-links.md")
 SYSTEM_NOTES = {
     "context": "_master/01-Context.md",
     "identity": "_master/02-Identity.md",
@@ -489,7 +490,23 @@ def obsidian_link(path: str, label: str) -> str:
     return f"[[{target}|{label}]]"
 
 
+def private_dashboard_action_lines(root: Path) -> list[str]:
+    path = root / PRIVATE_DASHBOARD_ACTION_LINKS_PATH
+    if not path.exists():
+        return []
+    lines: list[str] = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        if stripped.startswith("- "):
+            stripped = stripped[2:].strip()
+        lines.append(stripped)
+    return lines
+
+
 def dashboard_markdown(
+    root: Path,
     selected_entities: list[str],
     periods: dict[str, str],
     content_schedules: list[dict[str, str]],
@@ -524,7 +541,7 @@ def dashboard_markdown(
         obsidian_link("_master/_obsidian/bases/tasks-kanban-v1.base", "Tasks Kanban"),
         obsidian_link("_master/_obsidian/bases/content-kanban.base", "Content Kanban"),
     ]
-    action_lines = [*base_lines, *schedule_lines, *inbox_lines, "[[Daily What To Do]]"]
+    action_lines = [*base_lines, *schedule_lines, *inbox_lines, *private_dashboard_action_lines(root)]
     return f"""---
 type: dashboard
 generated: true
@@ -687,6 +704,7 @@ def main(argv: list[str] | None = None) -> None:
     write_if_changed(
         root / DASHBOARD_PATH,
         dashboard_markdown(
+            root,
             selected_entities,
             periods,
             content_schedules,

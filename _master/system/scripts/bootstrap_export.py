@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 import fnmatch
+import importlib.util
 import json
 import os
 import re
@@ -21,6 +22,7 @@ DEFAULT_MANIFEST_NAME = "_master/system/bootstrap/state/export-manifest.json"
 PUBLIC_WORKSPACE_FILE = "README.md"
 MANIFEST_VERSION = 1
 GLOBAL_EXCLUDE_SUFFIXES = (".bak",)
+PRIVATE_EXPORT_DROP_LINE_MARKER = "private-export: drop-line"
 SECRET_PATTERNS = [
     ("private key", re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")),
     ("GitHub token", re.compile(r"\bgh[pousr]_[A-Za-z0-9_]{30,}\b")),
@@ -66,6 +68,24 @@ def split_yaml_frontmatter(text: str) -> tuple[str, str]:
         if line.strip() == "---":
             return "".join(lines[: index + 1]).rstrip() + "\n", "".join(lines[index + 1 :])
     return "", text
+
+
+def parse_frontmatter(text: str) -> dict[str, str]:
+    frontmatter, _body = split_yaml_frontmatter(text)
+    if not frontmatter:
+        return {}
+    lines = frontmatter.splitlines()[1:-1]
+    result: dict[str, str] = {}
+    for line in lines:
+        if ":" not in line or line.startswith(" "):
+            continue
+        key, value = line.split(":", 1)
+        result[key.strip()] = value.strip().strip('"').strip("'")
+    return result
+
+
+def bool_frontmatter(value: str | None) -> bool:
+    return str(value or "").strip().lower() in {"true", "yes", "1"}
 
 
 def join_frontmatter_and_body(frontmatter: str, body: str) -> str:
@@ -144,6 +164,8 @@ class BootstrapExporter:
         self.copy_obsidian()
         self.copy_master_or_shared("_master")
         self.copy_context_folders()
+        self.regenerate_public_bases()
+        self.validate_public_base_contexts()
         self.create_library_and_wiki()
         self.write_manifest()
         self.log(f"export ready: {self.export_root}")
@@ -450,6 +472,120 @@ class BootstrapExporter:
             marker = target_root / relative / ".gitkeep"
             self.write_generated_text(marker, "", f"write public scaffold {marker}")
 
+    def load_bootstrap_module(self):
+        path = self.root / "_master/system/bootstrap/bootstrap_vault.py"
+        if not path.exists():
+            raise SystemExit(f"Missing bootstrap script: {path}")
+        spec = importlib.util.spec_from_file_location("bootstrap_vault_public_export", path)
+        module = importlib.util.module_from_spec(spec)
+        assert spec.loader is not None
+        spec.loader.exec_module(module)
+        return module
+
+    def context_metadata(self, item: dict[str, Any]) -> dict[str, str]:
+        target = item["target"]
+        target_note = self.export_root / target / f"{target}.md"
+        source_note = context_folder_note_path(self.root / item["source"])
+        for path in [target_note, source_note]:
+            if path.exists():
+                return parse_frontmatter(path.read_text(encoding="utf-8"))
+        return {}
+
+    def target_context_names(self) -> list[str]:
+        return [item["target"] for item in self.context_configs]
+
+    def public_default_context(self) -> str:
+        for item in self.context_configs:
+            metadata = self.context_metadata(item)
+            if bool_frontmatter(metadata.get("default_capture")):
+                return item["target"]
+        targets = self.target_context_names()
+        if "personal" in targets:
+            return "personal"
+        if not targets:
+            raise SystemExit("Public export has no configured context folders.")
+        return targets[0]
+
+    def public_active_contexts(self) -> list[str]:
+        active: list[str] = []
+        for item in self.context_configs:
+            metadata = self.context_metadata(item)
+            if (metadata.get("status") or "active").strip().lower() == "active":
+                active.append(item["target"])
+        return active
+
+    def public_content_contexts(self) -> list[str]:
+        content: list[str] = []
+        for item in self.context_configs:
+            target = item["target"]
+            source = item["source"]
+            metadata = self.context_metadata(item)
+            if (
+                bool_frontmatter(metadata.get("content_enabled"))
+                or (self.export_root / target / "_obsidian/content").exists()
+                or (self.root / source / "_obsidian/content").exists()
+            ):
+                content.append(target)
+        return content
+
+    def public_context_types(self, bootstrap_module) -> dict[str, str]:
+        context_types: dict[str, str] = {}
+        defaults = getattr(bootstrap_module, "DEFAULT_CONTEXT_TYPES", {})
+        for item in self.context_configs:
+            target = item["target"]
+            metadata = self.context_metadata(item)
+            context_types[target] = metadata.get("context_type") or defaults.get(target, "business")
+        return context_types
+
+    def regenerate_public_bases(self) -> None:
+        if not self.context_configs:
+            return
+        bootstrap_module = self.load_bootstrap_module()
+        targets = self.target_context_names()
+        bootstrap = bootstrap_module.Bootstrap(
+            root=self.export_root,
+            entities=targets,
+            active_entities=self.public_active_contexts(),
+            default_entity=self.public_default_context(),
+            context_types=self.public_context_types(bootstrap_module),
+            coding_agents=[],
+            content_entities=self.public_content_contexts(),
+            install_vault_command_enabled=False,
+            generate_agents_enabled=False,
+            dry_run=self.dry_run,
+            run_date=datetime.now(timezone.utc).date(),
+        )
+        bootstrap.setup_bases(drop_task_epic_views=True)
+
+    def discovered_source_context_names(self) -> set[str]:
+        names = {item["source"] for item in self.context_configs}
+        for child in self.root.iterdir():
+            if child.is_dir() and context_folder_note_path(child).exists():
+                names.add(child.name)
+        return names
+
+    def validate_public_base_contexts(self) -> None:
+        if self.dry_run:
+            return
+        allowed = set(self.target_context_names())
+        blocked = sorted(self.discovered_source_context_names() - allowed)
+        if not blocked:
+            return
+        leaks: list[str] = []
+        for path in sorted(self.export_root.rglob("*.base")):
+            text = path.read_text(encoding="utf-8", errors="replace")
+            for name in blocked:
+                needles = [
+                    f'{name}/_obsidian/',
+                    f'entity == "{name}"',
+                    f"entity == '{name}'",
+                ]
+                if any(needle in text for needle in needles):
+                    leaks.append(f"{path.relative_to(self.export_root)} contains {name}")
+        if leaks:
+            rendered = "\n".join(f"- {leak}" for leak in leaks[:20])
+            raise SystemExit(f"Refusing to export .base files with source context-folder references:\n{rendered}")
+
     def create_library_and_wiki(self) -> None:
         self.ensure_dir(self.export_root / "_library")
         wiki = self.export_root / "_wiki"
@@ -476,7 +612,7 @@ class BootstrapExporter:
             except UnicodeDecodeError:
                 shutil.copy2(source, target)
                 return
-            target.write_text(self.rewrite_text(text), encoding="utf-8")
+            target.write_text(self.rewrite_text(text, source=source), encoding="utf-8")
             shutil.copystat(source, target)
             return
         shutil.copy2(source, target)
@@ -583,10 +719,22 @@ class BootstrapExporter:
             if pattern.search(text):
                 raise SystemExit(f"Refusing to export possible {label} in exact-copy plugin file: {posix(relative)}")
 
-    def rewrite_text(self, text: str) -> str:
-        for source, target in self.rewrite_pairs:
-            text = text.replace(source, target)
+    def rewrite_text(self, text: str, *, source: Path | None = None) -> str:
+        for source_name, target_name in self.rewrite_pairs:
+            text = text.replace(source_name, target_name)
+        if source is not None and source.suffix == ".md":
+            text = self.strip_private_export_drop_lines(text)
         return text
+
+    def strip_private_export_drop_lines(self, text: str) -> str:
+        if PRIVATE_EXPORT_DROP_LINE_MARKER not in text:
+            return text
+        lines = text.splitlines()
+        kept = [line for line in lines if PRIVATE_EXPORT_DROP_LINE_MARKER not in line]
+        rendered = "\n".join(kept)
+        if text.endswith("\n"):
+            rendered += "\n"
+        return rendered
 
     def create_symlink(self, link: Path, target: str) -> None:
         self.ensure_dir(link.parent)

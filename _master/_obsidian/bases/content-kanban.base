@@ -1,14 +1,14 @@
 # Content Kanban
 generated: true
-generated_at: 2026-05-30T20:40:35
+generated_at: 2026-06-05T15:21:48
 managed_by: "managed-by: _master/system/bootstrap/bootstrap_vault.py"
 
 filters:
   and:
     - 'type == "content"'
     - or:
-      - file.inFolder("business/_obsidian/content")
       - file.inFolder("personal-brand/_obsidian/content")
+      - file.inFolder("business/_obsidian/content")
 
 formulas:
   statusRank: 'if(status=="idea",1,if(status=="cogs-are-turning",2,if(status=="draft",3,if(status=="planning-scripting",4,if(status=="scheduled",5,if(status=="published",6,if(status=="cancelled",99,999)))))))'

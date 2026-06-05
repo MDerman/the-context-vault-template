@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-05T04:37:08+00:00",
+  "generated_at": "2026-06-05T07:21:48+00:00",
   "paths": [
     ".agents",
     ".agents/skills",
@@ -170,8 +170,6 @@
     "_master/01-Context.md",
     "_master/02-Identity.md",
     "_master/03-Momentum.md",
-    "_master/Daily What To Do.md",
-    "_master/README_PERSONALIZED_QUICKSTART.md",
     "_master/_obsidian",
     "_master/_obsidian/attachments",
     "_master/_obsidian/attachments/20260513T212427-1-Pasted Graphic 24.jpg",
@@ -542,6 +540,7 @@
     "_master/general-tools/per-app-api-redirect/redirect_host.py",
     "_master/general-tools/per-app-api-redirect/run_proxy.sh",
     "_master/general-tools/remove-google-drive-backup-sync.zsh",
+    "_master/how-to.mp4",
     "_master/system",
     "_master/system/bootstrap",
     "_master/system/bootstrap/AGENTS.template.md",

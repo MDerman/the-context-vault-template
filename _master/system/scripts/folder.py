@@ -45,6 +45,16 @@ def read_content_enabled(path: Path) -> bool:
     return value.strip().lower() in {"true", "yes", "1"}
 
 
+def has_content_structure(context_root: Path) -> bool:
+    return any(
+        (context_root / rel).exists()
+        for rel in [
+            "_obsidian/content",
+            "_obsidian/content-schedules",
+        ]
+    )
+
+
 def read_context_type(path: Path) -> str:
     if not path.exists():
         return "business"
@@ -229,7 +239,7 @@ def create_main(argv: list[str], *, register_mode: bool = False) -> None:
     entity_note = context_folder_note_path(entity_root)
     existing_status = read_status(entity_note)
     existing_context_type = read_context_type(entity_note)
-    existing_content_enabled = read_content_enabled(entity_note)
+    existing_content_enabled = read_content_enabled(entity_note) or has_content_structure(entity_root)
     status = args.status or existing_status or "active"
     context_type = args.context_type or existing_context_type or "business"
     content_enabled = args.content_enabled if args.content_enabled is not None else existing_content_enabled

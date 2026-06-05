@@ -52,6 +52,12 @@ VALID_CODING_AGENTS = {"codex", "claude"}
 
 GENERATED_MARKER = "managed-by: _master/system/bootstrap/bootstrap_vault.py"
 MASTER_PERIODIC_MARKER = "managed-by: _master/system/scripts/periodic.py"
+TASK_CONTEXT_VIEWS_MARKER = "managed-by: _master/system/bootstrap/bootstrap_vault.py: task context views"
+BEGIN_TASK_CONTEXT_VIEWS = f"  # BEGIN {TASK_CONTEXT_VIEWS_MARKER}"
+END_TASK_CONTEXT_VIEWS = f"  # END {TASK_CONTEXT_VIEWS_MARKER}"
+EPIC_VIEWS_MARKER = "managed-by: _master/system/scripts/epic.py"
+BEGIN_EPIC_VIEWS = f"  # BEGIN {EPIC_VIEWS_MARKER}: epic views"
+END_EPIC_VIEWS = f"  # END {EPIC_VIEWS_MARKER}: epic views"
 OLD_GENERATED_MARKERS = (
     "managed-by: _master/system/bootstrap/setup/bootstrap_vault.py",
     "managed-by: _master/bootstrap/setup/bootstrap_vault.py",
@@ -241,14 +247,22 @@ class Bootstrap:
         if not self.dry_run:
             shutil.copy2(source, target)
 
-    def ensure_task_kanban_project_swimlanes(self, path: Path) -> None:
+    def ensure_task_kanban_project_swimlanes(
+        self,
+        path: Path,
+        *,
+        sync_context_views: bool = False,
+        drop_epic_views: bool = False,
+    ) -> None:
         if not path.exists():
             return
         text = path.read_text(encoding="utf-8")
         updated = add_project_swimlanes_to_task_kanban_views(text)
+        if sync_context_views:
+            updated = sync_task_context_views(updated, self.entities, drop_epic_views=drop_epic_views)
         if updated == text:
             return
-        self.log(f"patch project swimlanes in {rel(path, self.root)}")
+        self.log(f"patch task view wiring in {rel(path, self.root)}")
         if not self.dry_run:
             path.write_text(updated, encoding="utf-8")
 
@@ -404,10 +418,7 @@ class Bootstrap:
 
     def setup_templates(self) -> None:
         self.safe_remove_generated_path(self.root / "README_PERSONALIZED_QUICKSTART.md", BOOTSTRAP_MARKERS)
-        self.write_managed(
-            self.root / "_master/README_PERSONALIZED_QUICKSTART.md",
-            personalized_quickstart(self.entities, self.default_entity, self.active_entities, self.content_entities),
-        )
+        self.safe_remove_generated_path(self.root / "_master/README_PERSONALIZED_QUICKSTART.md", BOOTSTRAP_MARKERS)
         self.write_managed(self.root / "_master/_obsidian/templates/shared/default-tasks-template.md", shared_task_template())
         self.write_managed(self.root / "_master/_obsidian/templates/shared/content/content-item-template.md", content_item_template())
         self.write_managed(self.root / "_master/_obsidian/templates/shared/content/publication-template.md", publication_template())
@@ -432,7 +443,7 @@ class Bootstrap:
                 )
 
 
-    def setup_bases(self) -> None:
+    def setup_bases(self, *, drop_task_epic_views: bool = False) -> None:
         master_bases = {
             "epics-all.base": all_epics_base(self.active_entities),
             "tasks-today.base": today_base(),
@@ -473,8 +484,14 @@ class Bootstrap:
             "tasks-relationships.base",
             "tasks-home.base",
         }
-        for name in task_view_names:
-            self.ensure_task_kanban_project_swimlanes(master_task_views / name)
+        master_task_view_names = task_view_names | {"tasks-kanban-v1.base"}
+        task_context_view_names = {"tasks-kanban.base", "tasks-kanban-v1.base"}
+        for name in master_task_view_names:
+            self.ensure_task_kanban_project_swimlanes(
+                master_task_views / name,
+                sync_context_views=name in task_context_view_names,
+                drop_epic_views=drop_task_epic_views,
+            )
 
         for entity in self.entities:
             self.write_managed(self.root / entity / "_obsidian/bases/context-dashboard.base", entity_dashboard_base(entity))
@@ -715,6 +732,7 @@ def add_project_swimlanes_to_task_kanban_views(text: str) -> str:
                 add_or_update_task_kanban_option(lines, index, "maxSwimlaneHeight", "99999")
                 index = end + 1
                 continue
+            index = end
             continue
 
         if view_type == "- type: kanban-view":
@@ -729,6 +747,200 @@ def add_project_swimlanes_to_task_kanban_views(text: str) -> str:
 
         index = end
     return "\n".join(lines)
+
+
+TASK_FOLDER_FILTER_RE = re.compile(r'file\.inFolder\("([^"]+)/_obsidian/tasks"\)')
+EPIC_LINK_FILTER_RE = re.compile(r'epic\s*==\s*link\("([^"]+)/_obsidian/epics/[^"]+"\)')
+
+
+def context_label(entity: str) -> str:
+    return " ".join(part.capitalize() for part in re.split(r"[-_\s]+", entity) if part) or entity
+
+
+def yaml_double(value: str) -> str:
+    return '"' + value.replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+
+def remove_marked_block(lines: list[str], begin: str, end: str) -> list[str]:
+    output: list[str] = []
+    index = 0
+    while index < len(lines):
+        if lines[index] != begin:
+            output.append(lines[index])
+            index += 1
+            continue
+        index += 1
+        while index < len(lines) and lines[index] != end:
+            index += 1
+        if index < len(lines):
+            index += 1
+    return output
+
+
+def split_base_view_blocks(lines: list[str]) -> tuple[list[list[str]], list[str]]:
+    blocks: list[list[str]] = []
+    loose: list[str] = []
+    index = 0
+    while index < len(lines):
+        if lines[index].startswith("  - type:"):
+            start = index
+            index += 1
+            while index < len(lines) and not lines[index].startswith("  - type:"):
+                index += 1
+            blocks.append(lines[start:index])
+            continue
+        if lines[index].strip():
+            loose.append(lines[index])
+        index += 1
+    return blocks, loose
+
+
+def task_context_entity(block: list[str]) -> str | None:
+    match = TASK_FOLDER_FILTER_RE.search("\n".join(block))
+    return match.group(1) if match else None
+
+
+def epic_context_entity(block: list[str]) -> str | None:
+    match = EPIC_LINK_FILTER_RE.search("\n".join(block))
+    return match.group(1) if match else None
+
+
+def task_context_view_kind(blocks: list[list[str]]) -> str | None:
+    for block in blocks:
+        if not block:
+            continue
+        view_type = block[0].strip()
+        if view_type == "- type: tasknotesKanban":
+            return "tasknotesKanban"
+        if view_type == "- type: kanban-view":
+            return "kanban-view"
+    return None
+
+
+def tasknotes_context_view(entity: str) -> list[str]:
+    return [
+        "  - type: tasknotesKanban",
+        f"    name: {yaml_double(context_label(entity))}",
+        "    filters:",
+        "      and:",
+        f'        - file.inFolder("{entity}/_obsidian/tasks")',
+        "    groupBy:",
+        "      property: status",
+        "      direction: ASC",
+        "    order:",
+        "      - status",
+        "      - due",
+        "      - scheduled",
+        "      - contexts",
+        "      - file.tags",
+        "      - blockedBy",
+        "      - file.tasks",
+        "      - projects",
+        "      - complete_instances",
+        "      - recurrence",
+        "    sort:",
+        "      - property: tasknotes_manual_order",
+        "        direction: DESC",
+        "      - property: file.ctime",
+        "        direction: DESC",
+        "    swimLane: note.projects",
+        "    options:",
+        "      maxSwimlaneHeight: 99999",
+        "      columnWidth: 280",
+        "      hideEmptyColumns: false",
+        "    columnOrder: '{\"note.status\":[\"backlog\",\"up-next\",\"to-be-resumed\",\"ongoing\",\"in-progress\",\"done\",\"archived\"]}'",
+        "    enableSearch: true",
+        "    consolidateStatusIcon: true",
+    ]
+
+
+def bases_kanban_context_view(entity: str) -> list[str]:
+    return [
+        "  - type: kanban-view",
+        f"    name: {yaml_double(context_label(entity))}",
+        "    filters:",
+        "      and:",
+        f'        - file.inFolder("{entity}/_obsidian/tasks")',
+        "    order:",
+        "      - formula.taskBadge",
+        "    groupByProperty: status",
+        "    swimlaneByProperty: projects",
+        "    columnOrders:",
+        "      note.status:",
+        "        - backlog",
+        "        - up-next",
+        "        - to-be-resumed",
+        "        - ongoing",
+        "        - in-progress",
+        "        - done",
+        "        - archived",
+        "    columnColors:",
+        "      note.status:",
+        "        backlog: yellow",
+        "        up-next: cyan",
+        "        to-be-resumed: orange",
+        "        ongoing: purple",
+        "        in-progress: blue",
+        "        done: green",
+        "        archived: red",
+        "    wrapPropertyValues: false",
+    ]
+
+
+def generated_task_context_views(kind: str, entities: list[str]) -> list[str]:
+    lines = [BEGIN_TASK_CONTEXT_VIEWS]
+    for entity in entities:
+        lines.extend(tasknotes_context_view(entity) if kind == "tasknotesKanban" else bases_kanban_context_view(entity))
+    lines.append(END_TASK_CONTEXT_VIEWS)
+    return lines
+
+
+def sync_task_context_views(text: str, entities: list[str], *, drop_epic_views: bool = False) -> str:
+    lines = remove_marked_block(text.splitlines(), BEGIN_TASK_CONTEXT_VIEWS, END_TASK_CONTEXT_VIEWS)
+    try:
+        views_index = lines.index("views:")
+    except ValueError:
+        return text
+
+    prefix = lines[: views_index + 1]
+    body = lines[views_index + 1 :]
+    epic_suffix: list[str] = []
+    if BEGIN_EPIC_VIEWS in body and END_EPIC_VIEWS in body:
+        begin = body.index(BEGIN_EPIC_VIEWS)
+        end = body.index(END_EPIC_VIEWS, begin) + 1
+        epic_suffix = body[begin:end]
+        body = body[:begin] + body[end:]
+        if drop_epic_views:
+            epic_suffix = []
+
+    blocks, loose = split_base_view_blocks(body)
+    kind = task_context_view_kind(blocks)
+    if kind is None:
+        return text
+
+    wanted = set(entities)
+    kept_blocks: list[list[str]] = []
+    for block in blocks:
+        context_entity = task_context_entity(block)
+        if context_entity is not None:
+            continue
+
+        epic_entity = epic_context_entity(block)
+        if epic_entity is not None:
+            if not drop_epic_views and epic_entity in wanted:
+                kept_blocks.append(block)
+            continue
+
+        kept_blocks.append(block)
+
+    output = prefix[:]
+    output.extend(loose)
+    for block in kept_blocks:
+        output.extend(block)
+    if entities:
+        output.extend(generated_task_context_views(kind, entities))
+    output.extend(epic_suffix)
+    return "\n".join(output).rstrip() + "\n"
 
 
 def active_periods(day: dt.date) -> dict[str, str]:
@@ -910,241 +1122,6 @@ def is_frontmatter_only(existing: str) -> bool:
             body = "" if body_start == -1 else existing[body_start + 1 :]
             return body.strip() == ""
     return existing.strip() == ""
-
-
-def personalized_quickstart(
-    entities: list[str],
-    default_entity: str,
-    active_entities: list[str],
-    content_entities: list[str],
-) -> str:
-    entity_lines = "\n".join(f"- `{entity}`" for entity in entities)
-    active_lines = "\n".join(f"- `{entity}`" for entity in active_entities)
-    content_lines = "\n".join(f"- `{entity}`" for entity in content_entities) or "- None"
-    return f"""---
-{managed_properties()}
----
-# Personalized Quickstart
-
-Open this whole folder as the root Obsidian vault. Context folders are content workspaces inside the root vault, not standalone Obsidian vaults.
-
-## Mental Model
-
-- Root vault: master control panel across all context folders.
-- Context folders: source-of-truth workspaces.
-- `_master`: operating manual, generated dashboards, setup scripts, shared templates, agent context, agent skills, reusable scripts, media, and Mac/dev tools.
-- `_library`: learning material, research, swipe files, downloaded examples, lead magnets, and source material.
-- `_wiki`: synthesized knowledge built by LLMs using `_wiki/AGENTS.md` and `_wiki/karpathy-initial-proompt.md`.
-- `other`: archive/dump zone for excess context folders and miscellaneous files.
-
-## Context Folders
-
-{entity_lines}
-
-Default capture context folder:
-
-- `{default_entity}`
-
-Default active context folders:
-
-{active_lines}
-
-Each context folder has an inside-folder note named after the folder, for example `business/business.md`. Its `status` property controls the default agent periodic rollups:
-
-- `status: active`: included when you run the periodic generator with no context folder args.
-- `status: archived`: kept available but excluded from default rollups.
-- blank or missing status: not active.
-
-Its `content_enabled` property controls whether bootstrap scaffolds content infrastructure:
-
-- `content_enabled: true`: create content folders, content schedule folders, publication notes, cadence config, and content Bases.
-- `content_enabled: false`: no content scaffold by default.
-
-Its `default_capture` property marks the context folder that receives unspecific tasks and periodic capture.
-
-Content-enabled context folders:
-
-{content_lines}
-
-The context folder note can keep a short body, but the frontmatter is the control panel:
-
-```yaml
----
-status: active
-content_enabled: false
-default_capture: true
----
-```
-
-Context folder operating folders start with `_` so normal folders can sit directly under each context folder.
-
-```text
-<context-folder>/
-  <context-folder>.md
-  _obsidian/
-    attachments/
-    bases/
-    content/
-    excalidraw/
-    epics/
-    periodic/
-      daily/
-      weekly/
-      quarterly/
-      yearly/
-    projects/
-    tasks/
-    templates/
-      periodic/
-  <real context-specific folders, such as docs or projects/>
-```
-
-Content-enabled context folders also get:
-
-```text
-<context-folder>/_obsidian/content/content-cadence.json
-<context-folder>/_obsidian/content-schedules/
-<context-folder>/_obsidian/content/
-  publications/
-  items/
-  ideas/
-  archive/
-```
-
-`_obsidian/content/content-cadence.json` controls recurring publication cadence, `schedule_format`, and `publication_order`. Normal refresh is create-only for content schedules and maintains the `Current content schedule:` line in the context folder note; run `vault content --force` only when intentionally regenerating an existing managed schedule note.
-
-The context folder note is the entity's durable operating source for Identity and Momentum. For personal-brand entities, Social Selling lives as a third-level section inside Momentum. Each context folder owns its local periodic templates under `_obsidian/templates/periodic`. `_master/_obsidian/templates/shared` is for root-level shared non-periodic templates, entity-note templates, content templates, and the default TaskNotes template.
-
-## Agent Files
-
-- `AGENTS.md`: generated instructions for Codex, Claude, and other coding agents. Edit `_master/system/bootstrap/AGENTS.template.md`, then rerun `python3 _master/system/bootstrap/generate_agents.py`.
-- `CLAUDE.md`: symlink to `AGENTS.md`.
-- `.agents/skills`: agent skills folder.
-- `.claude/skills`: symlink to `.agents/skills`.
-- `_master/system/context/CONTEXT.md` and `_master/system/context/context.json`: generated current state for agents.
-- `_master/system/context/*.md`: generated readable files for agents plus durable agent operating notes.
-
-Context folders do not carry agent symlinks or their own agent workspaces. Open the root vault when working with agents.
-
-## Root-Only Workflow
-
-Use the root vault as your daily control panel:
-
-1. Create tasks with TaskNotes from the root vault.
-2. Choose a context to route the task into the right context folder.
-3. Use daily, weekly, quarterly, and yearly periodic notes. Monthly periodic notes are intentionally not used.
-4. Open the current flat rollup in `_master/system/context/` for readable rollups across active context folders.
-5. Open `_master/_obsidian/bases` and `_master/_obsidian/bases` for dashboards and task views.
-
-Task routing:
-
-```text
-No context or default context -> {default_entity}/_obsidian/tasks
-@business              -> business/_obsidian/tasks
-@dev                     -> dev/_obsidian/tasks
-```
-
-Periodic notes:
-
-```text
-Context folder source notes: <context-folder>/_obsidian/periodic/<daily|weekly|quarterly|yearly>/
-Agent rollups:       _master/system/context/<period-id>.md
-```
-
-The generator creates missing context folder periodic notes from each context folder's own `_obsidian/templates/periodic/<period>-template.md` file. Each active context folder can keep lean local prompts for its own operating rhythm.
-
-Agent rollups inline each context folder source note so agents can read them without Obsidian Sync Embeds:
-
-````md
-_Source: `business/_obsidian/periodic/quarterly/2026-Q2.md`_
-````
-
-Context folder periodic notes remain the editable source of truth. Sync Embeds notes live at `_master/system/obsidian_notes/beta_plugins_docs/README-sync-embeds.md`.
-
-Agent periodic generator:
-
-```bash
-vault periodic
-vault periodic --all
-vault periodic --context-folders dev,claudeche
-```
-
-`context.py` calls this generator and the content schedule generator for the default refresh path, so one context refresh updates context, current 4-week content schedules, realized system notes, and current agent periodic rollups.
-
-No args means active context folders from context folder notes. `--all` means all configured context folders. `--context-folders` means only that one-off context folder list.
-
-Periodic cleanup:
-
-```bash
-python3 _master/system/scripts/delete_master_periodic_notes_for_now.py
-python3 _master/system/scripts/delete_master_periodic_notes_for_now.py --context-folders dev,claudeche
-```
-
-No args deletes the current generated master rollups under `_master/system/context`. Use `--context-folders` or `--all` when you also want to clean current context folder source notes.
-
-Add a context folder:
-
-```bash
-vault folder -n new-context-folder -s active
-vault folder -n new-context-folder -s archived
-```
-
-Root Obsidian settings live in the current root `.obsidian` folder. Bootstrap does not copy or patch profile settings.
-
-## Where Things Go
-
-- Active context folder operating material: the matching context folder.
-- Tasks: `<context-folder>/_obsidian/tasks`.
-- Projects: `<context-folder>/_obsidian/projects`.
-- Epics: `<context-folder>/_obsidian/epics`.
-- Entity operating note: `<context-folder>/<context-folder>.md`.
-- Content assets for content-enabled entities: `<context-folder>/_obsidian/content`.
-- Content schedules for content-enabled entities: `<context-folder>/_obsidian/content-schedules`.
-- Periodic notes: `<context-folder>/_obsidian/periodic`.
-- Learning, research, downloaded templates, lead magnets: `_library`.
-- Durable synthesized knowledge: `_wiki`.
-- Reusable assets/scripts/media: `_master`.
-- Old or uncertain material: `other`.
-
-Context folders are not learning folders. If learning from `_library` or `_wiki` belongs in a context folder, rewrite it as an operating artifact first: SOP, keep-in-mind note, training note, checklist, playbook, decision record, policy, or active reference.
-
-## TaskNotes Shorthand
-
-TaskNotes stores each task as one Markdown note with YAML frontmatter. Its natural language parser can extract structure from the task title/body.
-
-- `#tag`: adds an Obsidian tag.
-- `@context`: sets context. In this setup, context also controls which context folder `_obsidian/tasks` folder is used.
-- `+project`: links a simple project.
-- `+[[Project Name]]`: links a project note, usually from `<context-folder>/_obsidian/projects`.
-- `tomorrow`, `next Friday`, `January 15 at 3pm`: parsed as dates/times.
-- `high`, `normal`, `low`: parsed as priority words.
-- `!`: configurable priority trigger; TaskNotes supports it, but it may need to be enabled in settings.
-- `backlog`, `up-next`, `to-be-resumed`, `ongoing`, `in-progress`, `done`, `archived`: configured status words.
-- `*`: configurable status trigger.
-- `2h`, `30min`, `1h30m`: parsed as time estimates.
-- `daily`, `weekly`, `every Monday`: parsed as recurrence.
-
-Examples:
-
-```text
-Prepare launch checklist tomorrow @business #marketing high
-Review contract next Friday @dev +[[Client Work]] in-progress
-Draft weekly reflection @personal 30min
-```
-
-Useful docs:
-
-- TaskNotes NLP syntax: https://tasknotes.dev/features/inline-tasks/
-- TaskNotes task properties: https://tasknotes.dev/settings/task-properties/
-
-## First Things To Open
-
-- `_master/01-Context.md`
-- `_master/system/context/<today>.md`
-- `_master/_obsidian/bases/content-kanban.base`
-- `_master/_obsidian/bases/tasks-home.base`
-- `_master/_obsidian/bases/tasks-today.base`
-"""
 
 
 def shared_task_template() -> str:

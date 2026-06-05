@@ -157,8 +157,9 @@ views:
         done: green
         archived: red
     wrapPropertyValues: false
+  # BEGIN managed-by: _master/system/bootstrap/bootstrap_vault.py: task context views
   - type: kanban-view
-    name: Personal
+    name: "Personal"
     filters:
       and:
         - file.inFolder("personal/_obsidian/tasks")
@@ -186,7 +187,7 @@ views:
         archived: red
     wrapPropertyValues: false
   - type: kanban-view
-    name: Matt Brand
+    name: "Personal Brand"
     filters:
       and:
         - file.inFolder("personal-brand/_obsidian/tasks")
@@ -214,7 +215,7 @@ views:
         archived: red
     wrapPropertyValues: false
   - type: kanban-view
-    name: Impression
+    name: "Business"
     filters:
       and:
         - file.inFolder("business/_obsidian/tasks")
@@ -241,59 +242,4 @@ views:
         done: green
         archived: red
     wrapPropertyValues: false
-  - type: kanban-view
-    name: Dev
-    filters:
-      and:
-        - file.inFolder("dev/_obsidian/tasks")
-    order:
-      - formula.taskBadge
-    groupByProperty: status
-    swimlaneByProperty: projects
-    columnOrders:
-      note.status:
-        - backlog
-        - up-next
-        - to-be-resumed
-        - ongoing
-        - in-progress
-        - done
-        - archived
-    columnColors:
-      note.status:
-        backlog: yellow
-        up-next: cyan
-        to-be-resumed: orange
-        ongoing: purple
-        in-progress: blue
-        done: green
-        archived: red
-    wrapPropertyValues: false
-  - type: kanban-view
-    name: Claudeche
-    filters:
-      and:
-        - file.inFolder("claudeche/_obsidian/tasks")
-    order:
-      - formula.taskBadge
-    groupByProperty: status
-    swimlaneByProperty: projects
-    columnOrders:
-      note.status:
-        - backlog
-        - up-next
-        - to-be-resumed
-        - ongoing
-        - in-progress
-        - done
-        - archived
-    columnColors:
-      note.status:
-        backlog: yellow
-        up-next: cyan
-        to-be-resumed: orange
-        ongoing: purple
-        in-progress: blue
-        done: green
-        archived: red
-    wrapPropertyValues: false
+  # END managed-by: _master/system/bootstrap/bootstrap_vault.py: task context views

@@ -1,14 +1,14 @@
 # Content Calendar
 generated: true
-generated_at: 2026-05-30T20:40:35
+generated_at: 2026-06-05T15:21:48
 managed_by: "managed-by: _master/system/bootstrap/bootstrap_vault.py"
 
 filters:
   and:
     - 'type == "content"'
     - or:
-      - file.inFolder("business/_obsidian/content/items")
       - file.inFolder("personal-brand/_obsidian/content/items")
+      - file.inFolder("business/_obsidian/content/items")
 
 views:
   - type: calendar
@@ -25,10 +25,10 @@ views:
     startDate: publish_date
     weekStartDay: monday
   - type: calendar
-    name: "business Calendar"
+    name: "personal-brand Calendar"
     filters:
       and:
-        - 'entity == "business"'
+        - 'entity == "personal-brand"'
 
     order:
       - file.name
@@ -42,10 +42,10 @@ views:
     startDate: publish_date
     weekStartDay: monday
   - type: calendar
-    name: "personal-brand Calendar"
+    name: "business Calendar"
     filters:
       and:
-        - 'entity == "personal-brand"'
+        - 'entity == "business"'
 
     order:
       - file.name
