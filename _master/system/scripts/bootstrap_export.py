@@ -491,9 +491,7 @@ class BootstrapExporter:
             return False
 
     def write_public_workspace(self, source: Path, target: Path) -> None:
-        data = json.loads(source.read_text(encoding="utf-8"))
-        self.sanitize_main_workspace(data)
-        self.sanitize_workspace_node(data)
+        data = self.public_workspace()
         rendered = json.dumps(data, indent=2) + "\n"
         for source_name, target_name in self.rewrite_pairs:
             rendered = rendered.replace(source_name, target_name)
@@ -501,6 +499,123 @@ class BootstrapExporter:
             raise SystemExit("Refusing to export workspace.json with private file history.")
         target.write_text(rendered, encoding="utf-8")
         shutil.copystat(source, target)
+
+    def public_workspace(self) -> dict[str, Any]:
+        return {
+            "main": {
+                "id": "public-main",
+                "type": "tabs",
+                "children": [self.public_readme_leaf("public-readme")],
+                "currentTab": 0,
+            },
+            "left": {
+                "id": "public-left",
+                "type": "split",
+                "children": [
+                    {
+                        "id": "public-left-tabs",
+                        "type": "tabs",
+                        "children": [
+                            self.public_core_leaf(
+                                "public-files",
+                                "file-explorer",
+                                {"sortOrder": "alphabetical", "autoReveal": False},
+                                "lucide-folder-closed",
+                                "Files",
+                            ),
+                            self.public_core_leaf(
+                                "public-search",
+                                "search",
+                                {
+                                    "query": "",
+                                    "matchingCase": False,
+                                    "explainSearch": False,
+                                    "collapseAll": False,
+                                    "extraContext": False,
+                                    "sortOrder": "alphabetical",
+                                },
+                                "lucide-search",
+                                "Search",
+                            ),
+                            self.public_core_leaf(
+                                "public-bookmarks",
+                                "bookmarks",
+                                {},
+                                "lucide-bookmark",
+                                "Bookmarks",
+                            ),
+                        ],
+                        "currentTab": 0,
+                    }
+                ],
+                "direction": "horizontal",
+                "width": 320,
+            },
+            "right": {
+                "id": "public-right",
+                "type": "split",
+                "children": [
+                    {
+                        "id": "public-right-tabs",
+                        "type": "tabs",
+                        "children": [
+                            self.public_core_leaf(
+                                "public-backlinks",
+                                "backlink",
+                                {
+                                    "collapseAll": False,
+                                    "extraContext": False,
+                                    "sortOrder": "alphabetical",
+                                    "showSearch": False,
+                                    "searchQuery": "",
+                                    "backlinkCollapsed": False,
+                                    "unlinkedCollapsed": True,
+                                },
+                                "links-coming-in",
+                                "Backlinks",
+                            ),
+                            self.public_core_leaf(
+                                "public-outline",
+                                "outline",
+                                {
+                                    "file": PUBLIC_WORKSPACE_FILE,
+                                    "followCursor": False,
+                                    "showSearch": False,
+                                    "searchQuery": "",
+                                },
+                                "lucide-list",
+                                "Outline",
+                            ),
+                        ],
+                        "currentTab": 0,
+                    }
+                ],
+                "direction": "horizontal",
+                "width": 300,
+            },
+            "left-ribbon": {"hiddenItems": {}},
+            "active": "public-readme",
+            "lastOpenFiles": [PUBLIC_WORKSPACE_FILE],
+        }
+
+    def public_core_leaf(
+        self,
+        leaf_id: str,
+        view_type: str,
+        state: dict[str, Any],
+        icon: str,
+        title: str,
+    ) -> dict[str, Any]:
+        return {
+            "id": leaf_id,
+            "type": "leaf",
+            "state": {
+                "type": view_type,
+                "state": state,
+                "icon": icon,
+                "title": title,
+            },
+        }
 
     def sanitize_main_workspace(self, data: Any) -> None:
         if not isinstance(data, dict):

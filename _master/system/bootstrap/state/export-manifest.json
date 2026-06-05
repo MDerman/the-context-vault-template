@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-05T04:37:08+00:00",
+  "generated_at": "2026-06-05T06:28:45+00:00",
   "paths": [
     ".agents",
     ".agents/skills",
@@ -159,9 +159,7 @@
     ".obsidian/themes/Typewriter/manifest.json",
     ".obsidian/themes/Typewriter/theme.css",
     ".obsidian/types.json",
-    ".obsidian/workspace-mobile.json",
     ".obsidian/workspace.json",
-    ".obsidian/workspaces.json",
     "AGENTS.md",
     "CLAUDE.md",
     "README.md",

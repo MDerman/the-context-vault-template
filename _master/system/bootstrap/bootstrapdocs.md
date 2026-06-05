@@ -38,6 +38,7 @@ Generated copies under `_master/system/context/*.md` are agent-readable outputs 
 The exporter:
 
 - copies root agent wiring, selected root files, root `.obsidian` profile files with configured exclusions, `_master` minus generated/private outputs, empty `_library`, `_wiki/AGENTS.md`, and configured context folder scaffolds;
+- writes a minimal core-only `.obsidian/workspace.json` for fresh public installs and excludes saved workspace/mobile layout files;
 - writes `_master/system/bootstrap/state/export-manifest.json` so future exports can remove stale export-owned files;
 - preserves repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, and contribution docs;
 - refuses to export inside the source vault.

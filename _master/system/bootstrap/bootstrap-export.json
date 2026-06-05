@@ -108,7 +108,9 @@
     ".obsidian/plugins/system3-relay/relay.log*",
     ".obsidian/plugins/system3-relay/relay*.log*",
     ".obsidian/plugins/terminal/data.json",
-    ".obsidian/plugins/todoist-sync-plugin/data.json"
+    ".obsidian/plugins/todoist-sync-plugin/data.json",
+    ".obsidian/workspace-mobile.json",
+    ".obsidian/workspaces.json"
   ],
   "obsidian_plugin_exact_copy_plugins": [
     "context-nine",
