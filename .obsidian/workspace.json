@@ -1,10 +1,10 @@
 {
   "main": {
-    "id": "public-main",
+    "id": "54a89e5649bcfb7b",
     "type": "tabs",
     "children": [
       {
-        "id": "public-readme",
+        "id": "bb7530061b9870b4",
         "type": "leaf",
         "state": {
           "type": "markdown",
@@ -21,15 +21,15 @@
     "currentTab": 0
   },
   "left": {
-    "id": "public-left",
+    "id": "30aa34700bea13c7",
     "type": "split",
     "children": [
       {
-        "id": "public-left-tabs",
+        "id": "5b978711000ded9b",
         "type": "tabs",
         "children": [
           {
-            "id": "public-files",
+            "id": "12a3aa81c232d265",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -42,12 +42,12 @@
             }
           },
           {
-            "id": "public-search",
+            "id": "7a9be93eb12a38b4",
             "type": "leaf",
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:#business",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -59,7 +59,7 @@
             }
           },
           {
-            "id": "public-bookmarks",
+            "id": "7c3e12f009394223",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -68,23 +68,23 @@
               "title": "Bookmarks"
             }
           }
-        ],
-        "currentTab": 0
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 320
+    "width": 386
   },
   "right": {
-    "id": "public-right",
+    "id": "c5da0292b2670f3d",
     "type": "split",
     "children": [
       {
-        "id": "public-right-tabs",
+        "id": "f5407bdcfb351c87",
         "type": "tabs",
+        "dimension": 36.22963537626067,
         "children": [
           {
-            "id": "public-backlinks",
+            "id": "54e1657f30973278",
             "type": "leaf",
             "state": {
               "type": "backlink",
@@ -102,7 +102,50 @@
             }
           },
           {
-            "id": "public-outline",
+            "id": "406e2cfcbe92a3df",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "README.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "lucide-file",
+              "title": "README"
+            }
+          },
+          {
+            "id": "f807c5adeba6634f",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "cabdb4a78a2d1736",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "80dd5b6b0a54906e",
             "type": "leaf",
             "state": {
               "type": "outline",
@@ -112,21 +155,104 @@
                 "showSearch": false,
                 "searchQuery": ""
               },
-              "icon": "lucide-list",
-              "title": "Outline"
+              "icon": "lucide-file",
+              "title": "README"
+            }
+          },
+          {
+            "id": "0dfb3af3c2de342c",
+            "type": "leaf",
+            "state": {
+              "type": "system3-sync-status",
+              "state": {},
+              "icon": "satellite",
+              "title": "Sync status"
             }
           }
         ],
-        "currentTab": 0
+        "currentTab": 1
+      },
+      {
+        "id": "21f8b3b76e2a4780",
+        "type": "tabs",
+        "dimension": 35.76415826221878,
+        "children": [
+          {
+            "id": "9b5af85820951a6f",
+            "type": "leaf",
+            "state": {
+              "type": "vault-cockpit-view",
+              "state": {},
+              "icon": "square-terminal",
+              "title": "Vault Command Center"
+            }
+          }
+        ]
+      },
+      {
+        "id": "d876f1e5ee5dd993",
+        "type": "tabs",
+        "dimension": 28.006206361520558,
+        "children": [
+          {
+            "id": "1ffc5fcaa195eeb3",
+            "type": "leaf",
+            "state": {
+              "type": "calendar",
+              "state": {},
+              "icon": "calendar-with-checkmark",
+              "title": "Calendar"
+            }
+          },
+          {
+            "id": "5c5b7ec025f90eb3",
+            "type": "leaf",
+            "state": {
+              "type": "tasknotes-pomodoro-view",
+              "state": {},
+              "icon": "lucide-ghost",
+              "title": "tasknotes-pomodoro-view"
+            }
+          }
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 251
   },
   "left-ribbon": {
-    "hiddenItems": {}
+    "hiddenItems": {
+      "context-nine:Open vault command center": false,
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "workspaces:Manage workspace layouts": false,
+      "obsidian-excalidraw-plugin:New drawing": false,
+      "obsidian-importer:Open Importer": false,
+      "templater-obsidian:Templater": false,
+      "obsidian-textgenerator-plugin:Generate Text!": false,
+      "obsidian-textgenerator-plugin:Text Generator: Templates Packages Manager": false,
+      "tasknotes:Open mini calendar view": false,
+      "tasknotes:Open calendar view": false,
+      "tasknotes:Open tasks view": false,
+      "tasknotes:Open agenda view": false,
+      "tasknotes:Open kanban board": false,
+      "tasknotes:Open pomodoro timer": false,
+      "tasknotes:Open pomodoro statistics": false,
+      "tasknotes:Create new task": false,
+      "obsidian42-brat:BRAT": false,
+      "omnisearch:Omnisearch": false,
+      "obsidian-full-calendar:Open Full Calendar": false,
+      "terminal:Open terminal": false,
+      "system3-relay:Relay": false,
+      "periodic-notes:Open today": false
+    }
   },
-  "active": "public-readme",
+  "active": "60418e06a5cf5a59",
   "lastOpenFiles": [
     "README.md"
   ]

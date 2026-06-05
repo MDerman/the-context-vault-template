@@ -1,0 +1,363 @@
+{
+  "workspaces": {
+    "MAIN": {
+      "main": {
+        "id": "54a89e5649bcfb7b",
+        "type": "split",
+        "children": [
+          {
+            "id": "bb7e594664b21dd4",
+            "type": "tabs",
+            "dimension": 63.06755260243633,
+            "children": [
+              {
+                "id": "0a1fc49bc93dad8e",
+                "type": "leaf",
+                "pinned": true,
+                "state": {
+                  "type": "bases",
+                  "state": {
+                    "file": "_master/_obsidian/bases/tasks-kanban-v1.base",
+                    "viewName": "Impression"
+                  },
+                  "pinned": true,
+                  "icon": "tasknotes-simple",
+                  "title": "tasks-kanban-v1"
+                }
+              },
+              {
+                "id": "8ec4967020c00d94",
+                "type": "leaf",
+                "state": {
+                  "type": "bases",
+                  "state": {
+                    "file": "business/_obsidian/bases/tasks-epic-current-dev-kanban.base",
+                    "viewName": "Current dev Kanban"
+                  },
+                  "icon": "tasknotes-simple",
+                  "title": "tasks-epic-current-dev-kanban"
+                }
+              },
+              {
+                "id": "bb7530061b9870b4",
+                "type": "leaf",
+                "state": {
+                  "type": "bases",
+                  "state": {
+                    "file": "business/_obsidian/bases/tasks-epic-growth-kanban.base",
+                    "viewName": "Growth Kanban"
+                  },
+                  "icon": "tasknotes-simple",
+                  "title": "tasks-epic-growth-kanban"
+                }
+              },
+              {
+                "id": "e92427d6f280ad67",
+                "type": "leaf",
+                "pinned": true,
+                "state": {
+                  "type": "bases",
+                  "state": {
+                    "file": "_master/_obsidian/bases/content-kanban.base",
+                    "viewName": "YouTube"
+                  },
+                  "pinned": true,
+                  "icon": "columns",
+                  "title": "content-kanban"
+                }
+              },
+              {
+                "id": "3ee967e0bbc87755",
+                "type": "leaf",
+                "pinned": true,
+                "state": {
+                  "type": "markdown",
+                  "state": {
+                    "file": "_master/_obsidian/periodic/quarterly/2026-Q2.md",
+                    "mode": "source",
+                    "source": false
+                  },
+                  "pinned": true,
+                  "icon": "lucide-file",
+                  "title": "2026-Q2"
+                }
+              },
+              {
+                "id": "ce1928022954efac",
+                "type": "leaf",
+                "state": {
+                  "type": "markdown",
+                  "state": {
+                    "file": "personal/_obsidian/periodic/daily/2026-05-14.md",
+                    "mode": "source",
+                    "source": false
+                  },
+                  "icon": "lucide-file",
+                  "title": "2026-05-14"
+                }
+              }
+            ],
+            "currentTab": 5
+          },
+          {
+            "id": "3cdff202baa90a62",
+            "type": "tabs",
+            "dimension": 36.93244739756368,
+            "children": [
+              {
+                "id": "d76a32041ba6e06b",
+                "type": "leaf",
+                "state": {
+                  "type": "markdown",
+                  "state": {
+                    "file": "_master/system/inbox/apple-notes.md",
+                    "mode": "source",
+                    "source": false
+                  },
+                  "icon": "lucide-file",
+                  "title": "apple-notes"
+                }
+              },
+              {
+                "id": "e996cf15ab260eff",
+                "type": "leaf",
+                "state": {
+                  "type": "markdown",
+                  "state": {
+                    "file": "_master/system/obsidian_notes/potential_ideas/dashboard ideas.md",
+                    "mode": "source",
+                    "source": false
+                  },
+                  "icon": "lucide-file",
+                  "title": "dashboard ideas"
+                }
+              },
+              {
+                "id": "467ad43b45f7c396",
+                "type": "leaf",
+                "state": {
+                  "type": "markdown",
+                  "state": {
+                    "file": "_master/03-Momentum.md",
+                    "mode": "source",
+                    "source": false
+                  },
+                  "icon": "lucide-file",
+                  "title": "03-Momentum"
+                }
+              }
+            ],
+            "currentTab": 2
+          }
+        ],
+        "direction": "vertical"
+      },
+      "left": {
+        "id": "30aa34700bea13c7",
+        "type": "split",
+        "children": [
+          {
+            "id": "5b978711000ded9b",
+            "type": "tabs",
+            "children": [
+              {
+                "id": "12a3aa81c232d265",
+                "type": "leaf",
+                "state": {
+                  "type": "file-explorer",
+                  "state": {
+                    "sortOrder": "alphabetical",
+                    "autoReveal": false
+                  },
+                  "icon": "lucide-folder-closed",
+                  "title": "Files"
+                }
+              },
+              {
+                "id": "7a9be93eb12a38b4",
+                "type": "leaf",
+                "state": {
+                  "type": "search",
+                  "state": {
+                    "query": "Content Calendar",
+                    "matchingCase": false,
+                    "explainSearch": false,
+                    "collapseAll": false,
+                    "extraContext": false,
+                    "sortOrder": "alphabetical"
+                  },
+                  "icon": "lucide-search",
+                  "title": "Search"
+                }
+              },
+              {
+                "id": "7c3e12f009394223",
+                "type": "leaf",
+                "state": {
+                  "type": "bookmarks",
+                  "state": {},
+                  "icon": "lucide-bookmark",
+                  "title": "Bookmarks"
+                }
+              }
+            ],
+            "currentTab": 1
+          }
+        ],
+        "direction": "horizontal",
+        "width": 393
+      },
+      "right": {
+        "id": "c5da0292b2670f3d",
+        "type": "split",
+        "children": [
+          {
+            "id": "f5407bdcfb351c87",
+            "type": "tabs",
+            "dimension": 74.37899219304471,
+            "children": [
+              {
+                "id": "54e1657f30973278",
+                "type": "leaf",
+                "state": {
+                  "type": "backlink",
+                  "state": {
+                    "collapseAll": false,
+                    "extraContext": false,
+                    "sortOrder": "alphabetical",
+                    "showSearch": false,
+                    "searchQuery": "",
+                    "backlinkCollapsed": false,
+                    "unlinkedCollapsed": true
+                  },
+                  "icon": "links-coming-in",
+                  "title": "Backlinks"
+                }
+              },
+              {
+                "id": "406e2cfcbe92a3df",
+                "type": "leaf",
+                "state": {
+                  "type": "outgoing-link",
+                  "state": {
+                    "linksCollapsed": false,
+                    "unlinkedCollapsed": true
+                  },
+                  "icon": "links-going-out",
+                  "title": "Outgoing links"
+                }
+              },
+              {
+                "id": "f807c5adeba6634f",
+                "type": "leaf",
+                "state": {
+                  "type": "tag",
+                  "state": {
+                    "sortOrder": "frequency",
+                    "useHierarchy": true,
+                    "showSearch": false,
+                    "searchQuery": ""
+                  },
+                  "icon": "lucide-tags",
+                  "title": "Tags"
+                }
+              },
+              {
+                "id": "cabdb4a78a2d1736",
+                "type": "leaf",
+                "state": {
+                  "type": "all-properties",
+                  "state": {
+                    "sortOrder": "frequency",
+                    "showSearch": false,
+                    "searchQuery": ""
+                  },
+                  "icon": "lucide-archive",
+                  "title": "All properties"
+                }
+              },
+              {
+                "id": "80dd5b6b0a54906e",
+                "type": "leaf",
+                "state": {
+                  "type": "outline",
+                  "state": {
+                    "file": "personal/_obsidian/periodic/daily/2026-05-14.md",
+                    "followCursor": false,
+                    "showSearch": false,
+                    "searchQuery": ""
+                  },
+                  "icon": "lucide-list",
+                  "title": "Outline of 2026-05-14"
+                }
+              }
+            ],
+            "currentTab": 3
+          },
+          {
+            "id": "d876f1e5ee5dd993",
+            "type": "tabs",
+            "dimension": 25.621007806955287,
+            "children": [
+              {
+                "id": "1ffc5fcaa195eeb3",
+                "type": "leaf",
+                "state": {
+                  "type": "calendar",
+                  "state": {},
+                  "icon": "calendar-with-checkmark",
+                  "title": "Calendar"
+                }
+              },
+              {
+                "id": "5c5b7ec025f90eb3",
+                "type": "leaf",
+                "state": {
+                  "type": "tasknotes-pomodoro-view",
+                  "state": {},
+                  "icon": "lucide-ghost",
+                  "title": "tasknotes-pomodoro-view"
+                }
+              }
+            ]
+          }
+        ],
+        "direction": "horizontal",
+        "width": 260
+      },
+      "left-ribbon": {
+        "hiddenItems": {
+          "obsidian-full-calendar:Open Full Calendar": false,
+          "omnisearch:Omnisearch": false,
+          "switcher:Open quick switcher": false,
+          "graph:Open graph view": false,
+          "canvas:Create new canvas": false,
+          "daily-notes:Open today's daily note": false,
+          "templates:Insert template": false,
+          "command-palette:Open command palette": false,
+          "bases:Create new base": false,
+          "obsidian-excalidraw-plugin:New drawing": false,
+          "obsidian-importer:Open Importer": false,
+          "templater-obsidian:Templater": false,
+          "obsidian-textgenerator-plugin:Generate Text!": false,
+          "workspaces:Manage workspace layouts": false,
+          "tasknotes:Open mini calendar view": false,
+          "obsidian-textgenerator-plugin:Text Generator: Templates Packages Manager": false,
+          "tasknotes:Open calendar view": false,
+          "tasknotes:Open tasks view": false,
+          "tasknotes:Open agenda view": false,
+          "tasknotes:Open kanban board": false,
+          "tasknotes:Open pomodoro timer": false,
+          "tasknotes:Open pomodoro statistics": false,
+          "tasknotes:Create new task": false,
+          "obsidian42-brat:BRAT": false,
+          "terminal:Open terminal": false,
+          "periodic-notes:Open today": false
+        }
+      },
+      "active": "7a9be93eb12a38b4",
+      "mtime": "2026-05-14T14:09:28+02:00"
+    }
+  },
+  "active": "MAIN"
+}
