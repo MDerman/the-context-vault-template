@@ -1,5 +1,7 @@
 # The Context Vault Template
 
+[Tutorial video](https://drive.google.com/file/d/1Rnlbrc10ckh9bnxiz_CkdLYXE0jTdyUI/view?usp=sharing)
+
 ## Install On New Mac
 
 First run the install script from any terminal directory:

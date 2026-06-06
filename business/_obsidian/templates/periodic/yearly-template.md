@@ -1,8 +1,8 @@
 ---
 type: periodic
 period: yearly
-entity: <% tp.file.folder(true).split('/')[0] %>
-period_id: <% tp.file.title %>
+entity: business
+period_id: FREE TOOLS (SEO) -start
 generated: false
 ---
 # Impression Yearly
