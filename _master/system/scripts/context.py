@@ -707,7 +707,7 @@ managed_by: "{MARKER}"
 
 {markdown_list(dashboard_checklist_lines(root, today, periods, config))}
 
-#### Home Pages (contexts)
+#### Home Pages
 
 {markdown_list(context_note_lines)}
 

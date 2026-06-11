@@ -44,6 +44,22 @@ class DashboardChecklistTests(unittest.TestCase):
         self.assertEqual(len(lines), 1)
         self.assertIn("[[_master/_obsidian/periodic/daily/2025-07-23|Plan and review day]]", lines[0])
 
+    def test_dashboard_heading_is_home_pages(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            rendered = context.dashboard_markdown(
+                root,
+                ["personal"],
+                context.active_periods(dt.date(2025, 7, 23)),
+                [],
+                "2025-07-23T07:00:00",
+                dt.date(2025, 7, 23),
+                CONFIG,
+            )
+
+        self.assertIn("#### Home Pages\n", rendered)
+        self.assertNotIn("#### Home Pages (contexts)", rendered)
+
     def test_end_of_week_includes_weekly_review(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             lines = self.lines_for(Path(tmp), dt.date(2025, 6, 15))
