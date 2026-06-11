@@ -41,8 +41,8 @@ Recurring daily, weekly, quarterly, and yearly checklists belong in periodic tem
 ![[personal-brand/personal-brand#Momentum]]
 ```
 
-## business
+## impression
 
 ```sync
-![[business/business#Momentum]]
+![[business/impression#Momentum]]
 ```

@@ -38,11 +38,11 @@ Configured context folders:
 
 - `personal`: personal life, goals, health, values, finances, relationships, home, reflection, default capture. Active by default.
 - `personal-brand`: personal brand, public writing, content, media, audience, offers, reputation. Active by default.
-- `business`: Impression business workspace. Active by default.
+- `impression`: Impression business workspace. Active by default.
 - `dev`: development, contracting, software projects, job applications, technical work. Archived by default.
 - `claudeche`: Claudeche workspace. Archived by default.
 
-Each context folder has an inside-folder note named after the folder, for example `business/business.md`. Its `status` property controls whether that context folder appears in default generated agent periodic rollups:
+Each context folder has an inside-folder note named after the folder, for example `business/impression.md`. Its `status` property controls whether that context folder appears in default generated agent periodic rollups:
 
 - `status: active`: included when the generator is run with no context folder arguments.
 - `status: archived`: still available, but excluded from default rollups.
@@ -58,9 +58,9 @@ Its `default_capture` property controls the default place for unspecific tasks a
 - `default_capture: true`: preferred capture context folder.
 - if no folder is marked, scripts fall back to the first active context folder.
 
-The default active working set is `personal`, `personal-brand`, and `business`.
+The default active working set is `personal`, `personal-brand`, and `impression`.
 
-The content-enabled working set is `personal-brand` and `business`.
+The content-enabled working set is `personal-brand` and `impression`.
 
 The context folder note is the local routing map. Its frontmatter is the control panel:
 
@@ -264,7 +264,7 @@ _master/system/context/YYYY.md
 Those agent notes are script-generated composed views. They inline the selected context folder source notes:
 
 ````md
-## business
+## impression
 
 _Source: `business/_obsidian/periodic/quarterly/2026-Q2.md`_
 ````
@@ -285,7 +285,7 @@ vault periodic --all
 vault periodic --context-folders dev,claudeche
 ```
 
-`context.py` calls this generator for the default refresh path, so one agent-context refresh updates context, realized system notes, current master periodic rollups, and current agent periodic rollups.
+`context.py` calls this generator for the default refresh path, so one agent-context refresh updates context, realized system notes, current master periodic rollups, and current agent periodic rollups. Monthly agent rollups are kept as history so dashboard reminders can carry forward unchecked monthly SOP items.
 
 Clean current generated master periodic rollups with:
 
@@ -296,7 +296,7 @@ python3 _master/system/scripts/delete_master_periodic_notes_for_now.py --context
 
 No args deletes the current generated master rollups under `_master/system/context`. Use `--context-folders` or `--all` when you also want to clean current context folder source notes.
 
-Monthly periodic notes are intentionally not used.
+Monthly periodic notes are generated from blank default templates and linked only from the generated dashboard checklist.
 
 ## TaskNotes
 
@@ -320,7 +320,7 @@ In the master vault:
 
 - Default task context is `personal`.
 - Default task folder is `{{context}}/_obsidian/tasks`.
-- A task with context `business` goes to `business/_obsidian/tasks`.
+- A task with context `impression` goes to `business/_obsidian/tasks`.
 - A task with no chosen context defaults to `personal/_obsidian/tasks`.
 - Master TaskNotes command views live in `_master/_obsidian/bases`.
 
@@ -400,7 +400,7 @@ Content-enabled context folders store owned content in `_obsidian/content`. This
 Current content-enabled entities:
 
 - `personal-brand`: Matt Derman blog, Copy and Context, YouTube, LinkedIn, X, and Substack Notes.
-- `business`: Impression blog and AI LinkedIn Insights.
+- `impression`: Impression blog and AI LinkedIn Insights.
 
 Content item frontmatter:
 
@@ -674,7 +674,7 @@ Configured context folder mapping:
 ```text
 personal -> personal
 personal-brand -> personal-brand
-business -> business
+impression -> business
 ```
 
 The export copies root agent wiring, root `.obsidian` profile files with configured exclusions, `_master` minus generated outputs, empty `_library`, and `_wiki/AGENTS.md`. Context exports create sanitized public folder notes named after the target folder and copy public `_obsidian` Bases and templates.

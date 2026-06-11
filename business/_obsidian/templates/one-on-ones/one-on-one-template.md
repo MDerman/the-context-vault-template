@@ -1,35 +1,21 @@
-<%*
-const parts = tp.file.folder(true).split("/");
-const folderName = parts[parts.length - 1] || "Unknown";
-const rootFolders = new Set(["1-on-1s"]);
-const attendee = rootFolders.has(folderName) ? "Unknown" : folderName;
-const date = tp.date.now("YYYY-MM-DD");
-const compactDate = tp.date.now("YYYYMMDD");
-const defaultTitles = new Set(["Untitled", "New note"]);
-const targetTitle = `1on1-${attendee}-${compactDate}`;
-
-if (defaultTitles.has(tp.file.title)) {
-  await tp.file.rename(targetTitle);
-}
--%>
 ---
-title: "<% defaultTitles.has(tp.file.title) ? targetTitle : tp.file.title %>"
+title: "FREE TOOLS (SEO) -start"
 type: meeting
 meeting_type: 1-on-1
 status: draft
-date: <% date %>
+date: 2026-06-05
 attendees:
-  - <% attendee %>
+  - tasks
 people:
-  - <% attendee %>
+  - tasks
 project:
 source:
 tags:
   - work/1on1
 ---
 
-Date: <% date %>
-Attendees: <% attendee %>
+Date: 2026-06-05
+Attendees: tasks
 
 <% tp.file.cursor(1) %>
 
@@ -47,7 +33,7 @@ Attendees: <% attendee %>
 
 ```tasks
 not done
-(path includes <% attendee %>) OR (description includes <% attendee %>)
+(path includes tasks) OR (description includes tasks)
 hide edit button
 show backlink
 short mode

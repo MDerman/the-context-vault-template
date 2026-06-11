@@ -28,8 +28,8 @@ Each embedded section below comes from the entity's context folder note.
 ![[personal-brand/personal-brand#Identity]]
 ```
 
-## business
+## impression
 
 ```sync
-![[business/business#Identity]]
+![[business/impression#Identity]]
 ```

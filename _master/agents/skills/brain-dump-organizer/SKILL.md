@@ -23,7 +23,7 @@ vault triage prepare
    - `_master/system/context/CONTEXT.md`
    - `personal/personal.md`
    - `personal-brand/personal-brand.md`
-   - `business/business.md`
+   - `business/impression.md`
    - relevant existing `_obsidian/tasks`
 5. Edit each proposal note for the run:
    - set `route`, `target_context`, `target_kind`, `apply_action`, `priority`, `task_status`, `target_path`, and `confidence`;

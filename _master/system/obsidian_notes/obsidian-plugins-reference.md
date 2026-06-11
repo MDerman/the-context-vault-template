@@ -21,7 +21,7 @@ Configured root-vault behavior:
 
 In practice:
 
-- A task with context `business` is created in `business/_obsidian/tasks`.
+- A task with context `impression` is created in `business/_obsidian/tasks`.
 - A task with no context defaults to `personal/_obsidian/tasks`.
 - Prefer contexts for context folder routing and tags for sub-project/grouping.
 - Use `due` and `scheduled` exactly in task frontmatter. Do not rename them to `due_date` or `scheduled_date`; Bases and generated agent context expect the TaskNotes native names.
@@ -61,7 +61,7 @@ The `*` status trigger is enabled. The `!` priority trigger exists but is disabl
 
 ## Periodic Notes And Calendar
 
-Periodic Notes owns dated notes. Monthly notes are intentionally not used.
+Periodic Notes owns dated notes, including blank monthly SOP notes surfaced from the generated dashboard.
 
 Root vault defaults point at `personal`:
 
@@ -69,6 +69,7 @@ Root vault defaults point at `personal`:
 | --- | --- | --- |
 | Daily | `personal/_obsidian/periodic/daily` | `YYYY-MM-DD` |
 | Weekly | `personal/_obsidian/periodic/weekly` | `GGGG-[W]WW` |
+| Monthly | `personal/_obsidian/periodic/monthly` | `YYYY-MM` |
 | Quarterly | `personal/_obsidian/periodic/quarterly` | `YYYY-[Q]Q` |
 | Yearly | `personal/_obsidian/periodic/yearly` | `YYYY` |
 
@@ -99,6 +100,7 @@ Context folder periodic folders use their local templates:
 ```text
 <context-folder>/_obsidian/periodic/daily      -> <context-folder>/_obsidian/templates/periodic/daily-template.md
 <context-folder>/_obsidian/periodic/weekly     -> <context-folder>/_obsidian/templates/periodic/weekly-template.md
+<context-folder>/_obsidian/periodic/monthly    -> <context-folder>/_obsidian/templates/periodic/monthly-template.md
 <context-folder>/_obsidian/periodic/quarterly  -> <context-folder>/_obsidian/templates/periodic/quarterly-template.md
 <context-folder>/_obsidian/periodic/yearly     -> <context-folder>/_obsidian/templates/periodic/yearly-template.md
 <context-folder>/_obsidian/tasks               -> _master/_obsidian/templates/shared/default-tasks-template.md

@@ -22,7 +22,7 @@ Use this skill for open source contribution work, including one-off patches in r
 Prefer the helper script in this repo when available:
 
 ```bash
-pnpm --dir ~/Code/business oss:pr -- \
+pnpm --dir ~/Code/impression oss:pr -- \
   --repo owner/name \
   --branch fix-example \
   --title "Fix example" \

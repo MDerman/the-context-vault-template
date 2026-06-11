@@ -25,7 +25,7 @@
         "legal_terms": [
           "1. Payment is due within {payment_terms_days} days from issue date.",
           "2. Please use invoice number {invoice_number} as payment reference.",
-          "3. For queries, contact matt@business.so."
+          "3. For queries, contact matt@impression.so."
         ]
       },
       "payment": {
@@ -38,7 +38,7 @@
           "[BRANCH CODE: 250655]"
         ],
         "contact_detail_lines": [
-          "[EMAIL: matt@business.so]",
+          "[EMAIL: matt@impression.so]",
           "[PHONE: 0611926226]",
           "[DUE DATE: {due_date}]"
         ]

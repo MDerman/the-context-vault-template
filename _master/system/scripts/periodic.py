@@ -55,6 +55,7 @@ def active_periods(day: dt.date) -> dict[str, str]:
     return {
         "daily": day.isoformat(),
         "weekly": f"{iso.year}-W{iso.week:02d}",
+        "monthly": f"{day.year}-{day.month:02d}",
         "quarterly": f"{day.year}-Q{quarter}",
         "yearly": f"{day.year}",
     }
@@ -170,6 +171,10 @@ def parse_moment_date(value: str, fmt: str) -> dt.date:
         match = re.fullmatch(r"(\d{4})-W(\d{2})", value)
         if match:
             return dt.date.fromisocalendar(int(match.group(1)), int(match.group(2)), 1)
+    if fmt == "YYYY-MM":
+        match = re.fullmatch(r"(\d{4})-(\d{2})", value)
+        if match:
+            return dt.date(int(match.group(1)), int(match.group(2)), 1)
     if fmt == "YYYY-[Q]Q":
         match = re.fullmatch(r"(\d{4})-Q([1-4])", value)
         if match:
@@ -240,6 +245,14 @@ def is_generated_master_periodic_note(path: Path) -> bool:
     text = path.read_text(encoding="utf-8", errors="replace")
     props = parse_frontmatter(text)
     return props.get("type") == "master-periodic" and props.get("generated", "").lower() == "true"
+
+
+def generated_agent_period(path: Path) -> str:
+    text = path.read_text(encoding="utf-8", errors="replace")
+    props = parse_frontmatter(text)
+    if props.get("type") != "agent-periodic" or props.get("generated", "").lower() != "true":
+        return ""
+    return props.get("period", "")
 
 
 def master_periodic_path(root: Path, period: str, period_id: str) -> Path:
@@ -408,6 +421,8 @@ def cleanup_agent_periodic_history(root: Path, current_paths: set[Path]) -> None
     if agent_dir.exists():
         for path in sorted(agent_dir.glob("*.md")):
             if path in current_paths:
+                continue
+            if generated_agent_period(path) == "monthly":
                 continue
             if is_generated_agent_periodic_note(path):
                 path.unlink()

@@ -27,6 +27,7 @@
       {
         "id": "5b978711000ded9b",
         "type": "tabs",
+        "dimension": 57.79742765273313,
         "children": [
           {
             "id": "12a3aa81c232d265",
@@ -47,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#business",
+                "query": "personal.md",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -69,10 +70,54 @@
             }
           }
         ]
+      },
+      {
+        "id": "919598e964260d4d",
+        "type": "tabs",
+        "dimension": 16.077170418006432,
+        "children": [
+          {
+            "id": "9b5af85820951a6f",
+            "type": "leaf",
+            "state": {
+              "type": "vault-cockpit-view",
+              "state": {},
+              "icon": "square-terminal",
+              "title": "Vault Command Center"
+            }
+          }
+        ]
+      },
+      {
+        "id": "4365fdef29381df3",
+        "type": "tabs",
+        "dimension": 26.12540192926045,
+        "children": [
+          {
+            "id": "1ffc5fcaa195eeb3",
+            "type": "leaf",
+            "state": {
+              "type": "calendar",
+              "state": {},
+              "icon": "calendar-with-checkmark",
+              "title": "Calendar"
+            }
+          },
+          {
+            "id": "5c5b7ec025f90eb3",
+            "type": "leaf",
+            "state": {
+              "type": "tasknotes-pomodoro-view",
+              "state": {},
+              "icon": "lucide-ghost",
+              "title": "tasknotes-pomodoro-view"
+            }
+          }
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 386
+    "width": 288
   },
   "right": {
     "id": "c5da0292b2670f3d",
@@ -81,7 +126,6 @@
       {
         "id": "f5407bdcfb351c87",
         "type": "tabs",
-        "dimension": 36.22963537626067,
         "children": [
           {
             "id": "54e1657f30973278",
@@ -160,7 +204,7 @@
             }
           },
           {
-            "id": "d9be3dfb3f692d2f",
+            "id": "de11147b2df90142",
             "type": "leaf",
             "state": {
               "type": "system3-sync-status",
@@ -171,54 +215,11 @@
           }
         ],
         "currentTab": 1
-      },
-      {
-        "id": "21f8b3b76e2a4780",
-        "type": "tabs",
-        "dimension": 35.76415826221878,
-        "children": [
-          {
-            "id": "9b5af85820951a6f",
-            "type": "leaf",
-            "state": {
-              "type": "vault-cockpit-view",
-              "state": {},
-              "icon": "square-terminal",
-              "title": "Vault Command Center"
-            }
-          }
-        ]
-      },
-      {
-        "id": "d876f1e5ee5dd993",
-        "type": "tabs",
-        "dimension": 28.006206361520558,
-        "children": [
-          {
-            "id": "1ffc5fcaa195eeb3",
-            "type": "leaf",
-            "state": {
-              "type": "calendar",
-              "state": {},
-              "icon": "calendar-with-checkmark",
-              "title": "Calendar"
-            }
-          },
-          {
-            "id": "5c5b7ec025f90eb3",
-            "type": "leaf",
-            "state": {
-              "type": "tasknotes-pomodoro-view",
-              "state": {},
-              "icon": "lucide-ghost",
-              "title": "tasknotes-pomodoro-view"
-            }
-          }
-        ]
       }
     ],
     "direction": "horizontal",
-    "width": 251
+    "width": 283,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -252,7 +253,7 @@
       "periodic-notes:Open today": false
     }
   },
-  "active": "7d319fd60de932b9",
+  "active": "12a3aa81c232d265",
   "lastOpenFiles": [
     "README.md"
   ]

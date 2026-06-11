@@ -146,8 +146,8 @@ def content_frontmatter(item: MigrationItem, root: Path) -> str:
 
 def destination_for_blog(root: Path, source_root: Path, path: Path, title: str, metadata: dict[str, str]) -> tuple[str, Path, str]:
     website = metadata.get("Websites", metadata.get("Website", ""))
-    entity = "business" if "business" in website.lower() else "personal-brand"
-    publication = "business" if entity == "business" else "personal-brand"
+    entity = "impression" if "impression" in website.lower() else "personal-brand"
+    publication = "impression" if entity == "impression" else "personal-brand"
     relative = path.relative_to(source_root)
     if len(relative.parts) > 1:
         parent_slug = slugify(relative.parts[0])

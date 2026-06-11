@@ -181,7 +181,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--root", default=None, help="Vault root. Defaults to auto-discovery.")
     sub = parser.add_subparsers(dest="command", required=True)
     create = sub.add_parser("create", help="Create a TaskNotes task.")
-    create.add_argument("context", help="Context folder, e.g. business.")
+    create.add_argument("context", help="Context folder, e.g. impression.")
     create.add_argument("title", help="Task title.")
     create.add_argument("--project", action="append", default=[], help="Existing project title/path. Repeat for multiple.")
     create.add_argument("--epic", default=None, help="Existing epic title/path.")

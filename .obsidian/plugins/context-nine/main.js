@@ -1518,11 +1518,12 @@ var VaultCockpitView = class extends import_obsidian5.ItemView {
     const { containerEl } = this;
     containerEl.empty();
     containerEl.addClass("omp-vault-cockpit");
+    containerEl.toggleClass("is-actions-expanded", this.actionsExpanded);
     this.buttons.clear();
     const primaryRow = containerEl.createDiv({ cls: "omp-vault-cockpit-primary-row" });
     const refreshCommand = (_a = this.findCommand("refresh")) != null ? _a : this.commands[0];
     if (refreshCommand) {
-      const refreshButton = this.createCommandButton(primaryRow, refreshCommand, "omp-vault-cockpit-refresh mod-cta");
+      const refreshButton = this.createCommandButton(primaryRow, refreshCommand, "omp-vault-cockpit-refresh");
       this.buttons.set(refreshCommand.id, refreshButton);
     }
     this.statusEl = primaryRow.createDiv({ cls: "omp-vault-cockpit-status", text: labelForStatus(this.status) });

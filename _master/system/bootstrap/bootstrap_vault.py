@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Bootstrap this Obsidian workspace into the lowercase context folder layout.
+Bootstrap this Obsidian workspace into the context folder layout.
 
 The script is intentionally conservative:
 - it never moves content from legacy dash-prefixed folders;
@@ -45,6 +45,7 @@ VALID_CONTEXT_TYPES = {"personal", "personal-brand", "business"}
 PERIODS = {
     "daily": "daily",
     "weekly": "weekly",
+    "monthly": "monthly",
     "quarterly": "quarterly",
     "yearly": "yearly",
 }
@@ -334,6 +335,7 @@ class Bootstrap:
             "_master/_obsidian/templates/shared/entity-notes",
             "_master/_obsidian/excalidraw",
             "_master/_obsidian/excalidraw/Scripts",
+            "_master/_obsidian/periodic/monthly",
             "_master/system/scripts",
             "_master/_obsidian/attachments",
         ]
@@ -352,6 +354,7 @@ class Bootstrap:
                 "_obsidian/epics",
                 "_obsidian/periodic/daily",
                 "_obsidian/periodic/weekly",
+                "_obsidian/periodic/monthly",
                 "_obsidian/periodic/quarterly",
                 "_obsidian/periodic/yearly",
                 "_obsidian/projects",
@@ -364,16 +367,6 @@ class Bootstrap:
             if entity in self.content_entities:
                 for directory in content_directories():
                     self.ensure_dir(self.root / entity / directory)
-
-    def cleanup_retired_monthly_periodics(self) -> None:
-        for entity in self.entities:
-            self.safe_remove_generated_path(self.root / entity / "_obsidian/periodic/monthly", MANAGED_MARKERS)
-        self.safe_remove_generated_path(self.root / "_master/_obsidian/periodic/monthly", MANAGED_MARKERS)
-        for entity in self.entities:
-            self.safe_remove_generated_path(
-                self.root / entity / "_obsidian/templates/periodic/monthly-template.md",
-                MANAGED_MARKERS,
-            )
 
     def setup_context_folder_notes(self) -> None:
         active = set(self.active_entities)
@@ -640,7 +633,6 @@ class Bootstrap:
 
     def run(self) -> None:
         self.setup_directories()
-        self.cleanup_retired_monthly_periodics()
         self.setup_context_folder_notes()
         self.setup_agent_infrastructure()
         self.cleanup_obsolete_context_folder_workspace_artifacts()
@@ -949,6 +941,7 @@ def active_periods(day: dt.date) -> dict[str, str]:
     return {
         "daily": day.isoformat(),
         "weekly": f"{iso.year}-W{iso.week:02d}",
+        "monthly": f"{day.year}-{day.month:02d}",
         "quarterly": f"{day.year}-Q{quarter}",
         "yearly": f"{day.year}",
     }
@@ -1860,7 +1853,7 @@ def prompt(default: str, label: str) -> str:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Bootstrap the lowercase context folder Obsidian layout.")
+    parser = argparse.ArgumentParser(description="Bootstrap the context folder Obsidian layout.")
     parser.add_argument("--root", default=".", help="Vault root. Defaults to current directory.")
     parser.add_argument("--context-folders", dest="entities", metavar="CONTEXT_FOLDERS", help="Comma-separated context folders.")
     parser.add_argument("--sub-vaults", dest="entities", help=argparse.SUPPRESS)

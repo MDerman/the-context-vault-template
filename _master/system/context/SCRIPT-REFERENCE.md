@@ -9,10 +9,11 @@ This is the fuller script reference. Use `_master/system/context/SCRIPTS.md` for
 ## Main Scripts
 
 - `vault.py`: terminal dispatcher installed as `vault` in `~/.local/bin`; forwards subcommands to the scripts below.
-- `refresh.py`: runs the vault refresh pipeline; by default it ingests the Brain Dump Apple Note, runs the Google Calendar task mirror, regenerates agent context, updates `_master/Dashboard.md`, and removes stale generated agent periodic rollups unless `--keep-agent-periodic-history` is passed.
+- `refresh.py`: runs the vault refresh pipeline; by default it ingests the Brain Dump Apple Note, runs the Google Calendar task mirror, regenerates agent context, updates `_master/Dashboard.md`, and removes stale generated non-monthly agent periodic rollups unless `--keep-agent-periodic-history` is passed.
+- `refresh_schedule.py`: registers, unregisters, reports, and runs the macOS LaunchAgent daily refresh wrapper.
 - `context.py`: generates compact agent-readable state, `_master/Dashboard.md`, current content schedules, realized system notes, and current periodic rollups.
 - `content.py`: generates fixed 4-week content schedule notes from enabled `_obsidian/content/content-cadence.json` files and maintains the `Current content schedule:` line in each enabled context folder note. Supports `schedule_format`, `publication_order`, and `--force` to regenerate existing managed schedule notes.
-- `periodic.py`: generates current daily, weekly, quarterly, and yearly flat agent rollups under `_master/system/context/`.
+- `periodic.py`: generates current daily, weekly, monthly, quarterly, and yearly flat agent rollups under `_master/system/context/`; historic monthly rollups are preserved for dashboard carry-forward reminders.
 - `brain_dump.py`: imports the Brain Dump Apple Note into its single vault import file, copies attachments, and can clear the source note.
 - `_master/agents/skills/brain-dump-organizer/scripts/triage.py`: creates Brain Dump organizer backups/proposals, maintains the triage Base, clears the import file, and applies approved proposals.
 - `epic.py`: creates, renames, deletes, lists, and syncs context folder epics; keeps task links, per-epic TaskNotes Kanban Bases, and managed master task kanban epic views in sync.

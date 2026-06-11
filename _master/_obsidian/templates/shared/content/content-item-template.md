@@ -13,7 +13,7 @@ conversion_goal:
 tags:
   - content
 generated: true
-generated_at: 2026-05-30T20:40:35
+generated_at: 2026-06-06T14:27:02
 managed_by: "managed-by: _master/system/bootstrap/bootstrap_vault.py"
 ---
 

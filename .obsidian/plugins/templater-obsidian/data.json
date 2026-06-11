@@ -23,6 +23,10 @@
       "template": "personal/_obsidian/templates/periodic/weekly-template.md"
     },
     {
+      "folder": "personal/_obsidian/periodic/monthly",
+      "template": "personal/_obsidian/templates/periodic/monthly-template.md"
+    },
+    {
       "folder": "personal/_obsidian/periodic/quarterly",
       "template": "personal/_obsidian/templates/periodic/quarterly-template.md"
     },
@@ -43,6 +47,10 @@
       "template": "personal-brand/_obsidian/templates/periodic/weekly-template.md"
     },
     {
+      "folder": "personal-brand/_obsidian/periodic/monthly",
+      "template": "personal-brand/_obsidian/templates/periodic/monthly-template.md"
+    },
+    {
       "folder": "personal-brand/_obsidian/periodic/quarterly",
       "template": "personal-brand/_obsidian/templates/periodic/quarterly-template.md"
     },
@@ -61,6 +69,10 @@
     {
       "folder": "business/_obsidian/periodic/weekly",
       "template": "business/_obsidian/templates/periodic/weekly-template.md"
+    },
+    {
+      "folder": "business/_obsidian/periodic/monthly",
+      "template": "business/_obsidian/templates/periodic/monthly-template.md"
     },
     {
       "folder": "business/_obsidian/periodic/quarterly",

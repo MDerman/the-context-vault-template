@@ -1,5 +1,7 @@
 # The Context Vault Template
 
+[Tutorial video](https://drive.google.com/file/d/1Rnlbrc10ckh9bnxiz_CkdLYXE0jTdyUI/view?usp=sharing)
+
 ## Install On New Mac
 
 First run the install script from any terminal directory:
@@ -34,7 +36,7 @@ This is made possible by a custom plugin called Context Nine and by the Relay pl
 - The installer runs with `sudo`, but writes the vault and bootstrap state as the user who invoked sudo.
 - Vault folder has no public-repo `.git` pointer after install.
 - `init_vault.sh` installs/checks command dependencies, creates starter context folders named `personal`, `personal-brand`, and `business`, asks whether to rename them, generates agent files, installs `vault` to `~/.local/bin/vault`, and adds that directory to zsh startup files.
-- Context folder names must be lowercase slugs using letters, numbers, and hyphens. If you rename a starter folder during setup, the installer moves the folder and rewrites structured references such as paths, Obsidian links, plugin settings, frontmatter identity values, and `@context` tokens. It does not blindly rewrite normal prose.
+- Context folder names must start and end with a letter or number and may use letters, numbers, dots, and hyphens, for example `business` or `business.nosync`. If you rename a starter folder during setup, the installer moves the folder and rewrites structured references such as paths, Obsidian links, plugin settings, frontmatter identity values, and `@context` tokens. It does not blindly rewrite normal prose.
 - The one-line `sudo bash` installer also installs `/usr/local/bin/vault`, so `vault` works even before a new shell has loaded `~/.local/bin`.
 - Run `_master/system/bootstrap/init_vault.sh --enable-git` later only if you want optional personal Git/LFS for your own vault.
 
@@ -65,7 +67,7 @@ Default workspace map:
 
 - `personal`: personal life, health, relationships, finances, default capture, and personal accountability.
 - `personal-brand`: personal brand, writing, media, audience, authority, and social selling.
-- `business`: product and business execution.
+- `impression`: product and business execution.
 
 Daily flow:
 

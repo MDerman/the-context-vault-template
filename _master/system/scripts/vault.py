@@ -13,6 +13,7 @@ ROOT = SCRIPT_DIR.parents[2]
 
 COMMANDS = {
     "refresh": SCRIPT_DIR / "refresh.py",
+    "refresh-schedule": SCRIPT_DIR / "refresh_schedule.py",
     "sync": SCRIPT_DIR / "brain_dump.py",
     "context": SCRIPT_DIR / "context.py",
     "inventory": SCRIPT_DIR / "inventory.py",
@@ -42,6 +43,7 @@ def print_help() -> None:
 Common commands:
   root         Print the current vault root path.
   refresh      Ingest configured sources and regenerate agent context.
+  refresh-schedule  Register, unregister, or inspect the daily refresh LaunchAgent.
   sync         Import the configured Brain Dump Apple Note.
   context      Regenerate agent-readable context and dashboard files.
   inventory    Print contexts, statuses, epics, and projects for routing.
@@ -65,6 +67,8 @@ Common commands:
 Examples:
   cd "$(vault root)"
   vault refresh
+  vault refresh-schedule register
+  vault refresh-schedule unregister
   vault refresh --all
   vault inventory
   vault task create business "Follow up with partner" --project "Partnerships" --epic "Growth"

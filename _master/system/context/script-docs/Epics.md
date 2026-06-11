@@ -17,9 +17,9 @@ Useful variants:
 ```bash
 vault epic list
 vault epic sync
-vault epic rename business "Old Epic" "New Epic"
-vault epic delete business "New Epic"
-vault epic delete business "New Epic" --force
+vault epic rename impression "Old Epic" "New Epic"
+vault epic delete impression "New Epic"
+vault epic delete impression "New Epic" --force
 ```
 
 Rename moves the epic note, updates its `title`, rewrites linked task references, regenerates per-epic task Bases, and updates the master task kanban epic views. Delete refuses to remove an epic while tasks still link to it unless `--force` is passed.

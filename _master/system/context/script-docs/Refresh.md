@@ -12,6 +12,16 @@ vault refresh
 
 The refresh wrapper ingests the configured Brain Dump Apple Note, runs the Google Calendar TaskNotes date mirror, regenerates agent context, then runs best-effort local Git maintenance.
 
+Register the local daily refresh LaunchAgent:
+
+```bash
+vault refresh-schedule register
+vault refresh-schedule status
+vault refresh-schedule unregister
+```
+
+The schedule is configured in `_master/system/config.json` under `refresh_schedule`. Use `timezone: local` to resolve each laptop's current system timezone at runtime.
+
 Implementation script:
 
 ```bash

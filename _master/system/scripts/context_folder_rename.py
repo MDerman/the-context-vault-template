@@ -16,7 +16,7 @@ from typing import Any
 from script_utils import resolve_vault_root
 
 
-VALID_NAME = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+VALID_NAME = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9.-]*[A-Za-z0-9])?$")
 SKIP_DIR_NAMES = {
     ".git",
     ".mypy_cache",
@@ -56,7 +56,9 @@ class RenameResult:
 def validate_slug(value: str, label: str) -> str:
     slug = value.strip()
     if "/" in slug or "\\" in slug or not VALID_NAME.match(slug):
-        raise SystemExit(f"{label} must be lowercase and contain only letters, numbers, and hyphens.")
+        raise SystemExit(
+            f"{label} must start and end with a letter or number, and contain only letters, numbers, dots, and hyphens."
+        )
     return slug
 
 

@@ -18,7 +18,7 @@ DEFAULT_ENTITIES = [
     "business",
 ]
 
-PERIODS = ["daily", "weekly", "quarterly", "yearly"]
+PERIODS = ["daily", "weekly", "monthly", "quarterly", "yearly"]
 AGENT_DIR = Path("_master/system/context")
 LEGACY_AGENT_PERIODIC_DIR = Path("_master/system/context/periodic")
 SAFE_MARKERS = [
@@ -38,6 +38,7 @@ def active_periods(day: dt.date) -> dict[str, str]:
     return {
         "daily": day.isoformat(),
         "weekly": f"{iso.year}-W{iso.week:02d}",
+        "monthly": f"{day.year}-{day.month:02d}",
         "quarterly": f"{day.year}-Q{quarter}",
         "yearly": f"{day.year}",
     }
@@ -160,7 +161,7 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument(
         "--periods",
         default=",".join(PERIODS),
-        help="Comma-separated period types to delete. Defaults to daily,weekly,quarterly,yearly.",
+        help="Comma-separated period types to delete. Defaults to daily,weekly,monthly,quarterly,yearly.",
     )
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--force", action="store_true", help="Delete even when a note is not marked generated/managed.")

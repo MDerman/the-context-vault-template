@@ -1,6 +1,6 @@
 ---
 generated: true
-generated_at: 2026-06-01T11:54:31
+generated_at: 2026-06-11T14:15:32
 managed_by: "managed-by: _master/system/bootstrap/generate_agents.py"
 ---
 If editing this agent file, edit `_master/system/bootstrap/AGENTS.template.md`, then rerun `python3 _master/system/bootstrap/generate_agents.py`.
@@ -22,7 +22,7 @@ Root workspace is one Obsidian vault with context folders. `CLAUDE.md` is a syml
 ## First Read
 
 1. Read `_master/system/context/CONTEXT.md` | current generated vault state, active periods, tasks, schedules, first-look files.
-2. Read relevant context folder note, for example `business/business.md`, before routing or storing info.
+2. Read relevant context folder note, for example `business/impression.md`, before routing or storing info.
 3. Read relevant `<context-folder>/<context-folder>.md` before changing entity operating rules.
 4. Open detail docs only when needed: `_master/01-Context.md`, `_master/system/context/SCRIPTS.md` | normal vault commands and refresh workflows, `_master/system/context/SCRIPT-REFERENCE.md` | full script inventory and one-time script cautions, `_master/system/context/OBSIDIAN-PROFILE.md` | Obsidian profile, plugins, UI settings, templates, Sync Embeds.
 5. For public bootstrap/export docs, read `_master/system/bootstrap/README-bootstrap.md` (public README source) and `_master/system/bootstrap/bootstrapdocs.md` (internal bootstrap mechanics).
@@ -46,7 +46,7 @@ Use each context folder's inside-folder note for local routing. Use `_master/01-
 - Tasks: `<context-folder>/_obsidian/tasks/`
 - Projects: `<context-folder>/_obsidian/projects/`
 - Epics: `<context-folder>/_obsidian/epics/`
-- Periodic notes: `<context-folder>/_obsidian/periodic/<daily|weekly|quarterly|yearly>/`
+- Periodic notes: `<context-folder>/_obsidian/periodic/<daily|weekly|monthly|quarterly|yearly>/`
 - Entity operating rules: `<context-folder>/<context-folder>.md`
 - Content: `<context-folder>/_obsidian/content/`
 - Content schedules: `<context-folder>/_obsidian/content-schedules/`
@@ -58,13 +58,13 @@ Use each context folder's inside-folder note for local routing. Use `_master/01-
 Use `rg` filename-first, then inspect only frontmatter/opening notes:
 
 ```bash
-sed -n '1,60p' "personal/_obsidian/tasks/starter-task.md"
+sed -n '1,60p' "business/_obsidian/tasks/starter-task.md"
 ```
 
 Common queries:
 
 ```bash
-rg -l '^\s*epic:.*Current dev' personal/_obsidian/tasks
+rg -l '^\s*epic:.*Current dev' business/_obsidian/tasks
 rg -l '^status: in-progress$' business/_obsidian/tasks personal-brand/_obsidian/tasks personal/_obsidian/tasks | head -5
 for s in in-progress ongoing to-be-resumed up-next backlog; do rg -l "^status: $s$" business/_obsidian/tasks personal-brand/_obsidian/tasks personal/_obsidian/tasks; done | head -50
 rg -l '^status: (idea|cogs-are-turning|draft|planning-scripting|scheduled)$' business/_obsidian/content/items personal-brand/_obsidian/content/items 2>/dev/null | head -50

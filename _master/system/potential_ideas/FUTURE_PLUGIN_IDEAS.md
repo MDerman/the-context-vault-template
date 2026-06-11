@@ -17,7 +17,7 @@ python3 _master/system/scripts/attachments.py --apply
 Desired behavior:
 
 - When an image or file is pasted/dropped into a note, detect the active Markdown note.
-- Determine the note's top-level root folder, such as `_library`, `_master`, `personal`, `personal-brand`, `business`, or `_wiki`.
+- Determine the note's top-level root folder, such as `_library`, `_master`, `personal`, `personal-brand`, `impression`, or `_wiki`.
 - Move the new attachment from the inbox to `<root-folder>/_obsidian/attachments/`.
 - Rewrite the inserted embed/link in the note to point at the final attachment path.
 - Preserve normal Obsidian embeds, preferably as `![[<root-folder>/_obsidian/attachments/<filename>]]`.

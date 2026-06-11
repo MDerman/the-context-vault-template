@@ -13,10 +13,14 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPT_DIR))
 
-from context_folder_rename import rename_context_folder, rewrite_text_for_context  # noqa: E402
+from context_folder_rename import rename_context_folder, rewrite_text_for_context, validate_slug  # noqa: E402
 
 
 class ContextFolderRenameTests(unittest.TestCase):
+    def test_validate_slug_accepts_dot_suffix_and_camel_case(self) -> None:
+        self.assertEqual(validate_slug("someString.nosync", "new context folder"), "someString.nosync")
+        self.assertEqual(validate_slug("business", "new context folder"), "business")
+
     def test_markdown_rewrites_structured_references_only(self) -> None:
         text = """---
 entity: business

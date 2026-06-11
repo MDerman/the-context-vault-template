@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import calendar
 import datetime as dt
 import importlib
 import json
@@ -28,11 +29,25 @@ AGENT_CONTEXT_MARKDOWN_PATH = AGENT_DIR / "CONTEXT.md"
 LEGACY_AGENT_CONTEXT_MARKDOWN_PATH = AGENT_DIR / ("context" + ".md")
 LEGACY_AGENT_SYSTEM_DIR = Path("_master/system/context/system")
 DASHBOARD_PATH = Path("_master/Dashboard.md")
+CONFIG_PATH = Path("_master/system/config.json")
 PRIVATE_DASHBOARD_ACTION_LINKS_PATH = Path("_master/system/local/dashboard-action-links.md")
 SYSTEM_NOTES = {
     "context": "_master/01-Context.md",
     "identity": "_master/02-Identity.md",
     "momentum": "_master/03-Momentum.md",
+}
+DEFAULT_DASHBOARD_CHECKLIST_CONFIG = {
+    "end_of_week_day": "sunday",
+    "monthly_sops_reminder_day": "last_day",
+}
+WEEKDAY_INDEX = {
+    "monday": 0,
+    "tuesday": 1,
+    "wednesday": 2,
+    "thursday": 3,
+    "friday": 4,
+    "saturday": 5,
+    "sunday": 6,
 }
 
 
@@ -42,6 +57,7 @@ def active_periods(day: dt.date) -> dict[str, str]:
     return {
         "daily": day.isoformat(),
         "weekly": f"{iso.year}-W{iso.week:02d}",
+        "monthly": f"{day.year}-{day.month:02d}",
         "quarterly": f"{day.year}-Q{quarter}",
         "yearly": f"{day.year}",
     }
@@ -350,6 +366,148 @@ def markdown_list(items: list[str]) -> str:
     return "\n".join(f"- {item}" for item in items) if items else "- None"
 
 
+def load_vault_config(root: Path) -> dict[str, Any]:
+    path = root / CONFIG_PATH
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+
+
+def dashboard_checklist_config(config: dict[str, Any]) -> dict[str, str]:
+    raw = config.get("dashboard_checklist", {})
+    if not isinstance(raw, dict):
+        raw = {}
+    return {
+        key: str(raw.get(key, default)).strip().lower()
+        for key, default in DEFAULT_DASHBOARD_CHECKLIST_CONFIG.items()
+    }
+
+
+def ordinal(value: int) -> str:
+    if 10 <= value % 100 <= 20:
+        suffix = "th"
+    else:
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(value % 10, "th")
+    return f"{value}{suffix}"
+
+
+def checklist_heading(day: dt.date) -> str:
+    return f"Checklist for {day.strftime('%a')}, {ordinal(day.day)} {day.strftime('%B')}"
+
+
+def end_of_month(day: dt.date) -> dt.date:
+    return dt.date(day.year, day.month, calendar.monthrange(day.year, day.month)[1])
+
+
+def quarter_end(day: dt.date) -> dt.date:
+    quarter = ((day.month - 1) // 3) + 1
+    month = quarter * 3
+    return dt.date(day.year, month, calendar.monthrange(day.year, month)[1])
+
+
+def configured_weekday(settings: dict[str, str]) -> int:
+    return WEEKDAY_INDEX.get(settings.get("end_of_week_day", "sunday"), WEEKDAY_INDEX["sunday"])
+
+
+def is_end_of_week_day(day: dt.date, settings: dict[str, str]) -> bool:
+    return day.weekday() == configured_weekday(settings)
+
+
+def is_monthly_sops_day(day: dt.date, settings: dict[str, str]) -> bool:
+    value = settings.get("monthly_sops_reminder_day", "last_day")
+    if value == "first_day":
+        return day.day == 1
+    return day == end_of_month(day)
+
+
+def is_quarter_planning_day(day: dt.date, settings: dict[str, str]) -> bool:
+    target = quarter_end(day)
+    if day == target - dt.timedelta(days=1):
+        return True
+    days_until = (target - day).days
+    return is_end_of_week_day(day, settings) and 0 < days_until <= 7
+
+
+def month_label(period_id: str) -> str:
+    try:
+        year, month = period_id.split("-", 1)
+        return dt.date(int(year), int(month), 1).strftime("%B %Y")
+    except ValueError:
+        return period_id
+
+
+def unchecked_checkbox_count(text: str) -> int:
+    return len(re.findall(r"^\s*[-*]\s+\[\s\]", text, flags=re.M))
+
+
+def stale_monthly_sops(root: Path, current_month: str) -> list[tuple[str, int]]:
+    items: list[tuple[str, int]] = []
+    agent_dir = root / AGENT_DIR
+    if not agent_dir.exists():
+        return items
+    for path in sorted(agent_dir.glob("*.md")):
+        text = path.read_text(encoding="utf-8", errors="replace")
+        props = simple_frontmatter(text)
+        if props.get("type") != "agent-periodic" or props.get("period") != "monthly":
+            continue
+        period_id = str(props.get("period_id") or path.stem)
+        if period_id >= current_month:
+            continue
+        count = unchecked_checkbox_count(text)
+        if count:
+            items.append((period_id, count))
+    return items
+
+
+def dashboard_checklist_lines(root: Path, day: dt.date, periods: dict[str, str], config: dict[str, Any]) -> list[str]:
+    settings = dashboard_checklist_config(config)
+    lines = [
+        "[ ] "
+        + obsidian_link(
+            f"_master/_obsidian/periodic/daily/{periods['daily']}.md",
+            "Plan and review day",
+        )
+    ]
+    if is_end_of_week_day(day, settings):
+        iso = day.isocalendar()
+        lines.append(
+            "[ ] "
+            + obsidian_link(
+                f"_master/_obsidian/periodic/weekly/{periods['weekly']}.md",
+                f"Plan next week and review the {ordinal(iso.week)} week of {iso.year}",
+            )
+        )
+    if is_monthly_sops_day(day, settings):
+        lines.append(
+            "[ ] "
+            + obsidian_link(
+                f"_master/_obsidian/periodic/monthly/{periods['monthly']}.md",
+                "Monthly SOPs",
+            )
+        )
+    for period_id, count in stale_monthly_sops(root, periods["monthly"]):
+        lines.append(
+            "[ ] "
+            + obsidian_link(
+                f"_master/_obsidian/periodic/monthly/{period_id}.md",
+                f"Finish Monthly SOPs for {month_label(period_id)}",
+            )
+            + f" ({count} open)"
+        )
+    if is_quarter_planning_day(day, settings):
+        lines.append(
+            "[ ] "
+            + obsidian_link(
+                f"_master/_obsidian/periodic/quarterly/{periods['quarterly']}.md",
+                "Plan next quarter and review past quarter",
+            )
+        )
+    return lines
+
+
 def task_lines(tasks: list[dict[str, Any]]) -> str:
     if not tasks:
         return "- None"
@@ -415,6 +573,7 @@ managed_by: "{MARKER}"
 
 - Daily: {periods["daily"]}
 - Weekly: {periods["weekly"]}
+- Monthly: {periods["monthly"]}
 - Quarterly: {periods["quarterly"]}
 - Yearly: {periods["yearly"]}
 
@@ -451,7 +610,7 @@ Use the master content kanban grouped by `status` to see content by status: `ide
 
 ## Context Folder Periodic Notes
 
-Use `<context-folder>/_obsidian/periodic/<daily|weekly|quarterly|yearly>/<period-id>.md`; current period IDs are listed in `Active Periods`.
+Use `<context-folder>/_obsidian/periodic/<daily|weekly|monthly|quarterly|yearly>/<period-id>.md`; current period IDs are listed in `Active Periods`.
 
 ## Tasks In Progress
 
@@ -511,11 +670,15 @@ def dashboard_markdown(
     periods: dict[str, str],
     content_schedules: list[dict[str, str]],
     generated_at: str,
+    today: dt.date,
+    config: dict[str, Any],
 ) -> str:
     context_lines: list[str] = []
     for entity in selected_entities:
         context_lines.append(f"#### {entity}")
         for period, period_id in periods.items():
+            if period == "monthly":
+                continue
             path = f"{entity}/_obsidian/periodic/{period}/{period_id}.md"
             context_lines.append(f"- {period.title()}: {obsidian_link(path, period_id)}")
         context_lines.append("")
@@ -524,18 +687,6 @@ def dashboard_markdown(
         for schedule in content_schedules
     ]
     context_note_lines = [obsidian_link(f"{entity}/{entity}.md", entity) for entity in selected_entities]
-    master_periodics = master_periodic_paths(periods)
-    standing_lines = [
-        obsidian_link("_master/system/context/01-Context.md", "01-Context"),
-        obsidian_link("_master/system/context/02-Identity.md", "02-Identity"),
-        obsidian_link("_master/system/context/03-Momentum.md", "03-Momentum"),
-    ]
-    periodic_lines = [
-        obsidian_link(master_periodics["yearly"], periods["yearly"]),
-        obsidian_link(master_periodics["weekly"], periods["weekly"]),
-        obsidian_link(master_periodics["quarterly"], periods["quarterly"]),
-        obsidian_link(master_periodics["daily"], periods["daily"]),
-    ]
     inbox_lines = [obsidian_link("_master/system/inbox/BRAIN_DUMP.md", "BRAIN_DUMP")]
     base_lines = [
         obsidian_link("_master/_obsidian/bases/tasks-kanban-v1.base", "Tasks Kanban"),
@@ -552,11 +703,9 @@ managed_by: "{MARKER}"
 
 {markdown_list(action_lines)}
 
-Standing
-{markdown_list(standing_lines)}
+##### {checklist_heading(today)}
 
-Periodic
-{markdown_list(periodic_lines)}
+{markdown_list(dashboard_checklist_lines(root, today, periods, config))}
 
 #### Home Pages (contexts)
 
@@ -620,6 +769,7 @@ def main(argv: list[str] | None = None) -> None:
     periodic_generator = importlib.import_module("periodic")
     content_schedule_generator = importlib.import_module("content")
     today = dt.date.fromisoformat(args.date)
+    config = load_vault_config(root)
     selected_entities = resolve_entities(root, configured, explicit, args.all)
     content_entities = content_enabled_entities(root, configured)
     selected_content_entities = [entity for entity in selected_entities if entity in content_entities]
@@ -668,6 +818,7 @@ def main(argv: list[str] | None = None) -> None:
         "master_periodic_notes": {
             period: path for period, path in master_periodic_paths(periods).items()
         },
+        "dashboard_checklist": dashboard_checklist_config(config),
         "content_views": {
             "content_calendar": "_master/_obsidian/bases/content-calendar.base",
             "content_kanban": "_master/_obsidian/bases/content-kanban.base",
@@ -709,6 +860,8 @@ def main(argv: list[str] | None = None) -> None:
             periods,
             content_schedules,
             state["generated"],
+            today,
+            config,
         ),
     )
 

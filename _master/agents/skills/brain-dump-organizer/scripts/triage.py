@@ -33,7 +33,7 @@ ROUTE_TARGETS = {
         "kind": "task",
         "directory": Path("personal-brand/_obsidian/tasks"),
     },
-    "business-task": {
+    "impression-task": {
         "context": "business",
         "kind": "task",
         "directory": Path("business/_obsidian/tasks"),
@@ -43,7 +43,7 @@ ROUTE_TARGETS = {
         "kind": "content-idea",
         "directory": Path("personal-brand/_obsidian/content/ideas"),
     },
-    "business-content-idea": {
+    "impression-content-idea": {
         "context": "business",
         "kind": "content-idea",
         "directory": Path("business/_obsidian/content/ideas"),
@@ -59,9 +59,9 @@ ROUTE_COLUMNS = [
     "unclassified",
     "personal-task",
     "matt-task",
-    "business-task",
+    "impression-task",
     "matt-content-idea",
-    "business-content-idea",
+    "impression-content-idea",
     "library-thought",
     "append-to-existing-task",
     "needs-splitting",
@@ -93,9 +93,9 @@ views:
         - unclassified
         - personal-task
         - matt-task
-        - business-task
+        - impression-task
         - matt-content-idea
-        - business-content-idea
+        - impression-content-idea
         - library-thought
         - append-to-existing-task
         - needs-splitting
@@ -105,9 +105,9 @@ views:
         unclassified: red
         personal-task: yellow
         matt-task: cyan
-        business-task: blue
+        impression-task: blue
         matt-content-idea: green
-        business-content-idea: purple
+        impression-content-idea: purple
         library-thought: orange
         append-to-existing-task: blue
         needs-splitting: red
@@ -682,9 +682,9 @@ def apply_proposals(root: Path, run_id: str | None = None, dry_run: bool = False
         try:
             if dry_run:
                 output_path = Path("dry-run")
-            elif route in {"personal-task", "matt-task", "business-task"}:
+            elif route in {"personal-task", "matt-task", "impression-task"}:
                 output_path = create_task(root, proposal_path, props, capture, now)
-            elif route in {"matt-content-idea", "business-content-idea"}:
+            elif route in {"matt-content-idea", "impression-content-idea"}:
                 output_path = create_content_idea(root, proposal_path, props, capture, now)
             elif route == "library-thought":
                 output_path = create_library_note(root, proposal_path, props, capture)

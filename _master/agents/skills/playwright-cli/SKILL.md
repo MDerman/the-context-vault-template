@@ -31,7 +31,7 @@ Use the repo wrapper to attach to the running shared Chrome profile:
 pnpm chrome:debug
 pnpm playwright-cli
 pnpm playwright-cli -- open http://app.localhost:3000
-pnpm playwright-cli -- -s=business-agent-123 open http://app.localhost:3000
+pnpm playwright-cli -- -s=impression-agent-123 open http://app.localhost:3000
 pnpm playwright-cli -- --auth-export open http://app.localhost:3000
 pnpm playwright-cli:shared -- open http://app.localhost:3000
 ```

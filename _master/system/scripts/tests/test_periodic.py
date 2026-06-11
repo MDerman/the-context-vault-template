@@ -24,6 +24,11 @@ SPEC.loader.exec_module(periodic)
 
 
 class PeriodicTemplateRenderingTests(unittest.TestCase):
+    def test_active_periods_include_monthly(self) -> None:
+        periods = periodic.active_periods(dt.date(2026, 6, 11))
+
+        self.assertEqual(periods["monthly"], "2026-06")
+
     def test_renders_templater_date_now_and_cursor_calls(self) -> None:
         template = """---
 entity: <% tp.file.folder(true).split('/')[0] %>
@@ -51,6 +56,44 @@ On this day last year <% tp.date.now("YYYY-MM-DD", "P-1Y") %>
         self.assertIn("<< [[2026-05-31]] | [[2026-06-02]]>>", rendered)
         self.assertIn("On this day last year 2025-06-01", rendered)
         self.assertNotIn("<%", rendered)
+
+    def test_generates_monthly_notes_and_preserves_monthly_agent_history(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            entity = root / "personal"
+            (entity / "_obsidian/templates/periodic").mkdir(parents=True)
+            (entity / "personal.md").write_text("---\nstatus: active\n---\n", encoding="utf-8")
+            for name in ("daily", "weekly", "quarterly", "yearly"):
+                (entity / "_obsidian/templates/periodic" / f"{name}-template.md").write_text("", encoding="utf-8")
+            (entity / "_obsidian/templates/periodic/monthly-template.md").write_text(
+                "## Monthly SOPs\n\n- [ ] Review month\n",
+                encoding="utf-8",
+            )
+
+            periodic.generate_periodic_notes(
+                root,
+                ["personal"],
+                [],
+                False,
+                dt.date(2026, 6, 11),
+                generated_at="2026-06-11T02:00:00",
+            )
+            periodic.generate_periodic_notes(
+                root,
+                ["personal"],
+                [],
+                False,
+                dt.date(2026, 7, 1),
+                generated_at="2026-07-01T02:00:00",
+            )
+
+            self.assertTrue((root / "personal/_obsidian/periodic/monthly/2026-06.md").exists())
+            self.assertTrue((root / "_master/_obsidian/periodic/monthly/2026-06.md").exists())
+            self.assertTrue((root / "_master/system/context/2026-06.md").exists())
+            self.assertIn(
+                "- [ ] Review month",
+                (root / "_master/system/context/2026-06.md").read_text(encoding="utf-8"),
+            )
 
 
 if __name__ == "__main__":

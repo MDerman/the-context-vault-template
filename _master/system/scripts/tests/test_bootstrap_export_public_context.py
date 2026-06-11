@@ -58,19 +58,19 @@ class PublicContextExportTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "source"
             export_root = Path(tmp) / "public"
-            source_context = root / "business"
+            source_context = root / "impression"
             (source_context / "_obsidian/content").mkdir(parents=True)
             (source_context / "_obsidian/content" / "content-cadence.json").write_text(
                 "{}\n",
                 encoding="utf-8",
             )
-            (source_context / "business.md").write_text(
+            (source_context / "impression.md").write_text(
                 """---
 status: active
 context_type: business
 content_enabled: true
 ---
-# business
+# impression
 
 ## Start Here
 
@@ -92,7 +92,7 @@ Private purpose detail should not be exported.
                 "export_root": str(export_root),
                 "context_folders": [
                     {
-                        "source": "business",
+                        "source": "impression",
                         "target": "business",
                         "public_home_description": [
                             "This is your business home.",
@@ -175,6 +175,55 @@ default_capture: true
             ).read_text(encoding="utf-8")
             self.assertNotIn("Private Note", exported_template)
             self.assertNotIn("private-export: drop-line", exported_template)
+            self.assertIn("[[personal#Momentum|Personal Momentum]]", exported_template)
+
+    def test_personal_daily_what_to_do_link_is_removed_from_exported_markdown(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "source"
+            export_root = Path(tmp) / "public"
+            source_context = root / "personal"
+            template = source_context / "_obsidian/templates/periodic/daily-template.md"
+            template.parent.mkdir(parents=True)
+            (source_context / "personal.md").write_text(
+                """---
+status: active
+context_type: personal
+content_enabled: false
+default_capture: true
+---
+# personal
+""",
+                encoding="utf-8",
+            )
+            template.write_text(
+                """## Links
+- [[personal/Daily What To Do|Daily What To Do]]
+- [[personal#Momentum|Personal Momentum]]
+""",
+                encoding="utf-8",
+            )
+            config = {
+                "export_root": str(export_root),
+                "context_folders": [
+                    {"source": "personal", "target": "personal"},
+                ],
+                "copy_obsidian": "exact",
+                "text_rewrite_suffixes": [".md"],
+            }
+
+            exporter = BootstrapExporter(
+                root=root,
+                config=config,
+                export_root=export_root,
+                force=True,
+                dry_run=False,
+            )
+            exporter.copy_context_folders()
+
+            exported_template = (
+                export_root / "personal/_obsidian/templates/periodic/daily-template.md"
+            ).read_text(encoding="utf-8")
+            self.assertNotIn("Daily What To Do", exported_template)
             self.assertIn("[[personal#Momentum|Personal Momentum]]", exported_template)
 
     def test_task_context_views_are_regenerated_for_public_contexts(self) -> None:

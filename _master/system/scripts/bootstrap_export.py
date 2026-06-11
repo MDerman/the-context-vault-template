@@ -23,6 +23,9 @@ PUBLIC_WORKSPACE_FILE = "README.md"
 MANIFEST_VERSION = 1
 GLOBAL_EXCLUDE_SUFFIXES = (".bak",)
 PRIVATE_EXPORT_DROP_LINE_MARKER = "private-export: drop-line"
+PRIVATE_EXPORT_DROP_LINKS = (
+    "[[personal/Daily What To Do|Daily What To Do]]",
+)
 SECRET_PATTERNS = [
     ("private key", re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")),
     ("GitHub token", re.compile(r"\bgh[pousr]_[A-Za-z0-9_]{30,}\b")),
@@ -727,10 +730,17 @@ class BootstrapExporter:
         return text
 
     def strip_private_export_drop_lines(self, text: str) -> str:
-        if PRIVATE_EXPORT_DROP_LINE_MARKER not in text:
+        if PRIVATE_EXPORT_DROP_LINE_MARKER not in text and not any(
+            link in text for link in PRIVATE_EXPORT_DROP_LINKS
+        ):
             return text
         lines = text.splitlines()
-        kept = [line for line in lines if PRIVATE_EXPORT_DROP_LINE_MARKER not in line]
+        kept = [
+            line
+            for line in lines
+            if PRIVATE_EXPORT_DROP_LINE_MARKER not in line
+            and not any(link in line for link in PRIVATE_EXPORT_DROP_LINKS)
+        ]
         rendered = "\n".join(kept)
         if text.endswith("\n"):
             rendered += "\n"

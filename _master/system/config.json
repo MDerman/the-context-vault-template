@@ -7,5 +7,16 @@
     "copy_attachments": true,
     "clear_after_ingest": true,
     "cleared_note_body": "<div>{note_name}</div><div><br></div>"
+  },
+  "refresh_schedule": {
+    "enabled": true,
+    "label": "com.obsidian-context-vault.refresh",
+    "timezone": "local",
+    "hour": 2,
+    "minute": 0
+  },
+  "dashboard_checklist": {
+    "end_of_week_day": "sunday",
+    "monthly_sops_reminder_day": "last_day"
   }
 }

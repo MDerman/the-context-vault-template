@@ -5,14 +5,14 @@ This folder contains a Python CLI that generates a one-page invoice PDF using ve
 ## Setup
 
 ```bash
-cd ~/Code/business/resources/invoices
+cd ~/Code/impression/resources/invoices
 python3 -m pip install -r requirements.txt
 ```
 
 ## Usage
 
 ```bash
-python3 ~/Code/business/resources/invoices/generate_invoice.py \
+python3 ~/Code/impression/resources/invoices/generate_invoice.py \
   --mode business \
   --invoice-number 001845 \
   --client soulv \
@@ -51,11 +51,11 @@ Current configured clients:
 
 The generated PDF is written to:
 
-`~/Code/business/resources/invoices/output/invoice-<invoiceNumber>.pdf`
+`~/Code/impression/resources/invoices/output/invoice-<invoiceNumber>.pdf`
 
 Example:
 
-`~/Code/business/resources/invoices/output/invoice-001845.pdf`
+`~/Code/impression/resources/invoices/output/invoice-001845.pdf`
 
 ## Runtime Inputs
 
@@ -68,7 +68,7 @@ Only these values are dynamic at runtime:
 
 All other invoice text and layout settings come from:
 
-`~/Code/business/resources/invoices/invoice.constants.json`
+`~/Code/impression/resources/invoices/invoice.constants.json`
 
 ## Constants Schema
 
@@ -110,7 +110,7 @@ Inside each mode's `invoice_defaults`:
 Generate:
 
 ```bash
-python3 ~/Code/business/resources/invoices/generate_invoice.py \
+python3 ~/Code/impression/resources/invoices/generate_invoice.py \
   --mode business \
   --invoice-number 001845 \
   --client soulv \
@@ -123,7 +123,7 @@ Optional text extraction check:
 ```bash
 python3 - <<'PY'
 from pypdf import PdfReader
-pdf = "~/Code/business/resources/invoices/output/invoice-001845.pdf"
+pdf = "~/Code/impression/resources/invoices/output/invoice-001845.pdf"
 text = "\n".join(page.extract_text() or "" for page in PdfReader(pdf).pages)
 for needle in ["001845", "INVOICE", "BALANCE DUE (R)"]:
     print(needle, "=>", needle in text)
@@ -134,16 +134,16 @@ PY
 
 This repo now includes:
 
-`~/Code/business/resources/invoices/generate_soulv_finance_recons_invoice.sh`
+`~/Code/impression/resources/invoices/generate_soulv_finance_recons_invoice.sh`
 
 Run it:
 
 ```bash
-~/Code/business/resources/invoices/generate_soulv_finance_recons_invoice.sh
+~/Code/impression/resources/invoices/generate_soulv_finance_recons_invoice.sh
 ```
 
 Optional invoice number override:
 
 ```bash
-~/Code/business/resources/invoices/generate_soulv_finance_recons_invoice.sh SOULV-2026-03-02-ALT
+~/Code/impression/resources/invoices/generate_soulv_finance_recons_invoice.sh SOULV-2026-03-02-ALT
 ```

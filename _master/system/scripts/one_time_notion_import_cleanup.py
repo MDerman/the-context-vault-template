@@ -3,8 +3,8 @@
 
 This script is intentionally specific to the May 2026 workspace cleanup:
 
-- copy business attachments referenced from _master/_obsidian/attachments into the
-  business vault attachment folder and rewrite links
+- copy impression attachments referenced from _master/_obsidian/attachments into the
+  impression vault attachment folder and rewrite links
 - move personal-brand/TODO_EXPORTED_NOTION into personal-brand with Notion IDs
   stripped from visible filenames
 - centralize imported non-Markdown resources under personal-brand/_obsidian/attachments
@@ -33,7 +33,7 @@ from urllib.parse import quote, unquote
 ROOT = Path(__file__).resolve().parents[3]
 VAULT_02 = ROOT / "personal-brand"
 SOURCE = VAULT_02 / "TODO_EXPORTED_NOTION"
-VAULT_03 = ROOT / "business"
+VAULT_03 = ROOT / "impression"
 MASTER_ATTACHMENTS = ROOT / "_master" / "_obsidian" / "attachments"
 REPORT_ROOT = Path.home() / "Downloads" / "vault-generated" / "import-reports"
 REPORT_DIR = REPORT_ROOT / "2026-05-11-notion-cleanup"
@@ -509,7 +509,7 @@ def copy_03_master_attachments(dry_run: bool) -> Counter:
         alias = match.group(3) or ""
         mapped = filename_map.get(original_name, clean_name(original_name))
         stats["03_links_rewritten"] += 1
-        return f"[[business/_obsidian/attachments/notion-task-import/{mapped}{fragment}{alias}]]"
+        return f"[[impression/_obsidian/attachments/notion-task-import/{mapped}{fragment}{alias}]]"
 
     for md_path in VAULT_03.rglob("*.md"):
         text = md_path.read_text(encoding="utf-8", errors="replace")
@@ -615,7 +615,7 @@ def verify() -> int:
 
     result = os.popen(f"rg -n '_master/_obsidian/attachments' {quote(str(VAULT_03), safe='/ ._-')!r} -g '*.md'").read().strip()
     if result:
-        failures.append("business still references _master/_obsidian/attachments")
+        failures.append("impression still references _master/_obsidian/attachments")
 
     id_paths = []
     for path in VAULT_02.rglob("*"):

@@ -14,6 +14,12 @@
     "enabled": true,
     "format": "GGGG-[W]WW"
   },
+  "monthly": {
+    "folder": "personal/_obsidian/periodic/monthly",
+    "template": "personal/_obsidian/templates/periodic/monthly-template.md",
+    "enabled": true,
+    "format": "YYYY-MM"
+  },
   "quarterly": {
     "folder": "personal/_obsidian/periodic/quarterly",
     "template": "personal/_obsidian/templates/periodic/quarterly-template.md",

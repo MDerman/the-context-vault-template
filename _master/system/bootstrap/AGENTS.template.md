@@ -22,7 +22,7 @@ Root workspace is one Obsidian vault with context folders. `CLAUDE.md` is a syml
 ## First Read
 
 1. Read `_master/system/context/CONTEXT.md` | current generated vault state, active periods, tasks, schedules, first-look files.
-2. Read relevant context folder note, for example `business/business.md`, before routing or storing info.
+2. Read relevant context folder note, for example `business/impression.md`, before routing or storing info.
 3. Read relevant `<context-folder>/<context-folder>.md` before changing entity operating rules.
 4. Open detail docs only when needed: `_master/01-Context.md`, `_master/system/context/SCRIPTS.md` | normal vault commands and refresh workflows, `_master/system/context/SCRIPT-REFERENCE.md` | full script inventory and one-time script cautions, `_master/system/context/OBSIDIAN-PROFILE.md` | Obsidian profile, plugins, UI settings, templates, Sync Embeds.
 5. For public bootstrap/export docs, read `_master/system/bootstrap/README-bootstrap.md` (public README source) and `_master/system/bootstrap/bootstrapdocs.md` (internal bootstrap mechanics).
@@ -46,7 +46,7 @@ Use each context folder's inside-folder note for local routing. Use `_master/01-
 - Tasks: `<context-folder>/_obsidian/tasks/`
 - Projects: `<context-folder>/_obsidian/projects/`
 - Epics: `<context-folder>/_obsidian/epics/`
-- Periodic notes: `<context-folder>/_obsidian/periodic/<daily|weekly|quarterly|yearly>/`
+- Periodic notes: `<context-folder>/_obsidian/periodic/<daily|weekly|monthly|quarterly|yearly>/`
 - Entity operating rules: `<context-folder>/<context-folder>.md`
 - Content: `<context-folder>/_obsidian/content/`
 - Content schedules: `<context-folder>/_obsidian/content-schedules/`

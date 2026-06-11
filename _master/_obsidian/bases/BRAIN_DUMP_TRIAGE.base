@@ -21,9 +21,9 @@ views:
         - unclassified
         - personal-task
         - matt-task
-        - business-task
+        - impression-task
         - matt-content-idea
-        - business-content-idea
+        - impression-content-idea
         - library-thought
         - append-to-existing-task
         - needs-splitting
@@ -33,9 +33,9 @@ views:
         unclassified: red
         personal-task: yellow
         matt-task: cyan
-        business-task: blue
+        impression-task: blue
         matt-content-idea: green
-        business-content-idea: purple
+        impression-content-idea: purple
         library-thought: orange
         append-to-existing-task: blue
         needs-splitting: red

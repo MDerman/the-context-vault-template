@@ -10,9 +10,9 @@ For each proposal note in the current run, decide what it should become and edit
 
 - `personal-task`: executable personal/life/admin action for `personal/_obsidian/tasks`.
 - `matt-task`: executable personal-brand/content/business action for `personal-brand/_obsidian/tasks`.
-- `business-task`: executable Impression product/business/dev action for `business/_obsidian/tasks`.
+- `impression-task`: executable Impression product/business/dev action for `business/_obsidian/tasks`.
 - `matt-content-idea`: content angle for Matt Derman structured content ideas.
-- `business-content-idea`: content angle for Impression structured content ideas.
+- `impression-content-idea`: content angle for Impression structured content ideas.
 - `library-thought`: non-actionable thought, research idea, swipe, or durable idea for `_library/thoughts`.
 - `append-to-existing-task`: the block belongs inside an existing task; set `target_path`.
 - `needs-splitting`: one proposal contains multiple unrelated things and should be split before apply.
@@ -32,7 +32,7 @@ For each proposal note in the current run, decide what it should become and edit
 
 - `title`: short human-readable title.
 - `route`: one allowed route.
-- `target_context`: `personal`, `personal-brand`, `business`, or `_library`.
+- `target_context`: `personal`, `personal-brand`, `impression`, or `_library`.
 - `target_kind`: `task`, `content-idea`, `library-note`, or `existing-task-update`.
 - `apply_action`: `create-note`, `append-to-existing-task`, or `skip`.
 - `priority`: task priority, usually `normal`.

@@ -46,13 +46,13 @@ def parse_args() -> argparse.Namespace:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     create_parser = subparsers.add_parser("create", help="Create an epic note and sync its task Bases.")
-    create_parser.add_argument("context_folder", help="Context folder, e.g. business.")
+    create_parser.add_argument("context_folder", help="Context folder, e.g. impression.")
     create_parser.add_argument("title", help="Epic title.")
     create_parser.add_argument("--status", default="in-progress", help="Epic status. Defaults to in-progress.")
     create_parser.add_argument("--dry-run", action="store_true", help="Print intended changes without writing.")
 
     delete_parser = subparsers.add_parser("delete", help="Delete an epic note and sync generated task Bases.")
-    delete_parser.add_argument("context_folder", help="Context folder, e.g. business.")
+    delete_parser.add_argument("context_folder", help="Context folder, e.g. impression.")
     delete_parser.add_argument("title", help="Epic title or epic note filename stem.")
     delete_parser.add_argument(
         "--force",
@@ -62,7 +62,7 @@ def parse_args() -> argparse.Namespace:
     delete_parser.add_argument("--dry-run", action="store_true", help="Print intended changes without writing.")
 
     rename_parser = subparsers.add_parser("rename", help="Rename an epic and preserve linked tasks/views.")
-    rename_parser.add_argument("context_folder", help="Context folder, e.g. business.")
+    rename_parser.add_argument("context_folder", help="Context folder, e.g. impression.")
     rename_parser.add_argument("old_title", help="Existing epic title or epic note filename stem.")
     rename_parser.add_argument("new_title", help="New epic title.")
     rename_parser.add_argument("--dry-run", action="store_true", help="Print intended changes without writing.")
