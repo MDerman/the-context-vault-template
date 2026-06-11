@@ -1,20 +1,38 @@
 ---
 type: periodic
 period: weekly
-entity: business
-period_id: FREE TOOLS (SEO) -start
+entity: <% tp.file.folder(true).split('/')[0] %>
+period_id: <% tp.file.title %>
 generated: false
 ---
-# Impression Weekly
+# <% tp.file.title %>
 
 [[business#Identity|Identity]]
 [[business#Momentum|Momentum]]
 
 ## Focus Goals
 
-- 
-- 
-- 
+-
+-
+-
+
+## Eisenhower Planning
+
+### Urgent + Important
+
+- [ ]
+
+### Urgent, Not Important
+
+- [ ]
+
+### Important, Not Urgent
+
+- [ ]
+
+### Not Urgent, Not Important
+
+- [ ]
 
 ## Product / Business Review
 

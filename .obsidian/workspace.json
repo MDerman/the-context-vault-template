@@ -27,7 +27,7 @@
       {
         "id": "5b978711000ded9b",
         "type": "tabs",
-        "dimension": 57.79742765273313,
+        "dimension": 72.9903536977492,
         "children": [
           {
             "id": "12a3aa81c232d265",
@@ -72,26 +72,9 @@
         ]
       },
       {
-        "id": "919598e964260d4d",
-        "type": "tabs",
-        "dimension": 16.077170418006432,
-        "children": [
-          {
-            "id": "9b5af85820951a6f",
-            "type": "leaf",
-            "state": {
-              "type": "vault-cockpit-view",
-              "state": {},
-              "icon": "square-terminal",
-              "title": "Vault Command Center"
-            }
-          }
-        ]
-      },
-      {
         "id": "4365fdef29381df3",
         "type": "tabs",
-        "dimension": 26.12540192926045,
+        "dimension": 27.009646302250808,
         "children": [
           {
             "id": "1ffc5fcaa195eeb3",
@@ -111,6 +94,16 @@
               "state": {},
               "icon": "lucide-ghost",
               "title": "tasknotes-pomodoro-view"
+            }
+          },
+          {
+            "id": "9b5af85820951a6f",
+            "type": "leaf",
+            "state": {
+              "type": "vault-cockpit-view",
+              "state": {},
+              "icon": "square-terminal",
+              "title": "Vault Command Center"
             }
           }
         ]
@@ -253,7 +246,7 @@
       "periodic-notes:Open today": false
     }
   },
-  "active": "8b0646fe6917047a",
+  "active": "31a58180b9425b0e",
   "lastOpenFiles": [
     "README.md"
   ]

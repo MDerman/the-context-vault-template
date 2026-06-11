@@ -1,35 +1,31 @@
-# Impression Eisenhower Tasks
-
 filters:
   and:
     - file.hasTag("task")
     - file.inFolder("business/_obsidian/tasks")
-
 formulas:
-  anchorDay: 'if(date(this.file.name), date(this.file.name), today())'
-  priorityWeight: 'if(priority=="none",0,if(priority=="low",1,if(priority=="normal",2,if(priority=="high",3,999))))'
-  urgentDate: 'if(due && scheduled, if(date(due) < date(scheduled), due, scheduled), if(due, due, scheduled))'
-  daysUntilUrgentDate: 'if(formula.urgentDate, ((number(date(formula.urgentDate)) - number(formula.anchorDay)) / 86400000).floor(), null)'
-  urgencyScore: 'if(!formula.urgentDate, formula.priorityWeight, formula.priorityWeight + max(0, 10 - formula.daysUntilUrgentDate))'
-  doneDay: 'if(completedDate, date(completedDate).date(), null)'
-
+  anchorDay: if(date(this.file.name), date(this.file.name), today())
+  priorityWeight: if(priority=="none",0,if(priority=="low",1,if(priority=="normal",2,if(priority=="high",3,999))))
+  urgentDate: if(due && scheduled, if(date(due) < date(scheduled), due, scheduled), if(due, due, scheduled))
+  daysUntilUrgentDate: if(formula.urgentDate, ((number(date(formula.urgentDate)) - number(formula.anchorDay)) / 86400000).floor(), null)
+  urgencyScore: if(!formula.urgentDate, formula.priorityWeight, formula.priorityWeight + max(0, 10 - formula.daysUntilUrgentDate))
+  doneDay: if(completedDate, date(completedDate).date(), null)
 views:
   - type: tasknotesTaskList
-    name: "Urgent Important"
+    name: Urgent Important
     filters:
       and:
         - status != "done"
         - status != "archived"
         - or:
-          - priority == "normal"
-          - priority == "high"
+            - priority == "normal"
+            - priority == "high"
         - or:
-          - and:
-            - due
-            - date(due) <= formula.anchorDay + "7d"
-          - and:
-            - scheduled
-            - date(scheduled) <= formula.anchorDay + "7d"
+            - and:
+                - due
+                - date(due) <= formula.anchorDay + "7d"
+            - and:
+                - scheduled
+                - date(scheduled) <= formula.anchorDay + "7d"
     order:
       - status
       - priority
@@ -38,27 +34,27 @@ views:
       - projects
       - file.name
     sort:
-      - column: formula.urgencyScore
+      - property: formula.urgencyScore
         direction: DESC
-      - column: due
+      - property: due
         direction: ASC
   - type: tasknotesTaskList
-    name: "Urgent Not Important"
+    name: Urgent Not Important
     filters:
       and:
         - status != "done"
         - status != "archived"
         - or:
-          - priority == "low"
-          - priority == "none"
-          - priority.isEmpty()
+            - priority == "low"
+            - priority == "none"
+            - priority.isEmpty()
         - or:
-          - and:
-            - due
-            - date(due) <= formula.anchorDay + "7d"
-          - and:
-            - scheduled
-            - date(scheduled) <= formula.anchorDay + "7d"
+            - and:
+                - due
+                - date(due) <= formula.anchorDay + "7d"
+            - and:
+                - scheduled
+                - date(scheduled) <= formula.anchorDay + "7d"
     order:
       - status
       - priority
@@ -67,30 +63,30 @@ views:
       - projects
       - file.name
     sort:
-      - column: due
+      - property: due
         direction: ASC
-      - column: scheduled
+      - property: scheduled
         direction: ASC
   - type: tasknotesTaskList
-    name: "Important Not Urgent"
+    name: Important Not Urgent
     filters:
       and:
         - status != "done"
         - status != "archived"
         - or:
-          - priority == "normal"
-          - priority == "high"
+            - priority == "normal"
+            - priority == "high"
         - or:
-          - and:
-            - date(due).isEmpty()
-            - date(scheduled).isEmpty()
-          - and:
-            - or:
-              - date(due) > formula.anchorDay + "7d"
-              - date(due).isEmpty()
-            - or:
-              - date(scheduled) > formula.anchorDay + "7d"
-              - date(scheduled).isEmpty()
+            - and:
+                - date(due).isEmpty()
+                - date(scheduled).isEmpty()
+            - and:
+                - or:
+                    - date(due) > formula.anchorDay + "7d"
+                    - date(due).isEmpty()
+                - or:
+                    - date(scheduled) > formula.anchorDay + "7d"
+                    - date(scheduled).isEmpty()
     order:
       - status
       - priority
@@ -99,33 +95,33 @@ views:
       - projects
       - file.name
     sort:
-      - column: priority
+      - property: priority
         direction: DESC
-      - column: scheduled
+      - property: scheduled
         direction: ASC
-      - column: due
+      - property: due
         direction: ASC
   - type: tasknotesTaskList
-    name: "Not Urgent Not Important"
+    name: Not Urgent Not Important
     filters:
       and:
         - status != "done"
         - status != "archived"
         - or:
-          - priority == "low"
-          - priority == "none"
-          - priority.isEmpty()
+            - priority == "low"
+            - priority == "none"
+            - priority.isEmpty()
         - or:
-          - and:
-            - date(due).isEmpty()
-            - date(scheduled).isEmpty()
-          - and:
-            - or:
-              - date(due) > formula.anchorDay + "7d"
-              - date(due).isEmpty()
-            - or:
-              - date(scheduled) > formula.anchorDay + "7d"
-              - date(scheduled).isEmpty()
+            - and:
+                - date(due).isEmpty()
+                - date(scheduled).isEmpty()
+            - and:
+                - or:
+                    - date(due) > formula.anchorDay + "7d"
+                    - date(due).isEmpty()
+                - or:
+                    - date(scheduled) > formula.anchorDay + "7d"
+                    - date(scheduled).isEmpty()
     order:
       - status
       - priority
@@ -134,12 +130,12 @@ views:
       - projects
       - file.name
     sort:
-      - column: scheduled
+      - property: scheduled
         direction: ASC
-      - column: due
+      - property: due
         direction: ASC
   - type: tasknotesTaskList
-    name: "Done Today"
+    name: Done Today
     filters:
       and:
         - status == "done"
@@ -152,5 +148,5 @@ views:
       - projects
       - file.name
     sort:
-      - column: completedDate
+      - property: completedDate
         direction: DESC

@@ -65,6 +65,10 @@ def yaml_list(items: list[str]) -> str:
     return "\n".join(f"  - {item}" for item in items)
 
 
+def personal_first_entities(entities: list[str]) -> list[str]:
+    return sorted(entities, key=lambda entity: 0 if entity == "personal" else 1)
+
+
 def strip_frontmatter(text: str) -> str:
     return re.sub(r"^---\n.*?\n---\n", "", text, count=1, flags=re.S).strip()
 
@@ -366,6 +370,7 @@ source_context_folders:
 
 
 def master_periodic_note(root: Path, entities: list[str], period: str, period_id: str, generated_at: str) -> str:
+    entities = personal_first_entities(entities)
     sections = "\n\n".join(
         f"## {entity}\n\n```sync\n![[{entity}/_obsidian/periodic/{period}/{period_id}]]\n```"
         for entity in entities
