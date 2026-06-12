@@ -137,6 +137,17 @@ cd "${TARGET}"
 run_as_install_user /bin/bash _master/system/bootstrap/init_vault.sh
 
 PYTHON_BIN="$(command -v python3)"
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  if run_as_install_user "${PYTHON_BIN}" "${TARGET}/_master/system/scripts/refresh_schedule.py" --root "${TARGET}" register; then
+    echo "Registered daily vault refresh schedule."
+  else
+    echo "Warning: Could not register daily vault refresh schedule." >&2
+    echo "Run manually later: vault refresh-schedule register" >&2
+  fi
+else
+  echo "Daily vault refresh schedule skipped: requires macOS launchd."
+fi
+
 if [[ "${EUID}" -eq 0 ]]; then
   mkdir -p /usr/local/bin
   "${PYTHON_BIN}" "${TARGET}/_master/system/bootstrap/install_vault_command.py" \

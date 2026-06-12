@@ -36,6 +36,7 @@ This is made possible by a custom plugin called Context Nine and by the Relay pl
 - The installer runs with `sudo`, but writes the vault and bootstrap state as the user who invoked sudo.
 - Vault folder has no public-repo `.git` pointer after install.
 - `init_vault.sh` installs/checks command dependencies, creates starter context folders named `personal`, `personal-brand`, and `business`, asks whether to rename them, generates agent files, installs `vault` to `~/.local/bin/vault`, and adds that directory to zsh startup files.
+- On macOS, the installer registers or updates the daily `vault refresh` LaunchAgent. If registration fails, run `vault refresh-schedule register` after setup.
 - Context folder names must start and end with a letter or number and may use letters, numbers, dots, and hyphens, for example `business` or `business.nosync`. If you rename a starter folder during setup, the installer moves the folder and rewrites structured references such as paths, Obsidian links, plugin settings, frontmatter identity values, and `@context` tokens. It does not blindly rewrite normal prose.
 - The one-line `sudo bash` installer also installs `/usr/local/bin/vault`, so `vault` works even before a new shell has loaded `~/.local/bin`.
 - Run `_master/system/bootstrap/init_vault.sh --enable-git` later only if you want optional personal Git/LFS for your own vault.

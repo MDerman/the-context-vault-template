@@ -110,7 +110,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 288
+    "width": 293
   },
   "right": {
     "id": "c5da0292b2670f3d",
@@ -246,7 +246,7 @@
       "periodic-notes:Open today": false
     }
   },
-  "active": "31a58180b9425b0e",
+  "active": "60418e06a5cf5a59",
   "lastOpenFiles": [
     "README.md"
   ]
