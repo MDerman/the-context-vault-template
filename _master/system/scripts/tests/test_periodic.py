@@ -23,6 +23,17 @@ sys.modules[SPEC.name] = periodic
 SPEC.loader.exec_module(periodic)
 
 
+def make_periodic_entity(root: Path, daily_template: str) -> Path:
+    entity = root / "personal"
+    template_dir = entity / "_obsidian/templates/periodic"
+    template_dir.mkdir(parents=True)
+    (entity / "personal.md").write_text("---\nstatus: active\n---\n", encoding="utf-8")
+    (template_dir / "daily-template.md").write_text(daily_template, encoding="utf-8")
+    for name in ("weekly", "monthly", "quarterly", "yearly"):
+        (template_dir / f"{name}-template.md").write_text("", encoding="utf-8")
+    return entity
+
+
 class PeriodicTemplateRenderingTests(unittest.TestCase):
     def test_active_periods_include_monthly(self) -> None:
         periods = periodic.active_periods(dt.date(2026, 6, 11))
@@ -106,6 +117,131 @@ On this day last year <% tp.date.now("YYYY-MM-DD", "P-1Y") %>
                 "- [ ] Review month",
                 (root / "_master/system/context/2026-06.md").read_text(encoding="utf-8"),
             )
+
+    def test_carries_unchecked_daily_checklist_items_once(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            entity = make_periodic_entity(
+                root,
+                """---
+type: periodic
+period: daily
+entity: personal
+period_id: <% tp.file.title %>
+generated: false
+---
+## Today
+- [ ] 
+---
+""",
+            )
+            previous = entity / "_obsidian/periodic/daily/2026-06-11.md"
+            previous.parent.mkdir(parents=True)
+            previous.write_text(
+                """---
+type: periodic
+period: daily
+entity: personal
+period_id: 2026-06-11
+generated: false
+---
+## Today
+- [ ] alpha
+- [ ] beta
+- [x] done
+- [ ] gamma
+- [ ] 
+- [ ] delta
+---
+""",
+                encoding="utf-8",
+            )
+
+            periodic.generate_periodic_notes(
+                root,
+                ["personal"],
+                [],
+                False,
+                dt.date(2026, 6, 12),
+                generated_at="2026-06-12T02:00:00",
+            )
+            current = entity / "_obsidian/periodic/daily/2026-06-12.md"
+            text = current.read_text(encoding="utf-8")
+
+            self.assertIn("- [ ] alpha\n- [ ] beta\n- [ ] gamma\n- [ ] delta", text)
+            self.assertNotIn("- [x] done", text)
+            self.assertNotIn("- [ ] \n", text)
+
+            periodic.generate_periodic_notes(
+                root,
+                ["personal"],
+                [],
+                False,
+                dt.date(2026, 6, 12),
+                generated_at="2026-06-12T02:00:00",
+            )
+
+            self.assertEqual(text, current.read_text(encoding="utf-8"))
+
+    def test_carries_multiple_headings_and_preserves_existing_prompts(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            entity = make_periodic_entity(
+                root,
+                """---
+type: periodic
+period: daily
+entity: personal
+period_id: <% tp.file.title %>
+generated: false
+---
+## Output
+
+- [ ] Existing prompt
+- [ ] Another prompt
+
+## Notes
+-
+""",
+            )
+            previous = entity / "_obsidian/periodic/daily/2026-06-11.md"
+            previous.parent.mkdir(parents=True)
+            previous.write_text(
+                """---
+type: periodic
+period: daily
+entity: personal
+period_id: 2026-06-11
+generated: false
+---
+## Output
+
+- [ ] Existing prompt
+- [ ] Ship new thing
+
+## Missing Heading
+- [ ] Carry into appended heading
+
+## Notes
+- not a checklist
+""",
+                encoding="utf-8",
+            )
+
+            periodic.generate_periodic_notes(
+                root,
+                ["personal"],
+                [],
+                False,
+                dt.date(2026, 6, 12),
+                generated_at="2026-06-12T02:00:00",
+            )
+            text = (entity / "_obsidian/periodic/daily/2026-06-12.md").read_text(encoding="utf-8")
+
+            self.assertEqual(text.count("- [ ] Existing prompt"), 1)
+            self.assertIn("- [ ] Another prompt\n- [ ] Ship new thing", text)
+            self.assertIn("## Missing Heading\n- [ ] Carry into appended heading", text)
+            self.assertNotIn("- [ ] not a checklist", text)
 
 
 if __name__ == "__main__":

@@ -11,6 +11,7 @@ import os
 import plistlib
 import subprocess
 import sys
+import time
 from pathlib import Path
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
@@ -45,6 +46,9 @@ def load_refresh_config(root: Path) -> dict[str, object]:
         "timezone": system_timezone(),
         "hour": 2,
         "minute": 0,
+        "catchup_interval_seconds": 60,
+        "retry_attempts": 3,
+        "retry_delay_seconds": 60,
     }
     path = root / CONFIG_PATH
     if not path.exists():
@@ -99,7 +103,7 @@ def refresh_command(root: Path) -> list[str]:
 
 def launch_agent_plist(root: Path, config: dict[str, object]) -> dict[str, object]:
     label = label_from_config(config)
-    return {
+    plist = {
         "Label": label,
         "ProgramArguments": refresh_command(root),
         "WorkingDirectory": str(root),
@@ -111,6 +115,10 @@ def launch_agent_plist(root: Path, config: dict[str, object]) -> dict[str, objec
         "StandardOutPath": str(LOG_DIR / "obsidian-context-vault-refresh.out.log"),
         "StandardErrorPath": str(LOG_DIR / "obsidian-context-vault-refresh.err.log"),
     }
+    catchup_interval = config_int(config, "catchup_interval_seconds", 60)
+    if catchup_interval > 0:
+        plist["StartInterval"] = catchup_interval
+    return plist
 
 
 def run_launchctl(args: list[str], *, check: bool = True, quiet: bool = False) -> subprocess.CompletedProcess[str]:
@@ -138,7 +146,7 @@ def register(root: Path, dry_run: bool) -> int:
     run_launchctl(["bootstrap", launch_domain(), str(path)])
     run_launchctl(["enable", launch_service(label)], check=False)
     print(f"registered {label}: {path}")
-    return 0
+    return run_due(root)
 
 
 def unregister(root: Path, dry_run: bool) -> int:
@@ -173,8 +181,29 @@ def status(root: Path) -> int:
     print(f"loaded: {'yes' if loaded else 'no'}")
     print(f"timezone: {timezone_value} ({timezone_label})")
     print(f"time: {config_int(config, 'hour', 2):02d}:{config_int(config, 'minute', 0):02d}")
+    print(f"catchup_interval_seconds: {config_int(config, 'catchup_interval_seconds', 60)}")
+    print(f"retry_attempts: {config_int(config, 'retry_attempts', 3)}")
+    print(f"retry_delay_seconds: {config_int(config, 'retry_delay_seconds', 60)}")
     print(f"last_refresh_date: {stamp.read_text(encoding='utf-8').strip() if stamp.exists() else 'none'}")
     return 0
+
+
+def run_refresh_with_retries(root: Path, today: str, config: dict[str, object]) -> int:
+    attempts = max(1, config_int(config, "retry_attempts", 3))
+    retry_delay = max(0, config_int(config, "retry_delay_seconds", 60))
+    command = [sys.executable, str(SCRIPT_DIR / "refresh.py"), "--root", str(root), "--date", today]
+    for attempt in range(1, attempts + 1):
+        print(f"refresh attempt {attempt}/{attempts} for {today}")
+        result = subprocess.run(command, cwd=root)
+        if result.returncode == 0:
+            return 0
+        if attempt < attempts and retry_delay:
+            print(f"refresh attempt {attempt}/{attempts} failed with exit code {result.returncode}; retrying in {retry_delay}s", file=sys.stderr)
+            time.sleep(retry_delay)
+        elif attempt < attempts:
+            print(f"refresh attempt {attempt}/{attempts} failed with exit code {result.returncode}; retrying", file=sys.stderr)
+    print(f"refresh failed after {attempts} attempts for {today}", file=sys.stderr)
+    return result.returncode
 
 
 def run_due(root: Path) -> int:
@@ -191,16 +220,13 @@ def run_due(root: Path) -> int:
         try:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
-            print("refresh already running")
             return 0
         if stamp_path.exists() and stamp_path.read_text(encoding="utf-8").strip() == today:
-            print(f"refresh already completed for {today}")
             return 0
-        command = [sys.executable, str(SCRIPT_DIR / "refresh.py"), "--root", str(root), "--date", today]
-        result = subprocess.run(command, cwd=root)
-        if result.returncode == 0:
+        result = run_refresh_with_retries(root, today, config)
+        if result == 0:
             stamp_path.write_text(today + "\n", encoding="utf-8")
-        return result.returncode
+        return result
 
 
 def main(argv: list[str] | None = None) -> int:

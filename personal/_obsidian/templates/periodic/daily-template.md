@@ -15,7 +15,7 @@ generated: false
 
 # Super-alignment
 ## 📒 ~5 Tasks I want to get done today
-- 
+- [ ] 
 ---
 ## Manifestation statement:
 

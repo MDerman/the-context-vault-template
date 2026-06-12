@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-06-12T01:03:38+00:00",
+  "generated_at": "2026-06-12T02:36:30+00:00",
   "paths": [
     ".agents",
     ".agents/skills",
@@ -730,6 +730,7 @@
     "_master/system/scripts/tests/test_context_folder_notes_migration.py",
     "_master/system/scripts/tests/test_context_folder_rename.py",
     "_master/system/scripts/tests/test_periodic.py",
+    "_master/system/scripts/tests/test_refresh_schedule.py",
     "_master/system/scripts/upgrade.py",
     "_master/system/scripts/vault-commands.json",
     "_master/system/scripts/vault.py",

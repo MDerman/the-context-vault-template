@@ -11,7 +11,7 @@
   {
     "id": "refresh-schedule-register",
     "label": "Refresh Schedule Register",
-    "description": "Register the macOS LaunchAgent that runs the vault refresh once per local day at the configured morning time or after wake/login.",
+    "description": "Register the macOS LaunchAgent that refreshes at load, at the configured morning time, and via short due checks after wake/login until today's refresh succeeds.",
     "args": [
       "refresh-schedule",
       "register"
@@ -31,7 +31,7 @@
   {
     "id": "refresh-schedule-status",
     "label": "Refresh Schedule Status",
-    "description": "Show the configured LaunchAgent label, schedule, load state, and last successful refresh date.",
+    "description": "Show the configured LaunchAgent label, schedule, catch-up interval, retry settings, load state, and last successful refresh date.",
     "args": [
       "refresh-schedule",
       "status"

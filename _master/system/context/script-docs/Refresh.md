@@ -20,7 +20,7 @@ vault refresh-schedule status
 vault refresh-schedule unregister
 ```
 
-The schedule is configured in `_master/system/config.json` under `refresh_schedule`. Use `timezone: local` to resolve each laptop's current system timezone at runtime.
+The schedule is configured in `_master/system/config.json` under `refresh_schedule`. Use `timezone: local` to resolve each laptop's current system timezone at runtime. The LaunchAgent runs at load, at the configured time, and every `catchup_interval_seconds` seconds as an idempotent due check. A successful refresh writes the local date to `~/Library/Application Support/obsidian-context-vault/last-refresh-date.txt`; until that stamp matches today, failed refreshes retry according to `retry_attempts` and `retry_delay_seconds`.
 
 Implementation script:
 

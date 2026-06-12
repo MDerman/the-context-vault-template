@@ -47,6 +47,9 @@ LEGACY_AGENT_PERIODIC_DIR = Path("_master/system/context/periodic")
 CURRENT_CONTENT_SCHEDULE_PLACEHOLDER = "{{current_content_schedule_sync_embed}}"
 TEMPLATER_DATE_NOW_RE = re.compile(r"<%\s*tp\.date\.now\((.*?)\)\s*%>")
 TEMPLATER_CURSOR_RE = re.compile(r"<%\s*tp\.file\.cursor\(\)\s*%>")
+SECONDARY_HEADING_RE = re.compile(r"^##(?!#)\s+(.+?)\s*$")
+HEADING_RE = re.compile(r"^(#{1,6})\s+")
+CHECKLIST_RE = re.compile(r"^\s*-\s+\[(?P<mark>[ xX])\]\s*(?P<body>.*)$")
 
 
 def active_periods(day: dt.date) -> dict[str, str]:
@@ -90,6 +93,157 @@ def parse_frontmatter(text: str) -> dict[str, str]:
         key, value = line.split(":", 1)
         data[key.strip()] = value.strip().strip('"').strip("'")
     return data
+
+
+def heading_level(line: str) -> int | None:
+    match = HEADING_RE.match(line)
+    return len(match.group(1)) if match else None
+
+
+def secondary_heading(line: str) -> str | None:
+    match = SECONDARY_HEADING_RE.match(line)
+    return match.group(1).strip() if match else None
+
+
+def checklist_item(line: str) -> tuple[str, str] | None:
+    match = CHECKLIST_RE.match(line)
+    if not match:
+        return None
+    return match.group("mark"), match.group("body").strip()
+
+
+def section_end(lines: list[str], start_index: int, max_level: int) -> int:
+    for index in range(start_index, len(lines)):
+        level = heading_level(lines[index])
+        if level is not None and level <= max_level:
+            return index
+    return len(lines)
+
+
+def carried_daily_checklists(text: str) -> dict[str, list[str]]:
+    lines = text.splitlines()
+    carried: dict[str, list[str]] = {}
+    for index, line in enumerate(lines):
+        heading = secondary_heading(line)
+        if not heading:
+            continue
+        end = section_end(lines, index + 1, 2)
+        cursor = index + 1
+        while cursor < end and not lines[cursor].strip():
+            cursor += 1
+        if cursor >= end or not checklist_item(lines[cursor]):
+            continue
+        items: list[str] = []
+        seen: set[str] = set()
+        while cursor < end:
+            if not lines[cursor].strip():
+                cursor += 1
+                continue
+            item = checklist_item(lines[cursor])
+            if not item:
+                break
+            mark, body = item
+            if mark == " " and body and body not in seen:
+                items.append(body)
+                seen.add(body)
+            cursor += 1
+        if items:
+            carried.setdefault(heading, []).extend(items)
+    return carried
+
+
+def find_secondary_section(lines: list[str], heading: str) -> tuple[int, int, int] | None:
+    for index, line in enumerate(lines):
+        if secondary_heading(line) == heading:
+            return index, index + 1, section_end(lines, index + 1, 2)
+    return None
+
+
+def target_checklist_bodies(lines: list[str], start: int, end: int) -> set[str]:
+    bodies: set[str] = set()
+    for line in lines[start:end]:
+        item = checklist_item(line)
+        if item and item[1]:
+            bodies.add(item[1])
+    return bodies
+
+
+def remove_blank_checklist_items(lines: list[str], start: int, end: int) -> list[str]:
+    section = [line for line in lines[start:end] if not (checklist_item(line) and not checklist_item(line)[1])]
+    return [*lines[:start], *section, *lines[end:]]
+
+
+def checklist_insert_index(lines: list[str], start: int, end: int) -> int:
+    cursor = start
+    while cursor < end and not lines[cursor].strip():
+        cursor += 1
+    if cursor >= end:
+        return end
+    if not checklist_item(lines[cursor]):
+        return cursor
+    while cursor < end and checklist_item(lines[cursor]):
+        cursor += 1
+    return cursor
+
+
+def append_carried_daily_checklists(text: str, carried: dict[str, list[str]]) -> str:
+    if not carried:
+        return text
+    lines = text.splitlines()
+    changed = False
+
+    for heading, source_items in carried.items():
+        section = find_secondary_section(lines, heading)
+        existing: set[str] = set()
+        if section:
+            _, start, end = section
+            existing = target_checklist_bodies(lines, start, end)
+        pending: list[str] = []
+        seen = set(existing)
+        for body in source_items:
+            if body and body not in seen:
+                pending.append(body)
+                seen.add(body)
+        if not pending:
+            continue
+
+        if not section:
+            if lines and lines[-1].strip():
+                lines.append("")
+            lines.append(f"## {heading}")
+            lines.extend(f"- [ ] {body}" for body in pending)
+            changed = True
+            continue
+
+        _, start, end = section
+        lines = remove_blank_checklist_items(lines, start, end)
+        _, start, end = find_secondary_section(lines, heading) or (0, len(lines), len(lines))
+        insert_at = checklist_insert_index(lines, start, end)
+        lines[insert_at:insert_at] = [f"- [ ] {body}" for body in pending]
+        changed = True
+
+    if not changed:
+        return text
+    return "\n".join(lines) + "\n"
+
+
+def carry_forward_daily_checklists(root: Path, entities: list[str], day: dt.date) -> None:
+    previous_id = (day - dt.timedelta(days=1)).isoformat()
+    current_id = day.isoformat()
+    for entity in entities:
+        daily_dir = root / entity / "_obsidian/periodic/daily"
+        previous_path = daily_dir / f"{previous_id}.md"
+        current_path = daily_dir / f"{current_id}.md"
+        if not previous_path.exists() or not current_path.exists():
+            continue
+        carried = carried_daily_checklists(previous_path.read_text(encoding="utf-8"))
+        if not carried:
+            continue
+        current = current_path.read_text(encoding="utf-8")
+        updated = append_carried_daily_checklists(current, carried)
+        if updated != current:
+            current_path.write_text(updated, encoding="utf-8")
+            print(f"carried daily checklist items into {current_path}")
 
 
 def split_templater_args(value: str) -> list[str]:
@@ -459,6 +613,8 @@ def generate_periodic_notes(
     for period, period_id in periods.items():
         for entity in entities:
             ensure_entity_note(root, entity, period, period_id, day)
+        if period == "daily":
+            carry_forward_daily_checklists(root, entities, day)
         write_master_periodic_note(root, entities, period, period_id, generated_at)
         write_agent_periodic_note(root, entities, period, period_id, generated_at)
         current_paths.add(agent_periodic_path(root, period_id))

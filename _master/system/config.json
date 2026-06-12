@@ -13,7 +13,10 @@
     "label": "com.obsidian-context-vault.refresh",
     "timezone": "local",
     "hour": 2,
-    "minute": 0
+    "minute": 0,
+    "catchup_interval_seconds": 60,
+    "retry_attempts": 3,
+    "retry_delay_seconds": 60
   },
   "dashboard_checklist": {
     "end_of_week_day": "sunday",
