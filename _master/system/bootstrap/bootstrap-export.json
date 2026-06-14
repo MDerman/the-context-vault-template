@@ -108,6 +108,9 @@
     ".obsidian/plugins/system3-relay/data.json",
     ".obsidian/plugins/system3-relay/relay.log*",
     ".obsidian/plugins/system3-relay/relay*.log*",
+    ".obsidian-mobile/plugins/system3-relay/data.json",
+    ".obsidian-mobile/plugins/system3-relay/relay.log*",
+    ".obsidian-mobile/plugins/system3-relay/relay*.log*",
     ".obsidian/plugins/terminal/data.json",
     ".obsidian/plugins/todoist-sync-plugin/data.json"
   ],

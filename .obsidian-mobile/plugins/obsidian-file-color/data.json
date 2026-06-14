@@ -1,0 +1,128 @@
+{
+  "cascadeColors": false,
+  "colorBackground": true,
+  "palette": [
+    {
+      "id": "vpnI4sM78jQ9WrnkhU3Aj",
+      "name": "claudeche",
+      "value": "#d6d4bd"
+    },
+    {
+      "id": "NhNo_syTkp7k6-McoBpmo",
+      "name": "Youtube",
+      "value": "#f41010"
+    },
+    {
+      "id": "L77rK_gmIuLnLI6DIKbi8",
+      "name": "Impression",
+      "value": "#240aa3"
+    },
+    {
+      "id": "iJtq5FLVgI514u7gZ7iiK",
+      "name": "LIbrary and Wiki",
+      "value": "#2e96e5"
+    },
+    {
+      "id": "yWvychFFNA2bLPONczs3Z",
+      "name": "Obsidian",
+      "value": "#762e8a"
+    },
+    {
+      "id": "jDkHS3u6Z463GfAMfK1Gb",
+      "name": "dev",
+      "value": "#474343"
+    },
+    {
+      "id": "twAdXzDQVrWk05UdonPj_",
+      "name": "matt derman",
+      "value": "#366347"
+    },
+    {
+      "id": "e0Og_LIiYvagpCsq4djGH",
+      "name": "personal",
+      "value": "#2f2923"
+    }
+  ],
+  "fileColors": [
+    {
+      "path": ".agents",
+      "color": "yWvychFFNA2bLPONczs3Z"
+    },
+    {
+      "path": ".claude",
+      "color": "yWvychFFNA2bLPONczs3Z"
+    },
+    {
+      "path": ".keep-the-rhythm",
+      "color": "yWvychFFNA2bLPONczs3Z"
+    },
+    {
+      "path": ".obsidian",
+      "color": "yWvychFFNA2bLPONczs3Z"
+    },
+    {
+      "path": ".trash",
+      "color": "yWvychFFNA2bLPONczs3Z"
+    },
+    {
+      "path": "personal",
+      "color": "e0Og_LIiYvagpCsq4djGH"
+    },
+    {
+      "path": "personal/_obsidian",
+      "color": "yWvychFFNA2bLPONczs3Z"
+    },
+    {
+      "path": "personal-brand",
+      "color": "twAdXzDQVrWk05UdonPj_"
+    },
+    {
+      "path": "personal-brand/_obsidian",
+      "color": "yWvychFFNA2bLPONczs3Z"
+    },
+    {
+      "path": "personal-brand/Youtube Factory",
+      "color": "NhNo_syTkp7k6-McoBpmo"
+    },
+    {
+      "path": "business",
+      "color": "L77rK_gmIuLnLI6DIKbi8"
+    },
+    {
+      "path": "business/_obsidian",
+      "color": "yWvychFFNA2bLPONczs3Z"
+    },
+    {
+      "path": "dev",
+      "color": "jDkHS3u6Z463GfAMfK1Gb"
+    },
+    {
+      "path": "dev/_obsidian",
+      "color": "yWvychFFNA2bLPONczs3Z"
+    },
+    {
+      "path": "claudeche",
+      "color": "vpnI4sM78jQ9WrnkhU3Aj"
+    },
+    {
+      "path": "claudeche/_obsidian",
+      "color": "yWvychFFNA2bLPONczs3Z"
+    },
+    {
+      "path": "_library",
+      "color": "iJtq5FLVgI514u7gZ7iiK"
+    },
+    {
+      "path": "_master",
+      "color": "yWvychFFNA2bLPONczs3Z"
+    },
+    {
+      "path": "_master/_obsidian",
+      "color": "yWvychFFNA2bLPONczs3Z"
+    },
+    {
+      "path": "_wiki",
+      "color": "iJtq5FLVgI514u7gZ7iiK"
+    }
+  ]
+}

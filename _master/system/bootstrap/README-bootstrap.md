@@ -47,7 +47,7 @@ Preview a context folder rename later with:
 vault folder rename business studio --dry-run
 ```
 
-Export includes plugin metadata/styles and non-sensitive settings, ships source bundles only for Context Nine and Relay, downloads active third-party plugin bundles during setup, and excludes known sensitive/local plugin config. When Obsidian first opens the vault, approve community plugins if Obsidian asks to trust the vault.
+Export includes desktop and mobile Obsidian profiles, plugin metadata/styles, and non-sensitive settings. It ships source bundles only for Context Nine and Relay, downloads active third-party plugin bundles during setup, and excludes known sensitive/local plugin config. When Obsidian first opens the vault, approve community plugins if Obsidian asks to trust the vault.
 
 ## How To Use The Vault
 

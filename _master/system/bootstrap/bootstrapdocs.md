@@ -37,14 +37,14 @@ Generated copies under `_master/system/context/*.md` are agent-readable outputs 
 
 The exporter:
 
-- copies root agent wiring, selected root files, root `.obsidian` profile files with configured exclusions, `_master` minus generated/private outputs, empty `_library`, `_wiki/AGENTS.md`, and configured context folder scaffolds;
+- copies root agent wiring, selected root files, root `.obsidian` and `.obsidian-mobile` profile files with configured exclusions, `_master` minus generated/private outputs, empty `_library`, `_wiki/AGENTS.md`, and configured context folder scaffolds;
 - writes `_master/system/bootstrap/state/export-manifest.json` so future exports can remove stale export-owned files;
 - preserves repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, and contribution docs;
 - refuses to export inside the source vault.
 
 ## Plugin Code
 
-Most plugin code does not ship in public export. Plugin directories keep public metadata, styles, and non-sensitive settings:
+Most plugin code does not ship in public export. Plugin directories in `.obsidian` and `.obsidian-mobile` keep public metadata, styles, and non-sensitive settings:
 
 - `manifest.json`
 - `styles.css`
@@ -63,7 +63,7 @@ Local or patched plugins ship their bundles exactly because they are source-of-t
 
 Sensitive/local plugin config is still excluded:
 
-- `system3-relay/data.json` excluded
+- `system3-relay/data.json` excluded from both desktop and mobile profiles
 - `context-nine/data.json` excluded
 - other integration-ish plugin config excluded too
 

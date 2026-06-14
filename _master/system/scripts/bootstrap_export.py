@@ -278,17 +278,20 @@ class BootstrapExporter:
             self.create_symlink(self.export_root / link_name, target)
 
     def copy_obsidian(self) -> None:
-        source = self.root / ".obsidian"
-        target = self.export_root / ".obsidian"
-        if not source.is_dir():
-            raise SystemExit(f"Missing root .obsidian folder: {source}")
-        self.copy_obsidian_tree(source, target)
+        for profile_name, required in [(".obsidian", True), (".obsidian-mobile", False)]:
+            source = self.root / profile_name
+            target = self.export_root / profile_name
+            if not source.is_dir():
+                if required:
+                    raise SystemExit(f"Missing root {profile_name} folder: {source}")
+                continue
+            self.copy_obsidian_tree(source, target, profile_name)
 
-    def copy_obsidian_tree(self, source_root: Path, target_root: Path) -> None:
+    def copy_obsidian_tree(self, source_root: Path, target_root: Path, profile_name: str) -> None:
         self.ensure_dir(target_root)
         for item in sorted(source_root.rglob("*")):
             relative = item.relative_to(source_root)
-            vault_relative = Path(".obsidian") / relative
+            vault_relative = Path(profile_name) / relative
             target = target_root / relative
             if self.should_skip_obsidian(vault_relative, item):
                 continue
@@ -315,7 +318,7 @@ class BootstrapExporter:
 
     def is_blocked_plugin_file(self, relative: Path, item: Path) -> bool:
         parts = relative.parts
-        if len(parts) < 3 or parts[0] != ".obsidian" or parts[1] != "plugins":
+        if len(parts) < 3 or parts[0] not in {".obsidian", ".obsidian-mobile"} or parts[1] != "plugins":
             return False
         if item.is_dir():
             return False
@@ -708,7 +711,7 @@ class BootstrapExporter:
         except ValueError:
             return
         parts = relative.parts
-        if len(parts) < 4 or parts[0] != ".obsidian" or parts[1] != "plugins":
+        if len(parts) < 4 or parts[0] not in {".obsidian", ".obsidian-mobile"} or parts[1] != "plugins":
             return
         if parts[2] not in self.obsidian_plugin_full_copy_plugins:
             return
