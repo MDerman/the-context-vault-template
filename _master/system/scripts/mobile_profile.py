@@ -19,6 +19,7 @@ MOBILE_PLUGINS = [
     "obsidian-style-settings",
     "obsidian-file-color",
     "obsidian-icon-folder",
+    "system3-relay",
 ]
 
 CORE_SETTINGS_TO_COPY = [
@@ -49,7 +50,7 @@ def copy_file(source: Path, target: Path) -> bool:
 
 
 def ignore_backup_files(_: str, names: list[str]) -> set[str]:
-    return {name for name in names if ".bak" in name}
+    return {name for name in names if ".bak" in name or name.startswith("relay.log") or name.startswith("relay ")}
 
 
 def copy_directory(source: Path, target: Path) -> bool:
