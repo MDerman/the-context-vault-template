@@ -381,6 +381,7 @@ class Bootstrap:
             self.ensure_dir(self.root / "_master/agents/skills")
             self.ensure_dir(self.root / "_master/agents/skills-dump")
             self.ensure_dir(self.root / ".agents")
+            self.ensure_dir(self.root / ".agents/skills")
             self.ensure_dir(self.root / ".claude")
 
     def cleanup_obsolete_context_folder_workspace_artifacts(self) -> None:

@@ -65,7 +65,9 @@ Use `vault gcal create-block` only when user explicitly asks for time blocking o
 
 ## Skills
 
-Active shared agent skills live in `_master/agents/skills`, symlinked to `.agents/skills`.
+Active shared agent skills live in `_master/agents/skills`.
+
+Repo-local `.agents/skills` folders are real directories reserved for repo-scoped skills and should not be symlinked. Repo `.claude/skills` may symlink to `../.agents/skills` so Claude reads those same repo-scoped skills.
 
 If user asks to create or update an active skill, work there.
 

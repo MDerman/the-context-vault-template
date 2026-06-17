@@ -232,7 +232,28 @@ def ensure_symlink(root: Path, link: Path, target: str, dry_run: bool, directory
     print(f"symlink {path} -> {target}")
 
 
-def ensure_agent_symlinks(root: Path, dry_run: bool) -> None:
+def ensure_real_directory(root: Path, directory: Path, dry_run: bool) -> None:
+    path = root / directory
+    if path.is_symlink():
+        if dry_run:
+            print(f"[dry-run] remove legacy symlink {path}")
+            print(f"[dry-run] mkdir {path}")
+            return
+        path.unlink()
+        print(f"removed legacy symlink {path}")
+    elif path.exists() and not path.is_dir():
+        raise SystemExit(f"Refusing to replace existing non-directory path: {path}")
+    elif path.exists():
+        return
+
+    if dry_run:
+        print(f"[dry-run] mkdir {path}")
+        return
+    path.mkdir(parents=True, exist_ok=True)
+    print(f"mkdir {path}")
+
+
+def ensure_agent_paths(root: Path, dry_run: bool) -> None:
     skills_source = root / "_master/agents/skills"
     for directory in [root / "_master/agents/skills", root / "_master/agents/skills-dump", root / ".agents", root / ".claude"]:
         if directory.exists():
@@ -246,12 +267,12 @@ def ensure_agent_symlinks(root: Path, dry_run: bool) -> None:
         skills_source.mkdir(parents=True, exist_ok=True)
 
     ensure_symlink(root, Path("CLAUDE.md"), "AGENTS.md", dry_run)
-    ensure_symlink(root, Path(".agents/skills"), "../_master/agents/skills", dry_run, directory=True)
+    ensure_real_directory(root, Path(".agents/skills"), dry_run)
     ensure_symlink(root, Path(".claude/skills"), "../.agents/skills", dry_run, directory=True)
 
 
 def main(argv: list[str] | None = None) -> None:
-    parser = argparse.ArgumentParser(description="Generate root AGENTS.md and agent symlinks.")
+    parser = argparse.ArgumentParser(description="Generate root AGENTS.md and agent paths.")
     parser.add_argument("--root", default=".", help="Vault root.")
     parser.add_argument("--date", default=None, help="Generated timestamp override.")
     parser.add_argument("--dry-run", action="store_true")
@@ -261,7 +282,7 @@ def main(argv: list[str] | None = None) -> None:
     generated_at = args.date or dt.datetime.now().isoformat(timespec="seconds")
     content = render(root, generated_at)
     write_agents(root, content, args.dry_run)
-    ensure_agent_symlinks(root, args.dry_run)
+    ensure_agent_paths(root, args.dry_run)
 
 
 if __name__ == "__main__":

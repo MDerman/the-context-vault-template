@@ -1,6 +1,6 @@
 ---
 generated: true
-generated_at: 2026-06-11T14:15:32
+generated_at: 2026-06-17T08:48:48
 managed_by: "managed-by: _master/system/bootstrap/generate_agents.py"
 ---
 If editing this agent file, edit `_master/system/bootstrap/AGENTS.template.md`, then rerun `python3 _master/system/bootstrap/generate_agents.py`.
@@ -14,7 +14,8 @@ Root workspace is one Obsidian vault with context folders. `CLAUDE.md` is a syml
 - Do not read plaintext `.env`, token, key, kubeconfig, or secrets paths unless explicitly asked.
 - Use `[[Obsidian links]]`, not Markdown links, inside vault notes.
 - Put future agent plans in `.agents/plans/`.
-- Put active agent skills in `.agents/skills/`.
+- Put repo-scoped skills in `.agents/skills/`.
+- Put active shared agent skills in `_master/agents/skills/`.
 - Put dormant skills in `_master/agents/skills-dump/`.
 - Ignore incidental `.obsidian/` git churn.
 - Do not bulk-move, restructure, delete, or overwrite user content unless explicitly asked.
@@ -124,7 +125,8 @@ Read `_master/system/context/SCRIPTS.md` before refresh/setup commands. Read `_m
 
 ## Skills And Agents Settings
 
-If asked to create skills, add them to `_master/agents/skills` (symlinked to `.agents/skills`).
+If asked to create shared active skills, add them to `_master/agents/skills`.
+Repo-local `.agents/skills` is a real folder for repo-scoped skills, never a symlink. `.claude/skills` points to `../.agents/skills` so Claude can see the same repo-scoped skills.
 If asked to store but not make active a skill, add it to `_master/agents/skills-dump`.
 
 ## Agents Can

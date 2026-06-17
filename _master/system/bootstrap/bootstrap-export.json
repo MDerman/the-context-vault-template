@@ -56,11 +56,17 @@
     {
       "source": "_master/system/bootstrap/install.sh",
       "target": "install.sh"
+    },
+    {
+      "source": ".agents/skills/.gitkeep",
+      "target": ".agents/skills/.gitkeep"
     }
+  ],
+  "root_dirs": [
+    ".agents/skills"
   ],
   "root_symlinks": {
     "CLAUDE.md": "AGENTS.md",
-    ".agents/skills": "../_master/agents/skills",
     ".claude/skills": "../.agents/skills"
   },
   "generated_exclude_paths": [

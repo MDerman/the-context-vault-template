@@ -178,12 +178,23 @@
           "icon": "calendar-with-checkmark",
           "title": "Calendar"
         }
+      },
+      {
+        "id": "d98a12db1e81dc90",
+        "type": "leaf",
+        "state": {
+          "type": "system3-sync-status",
+          "state": {},
+          "icon": "satellite",
+          "title": "Sync status"
+        }
       }
     ],
     "currentTab": 0
   },
   "left-ribbon": {
     "hiddenItems": {
+      "system3-relay:Relay": false,
       "tasknotes:Open mini calendar view": false,
       "tasknotes:Open calendar view": false,
       "tasknotes:Open tasks view": false,
@@ -204,6 +215,7 @@
   },
   "active": "9a7f5e736b18de43",
   "lastOpenFiles": [
+    "business",
     "_master/system/inbox/BRAIN_DUMP.md",
     "_master/Dashboard.md",
     "personal-brand/Post Inspo.md",

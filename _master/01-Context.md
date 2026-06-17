@@ -219,8 +219,9 @@ Root agent files:
 
 - `AGENTS.md`: generated instructions for Codex, Claude, and other coding agents. Edit `_master/system/bootstrap/AGENTS.template.md`, then rerun `python3 _master/system/bootstrap/generate_agents.py`.
 - `CLAUDE.md`: symlink to `AGENTS.md`.
-- `.agents/skills`: agent skills folder.
-- `.claude/skills`: symlink to `.agents/skills`.
+- `_master/agents/skills`: active shared agent skills.
+- `.agents/skills`: real repo-local folder for repo-scoped skills; never symlink this path.
+- `.claude/skills`: symlink to `../.agents/skills` so Claude reads the same repo-scoped skills.
 
 Context folders do not have their own Obsidian profiles or agent symlinks. Open the root workspace for Obsidian and agent work.
 

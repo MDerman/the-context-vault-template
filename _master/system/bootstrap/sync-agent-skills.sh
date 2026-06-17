@@ -5,11 +5,12 @@ usage() {
   cat <<'USAGE'
 Usage: sync-agent-skills.sh [--dry-run|--apply]
 
-Sync local agent skill directories to the vault skill source.
+Sync local coding-agent global skill directories to the vault skill source.
 
-Default mode is --dry-run. Use --apply to copy existing target-only skills into
-the vault source, back up replaced paths, and symlink each target skills
-directory to _master/agents/skills.
+Default mode is --dry-run. Use --apply to reset existing symlinks, copy
+existing target-only skills from non-symlink directories into the vault source,
+back up replaced non-symlink paths, and symlink each target skills directory to
+_master/agents/skills.
 USAGE
 }
 
@@ -56,20 +57,6 @@ run() {
   fi
 }
 
-resolved_path() {
-  local path="$1"
-  if command -v realpath >/dev/null 2>&1; then
-    realpath "$path" 2>/dev/null && return 0
-  fi
-  python3 -c 'import os, sys; print(os.path.realpath(sys.argv[1]))' "$path"
-}
-
-same_path() {
-  local left="$1"
-  local right="$2"
-  [[ "$(resolved_path "$left")" == "$(resolved_path "$right")" ]]
-}
-
 ensure_source() {
   if [[ -e "$source_dir" && ! -d "$source_dir" ]]; then
     echo "Source exists but is not a directory: $source_dir" >&2
@@ -91,6 +78,13 @@ backup_path() {
   log "Back up $path -> $backup_path"
   run mkdir -p "$backup_dir"
   run mv "$path" "$backup_path"
+}
+
+reset_symlink() {
+  local target="$1"
+
+  log "Reset symlink: $target"
+  run rm "$target"
 }
 
 copy_target_only_skills() {
@@ -129,14 +123,7 @@ sync_target() {
   log "Target: $label -> $target"
 
   if [[ -L "$target" ]]; then
-    local current
-    current="$(readlink "$target")"
-    if [[ "$current" == "$source_dir" ]] || same_path "$target" "$source_dir"; then
-      log "Already linked to vault skills source."
-      return 0
-    fi
-
-    backup_path "$target" "${label}-skills-symlink"
+    reset_symlink "$target"
   elif [[ -d "$target" ]]; then
     copy_target_only_skills "$target" "$label"
     backup_path "$target" "${label}-skills-dir"

@@ -274,6 +274,8 @@ class BootstrapExporter:
             else:
                 source = target = item
             self.copy_file(self.root / source, self.export_root / target)
+        for directory in self.config.get("root_dirs", []):
+            self.ensure_dir(self.export_root / directory)
         for link_name, target in self.config.get("root_symlinks", {}).items():
             self.create_symlink(self.export_root / link_name, target)
 
