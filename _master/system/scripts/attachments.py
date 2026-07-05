@@ -23,23 +23,25 @@ import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from datetime import datetime
+from functools import lru_cache
 from pathlib import Path
 from urllib.parse import unquote
+
+from script_utils import discover_context_folders
 
 
 ROOT = Path(__file__).resolve().parents[3]
 
-TOP_ROOTS = {
-    "personal",
-    "personal-brand",
-    "business",
-    "dev",
-    "ctx9",
-    "claudeche",
+SYSTEM_ROOTS = {
     "_library",
     "_master",
     "_wiki",
 }
+
+
+@lru_cache(maxsize=1)
+def top_roots() -> set[str]:
+    return set(discover_context_folders(ROOT)) | SYSTEM_ROOTS
 
 SENSITIVE_DIR_NAMES = {
     ".env",
@@ -153,7 +155,7 @@ def top_root(path: Path) -> str | None:
         first = path.resolve().relative_to(ROOT).parts[0]
     except (IndexError, ValueError):
         return None
-    return first if first in TOP_ROOTS else None
+    return first if first in top_roots() else None
 
 
 def clean_name(name: str) -> str:
@@ -391,7 +393,7 @@ def iter_link_spans(text: str) -> list[LinkSpan]:
 
 def build_basename_index() -> dict[str, list[Path]]:
     index: dict[str, list[Path]] = defaultdict(list)
-    for root_name in TOP_ROOTS:
+    for root_name in top_roots():
         root_path = ROOT / root_name
         if not root_path.exists():
             continue
@@ -413,7 +415,7 @@ def resolve_link_target(note: Path, target: str, basename_index: dict[str, list[
     parts = target_path.lstrip("/").split("/")
     if target_path.startswith("/"):
         candidates.append((ROOT / target_path.lstrip("/")).resolve())
-    elif parts and parts[0] in TOP_ROOTS:
+    elif parts and parts[0] in top_roots():
         candidates.append((ROOT / target_path).resolve())
     else:
         candidates.append((note.parent / target_path).resolve())
@@ -742,7 +744,7 @@ def build_plan() -> tuple[
 
 
 def ensure_attachment_dirs(dry_run: bool, stats: Counter) -> None:
-    for root_name in sorted(TOP_ROOTS):
+    for root_name in sorted(top_roots()):
         directory = attachment_dir(root_name)
         stats["attachment_dirs_checked"] += 1
         if not directory.exists():
@@ -1019,7 +1021,7 @@ def verify() -> int:
             else:
                 failures.append(f"{rel(folder)} still exists")
 
-    for root_name in TOP_ROOTS:
+    for root_name in top_roots():
         if not attachment_dir(root_name).exists():
             failures.append(f"missing attachment folder: {root_name}/_obsidian/attachments")
 
