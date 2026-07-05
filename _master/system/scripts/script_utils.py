@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 LEGACY_VAULT_ROOT_PREFIXES = (
-    "/Users/matthewderman/" + "My " + "Drive/" + "Work" + "space/",
+    str(Path.home() / "My Drive" / "Workspace") + "/",
     "~/" + "My " + "Drive/" + "Work" + "space/",
 )
 

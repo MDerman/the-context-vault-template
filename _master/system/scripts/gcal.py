@@ -4,39 +4,47 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import datetime as dt
 import json
 import os
+import shutil
+import subprocess
 import sys
-import time
-import urllib.error
 import urllib.parse
-import urllib.request
-import webbrowser
 from dataclasses import dataclass
-from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
 from script_utils import context_folder_note_path, resolve_vault_root
 
-
-API_ROOT = "https://www.googleapis.com/calendar/v3"
-AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
-TOKEN_URL = "https://oauth2.googleapis.com/token"
-SCOPE = "https://www.googleapis.com/auth/calendar"
+CONFIG_RELATIVE_PATH = "_master/system/config/calendar.json"
 SYNC_OWNER = "vault-gcal-task-mirror"
 
-CALENDAR_ENV_KEYS = {
-    "time-blocks": "GOOGLE_CALENDAR_TIME_BLOCKS_NAME",
-    "scheduled": "GOOGLE_CALENDAR_SCHEDULED_TASKS_NAME",
-    "due": "GOOGLE_CALENDAR_DUE_TASKS_NAME",
+DEFAULT_CALENDAR_CONFIG: dict[str, Any] = {
+    "timeZone": "Africa/Johannesburg",
+    "calendarNames": {
+        "timeBlocks": "Time Blocks",
+        "scheduledTasks": "Scheduled Tasks",
+        "dueTasks": "Due Tasks",
+    },
+    "defaultDurations": {
+        "taskMinutes": 60,
+        "blockMinutes": 240,
+        "eventMinutes": 60,
+    },
+    "defaultEventCalendar": "primary",
 }
 DEFAULT_CALENDAR_NAMES = {
     "time-blocks": "Time Blocks",
     "scheduled": "Scheduled Tasks",
     "due": "Due Tasks",
+}
+CALENDAR_NAME_CONFIG = {
+    "time-blocks": ("GOOGLE_CALENDAR_TIME_BLOCKS_NAME", ("calendarNames", "timeBlocks"), "Time Blocks"),
+    "scheduled": ("GOOGLE_CALENDAR_SCHEDULED_TASKS_NAME", ("calendarNames", "scheduledTasks"), "Scheduled Tasks"),
+    "due": ("GOOGLE_CALENDAR_DUE_TASKS_NAME", ("calendarNames", "dueTasks"), "Due Tasks"),
 }
 DEFAULT_CALENDAR_REMINDERS = {
     "time-blocks": [{"method": "popup", "minutes": 0}],
@@ -66,56 +74,56 @@ class GCalError(RuntimeError):
     pass
 
 
+class GwsUnavailable(GCalError):
+    pass
+
+
+class GwsAuthError(GCalError):
+    pass
+
+
 @dataclass
 class Env:
     root: Path
-    env_dir: Path
-    values: dict[str, str]
+    config: dict[str, Any]
 
-    def get(self, key: str, default: str = "") -> str:
-        return self.values.get(key) or os.environ.get(key, default)
+    def config_value(self, keys: tuple[str, ...], default: Any = "") -> Any:
+        value: Any = self.config
+        for key in keys:
+            if not isinstance(value, dict) or key not in value:
+                return default
+            value = value[key]
+        return value
+
+    def setting(self, env_key: str, keys: tuple[str, ...], default: Any = "") -> Any:
+        return os.environ.get(env_key) or self.config_value(keys, default)
+
+    def int_setting(self, env_key: str, keys: tuple[str, ...], default: int) -> int:
+        return max(1, int(self.setting(env_key, keys, default)))
 
     @property
-    def token_path(self) -> Path:
-        raw = self.get("GOOGLE_ACCOUNT_TOKEN_PATH", "")
-        if raw:
-            path = resolve_env_path(self.root, raw)
-            legacy_path = resolve_env_path(
-                self.root, self.get("GOOGLE_CALENDAR_TOKEN_PATH", "_master/env/.gcal-token.json")
-            )
-            if not path.exists() and legacy_path.exists():
-                return legacy_path
-            return path
-        legacy_raw = self.get("GOOGLE_CALENDAR_TOKEN_PATH", "")
-        if legacy_raw:
-            return resolve_env_path(self.root, legacy_raw)
-        legacy_default = resolve_env_path(self.root, "_master/env/.gcal-token.json")
-        if legacy_default.exists():
-            return legacy_default
-        return resolve_env_path(self.root, "_master/env/.google-account-token.json")
+    def timezone_name(self) -> str:
+        return str(self.setting("GOOGLE_CALENDAR_TIME_ZONE", ("timeZone",), "Africa/Johannesburg"))
 
     @property
     def timezone(self) -> ZoneInfo:
-        return ZoneInfo(self.get("GOOGLE_CALENDAR_TIME_ZONE", "Africa/Johannesburg"))
+        return ZoneInfo(self.timezone_name)
 
     @property
     def default_task_duration(self) -> int:
-        raw = self.get("GOOGLE_CALENDAR_TASK_DEFAULT_DURATION_MINUTES", "60")
-        return max(1, int(raw))
+        return self.int_setting("GOOGLE_CALENDAR_TASK_DEFAULT_DURATION_MINUTES", ("defaultDurations", "taskMinutes"), 60)
 
     @property
     def default_block_duration(self) -> int:
-        raw = self.get("GOOGLE_CALENDAR_BLOCK_DEFAULT_DURATION_MINUTES", "240")
-        return max(1, int(raw))
+        return self.int_setting("GOOGLE_CALENDAR_BLOCK_DEFAULT_DURATION_MINUTES", ("defaultDurations", "blockMinutes"), 240)
 
     @property
     def default_event_duration(self) -> int:
-        raw = self.get("GOOGLE_CALENDAR_EVENT_DEFAULT_DURATION_MINUTES", "60")
-        return max(1, int(raw))
+        return self.int_setting("GOOGLE_CALENDAR_EVENT_DEFAULT_DURATION_MINUTES", ("defaultDurations", "eventMinutes"), 60)
 
     @property
     def default_event_calendar(self) -> str:
-        return self.get("GOOGLE_CALENDAR_DEFAULT_EVENT_CALENDAR", "primary")
+        return str(self.setting("GOOGLE_CALENDAR_DEFAULT_EVENT_CALENDAR", ("defaultEventCalendar",), "primary"))
 
 
 @dataclass
@@ -160,7 +168,7 @@ def parse_args() -> argparse.Namespace:
     event.add_argument(
         "--calendar",
         default=None,
-        help="Calendar name, id, primary, or default. Defaults to GOOGLE_CALENDAR_DEFAULT_EVENT_CALENDAR or primary.",
+        help="Calendar name, id, primary, or default. Defaults to calendar config defaultEventCalendar or primary.",
     )
     event.add_argument("--dry-run", action="store_true")
     event.add_argument("--apply", action="store_true")
@@ -183,110 +191,131 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Treat deleted mirror events as clearing the matching task date.",
     )
+    sync.add_argument(
+        "--prune-orphaned-task-events",
+        action="store_true",
+        help="Delete owned mirror events whose event IDs are not referenced by any current TaskNotes task.",
+    )
     sync.add_argument("--json", action="store_true", help="Emit JSON summary.")
 
     return parser.parse_args()
 
 
-def resolve_env_path(root: Path, raw: str) -> Path:
-    path = Path(os.path.expanduser(raw))
-    if not path.is_absolute():
-        path = root / path
-    return path
+def deep_merge_config(base: dict[str, Any], overrides: dict[str, Any]) -> dict[str, Any]:
+    result = copy.deepcopy(base)
+    for key, value in overrides.items():
+        if isinstance(value, dict) and isinstance(result.get(key), dict):
+            result[key] = deep_merge_config(result[key], value)
+        else:
+            result[key] = value
+    return result
 
 
-def parse_env_file(path: Path) -> dict[str, str]:
+def load_calendar_config(root: Path) -> dict[str, Any]:
+    path = root / CONFIG_RELATIVE_PATH
     if not path.exists():
-        return {}
-    values: dict[str, str] = {}
-    for line in path.read_text(encoding="utf-8").splitlines():
-        stripped = line.strip()
-        if not stripped or stripped.startswith("#"):
-            continue
-        if stripped.startswith("export "):
-            stripped = stripped[7:].strip()
-        if "=" not in stripped:
-            continue
-        key, value = stripped.split("=", 1)
-        key = key.strip()
-        value = value.strip().strip('"').strip("'")
-        if key:
-            values[key] = value
-    return values
+        return copy.deepcopy(DEFAULT_CALENDAR_CONFIG)
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise GCalError(f"Invalid calendar config JSON: {path}") from exc
+    if not isinstance(raw, dict):
+        raise GCalError(f"Calendar config must be a JSON object: {path}")
+    return deep_merge_config(DEFAULT_CALENDAR_CONFIG, raw)
 
 
 def load_env(root: Path) -> Env:
-    env_dir = root / "_master" / "env"
-    values = parse_env_file(env_dir / ".env.base")
-    values.update(parse_env_file(env_dir / ".env"))
-    return Env(root=root, env_dir=env_dir, values=values)
+    return Env(root=root, config=load_calendar_config(root))
 
 
-def require_client(env: Env) -> tuple[str, str]:
-    client_id = env.get("GOOGLE_ACCOUNT_CLIENT_ID", env.get("GOOGLE_CALENDAR_CLIENT_ID"))
-    client_secret = env.get("GOOGLE_ACCOUNT_CLIENT_SECRET", env.get("GOOGLE_CALENDAR_CLIENT_SECRET"))
-    if not client_id or not client_secret:
-        raise GCalError(
-            "Missing GOOGLE_ACCOUNT_CLIENT_ID or GOOGLE_ACCOUNT_CLIENT_SECRET. "
-            "Add them to _master/env/.env."
+def clean_query(query: dict[str, Any] | None) -> dict[str, Any]:
+    if not query:
+        return {}
+    return {key: value for key, value in query.items() if value is not None}
+
+
+def decode_path_part(value: str) -> str:
+    return urllib.parse.unquote(value)
+
+
+def gws_command_for_request(
+    method: str,
+    path: str,
+    query: dict[str, Any] | None,
+) -> tuple[list[str], dict[str, Any]]:
+    method = method.upper()
+    query_values = clean_query(query)
+    parts = [decode_path_part(part) for part in path.strip("/").split("/") if part]
+
+    if method == "GET" and parts == ["users", "me", "calendarList"]:
+        return ["calendarList", "list"], query_values
+    if method == "POST" and parts == ["calendars"]:
+        return ["calendars", "insert"], query_values
+    if method == "PATCH" and parts[:3] == ["users", "me", "calendarList"] and len(parts) == 4:
+        query_values["calendarId"] = parts[3]
+        return ["calendarList", "patch"], query_values
+
+    if len(parts) >= 3 and parts[0] == "calendars" and parts[2] == "events":
+        calendar_id = parts[1]
+        query_values["calendarId"] = calendar_id
+        if len(parts) == 3:
+            if method == "GET":
+                return ["events", "list"], query_values
+            if method == "POST":
+                return ["events", "insert"], query_values
+        if len(parts) == 4:
+            query_values["eventId"] = parts[3]
+            if method == "GET":
+                return ["events", "get"], query_values
+            if method == "PUT":
+                return ["events", "update"], query_values
+            if method == "DELETE":
+                return ["events", "delete"], query_values
+
+    raise GCalError(f"Unsupported Google Calendar API request for GWS: {method} {path}")
+
+
+def gws_error(stdout: str, stderr: str, returncode: int) -> GCalError:
+    message = (stderr or stdout or "").strip()
+    if returncode == 2 or "No encrypted credentials found" in message or "auth failed" in message.lower():
+        return GwsAuthError(
+            "GWS Calendar auth missing or invalid. Run `gws auth setup`, then "
+            "`gws auth login --scopes calendar,drive`."
         )
-    return client_id, client_secret
+    if "404" in message:
+        return GCalError(f"Google Calendar API error 404: {message}")
+    if "410" in message:
+        return GCalError(f"Google Calendar API error 410: {message}")
+    return GCalError(f"gws calendar failed with exit code {returncode}: {message}")
 
 
-def read_token(env: Env) -> dict[str, Any]:
-    if not env.token_path.exists():
-        raise GCalError("No Google token found. Run `vault gcal auth` first.")
-    return json.loads(env.token_path.read_text(encoding="utf-8"))
+def gws_api_request(
+    env: Env,
+    method: str,
+    path: str,
+    payload: dict[str, Any] | None = None,
+    query: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    if shutil.which("gws") is None:
+        raise GwsUnavailable("gws not found. Install dependencies, then run `gws auth setup`.")
 
+    command_parts, params = gws_command_for_request(method, path, query)
+    command = ["gws", "calendar", *command_parts, "--format", "json"]
+    if params:
+        command.extend(["--params", json.dumps(params, separators=(",", ":"))])
+    if payload is not None:
+        command.extend(["--json", json.dumps(payload, separators=(",", ":"))])
 
-def write_token(env: Env, token: dict[str, Any]) -> None:
-    env.token_path.parent.mkdir(parents=True, exist_ok=True)
-    env.token_path.write_text(json.dumps(token, indent=2, sort_keys=True), encoding="utf-8")
+    result = subprocess.run(command, cwd=env.root, text=True, capture_output=True)
+    if result.returncode != 0:
+        raise gws_error(result.stdout, result.stderr, result.returncode)
+    raw = result.stdout.strip()
+    if not raw:
+        return {}
     try:
-        env.token_path.chmod(0o600)
-    except OSError:
-        pass
-
-
-def token_expired(token: dict[str, Any]) -> bool:
-    return float(token.get("expires_at", 0)) < time.time() + 60
-
-
-def token_request(payload: dict[str, str]) -> dict[str, Any]:
-    body = urllib.parse.urlencode(payload).encode("utf-8")
-    request = urllib.request.Request(
-        TOKEN_URL,
-        data=body,
-        headers={"Content-Type": "application/x-www-form-urlencoded"},
-        method="POST",
-    )
-    with urllib.request.urlopen(request, timeout=30) as response:
-        return json.loads(response.read().decode("utf-8"))
-
-
-def refresh_token(env: Env, token: dict[str, Any]) -> dict[str, Any]:
-    client_id, client_secret = require_client(env)
-    if not token.get("refresh_token"):
-        raise GCalError("Stored token has no refresh_token. Run `vault gcal auth` again.")
-    refreshed = token_request(
-        {
-            "client_id": client_id,
-            "client_secret": client_secret,
-            "refresh_token": token["refresh_token"],
-            "grant_type": "refresh_token",
-        }
-    )
-    token.update(refreshed)
-    token["expires_at"] = time.time() + int(refreshed.get("expires_in", 3600))
-    write_token(env, token)
-    return token
-
-
-def access_token(env: Env) -> str:
-    token = read_token(env)
-    if token_expired(token):
-        token = refresh_token(env, token)
-    return str(token["access_token"])
+        return json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise GCalError(f"gws calendar returned invalid JSON: {raw}") from exc
 
 
 def api_request(
@@ -296,26 +325,7 @@ def api_request(
     payload: dict[str, Any] | None = None,
     query: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    url = f"{API_ROOT}{path}"
-    if query:
-        url += "?" + urllib.parse.urlencode({k: v for k, v in query.items() if v is not None})
-    data = json.dumps(payload).encode("utf-8") if payload is not None else None
-    request = urllib.request.Request(
-        url,
-        data=data,
-        method=method,
-        headers={
-            "Authorization": f"Bearer {access_token(env)}",
-            "Content-Type": "application/json",
-        },
-    )
-    try:
-        with urllib.request.urlopen(request, timeout=30) as response:
-            raw = response.read().decode("utf-8")
-            return json.loads(raw) if raw else {}
-    except urllib.error.HTTPError as exc:
-        raw = exc.read().decode("utf-8", errors="replace")
-        raise GCalError(f"Google Calendar API error {exc.code}: {raw}") from exc
+    return gws_api_request(env, method, path, payload=payload, query=query)
 
 
 def api_request_optional(env: Env, method: str, path: str, **kwargs: Any) -> dict[str, Any] | None:
@@ -327,65 +337,19 @@ def api_request_optional(env: Env, method: str, path: str, **kwargs: Any) -> dic
         raise
 
 
-class OAuthHandler(BaseHTTPRequestHandler):
-    code: str | None = None
-    error: str | None = None
-
-    def do_GET(self) -> None:  # noqa: N802
-        parsed = urllib.parse.urlparse(self.path)
-        params = urllib.parse.parse_qs(parsed.query)
-        OAuthHandler.code = params.get("code", [None])[0]
-        OAuthHandler.error = params.get("error", [None])[0]
-        body = b"Google Calendar authorization complete. You can close this tab."
-        self.send_response(200)
-        self.send_header("Content-Type", "text/plain")
-        self.send_header("Content-Length", str(len(body)))
-        self.end_headers()
-        self.wfile.write(body)
-
-    def log_message(self, format: str, *args: Any) -> None:
-        return
-
-
 def command_auth(env: Env) -> int:
-    client_id, client_secret = require_client(env)
-    server = HTTPServer(("127.0.0.1", 0), OAuthHandler)
-    redirect_uri = f"http://127.0.0.1:{server.server_port}/"
-    query = urllib.parse.urlencode(
-        {
-            "client_id": client_id,
-            "redirect_uri": redirect_uri,
-            "response_type": "code",
-            "scope": SCOPE,
-            "access_type": "offline",
-            "prompt": "consent",
-        }
-    )
-    url = f"{AUTH_URL}?{query}"
-    print(f"Opening browser for Google Calendar authorization:\n{url}")
-    webbrowser.open(url)
-    server.handle_request()
-    if OAuthHandler.error:
-        raise GCalError(f"OAuth failed: {OAuthHandler.error}")
-    if not OAuthHandler.code:
-        raise GCalError("OAuth did not return an authorization code.")
-    token = token_request(
-        {
-            "client_id": client_id,
-            "client_secret": client_secret,
-            "code": OAuthHandler.code,
-            "grant_type": "authorization_code",
-            "redirect_uri": redirect_uri,
-        }
-    )
-    token["expires_at"] = time.time() + int(token.get("expires_in", 3600))
-    write_token(env, token)
-    print(f"Wrote token to {env.token_path}")
+    _ = env
+    print("Google Calendar auth uses GWS.")
+    print("Run:")
+    print("  gws auth setup")
+    print("  gws auth login --scopes calendar,drive")
+    print("  vault gcal calendars ensure --apply")
     return 0
 
 
 def calendar_name(env: Env, key: str) -> str:
-    return env.get(CALENDAR_ENV_KEYS[key], DEFAULT_CALENDAR_NAMES[key])
+    env_key, config_keys, default = CALENDAR_NAME_CONFIG[key]
+    return str(env.setting(env_key, config_keys, default))
 
 
 def list_calendars(env: Env) -> list[dict[str, Any]]:
@@ -485,8 +449,8 @@ def date_or_datetime_to_event(value: str, env: Env, duration_minutes: int) -> tu
     start_dt = parse_local_datetime(value, env)
     end_dt = start_dt + dt.timedelta(minutes=duration_minutes)
     return (
-        {"dateTime": start_dt.isoformat(), "timeZone": env.get("GOOGLE_CALENDAR_TIME_ZONE", "Africa/Johannesburg")},
-        {"dateTime": end_dt.isoformat(), "timeZone": env.get("GOOGLE_CALENDAR_TIME_ZONE", "Africa/Johannesburg")},
+        {"dateTime": start_dt.isoformat(), "timeZone": env.timezone_name},
+        {"dateTime": end_dt.isoformat(), "timeZone": env.timezone_name},
     )
 
 
@@ -607,8 +571,8 @@ def event_payload(
     payload: dict[str, Any] = {
         "summary": title,
         "description": description,
-        "start": {"dateTime": start.isoformat(), "timeZone": env.get("GOOGLE_CALENDAR_TIME_ZONE", "Africa/Johannesburg")},
-        "end": {"dateTime": end.isoformat(), "timeZone": env.get("GOOGLE_CALENDAR_TIME_ZONE", "Africa/Johannesburg")},
+        "start": {"dateTime": start.isoformat(), "timeZone": env.timezone_name},
+        "end": {"dateTime": end.isoformat(), "timeZone": env.timezone_name},
     }
     if private:
         payload["extendedProperties"] = {"private": private}
@@ -838,6 +802,98 @@ def delete_event(env: Env, calendar_id: str, event_id: str) -> None:
     )
 
 
+def event_private_properties(event: dict[str, Any]) -> dict[str, str]:
+    private = (event.get("extendedProperties") or {}).get("private") or {}
+    return {str(key): str(value) for key, value in private.items()}
+
+
+def event_needs_payload_refresh(event: dict[str, Any], payload: dict[str, Any]) -> bool:
+    if event.get("summary", "") != payload.get("summary", ""):
+        return True
+    if event.get("description", "") != payload.get("description", ""):
+        return True
+    event_private = event_private_properties(event)
+    desired_private = ((payload.get("extendedProperties") or {}).get("private") or {})
+    return any(event_private.get(str(key)) != str(value) for key, value in desired_private.items())
+
+
+def list_owned_task_events(env: Env, calendar_id: str) -> list[dict[str, Any]]:
+    events: list[dict[str, Any]] = []
+    page_token = None
+    while True:
+        result = api_request(
+            env,
+            "GET",
+            f"/calendars/{urllib.parse.quote(calendar_id, safe='')}/events",
+            query={
+                "singleEvents": "true",
+                "showDeleted": "false",
+                "privateExtendedProperty": f"syncOwner={SYNC_OWNER}",
+                "pageToken": page_token,
+            },
+        )
+        events.extend(result.get("items", []))
+        page_token = result.get("nextPageToken")
+        if not page_token:
+            return events
+
+
+def referenced_event_ids(tasks: list[TaskNote]) -> set[str]:
+    ids: set[str] = set()
+    for task in tasks:
+        for cfg in FIELD_CONFIG.values():
+            event_id = str(task.data.get(cfg["event_id"]) or "")
+            if event_id:
+                ids.add(event_id)
+    return ids
+
+
+def all_existing_task_event_ids(root: Path) -> set[str]:
+    ids: set[str] = set()
+    for path in sorted(root.glob("*/_obsidian/tasks/*.md")):
+        if path.parts[-4].startswith(".") or path.parts[-4].startswith("_"):
+            continue
+        if "/archive/" in path.as_posix():
+            continue
+        parsed = parse_frontmatter(path.read_text(encoding="utf-8"))
+        if not parsed:
+            continue
+        data = parsed[1]
+        tags = data.get("tags", [])
+        if "task" not in tags:
+            continue
+        for cfg in FIELD_CONFIG.values():
+            event_id = str(data.get(cfg["event_id"]) or "")
+            if event_id:
+                ids.add(event_id)
+    return ids
+
+
+def prune_orphaned_task_events(
+    env: Env,
+    calendar_ids: dict[str, str],
+    tasks: list[TaskNote],
+    apply: bool,
+) -> list[str]:
+    referenced_ids = referenced_event_ids(tasks) | all_existing_task_event_ids(env.root)
+    actions: list[str] = []
+    for field in ("scheduled", "due"):
+        calendar_id = calendar_ids.get(field)
+        if not calendar_id:
+            continue
+        for event in list_owned_task_events(env, calendar_id):
+            event_id = str(event.get("id") or "")
+            if event_private_properties(event).get("syncOwner") != SYNC_OWNER:
+                continue
+            if not event_id or event_id in referenced_ids:
+                continue
+            task_path = event_private_properties(event).get("taskPath", "")
+            if apply:
+                delete_event(env, calendar_id, event_id)
+            actions.append(f"prune-orphaned-task-event:{field}:{event_id}:{task_path}")
+    return actions
+
+
 def store_sync_metadata(task: TaskNote, field: str, event: dict[str, Any], value: str, now: str) -> None:
     cfg = FIELD_CONFIG[field]
     set_frontmatter_value(task, cfg["event_id"], str(event["id"]))
@@ -929,6 +985,11 @@ def sync_task_field(
             store_sync_metadata(task, field, event, event_value, now)
             dirty = True
         return f"update-task-from-event:{field}:{task.rel_path}", dirty
+    payload = task_event_payload(task, field, env)
+    if event_needs_payload_refresh(event, payload):
+        if apply:
+            update_event(env, calendar_id, event_id, payload)
+        return f"refresh-event-metadata:{field}:{task.rel_path}", dirty
     return f"unchanged:{field}:{task.rel_path}", dirty
 
 
@@ -955,7 +1016,8 @@ def command_sync_tasks(env: Env, args: argparse.Namespace) -> int:
     now = dt.datetime.now(env.timezone).isoformat(timespec="seconds")
     actions: list[str] = []
     dirty_tasks: set[Path] = set()
-    for task in read_tasks(env.root):
+    tasks = read_tasks(env.root)
+    for task in tasks:
         for field in ("scheduled", "due"):
             if field not in calendar_ids:
                 actions.append(f"skip-missing-calendar:{field}:{task.rel_path}")
@@ -974,6 +1036,8 @@ def command_sync_tasks(env: Env, args: argparse.Namespace) -> int:
                 dirty_tasks.add(task.path)
         if apply and task.path in dirty_tasks:
             write_task(task)
+    if args.prune_orphaned_task_events:
+        actions.extend(prune_orphaned_task_events(env, calendar_ids, tasks, apply))
 
     summary = {
         "apply": apply,

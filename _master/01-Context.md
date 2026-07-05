@@ -175,43 +175,7 @@ Reusable cross-context assets, agent skills, Mac automation, scripts, generated 
 
 ## Master Folder
 
-`_master` is the operating layer.
-
-Important paths:
-
-- `_master/00-StartHere.md`: walkthrough for the operating systems layer.
-- `_master/01-Context.md`: this note.
-- `_master/02-Identity.md`: identity system rollup.
-- `_master/03-Momentum.md`: momentum/accountability/social selling system rollup.
-- `_master/system/context/OBSIDIAN-PROFILE.md`: Obsidian profile, plugin, template, color, icon, Bases, calendar, and Sync Embeds reference.
-- `_master/system/context/SCRIPTS.md`: main scripts and normal refresh workflows.
-- `_master/system/context/SCRIPT-REFERENCE.md`: fuller script reference, including secondary and one-time scripts.
-- `_master/_obsidian/notes/operating-methods`: durable source notes for elimination, dreamlining, automation, and mini-retirement principles.
-- `_master/system/bootstrap/init_vault.sh`: first-run fresh/exported vault setup entrypoint.
-- `_master/system/bootstrap/bootstrap_vault.py`: generic bootstrap CLI.
-- `_master/system/bootstrap/bootstrap-export.json`: public export config, including context folder output mapping and export root.
-- `_master/system/bootstrap/AGENTS.template.md`: editable source for generated root agent instructions.
-- `_master/system/bootstrap/generate_agents.py`: generates root `AGENTS.md` and agent symlinks from discovered context folders.
-- `_master/system/bootstrap/install_dependencies.sh`: local dependency installer/checker for vault bootstrap commands.
-- `_master/system/bootstrap/install_vault_command.py`: installs the `vault` dispatcher into `~/.local/bin`.
-- `_master/system/bootstrap/sync-agent-skills.sh`: links local coding-agent skill folders to `_master/agents/skills`.
-- `_master/system/scripts/bootstrap_export.py`: exports the public bootstrap vault from the current vault.
-- `_master/system/scripts/upgrade.py`: upgrades public bootstrap installs from hidden upstream Git state outside iCloud.
-- `_master/system/scripts/vault.py`: terminal dispatcher installed as `vault` in `~/.local/bin`.
-- `_master/system/scripts/content.py`: creates current fixed 4-week content schedule notes from enabled cadence JSON.
-- `_master/system/scripts/periodic.py`: creates agent-readable periodic rollups for the current active or selected context folder set.
-- `_master/system/scripts/delete_master_periodic_notes_for_now.py`: deletes current generated master periodic rollups, and can also clean selected context folder source notes.
-- `_master/system/scripts/attachments.py`: dry-run, apply, and verify note attachment routing across root folders. Reports and quarantine output go to `~/Downloads/vault-generated/`.
-- `_master/system/scripts/context.py`: creates compact agent-readable context.
-- `_master/system/scripts/folder.py`: creates/registers a new context folder from the scaffold template.
-- `_master/Dashboard.md`: generated refresh dashboard with current periodic, content schedule, context folder note, and key Base links.
-- `_master/_obsidian/bases`: master dashboards.
-- `_master/system/context/*.md`: generated agent-readable system packets and periodic rollups.
-- `_master/_obsidian/bases`: master TaskNotes command views.
-- `_master/system/context`: generated agent context, realized system notes, agent periodic rollups, and durable agent operating notes.
-- `_master/_obsidian/templates/shared`: shared non-periodic templates, system templates, and shared task template.
-- `_master/_obsidian/templates/shared/content`: shared content and publication templates.
-- `_master/_obsidian/excalidraw`: master Excalidraw folder and source for shared Excalidraw scripts copied into each context folder.
+`_master` is the operating layer. Use `[[_master/README|_master README]]` for the current folder map, tooling SOP, skill SOP, and docs routing.
 
 Generated files contain a managed marker. The bootstrap updates generated files, but skips existing non-managed files.
 
@@ -220,6 +184,8 @@ Root agent files:
 - `AGENTS.md`: generated instructions for Codex, Claude, and other coding agents. Edit `_master/system/bootstrap/AGENTS.template.md`, then rerun `python3 _master/system/bootstrap/generate_agents.py`.
 - `CLAUDE.md`: symlink to `AGENTS.md`.
 - `_master/agents/skills`: active shared agent skills.
+- `_master/agents/skill-packs`: manual-only skill pack sources, symlinked through `_master/agents/skills/manual` with implicit invocation disabled.
+- `_master/agents/skills-dump`: dormant non-discoverable skill storage.
 - `.agents/skills`: real repo-local folder for repo-scoped skills; never symlink this path.
 - `.claude/skills`: symlink to `../.agents/skills` so Claude reads the same repo-scoped skills.
 
@@ -378,12 +344,12 @@ Google Calendar task mirrors:
 - `Scheduled Tasks`: two-way mirror of TaskNotes `scheduled` values.
 - `Due Tasks`: two-way mirror of TaskNotes `due` values.
 - Use `vault gcal list --days 7 --calendar all --json` when agents need low-context calendar awareness.
-- Use `vault gcal create-event` for concrete appointments, travel, meetings, reservations, and dated personal or business events; it writes to the default calendar (`primary`) unless `--calendar` or `GOOGLE_CALENDAR_DEFAULT_EVENT_CALENDAR` says otherwise.
+- Use `vault gcal create-event` for concrete appointments, travel, meetings, reservations, and dated personal or business events; it writes to the default calendar (`primary`) unless `--calendar` or `_master/system/config/calendar.json` says otherwise.
 - Use `vault gcal create-block` only when the user explicitly asks for time blocking or broad planning blocks on `Time Blocks`.
 - Broad work planning should usually use `Time Blocks`; avoid adding `scheduled` to ordinary tasks unless the task truly needs a specific work date/time.
 - Native TaskNotes Google export should stay disabled unless intentionally replacing the vault mirror, because the custom mirror owns the separate `Scheduled Tasks` and `Due Tasks` calendars.
 - `vault gcal calendars ensure --apply` sets default popup reminders: `Time Blocks` at event start, `Scheduled Tasks` at event start, and `Due Tasks` at event start plus 25 minutes before. The Google Calendar API does not expose the UI-only all-day default reminder time; set "0 days before at 9:00 AM" manually in Google Calendar if needed.
-- Context Nine runs `vault gcal sync-tasks --apply` every 5 minutes while Obsidian is open. `vault refresh` also runs the sync once before regenerating context.
+- Context Nine runs `vault gcal sync-tasks --apply` every 5 minutes while Obsidian is open. `vault refresh` runs `vault gcal sync-tasks --apply --prune-orphaned-task-events` once before regenerating context.
 
 TaskNotes time properties use the plugin's native frontmatter names:
 
@@ -680,7 +646,7 @@ impression -> business
 
 The export copies root agent wiring, root `.obsidian` profile files with configured exclusions, `_master` minus generated outputs, empty `_library`, and `_wiki/AGENTS.md`. Context exports create sanitized public folder notes named after the target folder and copy public `_obsidian` Bases and templates.
 
-The root public `README.md` is exported from `_master/system/bootstrap/README-bootstrap.md`. It documents the new-machine clone-to-iCloud flow. Internal bootstrap/export mechanics live in `_master/system/bootstrap/bootstrapdocs.md`. `--force` mirrors export-owned content into `~/Code/vault-public` without deleting the export root or repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, or contribution docs. Export ownership is tracked in `.bootstrap-export-manifest.json`; legacy exports without a manifest are cleaned at the export-root child level while preserving repo metadata.
+The root public `README.md` is exported from `_master/system/bootstrap/bootstrap-public-README.md`. It documents the new-machine clone-to-iCloud flow. Internal bootstrap/export mechanics live in `_master/system/README-vault-system-and-bootstrapped.md`. `--force` mirrors export-owned content into `~/Code/vault-public` without deleting the export root or repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, or contribution docs. Export ownership is tracked in `.bootstrap-export-manifest.json`; legacy exports without a manifest are cleaned at the export-root child level while preserving repo metadata.
 
 Root `.obsidian` is exported through the bootstrap exporter with sensitive path-name exclusions. Plugin directories export public metadata/styles and non-sensitive settings; Context Nine and Relay also export their bundles. Third-party plugin bundles and integration config files that may contain local settings or credentials are excluded from public export.
 

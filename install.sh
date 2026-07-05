@@ -163,3 +163,6 @@ fi
 echo ""
 echo "Install complete."
 echo "Vault: ${TARGET}"
+if ! run_as_install_user "${PYTHON_BIN}" "${TARGET}/_master/system/bootstrap/print_post_install_next_steps.py" --root "${TARGET}"; then
+  echo "Warning: Could not print optional post-install next steps." >&2
+fi

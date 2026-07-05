@@ -22,11 +22,20 @@ def run_optional(command: list[str], root: Path, label: str) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Refresh vault agent context and configured sources.")
+    parser = argparse.ArgumentParser(description="Refresh vault agent context and scheduled mirrors.")
     parser.add_argument("--root", default=None, help="Vault root. Defaults to auto-discovery.")
-    parser.add_argument("--skip-brain-dump", action="store_true", help="Skip configured Brain Dump ingestion.")
+    parser.add_argument("--sync-brain-dump", action="store_true", help="Ingest configured Brain Dump Apple Note.")
+    parser.add_argument(
+        "--skip-brain-dump",
+        action="store_true",
+        help="Compatibility no-op. Brain Dump ingestion is skipped unless --sync-brain-dump is passed.",
+    )
     parser.add_argument("--skip-gcal", action="store_true", help="Skip Google Calendar TaskNotes date mirror.")
-    parser.add_argument("--no-clear-brain-dump", action="store_true", help="Ingest Brain Dump without clearing the source note.")
+    parser.add_argument(
+        "--no-clear-brain-dump",
+        action="store_true",
+        help="When used with --sync-brain-dump, ingest Brain Dump without clearing the source note.",
+    )
     parser.add_argument("--all", action="store_true", help="Refresh all context folders, passed through to context.py.")
     parser.add_argument("--context-folders", default=None, help="Comma-separated context folders, passed through to context.py.")
     parser.add_argument("--date", default=None, help="Refresh date, passed through to context.py.")
@@ -38,7 +47,7 @@ def main(argv: list[str] | None = None) -> int:
     root = resolve_vault_root(args.root, __file__)
     script_dir = root / "_master/system/scripts"
 
-    if not args.skip_brain_dump:
+    if args.sync_brain_dump:
         ingest_command = [sys.executable, str(script_dir / "brain_dump.py"), "--root", str(root)]
         if args.no_clear_brain_dump:
             ingest_command.append("--no-clear")
@@ -46,7 +55,15 @@ def main(argv: list[str] | None = None) -> int:
 
     if not args.skip_gcal:
         run_optional(
-            [sys.executable, str(script_dir / "gcal.py"), "--root", str(root), "sync-tasks", "--apply"],
+            [
+                sys.executable,
+                str(script_dir / "gcal.py"),
+                "--root",
+                str(root),
+                "sync-tasks",
+                "--apply",
+                "--prune-orphaned-task-events",
+            ],
             root,
             "Google Calendar task sync",
         )

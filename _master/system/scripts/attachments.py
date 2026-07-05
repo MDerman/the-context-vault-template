@@ -34,6 +34,7 @@ TOP_ROOTS = {
     "personal-brand",
     "business",
     "dev",
+    "ctx9",
     "claudeche",
     "_library",
     "_master",
@@ -91,6 +92,7 @@ IMPORT_MARKERS = {
 }
 
 MASTER_ATTACHMENTS = ROOT / "_master" / "_obsidian" / "attachments"
+MASTER_INBOX = MASTER_ATTACHMENTS / "_inbox"
 ARTIFACT_ROOT = Path.home() / "Downloads" / "vault-generated"
 REPORT_ROOT = ARTIFACT_ROOT / "import-reports"
 QUARANTINE_ROOT = ARTIFACT_ROOT / "attachment-cleanup-quarantine"
@@ -106,6 +108,7 @@ MARKDOWN_ESCAPE_RE = re.compile(r"\\([\\`*_{}\[\]()#+\-.!_])")
 IMPORT_MARKER_MARKDOWN_RE = re.compile(
     r"(!?)\[([^\]]*)\]\(([^)\n]*(?:notion-import|notion-task-import)[^)\n]*)\)"
 )
+GENERIC_PASTE_RE = re.compile(r"^(?:Pasted image|image)(?:\s+(\d{8,14}))?$", re.IGNORECASE)
 
 
 @dataclass(frozen=True)
@@ -166,6 +169,22 @@ def clean_name(name: str) -> str:
 
 def clean_parts(parts: tuple[str, ...]) -> tuple[str, ...]:
     return tuple(clean_name(part) for part in parts if part not in {"notion-import", "notion-task-import", "_inbox"})
+
+
+def slugify(value: str) -> str:
+    cleaned = re.sub(r"[^A-Za-z0-9]+", "-", value).strip("-").lower()
+    return cleaned or "attachment"
+
+
+def clean_master_inbox_name(source: Path, note: Path | None) -> str:
+    stem, suffix = os.path.splitext(clean_name(source.name))
+    match = GENERIC_PASTE_RE.match(stem)
+    if not match:
+        return stem + suffix
+    prefix = slugify(note.stem if note else "master-inbox")
+    timestamp = match.group(1)
+    suffix_part = f"-{timestamp}" if timestamp else ""
+    return f"{prefix}-pasted-image{suffix_part}{suffix}"
 
 
 def is_local_target(target: str) -> bool:
@@ -423,12 +442,15 @@ def resolve_link_target(note: Path, target: str, basename_index: dict[str, list[
     return None
 
 
-def target_relative_for_source(source: Path, note_root: str, reason: str) -> tuple[str, ...]:
+def target_relative_for_source(source: Path, note_root: str, reason: str, note: Path | None = None) -> tuple[str, ...]:
     source = source.resolve()
     import_match = relative_to_first_matching_parent(source, IMPORT_FOLDERS)
     if import_match:
         _parent, source_rel = import_match
         return clean_parts(source_rel.parts)
+
+    if is_under(source, MASTER_INBOX):
+        return (clean_master_inbox_name(source, note),)
 
     if is_under(source, MASTER_ATTACHMENTS):
         source_rel = source.relative_to(MASTER_ATTACHMENTS)
@@ -528,6 +550,9 @@ def should_migrate_reference(note: Path, source: Path) -> tuple[bool, str, bool]
     if relative_to_first_matching_parent(source, IMPORT_FOLDERS):
         return True, "import-folder-reference", True
 
+    if is_under(source, MASTER_INBOX):
+        return True, "master-inbox-reference", True
+
     if is_under(source, MASTER_ATTACHMENTS) and "_inbox" not in source.relative_to(MASTER_ATTACHMENTS).parts:
         if note_root != "_master":
             return True, "_master-attachment-cross-root-reference", False
@@ -609,8 +634,9 @@ def plan_destination(
     reason: str,
     remove_source: bool,
     used: dict[Path, Path],
+    note: Path | None = None,
 ) -> PlannedDestination:
-    relative_parts = target_relative_for_source(source, note_root, reason)
+    relative_parts = target_relative_for_source(source, note_root, reason, note)
     intended = attachment_dir(note_root).joinpath(*relative_parts)
     destination = unique_destination(source, intended, used)
     return PlannedDestination(
@@ -698,7 +724,7 @@ def build_plan() -> tuple[
                 continue
             key = (source.resolve(), note_root)
             if key not in planned:
-                planned[key] = plan_destination(source, note_root, reason, remove_source, used_destinations)
+                planned[key] = plan_destination(source, note_root, reason, remove_source, used_destinations, note)
                 stats[f"planned_{reason}"] += 1
             note_replacements[note][(span.start, span.end)] = replacement_for(span, planned[key].destination)
             stats["planned_link_rewrites"] += 1
@@ -709,7 +735,7 @@ def build_plan() -> tuple[
             continue
         key = (source.resolve(), note_root)
         if key not in planned:
-            planned[key] = plan_destination(source, note_root, reason, True, used_destinations)
+            planned[key] = plan_destination(source, note_root, reason, True, used_destinations, note)
             stats[f"planned_{reason}"] += 1
 
     return planned, note_replacements, unresolved, stats
@@ -723,7 +749,7 @@ def ensure_attachment_dirs(dry_run: bool, stats: Counter) -> None:
             stats["attachment_dirs_created"] += 1
             if not dry_run:
                 directory.mkdir(parents=True, exist_ok=True)
-    inbox = MASTER_ATTACHMENTS / "_inbox"
+    inbox = MASTER_INBOX
     if not inbox.exists():
         stats["attachment_inbox_created"] += 1
         if not dry_run:
@@ -782,10 +808,11 @@ def cleanup_sources(
     used_quarantine: set[Path] = set()
     quarantine_manifest: list[dict[str, str]] = []
 
-    for import_folder in IMPORT_FOLDERS:
-        if not import_folder.exists():
+    cleanup_folders = IMPORT_FOLDERS + [MASTER_INBOX]
+    for cleanup_folder in cleanup_folders:
+        if not cleanup_folder.exists():
             continue
-        for source in sorted(import_folder.rglob("*")):
+        for source in sorted(cleanup_folder.rglob("*")):
             if not source.is_file():
                 continue
             resolved = source.resolve()
@@ -801,7 +828,7 @@ def cleanup_sources(
                 {
                     "source": rel(source),
                     "destination": rel(target),
-                    "reason": "unreferenced-import-file",
+                    "reason": "unreferenced-staging-file",
                     "size": str(source.stat().st_size),
                 }
             )

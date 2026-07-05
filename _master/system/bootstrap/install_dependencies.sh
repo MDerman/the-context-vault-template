@@ -22,7 +22,8 @@ usage() {
   cat <<'EOF'
 Usage: install_dependencies.sh [--dry-run]
 
-Installs/checks local command-line dependencies for this vault bootstrap.
+Installs/checks local command-line dependencies for this vault bootstrap from
+_master/system/bootstrap/Brewfile.
 
 Requires Homebrew. If Homebrew is missing, install it with:
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -80,26 +81,29 @@ EOF
   fi
 }
 
-install_or_upgrade_formula() {
-  local formula="$1"
-  if brew list --formula "$formula" >/dev/null 2>&1; then
-    echo "$formula already installed"
-    run brew upgrade "$formula" || true
-  else
-    run brew install "$formula"
-  fi
-}
-
 need_command_line_tools
 need_homebrew
 
-install_or_upgrade_formula git
-install_or_upgrade_formula git-lfs
-install_or_upgrade_formula python@3.12
-install_or_upgrade_formula ripgrep
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BREWFILE="${SCRIPT_DIR}/Brewfile"
+
+if [[ ! -f "${BREWFILE}" ]]; then
+  echo "Missing Brewfile: ${BREWFILE}" >&2
+  exit 1
+fi
+
+run brew bundle install --file "${BREWFILE}"
 
 echo "Dependency check complete."
 python3 --version || true
 git --version || true
 git lfs version || true
+jq --version || true
 rg --version | head -1 || true
+rclone version | head -1 || true
+if command -v gws >/dev/null 2>&1; then
+  gws --version || true
+fi
+if [[ -d /Library/Filesystems/macfuse.fs ]]; then
+  echo "macFUSE installed"
+fi

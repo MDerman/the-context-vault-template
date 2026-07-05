@@ -1,0 +1,12 @@
+brew "git"
+brew "git-lfs"
+brew "jq"
+brew "python@3.12"
+brew "ripgrep"
+brew "rclone"
+# Provides Google Workspace CLI binary `gws`; do not replace with unrelated `gws` formula.
+brew "googleworkspace-cli"
+# Required by `gws auth setup` for OAuth client/project setup.
+cask "gcloud-cli"
+# Required for rclone Finder mounts.
+cask "macfuse"

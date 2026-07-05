@@ -18,6 +18,8 @@ _master/system/scripts/
 
 Vault Command Center command labels, argument arrays, and hover descriptions are shared through [[_master/system/scripts/vault-commands.json]]. Update that JSON when a cockpit-visible command description changes.
 
+For `_master` folder layout, tooling SOPs, and skill-pack rules, read [[_master/README]].
+
 Open only the script doc needed for the current task.
 
 ## Script Docs
@@ -26,6 +28,7 @@ Open only the script doc needed for the current task.
 - [[script-docs/Init Vault]]
 - [[script-docs/Bootstrap Export]]
 - [[script-docs/Public Vault Upgrade]]
+- [[script-docs/Dependency Repos]]
 - [[script-docs/Agent Skills Sync]]
 - [[script-docs/Refresh]]
 - [[script-docs/Agent Context]]

@@ -21,7 +21,9 @@ COMMANDS = {
     "periodic": SCRIPT_DIR / "periodic.py",
     "attachments": SCRIPT_DIR / "attachments.py",
     "backup": SCRIPT_DIR / "backup.py",
+    "backup-sync": SCRIPT_DIR / "backup_sync.py",
     "bootstrap-export": SCRIPT_DIR / "bootstrap_export.py",
+    "deps": SCRIPT_DIR / "deps.py",
     "epic": SCRIPT_DIR / "epic.py",
     "project": SCRIPT_DIR / "project.py",
     "task": SCRIPT_DIR / "task.py",
@@ -42,7 +44,7 @@ def print_help() -> None:
 
 Common commands:
   root         Print the current vault root path.
-  refresh      Ingest configured sources and regenerate agent context.
+  refresh      Regenerate agent context and scheduled mirrors.
   refresh-schedule  Register, unregister, or inspect the daily refresh LaunchAgent.
   sync         Import the configured Brain Dump Apple Note.
   context      Regenerate agent-readable context and dashboard files.
@@ -51,7 +53,9 @@ Common commands:
   periodic     Generate current agent periodic rollups.
   attachments  Dry-run, apply, or verify attachment routing.
   backup       Back up root .obsidian.
+  backup-sync  Configure and run optional rclone Google Drive backup/sync.
   bootstrap-export  Export the public bootstrap vault.
+  deps         Clone/pull external dependency repos and rebuild managed projections.
   epic         Create, rename, delete, list epics and sync epic task Bases.
   project      Create and list project notes.
   task         Create TaskNotes tasks with validated project/epic links.
@@ -70,11 +74,17 @@ Examples:
   vault refresh-schedule register
   vault refresh-schedule unregister
   vault refresh --all
+  vault refresh --sync-brain-dump
   vault inventory
   vault task create business "Follow up with partner" --project "Partnerships" --epic "Growth"
   vault project create business "New Project" --epic "Growth"
   vault attachments --verify-only
+  vault backup-sync setup
+  vault backup-sync status
+  vault backup-sync shared-drives
   vault bootstrap-export --dry-run
+  vault deps status
+  vault deps sync --dry-run
   vault folder register business
   vault folder unregister business --dry-run
   vault folder remove business --dry-run

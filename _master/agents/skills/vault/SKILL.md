@@ -59,19 +59,20 @@ Create specific calendar events on the default Google Calendar:
 vault gcal create-event --title "Event title" --start "2026-06-02T19:30" --end "2026-06-02T20:30" --apply
 ```
 
-Use `vault gcal create-event` for appointments, travel, meetings, reservations, and other concrete dated events. It writes to `primary` unless `--calendar` or `GOOGLE_CALENDAR_DEFAULT_EVENT_CALENDAR` says otherwise.
+Use `vault gcal create-event` for appointments, travel, meetings, reservations, and other concrete dated events. It writes to `primary` unless `--calendar` or `_master/system/config/calendar.json` says otherwise.
 
 Use `vault gcal create-block` only when user explicitly asks for time blocking or broad planning blocks on `Time Blocks`.
 
 ## Skills
 
 Active shared agent skills live in `_master/agents/skills`.
+Manual-only discoverable skills live in `_master/agents/skill-packs` and are symlinked through `_master/agents/skills/manual`. Each manual-only skill must include `agents/openai.yaml` with `policy.allow_implicit_invocation: false`.
 
 Repo-local `.agents/skills` folders are real directories reserved for repo-scoped skills and should not be symlinked. Repo `.claude/skills` may symlink to `../.agents/skills` so Claude reads those same repo-scoped skills.
 
 If user asks to create or update an active skill, work there.
 
-If user asks to store a skill but not make it active, use `_master/agents/skills-dump`.
+If user asks to store a skill but not make it discoverable, use `_master/agents/skills-dump`.
 
 After changing skills, run `vault context` only if agent-readable generated docs need refresh.
 

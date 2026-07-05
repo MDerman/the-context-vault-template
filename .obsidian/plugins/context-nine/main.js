@@ -1265,8 +1265,9 @@ var FALLBACK_VAULT_COMMANDS = [
   {
     id: "refresh",
     label: "Refresh",
-    description: "Ingest configured Apple Notes, then regenerate agent context.",
+    description: "Run Google Calendar task sync and regenerate agent context.",
     args: ["refresh"],
+    cockpit: true,
     palette: true
   },
   {
@@ -1289,7 +1290,8 @@ var FALLBACK_VAULT_COMMANDS = [
     label: "Sync Apple Notes",
     description: "Import the configured Apple Note into the vault inbox.",
     args: ["sync"],
-    aliases: ["apple"]
+    aliases: ["apple"],
+    cockpit: true
   },
   {
     id: "context",
@@ -1521,10 +1523,21 @@ var VaultCockpitView = class extends import_obsidian5.ItemView {
     containerEl.toggleClass("is-actions-expanded", this.actionsExpanded);
     this.buttons.clear();
     const primaryRow = containerEl.createDiv({ cls: "omp-vault-cockpit-primary-row" });
-    const refreshCommand = (_a = this.findCommand("refresh")) != null ? _a : this.commands[0];
-    if (refreshCommand) {
-      const refreshButton = this.createCommandButton(primaryRow, refreshCommand, "omp-vault-cockpit-refresh");
-      this.buttons.set(refreshCommand.id, refreshButton);
+    const primaryActions = primaryRow.createDiv({ cls: "omp-vault-cockpit-primary-actions" });
+    const cockpitCommands = this.commands.filter((command) => command.cockpit);
+    const fallbackPrimaryCommand = (_a = this.findCommand("refresh")) != null ? _a : this.commands[0];
+    const primaryCommands = cockpitCommands.length > 0 ? cockpitCommands : fallbackPrimaryCommand ? [fallbackPrimaryCommand] : [];
+    for (const command of primaryCommands) {
+      const commandButton = this.createCommandButton(
+        primaryActions,
+        command,
+        [
+          "omp-vault-cockpit-primary-command",
+          command.id === "refresh" ? "omp-vault-cockpit-refresh" : "",
+          command.id === "sync" ? "omp-vault-cockpit-sync-icon" : ""
+        ].filter(Boolean).join(" ")
+      );
+      this.buttons.set(command.id, commandButton);
     }
     this.statusEl = primaryRow.createDiv({ cls: "omp-vault-cockpit-status", text: labelForStatus(this.status) });
     this.statusEl.dataset.status = this.status;
@@ -1553,14 +1566,18 @@ var VaultCockpitView = class extends import_obsidian5.ItemView {
     this.renderStatus();
   }
   createCommandButton(parent, command, extraClass = "") {
+    const iconOnly = command.id === "sync";
     const button = parent.createEl("button", {
       cls: `omp-vault-cockpit-command ${extraClass}`.trim(),
-      text: command.label,
+      text: iconOnly ? "" : command.label,
       attr: {
         title: command.description,
         "aria-label": command.description
       }
     });
+    if (iconOnly) {
+      (0, import_obsidian5.setIcon)(button, "sticky-note");
+    }
     button.addEventListener("click", () => {
       this.runCommand(command);
     });

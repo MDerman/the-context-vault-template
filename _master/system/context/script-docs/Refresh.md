@@ -10,7 +10,7 @@ Current manual refresh:
 vault refresh
 ```
 
-The refresh wrapper ingests the configured Brain Dump Apple Note, runs the Google Calendar TaskNotes date mirror, regenerates agent context, then runs best-effort local Git maintenance.
+The refresh wrapper runs the Google Calendar TaskNotes date mirror with orphan mirror-event pruning, regenerates agent context, then runs best-effort local Git maintenance. It does not ingest the Brain Dump Apple Note unless `--sync-brain-dump` is passed.
 
 Register the local daily refresh LaunchAgent:
 
@@ -46,10 +46,16 @@ Attachments are copied to:
 _master/system/inbox/BRAIN_DUMP_ATTACHMENTS/
 ```
 
-After a successful write, the Apple Note body is cleared back to a blank placeholder. To ingest without clearing Brain Dump:
+After a successful write, the Apple Note body is cleared back to a blank placeholder. To import Brain Dump during refresh:
 
 ```bash
-vault refresh --no-clear-brain-dump
+vault refresh --sync-brain-dump
+```
+
+To ingest without clearing Brain Dump:
+
+```bash
+vault refresh --sync-brain-dump --no-clear-brain-dump
 ```
 
 To refresh all context folders:
@@ -58,7 +64,7 @@ To refresh all context folders:
 vault refresh --all
 ```
 
-To skip Brain Dump ingestion:
+Brain Dump ingestion is skipped by default. The old compatibility flag is still accepted:
 
 ```bash
 vault refresh --skip-brain-dump

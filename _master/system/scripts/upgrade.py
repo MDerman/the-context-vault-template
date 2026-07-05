@@ -27,6 +27,7 @@ POLICY_PATH = BOOTSTRAP_STATE / "policy.json"
 RELEASE_PATH = BOOTSTRAP_STATE / "release.json"
 REPORT_ROOT = BOOTSTRAP_STATE / "upgrade-reports"
 EXPORT_MANIFEST_PATH = BOOTSTRAP_STATE / "export-manifest.json"
+DEPS_SCRIPT = Path("_master/system/scripts/deps.py")
 LEGACY_INSTALL_PATH = Path(".vault-bootstrap/install.json")
 LEGACY_POLICY_PATH = Path(".vault-bootstrap/policy.json")
 LEGACY_RELEASE_PATH = Path(".vault-bootstrap/release.json")
@@ -428,6 +429,21 @@ def run_migrations(root: Path, policy: dict[str, Any], report_dir: Path, apply: 
     return results
 
 
+def run_dependency_sync(root: Path, apply: bool) -> dict[str, Any]:
+    script = root / DEPS_SCRIPT
+    mode = "--apply" if apply else "--dry-run"
+    result: dict[str, Any] = {"path": DEPS_SCRIPT.as_posix(), "mode": mode}
+    if not script.exists():
+        result["result"] = "missing"
+        return result
+    completed = run([sys.executable, str(script), "sync", mode, "--root", str(root)], check=False)
+    result["returncode"] = completed.returncode
+    result["stdout"] = completed.stdout.strip()
+    result["stderr"] = completed.stderr.strip()
+    result["result"] = "ok" if completed.returncode == 0 else "failed"
+    return result
+
+
 def latest_report(root: Path) -> Path | None:
     reports: list[Path] = []
     for rel_root in [REPORT_ROOT, LEGACY_REPORT_ROOT]:
@@ -487,6 +503,7 @@ def run_upgrade(root: Path, apply: bool) -> int:
         "changes": entries,
         "migrations": [],
         "state_migration": [],
+        "dependencies": {},
     }
     report_path = write_report(root, report_payload)
 
@@ -503,10 +520,42 @@ def run_upgrade(root: Path, apply: bool) -> int:
         migrations = run_migrations(root, policy, report_path.parent, apply=False)
 
     report_payload["migrations"] = migrations
+    dependencies = run_dependency_sync(root, apply=apply)
+    report_payload["dependencies"] = dependencies
     report_path = write_report(root, report_payload)
+    if dependencies.get("stdout"):
+        print(dependencies["stdout"])
+    if dependencies.get("stderr"):
+        print(dependencies["stderr"], file=sys.stderr)
+    if dependencies.get("result") == "failed":
+        raise SystemExit(f"Dependency sync failed. See report: {report_path}")
     print(f"{'Applied' if apply else 'Dry-run'} upgrade report: {report_path}")
     print(f"changes: {len(entries)}")
     print(f"migrations: {len(migrations)}")
+    return 0
+
+
+def run_dependency_only_upgrade(root: Path, apply: bool) -> int:
+    timestamp = utc_stamp()
+    dependencies = run_dependency_sync(root, apply=apply)
+    report_payload: dict[str, Any] = {
+        "timestamp": timestamp,
+        "mode": "apply" if apply else "dry-run",
+        "public_bootstrap": "skipped_missing_install_state",
+        "changes": [],
+        "migrations": [],
+        "state_migration": [],
+        "dependencies": dependencies,
+    }
+    report_path = write_report(root, report_payload)
+    if dependencies.get("stdout"):
+        print(dependencies["stdout"])
+    if dependencies.get("stderr"):
+        print(dependencies["stderr"], file=sys.stderr)
+    if dependencies.get("result") == "failed":
+        raise SystemExit(f"Dependency sync failed. See report: {report_path}")
+    print("Skipped public bootstrap upgrade: missing install state.")
+    print(f"{'Applied' if apply else 'Dry-run'} dependency sync report: {report_path}")
     return 0
 
 
@@ -650,8 +699,12 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "init-state":
         return init_state(root, args.from_current, args.repo_url)
     if args.apply:
+        if not load_install(root):
+            return run_dependency_only_upgrade(root, apply=True)
         return run_upgrade(root, apply=True)
     if args.dry_run:
+        if not load_install(root):
+            return run_dependency_only_upgrade(root, apply=False)
         return run_upgrade(root, apply=False)
     print("Use `vault upgrade status`, `vault upgrade --dry-run`, or `vault upgrade --apply`.")
     return 2

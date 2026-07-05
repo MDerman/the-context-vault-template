@@ -2,10 +2,11 @@
   {
     "id": "refresh",
     "label": "Refresh",
-    "description": "Ingest configured Brain Dump, then regenerate agent context, the dashboard, content schedules, and current agent periodic rollups.",
+    "description": "Run Google Calendar task sync, regenerate agent context, the dashboard, content schedules, and current agent periodic rollups.",
     "args": [
       "refresh"
     ],
+    "cockpit": true,
     "palette": true
   },
   {
@@ -56,11 +57,12 @@
   },
   {
     "id": "sync",
-    "label": "Sync Brain Dump",
+    "label": "Sync Apple Notes",
     "description": "Import the configured Brain Dump Apple Note into the vault inbox and copy attachments according to the vault Brain Dump ingest config.",
     "args": [
       "sync"
-    ]
+    ],
+    "cockpit": true
   },
   {
     "id": "context",
@@ -200,6 +202,35 @@
     ]
   },
   {
+    "id": "backup-sync-setup",
+    "label": "Backup Sync Setup",
+    "description": "Run the interactive rclone Google Drive backup/sync setup wizard.",
+    "args": [
+      "backup-sync",
+      "setup"
+    ],
+    "palette": true
+  },
+  {
+    "id": "backup-sync-status",
+    "label": "Backup Sync Status",
+    "description": "Show rclone backup/sync remotes, sources, mounts, LaunchAgents, logs, and locks.",
+    "args": [
+      "backup-sync",
+      "status"
+    ]
+  },
+  {
+    "id": "backup-sync-shared-drives",
+    "label": "Backup Sync Shared Drives",
+    "description": "Open the Shared Drive picker to add/remove rclone Shared Drive remotes and read-only mounts.",
+    "args": [
+      "backup-sync",
+      "shared-drives"
+    ],
+    "palette": true
+  },
+  {
     "id": "bootstrap-export",
     "label": "Bootstrap Export",
     "description": "Export the public bootstrap vault from the current vault into the configured export root.",
@@ -208,9 +239,39 @@
     ]
   },
   {
+    "id": "deps-status",
+    "label": "Dependency Repos Status",
+    "description": "Show external dependency repo checkout state and managed projection health.",
+    "args": [
+      "deps",
+      "status"
+    ]
+  },
+  {
+    "id": "deps-sync-dry-run",
+    "label": "Dependency Repos Dry Run",
+    "description": "Preview cloning, fast-forward pulls, and managed projection rebuilds for external dependency repos.",
+    "args": [
+      "deps",
+      "sync",
+      "--dry-run"
+    ]
+  },
+  {
+    "id": "deps-sync-apply",
+    "label": "Dependency Repos Sync",
+    "description": "Clone or fast-forward pull external dependency repos, rebuild managed projections, and refresh skill links.",
+    "args": [
+      "deps",
+      "sync",
+      "--apply"
+    ],
+    "palette": true
+  },
+  {
     "id": "upgrade-dry-run",
     "label": "Upgrade Dry Run",
-    "description": "Preview public bootstrap vault updates using hidden upstream Git state and write an upgrade report.",
+    "description": "Preview public bootstrap vault updates plus external dependency repo sync and write an upgrade report.",
     "args": [
       "upgrade",
       "--dry-run"
@@ -219,7 +280,7 @@
   {
     "id": "upgrade-apply",
     "label": "Upgrade",
-    "description": "Apply public bootstrap vault updates using hidden upstream Git state.",
+    "description": "Apply public bootstrap vault updates, then sync external dependency repos and projections.",
     "args": [
       "upgrade",
       "--apply"

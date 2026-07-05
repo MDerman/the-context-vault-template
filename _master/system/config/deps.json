@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "repos": [
+    {
+      "id": "frontend-slides",
+      "url": "https://github.com/zarazhangrui/frontend-slides.git",
+      "path": "~/Code/open_source/frontend-slides",
+      "ref": "main",
+      "projections": [
+        {
+          "source": "plugins/frontend-slides/skills/frontend-slides",
+          "target": "_master/agents/skill-packs/frontend-slides",
+          "type": "manual-skill",
+          "managed": true
+        }
+      ]
+    },
+    {
+      "id": "googleworkspace-cli",
+      "url": "https://github.com/googleworkspace/cli.git",
+      "path": "~/Code/open_source/googleworkspace-cli",
+      "ref": "main",
+      "projections": [
+        {
+          "source": "skills/gws-shared",
+          "target": "_master/agents/skill-packs/gws-shared",
+          "type": "manual-skill",
+          "managed": true
+        },
+        {
+          "source": "skills/gws-drive",
+          "target": "_master/agents/skill-packs/gws-drive",
+          "type": "manual-skill",
+          "managed": true
+        },
+        {
+          "source": "skills/gws-gmail",
+          "target": "_master/agents/skill-packs/gws-gmail",
+          "type": "manual-skill",
+          "managed": true
+        },
+        {
+          "source": "skills/gws-calendar",
+          "target": "_master/agents/skill-packs/gws-calendar",
+          "type": "manual-skill",
+          "managed": true
+        },
+        {
+          "source": "skills/gws-sheets",
+          "target": "_master/agents/skill-packs/gws-sheets",
+          "type": "manual-skill",
+          "managed": true
+        }
+      ]
+    }
+  ]
+}

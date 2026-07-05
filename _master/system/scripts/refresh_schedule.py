@@ -191,7 +191,15 @@ def status(root: Path) -> int:
 def run_refresh_with_retries(root: Path, today: str, config: dict[str, object]) -> int:
     attempts = max(1, config_int(config, "retry_attempts", 3))
     retry_delay = max(0, config_int(config, "retry_delay_seconds", 60))
-    command = [sys.executable, str(SCRIPT_DIR / "refresh.py"), "--root", str(root), "--date", today]
+    command = [
+        sys.executable,
+        str(SCRIPT_DIR / "refresh.py"),
+        "--root",
+        str(root),
+        "--date",
+        today,
+        "--skip-brain-dump",
+    ]
     for attempt in range(1, attempts + 1):
         print(f"refresh attempt {attempt}/{attempts} for {today}")
         result = subprocess.run(command, cwd=root)

@@ -255,7 +255,14 @@ def ensure_real_directory(root: Path, directory: Path, dry_run: bool) -> None:
 
 def ensure_agent_paths(root: Path, dry_run: bool) -> None:
     skills_source = root / "_master/agents/skills"
-    for directory in [root / "_master/agents/skills", root / "_master/agents/skills-dump", root / ".agents", root / ".claude"]:
+    for directory in [
+        root / "_master/agents/skills",
+        root / "_master/agents/skill-packs",
+        root / "_master/agents/skills/manual",
+        root / "_master/agents/skills-dump",
+        root / ".agents",
+        root / ".claude",
+    ]:
         if directory.exists():
             continue
         if dry_run:

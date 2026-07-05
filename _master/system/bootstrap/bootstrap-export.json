@@ -50,7 +50,7 @@
   "root_files": [
     "AGENTS.md",
     {
-      "source": "_master/system/bootstrap/README-bootstrap.md",
+      "source": "_master/system/bootstrap/bootstrap-public-README.md",
       "target": "README.md"
     },
     {
@@ -79,10 +79,18 @@
   ],
   "generated_exclude_globs": [
     "_master/_obsidian/periodic/**",
+    "_master/_obsidian/attachments/**",
+    "_master/agents/skill-packs/**",
+    "_master/agents/skills/manual/**",
+    "_master/agents/skills/personal-folder-structure/**",
+    "_master/agents/skills-dump/**",
     "_master/system/context/2026*.md",
     "_master/system/backup/**",
     "_master/system/inbox/**",
-    "_master/system/local/**"
+    "_master/system/local/**",
+    "_master/backup-and-sync/**",
+    "_master/general-tools/gmail-invoice-collector/**",
+    "_master/general-tools/invoice-generation/**"
   ],
   "global_exclude_names": [
     ".DS_Store",

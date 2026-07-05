@@ -116,6 +116,7 @@ class RefreshScheduleTests(unittest.TestCase):
 
             self.assertEqual(result, 1)
             self.assertEqual(len(calls), 3)
+            self.assertIn("--skip-brain-dump", calls[0])
             self.assertFalse((state / "last-refresh-date.txt").exists())
 
     def test_run_due_writes_stamp_after_retry_success(self) -> None:
@@ -135,6 +136,7 @@ class RefreshScheduleTests(unittest.TestCase):
 
             self.assertEqual(result, 0)
             self.assertEqual(subprocess_run.call_count, 2)
+            self.assertIn("--skip-brain-dump", subprocess_run.call_args_list[0].args[0])
             self.assertEqual((state / "last-refresh-date.txt").read_text(encoding="utf-8").strip(), today_utc())
 
     def test_run_due_lock_prevents_duplicate_run(self) -> None:
