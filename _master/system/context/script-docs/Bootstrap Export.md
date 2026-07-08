@@ -11,7 +11,7 @@ vault bootstrap-export --dry-run
 vault bootstrap-export --force
 ```
 
-The export writes a root `README.md` from `_master/system/bootstrap/bootstrap-public-README.md`. Internal bootstrap/export mechanics live in `_master/system/README-vault-system-and-bootstrapped.md`. With `--force`, the exporter mirrors export-owned files into the configured export root while preserving repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, and contribution docs.
+The export writes a root `README.md` from `_master/system/bootstrap/README-public-vault-template.md`. Internal bootstrap/export mechanics live in `_master/system/README.md`. With `--force`, the exporter mirrors export-owned files into the configured export root while preserving repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, and contribution docs.
 
 Default export root and context folder output mapping live in:
 

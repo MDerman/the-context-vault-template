@@ -90,7 +90,7 @@ class Bootstrap:
         coding_agents: list[str],
         content_entities: list[str],
         install_vault_command_enabled: bool,
-        generate_agents_enabled: bool,
+        agent_symlinks_enabled: bool,
         dry_run: bool,
         run_date: dt.date,
     ) -> None:
@@ -102,7 +102,7 @@ class Bootstrap:
         self.coding_agents = coding_agents
         self.content_entities = content_entities
         self.install_vault_command_enabled = install_vault_command_enabled
-        self.generate_agents_enabled = generate_agents_enabled
+        self.agent_symlinks_enabled = agent_symlinks_enabled
         self.dry_run = dry_run
         self.run_date = run_date
 
@@ -379,8 +379,8 @@ class Bootstrap:
     def setup_agent_infrastructure(self) -> None:
         if self.coding_agents:
             self.ensure_dir(self.root / "_master/agents/skills")
-            self.ensure_dir(self.root / "_master/agents/skill-packs")
-            self.ensure_dir(self.root / "_master/agents/skills/manual")
+            self.ensure_dir(self.root / "_master/agents/manual-skills")
+            self.ensure_dir(self.root / "_master/agents/gh-skills")
             self.ensure_dir(self.root / "_master/agents/skills-dump")
             self.ensure_dir(self.root / ".agents")
             self.ensure_dir(self.root / ".agents/skills")
@@ -414,7 +414,7 @@ class Bootstrap:
 
     def setup_templates(self) -> None:
         self.safe_remove_generated_path(self.root / "README_PERSONALIZED_QUICKSTART.md", BOOTSTRAP_MARKERS)
-        self.safe_remove_generated_path(self.root / "_master/README_PERSONALIZED_QUICKSTART.md", BOOTSTRAP_MARKERS)
+        self.safe_remove_generated_path(self.root / "_master" / "README_PERSONALIZED_QUICKSTART.md", BOOTSTRAP_MARKERS)
         self.write_managed(self.root / "_master/_obsidian/templates/shared/default-tasks-template.md", shared_task_template())
         self.write_managed(self.root / "_master/_obsidian/templates/shared/content/content-item-template.md", content_item_template())
         self.write_managed(self.root / "_master/_obsidian/templates/shared/content/publication-template.md", publication_template())
@@ -580,17 +580,17 @@ class Bootstrap:
         if result != 0:
             raise RuntimeError("Failed to install vault command")
 
-    def generate_agents_file(self) -> None:
+    def ensure_agent_file_symlinks(self) -> None:
         import importlib.util
         import sys
 
-        if not self.generate_agents_enabled or not self.coding_agents:
-            self.log("skip AGENTS.md generation")
+        if not self.agent_symlinks_enabled or not self.coding_agents:
+            self.log("skip agent file symlink setup")
             return
-        generator_path = self.root / "_master/system/bootstrap/generate_agents.py"
-        if not generator_path.exists():
-            raise FileNotFoundError(generator_path)
-        spec = importlib.util.spec_from_file_location("generate_agents", generator_path)
+        helper_path = self.root / "_master/system/bootstrap/agents/ensure-agent-file-symlinks.py"
+        if not helper_path.exists():
+            raise FileNotFoundError(helper_path)
+        spec = importlib.util.spec_from_file_location("ensure_agent_file_symlinks", helper_path)
         module = importlib.util.module_from_spec(spec)
         assert spec.loader is not None
         sys.modules[spec.name] = module
@@ -644,7 +644,7 @@ class Bootstrap:
         self.setup_templates()
         self.setup_bases()
         self.setup_starter_notes()
-        self.generate_agents_file()
+        self.ensure_agent_file_symlinks()
         self.install_vault_command()
         self.run_generators()
 
@@ -1876,7 +1876,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--interactive", action="store_true")
     parser.add_argument("--skip-install-vault-command", action="store_true", help="Skip installing ~/.local/bin/vault.")
-    parser.add_argument("--skip-generate-agents", action="store_true", help="Skip root AGENTS.md generation.")
+    parser.add_argument("--skip-agent-symlinks", action="store_true", help="Skip root agent symlink setup.")
     return parser
 
 
@@ -1919,7 +1919,7 @@ def main(argv: list[str] | None = None) -> None:
         coding_agents=coding_agents,
         content_entities=content_entities,
         install_vault_command_enabled=not args.skip_install_vault_command,
-        generate_agents_enabled=not args.skip_generate_agents,
+        agent_symlinks_enabled=not args.skip_agent_symlinks,
         dry_run=args.dry_run,
         run_date=parse_date(args.date),
     )

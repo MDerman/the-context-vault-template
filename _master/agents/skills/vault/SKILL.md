@@ -66,7 +66,10 @@ Use `vault gcal create-block` only when user explicitly asks for time blocking o
 ## Skills
 
 Active shared agent skills live in `_master/agents/skills`.
-Manual-only discoverable skills live in `_master/agents/skill-packs` and are symlinked through `_master/agents/skills/manual`. Each manual-only skill must include `agents/openai.yaml` with `policy.allow_implicit_invocation: false`.
+Manual-only skills live in `_master/agents/manual-skills` and are exposed as individual symlinks in `_master/agents/skills`, for example `_master/agents/skills/gws-gmail -> ../manual-skills/gws-gmail`. They must include `agents/openai.yaml` with `policy.allow_implicit_invocation: false`.
+GitHub-managed skills installed with `gh skill --dir` live in `_master/agents/gh-skills` and are exposed as individual symlinks in `_master/agents/skills`, for example `_master/agents/skills/skybridge -> ../gh-skills/skybridge`.
+After adding a new manual-only skill, run `_master/system/bootstrap/agents/ensure-agent-skill-symlinks.sh --dry-run`, then `_master/system/bootstrap/agents/ensure-agent-skill-symlinks.sh --apply` to create the `_master/agents/skills/<skill> -> ../manual-skills/<skill>` symlink. Do not create manual-skill symlinks by hand.
+After installing or updating a GitHub-managed skill, run the same sync script so Codex and Claude discover it.
 
 Repo-local `.agents/skills` folders are real directories reserved for repo-scoped skills and should not be symlinked. Repo `.claude/skills` may symlink to `../.agents/skills` so Claude reads those same repo-scoped skills.
 

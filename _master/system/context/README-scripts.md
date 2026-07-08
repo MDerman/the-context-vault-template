@@ -2,7 +2,7 @@
 type: agent-reference
 status: enabled
 ---
-# SCRIPTS
+# Scripts
 
 Use terminal command first:
 
@@ -18,9 +18,9 @@ _master/system/scripts/
 
 Vault Command Center command labels, argument arrays, and hover descriptions are shared through [[_master/system/scripts/vault-commands.json]]. Update that JSON when a cockpit-visible command description changes.
 
-For `_master` folder layout, tooling SOPs, and skill-pack rules, read [[_master/README]].
+For global routing, read root [[AGENTS]]. For tool and skill SOPs, read [[_master/general-tools/README|general tools README]] or [[_master/agents/README|agents README]].
 
-Open only the script doc needed for the current task.
+Open only the script doc needed for the current task. Create a separate `README-<topic>.md` only when a command needs richer examples, SOPs, or quick start notes.
 
 ## Script Docs
 

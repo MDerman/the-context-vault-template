@@ -4,14 +4,14 @@ This note is the internal source of truth for how the public vault bootstrap cur
 
 ## Public README Source
 
-`_master/system/bootstrap/bootstrap-public-README.md` is exported as the public root `README.md`.
+`_master/system/bootstrap/README-public-vault-template.md` is exported as the public root `README.md`.
 `_master/system/bootstrap/install.sh` is exported as the public root `install.sh`.
 
 The export mapping lives in `_master/system/bootstrap/bootstrap-export.json` under `root_files`:
 
 ```json
 {
-  "source": "_master/system/bootstrap/bootstrap-public-README.md",
+  "source": "_master/system/bootstrap/README-public-vault-template.md",
   "target": "README.md"
 },
 {
@@ -20,15 +20,16 @@ The export mapping lives in `_master/system/bootstrap/bootstrap-export.json` und
 }
 ```
 
-Keep public setup instructions in `bootstrap-public-README.md`, but keep install implementation in `install.sh`. Keep implementation notes, edge cases, and maintenance details in this file.
+Keep public setup instructions in `README-public-vault-template.md`, but keep install implementation in `install.sh`. Keep implementation notes, edge cases, and maintenance details in this file.
 
 ## Internal Docs Stay Split
 
-- `_master/system/context/SCRIPTS.md`: normal command/operator workflows.
-- `_master/system/context/SCRIPT-REFERENCE.md`: full script inventory and one-time script cautions.
+- `_master/system/context/README-scripts.md`: normal command/operator workflows.
+- `_master/system/context/README-script-reference.md`: full script inventory and one-time script cautions.
 - `_master/01-Context.md`: vault architecture, folder model, data model, and bootstrap export workflow.
-- `_master/README.md`: `_master` folder map and tooling/skill SOPs.
-- `_master/system/context/OBSIDIAN-PROFILE.md`: Obsidian profile, plugins, UI settings, templates, Sync Embeds.
+- `_master/agents/README.md`: agent skill docs.
+- `_master/general-tools/README.md`: reusable tool docs.
+- `_master/system/context/README-obsidian-profile.md`: Obsidian profile, plugins, UI settings, templates, Sync Embeds.
 
 Generated copies under `_master/system/context/*.md` are agent-readable outputs from source docs. Edit the source files, not generated copies.
 
@@ -115,7 +116,7 @@ Profile upgrade does not advance the installed public commit. A later full `vaul
 
 ## System Folder Map
 
-- `_master/system/bootstrap`: first install, public export config, generated agent instructions, dependency install, plugin install, and skill sync scripts.
+- `_master/system/bootstrap`: first install, public export config, root agent symlink helpers, dependency install, plugin install, and skill sync scripts.
 - `_master/system/context`: agent-readable generated context, durable command docs, Obsidian profile docs, and current rollups.
 - `_master/system/scripts`: implementations behind the `vault` dispatcher and supporting script utilities.
 - `_master/system/migrations`: versioned migrations for public bootstrap upgrades.

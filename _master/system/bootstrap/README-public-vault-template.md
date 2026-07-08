@@ -35,7 +35,7 @@ This is made possible by a custom plugin called Context Nine and by the Relay pl
 - Vault-local bootstrap metadata lives under `_master/system/bootstrap/state/`.
 - The installer runs with `sudo`, but writes the vault and bootstrap state as the user who invoked sudo.
 - Vault folder has no public-repo `.git` pointer after install.
-- `init_vault.sh` installs/checks command dependencies, creates starter context folders named `personal`, `personal-brand`, and `business`, asks whether to rename them, generates agent files, installs `vault` to `~/.local/bin/vault`, and adds that directory to zsh startup files.
+- `init_vault.sh` installs/checks command dependencies, creates starter context folders named `personal`, `personal-brand`, and `business`, asks whether to rename them, ensures agent symlinks, installs `vault` to `~/.local/bin/vault`, and adds that directory to zsh startup files.
 - On macOS, the installer registers or updates the daily `vault refresh` LaunchAgent. If registration fails, run `vault refresh-schedule register` after setup.
 - Context folder names must start and end with a letter or number and may use letters, numbers, dots, and hyphens, for example `business` or `business.nosync`. If you rename a starter folder during setup, the installer moves the folder and rewrites structured references such as paths, Obsidian links, plugin settings, frontmatter identity values, and `@context` tokens. It does not blindly rewrite normal prose.
 - The one-line `sudo bash` installer also installs `/usr/local/bin/vault`, so `vault` works even before a new shell has loaded `~/.local/bin`.
@@ -58,9 +58,9 @@ Start here after opening the vault:
 - `_master/01-Context.md`: folder model, context folders, private/user-owned content, tasks, projects, epics, content, dashboards, and Relay collaboration.
 - `_master/system/context/02-Identity.md`: identity answers for each active workspace.
 - `_master/system/context/03-Momentum.md`: cadence, tasks, calendar, accountability, and social selling answers.
-- `_master/system/context/OBSIDIAN-PROFILE.md`: Obsidian plugins, settings, templates, UI, and profile details.
-- `_master/system/context/SCRIPTS.md`: `vault` commands and normal workflows.
-- `_master/system/README-vault-system-and-bootstrapped.md`: bootstrap/export internals and system folder map.
+- `_master/system/context/README-obsidian-profile.md`: Obsidian plugins, settings, templates, UI, and profile details.
+- `_master/system/context/README-scripts.md`: `vault` commands and normal workflows.
+- `_master/system/README.md`: bootstrap/export internals and system folder map.
 
 For Relay collaboration, read `_master/01-Context.md`.
 

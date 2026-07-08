@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "personal.md",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -106,11 +106,12 @@
               "title": "Vault Command Center"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
-    "width": 397
+    "width": 391
   },
   "right": {
     "id": "c5da0292b2670f3d",
@@ -197,7 +198,7 @@
             }
           },
           {
-            "id": "0658677b38d951a7",
+            "id": "5bd74a9c18434293",
             "type": "leaf",
             "state": {
               "type": "system3-sync-status",
@@ -246,7 +247,7 @@
       "periodic-notes:Open today": false
     }
   },
-  "active": "1ffc5fcaa195eeb3",
+  "active": "c7a5c3bddc489bc8",
   "lastOpenFiles": [
     "README.md"
   ]

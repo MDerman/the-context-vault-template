@@ -21,7 +21,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT = SCRIPT_DIR.parents[2]
 CONFIG_PATH = Path("_master/system/config/deps.json")
 BACKUP_ROOT = Path("_master/agents/backups/deps-projections")
-SKILL_SYNC = Path("_master/system/bootstrap/sync-agent-skills.sh")
+SKILL_SYNC = Path("_master/system/bootstrap/agents/ensure-agent-skill-symlinks.sh")
 MANAGED_MARKER = ".vault-deps-projection.json"
 
 
@@ -203,6 +203,28 @@ def projection_health(root: Path, projection: Projection) -> dict[str, Any]:
         "marker": bool(marker),
         "marker_repo_id": marker.get("repo_id"),
     }
+
+
+def status_payload(root: Path, repos: list[Repo]) -> dict[str, Any]:
+    payload_repos: list[dict[str, Any]] = []
+    for repo in repos:
+        summary = repo_summary(repo)
+        projections = []
+        for projection in repo.projections:
+            health = projection_health(root, projection)
+            state = "ok" if health["source_exists"] and health["target_exists"] and health["marker"] else "needs-sync"
+            projections.append(
+                {
+                    **health,
+                    "state": state,
+                    "repo_id": projection.repo_id,
+                }
+            )
+        up_to_date = None
+        if summary.get("local_commit") and summary.get("remote_commit"):
+            up_to_date = summary["local_commit"] == summary["remote_commit"]
+        payload_repos.append({**summary, "up_to_date": up_to_date, "projections": projections})
+    return {"config": str(root / CONFIG_PATH), "repos": payload_repos}
 
 
 def print_status(root: Path, repos: list[Repo]) -> int:
@@ -483,7 +505,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
     parser = argparse.ArgumentParser(description="Manage external vault dependency repos and projections.")
     subparsers = parser.add_subparsers(dest="command")
-    subparsers.add_parser("status", help="Show dependency repo and projection state.")
+    status_parser = subparsers.add_parser("status", help="Show dependency repo and projection state.")
+    status_parser.add_argument("--json", action="store_true", help="Emit machine-readable status JSON.")
     sync_parser = subparsers.add_parser("sync", help="Clone/pull repos and rebuild managed projections.")
     mode = sync_parser.add_mutually_exclusive_group()
     mode.add_argument("--dry-run", action="store_true", help="Preview changes.")
@@ -498,6 +521,9 @@ def main(argv: list[str] | None = None) -> int:
     root = resolve_vault_root(args.root, __file__)
     repos = load_config(root)
     if args.command == "status":
+        if args.json:
+            print(json.dumps(status_payload(root, repos), indent=2, sort_keys=True))
+            return 0
         return print_status(root, repos)
     if args.command == "sync":
         return sync(root, repos, apply=bool(args.apply))

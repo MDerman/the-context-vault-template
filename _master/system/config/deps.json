@@ -9,7 +9,7 @@
       "projections": [
         {
           "source": "plugins/frontend-slides/skills/frontend-slides",
-          "target": "_master/agents/skill-packs/frontend-slides",
+          "target": "_master/agents/manual-skills/frontend-slides",
           "type": "manual-skill",
           "managed": true
         }
@@ -23,31 +23,103 @@
       "projections": [
         {
           "source": "skills/gws-shared",
-          "target": "_master/agents/skill-packs/gws-shared",
+          "target": "_master/agents/manual-skills/gws-shared",
           "type": "manual-skill",
           "managed": true
         },
         {
           "source": "skills/gws-drive",
-          "target": "_master/agents/skill-packs/gws-drive",
+          "target": "_master/agents/manual-skills/gws-drive",
+          "type": "manual-skill",
+          "managed": true
+        },
+        {
+          "source": "skills/gws-drive-upload",
+          "target": "_master/agents/manual-skills/gws-drive-upload",
           "type": "manual-skill",
           "managed": true
         },
         {
           "source": "skills/gws-gmail",
-          "target": "_master/agents/skill-packs/gws-gmail",
+          "target": "_master/agents/manual-skills/gws-gmail",
+          "type": "manual-skill",
+          "managed": true
+        },
+        {
+          "source": "skills/gws-gmail-send",
+          "target": "_master/agents/manual-skills/gws-gmail-send",
+          "type": "manual-skill",
+          "managed": true
+        },
+        {
+          "source": "skills/gws-gmail-triage",
+          "target": "_master/agents/manual-skills/gws-gmail-triage",
+          "type": "manual-skill",
+          "managed": true
+        },
+        {
+          "source": "skills/gws-gmail-reply",
+          "target": "_master/agents/manual-skills/gws-gmail-reply",
+          "type": "manual-skill",
+          "managed": true
+        },
+        {
+          "source": "skills/gws-gmail-reply-all",
+          "target": "_master/agents/manual-skills/gws-gmail-reply-all",
+          "type": "manual-skill",
+          "managed": true
+        },
+        {
+          "source": "skills/gws-gmail-forward",
+          "target": "_master/agents/manual-skills/gws-gmail-forward",
+          "type": "manual-skill",
+          "managed": true
+        },
+        {
+          "source": "skills/gws-gmail-read",
+          "target": "_master/agents/manual-skills/gws-gmail-read",
+          "type": "manual-skill",
+          "managed": true
+        },
+        {
+          "source": "skills/gws-gmail-watch",
+          "target": "_master/agents/manual-skills/gws-gmail-watch",
           "type": "manual-skill",
           "managed": true
         },
         {
           "source": "skills/gws-calendar",
-          "target": "_master/agents/skill-packs/gws-calendar",
+          "target": "_master/agents/manual-skills/gws-calendar",
+          "type": "manual-skill",
+          "managed": true
+        },
+        {
+          "source": "skills/gws-calendar-insert",
+          "target": "_master/agents/manual-skills/gws-calendar-insert",
+          "type": "manual-skill",
+          "managed": true
+        },
+        {
+          "source": "skills/gws-calendar-agenda",
+          "target": "_master/agents/manual-skills/gws-calendar-agenda",
           "type": "manual-skill",
           "managed": true
         },
         {
           "source": "skills/gws-sheets",
-          "target": "_master/agents/skill-packs/gws-sheets",
+          "target": "_master/agents/manual-skills/gws-sheets",
+          "type": "manual-skill",
+          "managed": true
+        },
+        {
+          "source": "skills/gws-sheets-append",
+          "target": "_master/agents/manual-skills/gws-sheets-append",
+          "type": "manual-skill",
+          "managed": true
+        },
+        {
+          "source": "skills/gws-sheets-read",
+          "target": "_master/agents/manual-skills/gws-sheets-read",
           "type": "manual-skill",
           "managed": true
         }

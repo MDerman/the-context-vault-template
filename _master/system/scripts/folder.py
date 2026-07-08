@@ -297,7 +297,7 @@ def create_main(argv: list[str], *, register_mode: bool = False) -> None:
         coding_agents=discover_coding_agents(root),
         content_entities=content_entities,
         install_vault_command_enabled=True,
-        generate_agents_enabled=True,
+        agent_symlinks_enabled=True,
         dry_run=args.dry_run,
         run_date=bootstrap_module.parse_date(None),
     )
@@ -347,7 +347,7 @@ def rerun_bootstrap(root: Path, dry_run: bool, excluded: set[str] | None = None)
         coding_agents=discover_coding_agents(root),
         content_entities=content_entities,
         install_vault_command_enabled=True,
-        generate_agents_enabled=True,
+        agent_symlinks_enabled=True,
         dry_run=dry_run,
         run_date=bootstrap_module.parse_date(None),
     )

@@ -7,7 +7,6 @@ import argparse
 import copy
 import datetime as dt
 import json
-import os
 import shutil
 import subprocess
 import sys
@@ -42,9 +41,9 @@ DEFAULT_CALENDAR_NAMES = {
     "due": "Due Tasks",
 }
 CALENDAR_NAME_CONFIG = {
-    "time-blocks": ("GOOGLE_CALENDAR_TIME_BLOCKS_NAME", ("calendarNames", "timeBlocks"), "Time Blocks"),
-    "scheduled": ("GOOGLE_CALENDAR_SCHEDULED_TASKS_NAME", ("calendarNames", "scheduledTasks"), "Scheduled Tasks"),
-    "due": ("GOOGLE_CALENDAR_DUE_TASKS_NAME", ("calendarNames", "dueTasks"), "Due Tasks"),
+    "time-blocks": (("calendarNames", "timeBlocks"), "Time Blocks"),
+    "scheduled": (("calendarNames", "scheduledTasks"), "Scheduled Tasks"),
+    "due": (("calendarNames", "dueTasks"), "Due Tasks"),
 }
 DEFAULT_CALENDAR_REMINDERS = {
     "time-blocks": [{"method": "popup", "minutes": 0}],
@@ -95,15 +94,15 @@ class Env:
             value = value[key]
         return value
 
-    def setting(self, env_key: str, keys: tuple[str, ...], default: Any = "") -> Any:
-        return os.environ.get(env_key) or self.config_value(keys, default)
+    def setting(self, keys: tuple[str, ...], default: Any = "") -> Any:
+        return self.config_value(keys, default)
 
-    def int_setting(self, env_key: str, keys: tuple[str, ...], default: int) -> int:
-        return max(1, int(self.setting(env_key, keys, default)))
+    def int_setting(self, keys: tuple[str, ...], default: int) -> int:
+        return max(1, int(self.setting(keys, default)))
 
     @property
     def timezone_name(self) -> str:
-        return str(self.setting("GOOGLE_CALENDAR_TIME_ZONE", ("timeZone",), "Africa/Johannesburg"))
+        return str(self.setting(("timeZone",), "Africa/Johannesburg"))
 
     @property
     def timezone(self) -> ZoneInfo:
@@ -111,19 +110,19 @@ class Env:
 
     @property
     def default_task_duration(self) -> int:
-        return self.int_setting("GOOGLE_CALENDAR_TASK_DEFAULT_DURATION_MINUTES", ("defaultDurations", "taskMinutes"), 60)
+        return self.int_setting(("defaultDurations", "taskMinutes"), 60)
 
     @property
     def default_block_duration(self) -> int:
-        return self.int_setting("GOOGLE_CALENDAR_BLOCK_DEFAULT_DURATION_MINUTES", ("defaultDurations", "blockMinutes"), 240)
+        return self.int_setting(("defaultDurations", "blockMinutes"), 240)
 
     @property
     def default_event_duration(self) -> int:
-        return self.int_setting("GOOGLE_CALENDAR_EVENT_DEFAULT_DURATION_MINUTES", ("defaultDurations", "eventMinutes"), 60)
+        return self.int_setting(("defaultDurations", "eventMinutes"), 60)
 
     @property
     def default_event_calendar(self) -> str:
-        return str(self.setting("GOOGLE_CALENDAR_DEFAULT_EVENT_CALENDAR", ("defaultEventCalendar",), "primary"))
+        return str(self.setting(("defaultEventCalendar",), "primary"))
 
 
 @dataclass
@@ -277,10 +276,16 @@ def gws_command_for_request(
 
 def gws_error(stdout: str, stderr: str, returncode: int) -> GCalError:
     message = (stderr or stdout or "").strip()
-    if returncode == 2 or "No encrypted credentials found" in message or "auth failed" in message.lower():
+    message_lower = message.lower()
+    if (
+        returncode == 2
+        or "No encrypted credentials found" in message
+        or "auth failed" in message_lower
+        or "insufficient authentication scopes" in message_lower
+    ):
         return GwsAuthError(
             "GWS Calendar auth missing or invalid. Run `gws auth setup`, then "
-            "`gws auth login --scopes calendar,drive`."
+            "`gws auth login --services calendar,drive`."
         )
     if "404" in message:
         return GCalError(f"Google Calendar API error 404: {message}")
@@ -342,14 +347,14 @@ def command_auth(env: Env) -> int:
     print("Google Calendar auth uses GWS.")
     print("Run:")
     print("  gws auth setup")
-    print("  gws auth login --scopes calendar,drive")
+    print("  gws auth login --services calendar,drive")
     print("  vault gcal calendars ensure --apply")
     return 0
 
 
 def calendar_name(env: Env, key: str) -> str:
-    env_key, config_keys, default = CALENDAR_NAME_CONFIG[key]
-    return str(env.setting(env_key, config_keys, default))
+    config_keys, default = CALENDAR_NAME_CONFIG[key]
+    return str(env.setting(config_keys, default))
 
 
 def list_calendars(env: Env) -> list[dict[str, Any]]:

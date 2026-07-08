@@ -36,7 +36,7 @@ Google Calendar workflow:
 - `Time Blocks` is for broad manual or AI-created planning blocks.
 - `Scheduled Tasks` mirrors TaskNotes `scheduled`.
 - `Due Tasks` mirrors TaskNotes `due`.
-- First-time setup: run `gws auth setup`, then `gws auth login --scopes calendar,drive`, then `vault gcal calendars ensure --apply`.
+- First-time setup: run `gws auth setup`, then `gws auth login --services calendar,drive`, then `vault gcal calendars ensure --apply`.
 - `vault gcal calendars ensure --apply` sets default popup reminders: `Time Blocks` 0 minutes before, `Scheduled Tasks` 0 minutes before, and `Due Tasks` 0 plus 25 minutes before.
 - Google Calendar's API does not expose the UI-only all-day default reminder time such as "0 days before at 9:00 AM"; set that manually in Google Calendar if needed.
 - Use `vault gcal list --days 7 --calendar all --json` to inspect upcoming calendar context.

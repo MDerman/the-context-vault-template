@@ -27,3 +27,5 @@ generated: false
 *Take a moment to think on how you are coming along with on your overarching big goals and projects.**
 
 ---
+
+**You can tell how successful someone is going be by how quickly they do things. The gap between thoughts and actions. This is similar to definition of power.**

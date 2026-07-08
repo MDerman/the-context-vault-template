@@ -559,7 +559,61 @@ def run_dependency_only_upgrade(root: Path, apply: bool) -> int:
     return 0
 
 
-def status(root: Path) -> int:
+def upgrade_status_payload(root: Path) -> dict[str, Any]:
+    install = load_install(root)
+    report = latest_report(root)
+    payload: dict[str, Any] = {
+        "vaultRoot": str(root),
+        "installed": bool(install),
+        "repo": DEFAULT_REPO_URL,
+        "installedCommit": None,
+        "latestCommit": None,
+        "installedVersion": None,
+        "latestVersion": None,
+        "upToDate": None,
+        "latestReport": str(report) if report else None,
+    }
+    if not install:
+        payload["state"] = "missing-install-state"
+        payload["message"] = "No public bootstrap install state; upgrade runs dependency sync only."
+        return payload
+
+    release = load_release(root)
+    state_dir, upstream_git_dir = install_paths(root, install)
+    payload.update(
+        {
+            "state": "ok",
+            "repo": install.get("repo_url") or release.get("repo_url") or DEFAULT_REPO_URL,
+            "stateDir": str(state_dir),
+            "hiddenUpstreamGit": str(upstream_git_dir),
+            "hiddenUpstreamGitExists": upstream_git_dir.exists(),
+            "installedCommit": install.get("installed_commit") or "unknown",
+            "installedVersion": install.get("installed_version") or "unknown",
+        }
+    )
+    if not upstream_git_dir.exists():
+        payload["state"] = "missing-hidden-upstream"
+        payload["message"] = "Run `vault upgrade doctor` or `vault upgrade init-state --from-current`."
+        return payload
+
+    try:
+        latest_rev = fetch_latest(root, upstream_git_dir)
+        latest = latest_release(root, upstream_git_dir, latest_rev)
+    except SystemExit as exc:
+        payload["state"] = "fetch-failed"
+        payload["message"] = str(exc)
+        return payload
+    payload["latestCommit"] = latest_rev
+    payload["latestVersion"] = latest.get("version") or "unknown"
+    payload["upToDate"] = payload["installedCommit"] == latest_rev
+    payload["repo"] = payload["repo"] or latest.get("repo_url") or DEFAULT_REPO_URL
+    return payload
+
+
+def status(root: Path, json_output: bool = False) -> int:
+    if json_output:
+        print(json.dumps(upgrade_status_payload(root), indent=2, sort_keys=True))
+        return 0
     install, _state_dir, upstream_git_dir = ensure_install_state(root)
     latest_rev = fetch_latest(root, upstream_git_dir)
     installed_rev = install.get("installed_commit") or "unknown"
@@ -573,41 +627,84 @@ def status(root: Path) -> int:
     return 0
 
 
-def doctor(root: Path) -> int:
+def doctor_payload(root: Path) -> dict[str, Any]:
     ok = True
     install = load_install(root)
     release = load_release(root)
     policy = read_first_json(root, [POLICY_PATH, LEGACY_POLICY_PATH])
-    print(f"vault root: {root}")
+    legacy_present = (
+        (root / LEGACY_INSTALL_PATH).exists()
+        or (root / LEGACY_REPORT_ROOT).exists()
+        or (root / LEGACY_EXPORT_MANIFEST_PATH).exists()
+    )
+    state_dir = None
+    upstream_git_dir = None
     if install:
-        install_path = INSTALL_PATH if (root / INSTALL_PATH).exists() else LEGACY_INSTALL_PATH
-        print(f"install.json: ok ({root / install_path})")
+        state_dir, upstream_git_dir = install_paths(root, install)
+        if not upstream_git_dir.exists():
+            ok = False
+    else:
+        ok = False
+    if not policy:
+        ok = False
+    dot_git = root / ".git"
+    if dot_git.is_dir():
+        git_state = "directory-inside-vault"
+    elif dot_git.is_file() or dot_git.is_symlink():
+        git_state = "pointer-or-symlink"
+    else:
+        git_state = "absent"
+    return {
+        "ok": ok,
+        "vaultRoot": str(root),
+        "install": {
+            "present": bool(install),
+            "path": str(root / (INSTALL_PATH if (root / INSTALL_PATH).exists() else LEGACY_INSTALL_PATH)),
+        },
+        "policy": {
+            "present": bool(policy),
+            "path": str(root / (POLICY_PATH if (root / POLICY_PATH).exists() else LEGACY_POLICY_PATH)),
+        },
+        "releaseVersion": release.get("version") or "unknown",
+        "bootstrapState": str(root / BOOTSTRAP_STATE),
+        "legacyStatePresent": legacy_present,
+        "stateDir": str(state_dir) if state_dir else None,
+        "hiddenUpstreamGit": str(upstream_git_dir) if upstream_git_dir else None,
+        "hiddenUpstreamGitExists": upstream_git_dir.exists() if upstream_git_dir else False,
+        "gitState": git_state,
+        "repair": None if ok else "run `vault upgrade init-state --from-current` if this is a public bootstrap install.",
+    }
+
+
+def doctor(root: Path, json_output: bool = False) -> int:
+    payload = doctor_payload(root)
+    if json_output:
+        print(json.dumps(payload, indent=2, sort_keys=True))
+        return 0 if payload["ok"] else 1
+    ok = bool(payload["ok"])
+    print(f"vault root: {root}")
+    if payload["install"]["present"]:
+        print(f"install.json: ok ({payload['install']['path']})")
     else:
         print("install.json: missing")
-        ok = False
-    if policy:
-        policy_path = POLICY_PATH if (root / POLICY_PATH).exists() else LEGACY_POLICY_PATH
-        print(f"policy: ok ({root / policy_path})")
+    if payload["policy"]["present"]:
+        print(f"policy: ok ({payload['policy']['path']})")
     else:
         print("policy: missing")
-        ok = False
-    print(f"release version: {release.get('version') or 'unknown'}")
-    if (root / LEGACY_INSTALL_PATH).exists() or (root / LEGACY_REPORT_ROOT).exists() or (root / LEGACY_EXPORT_MANIFEST_PATH).exists():
+    print(f"release version: {payload['releaseVersion']}")
+    if payload["legacyStatePresent"]:
         print(f"legacy root state: present; next `vault upgrade --apply` migrates it to {BOOTSTRAP_STATE}")
     else:
-        print(f"bootstrap state: {root / BOOTSTRAP_STATE}")
-    if install:
-        _state_dir, upstream_git_dir = install_paths(root, install)
-        print(f"hidden upstream git: {upstream_git_dir}")
-        if upstream_git_dir.exists():
+        print(f"bootstrap state: {payload['bootstrapState']}")
+    if payload["install"]["present"]:
+        print(f"hidden upstream git: {payload['hiddenUpstreamGit']}")
+        if payload["hiddenUpstreamGitExists"]:
             print("hidden upstream git: ok")
         else:
             print("hidden upstream git: missing")
-            ok = False
-    dot_git = root / ".git"
-    if dot_git.is_dir():
+    if payload["gitState"] == "directory-inside-vault":
         print(".git: directory inside vault (not recommended for iCloud)")
-    elif dot_git.is_file() or dot_git.is_symlink():
+    elif payload["gitState"] == "pointer-or-symlink":
         print(".git: pointer/symlink present, likely optional user Git")
     else:
         print(".git: absent")
@@ -684,6 +781,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--from-current", action="store_true", help="For init-state: recreate hidden state from current public repo.")
     parser.add_argument("--repo-url", default=None, help="Override upstream public repo URL for init-state.")
     parser.add_argument("--root", default=None, help="Vault root. Defaults to auto-discovery.")
+    parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON for status/doctor.")
     return parser.parse_args(argv)
 
 
@@ -691,9 +789,9 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     root = resolve_vault_root(args.root, __file__)
     if args.command == "status":
-        return status(root)
+        return status(root, json_output=args.json)
     if args.command == "doctor":
-        return doctor(root)
+        return doctor(root, json_output=args.json)
     if args.command == "repair-prompt":
         return repair_prompt(root)
     if args.command == "init-state":

@@ -167,7 +167,7 @@ def unregister(root: Path, dry_run: bool) -> int:
     return 0
 
 
-def status(root: Path) -> int:
+def status_payload(root: Path) -> dict[str, object]:
     config = load_refresh_config(root)
     label = label_from_config(config)
     path = plist_path(label)
@@ -176,15 +176,34 @@ def status(root: Path) -> int:
     stamp = STATE_DIR / "last-refresh-date.txt"
     timezone_value = str(config.get("timezone") or "local")
     timezone_label = system_timezone() if timezone_value.lower() in {"local", "system"} else timezone_value
-    print(f"label: {label}")
-    print(f"plist: {path}")
-    print(f"loaded: {'yes' if loaded else 'no'}")
-    print(f"timezone: {timezone_value} ({timezone_label})")
-    print(f"time: {config_int(config, 'hour', 2):02d}:{config_int(config, 'minute', 0):02d}")
-    print(f"catchup_interval_seconds: {config_int(config, 'catchup_interval_seconds', 60)}")
-    print(f"retry_attempts: {config_int(config, 'retry_attempts', 3)}")
-    print(f"retry_delay_seconds: {config_int(config, 'retry_delay_seconds', 60)}")
-    print(f"last_refresh_date: {stamp.read_text(encoding='utf-8').strip() if stamp.exists() else 'none'}")
+    return {
+        "label": label,
+        "plist": str(path),
+        "loaded": loaded,
+        "timezone": timezone_value,
+        "timezoneLabel": timezone_label,
+        "time": f"{config_int(config, 'hour', 2):02d}:{config_int(config, 'minute', 0):02d}",
+        "catchupIntervalSeconds": config_int(config, "catchup_interval_seconds", 60),
+        "retryAttempts": config_int(config, "retry_attempts", 3),
+        "retryDelaySeconds": config_int(config, "retry_delay_seconds", 60),
+        "lastRefreshDate": stamp.read_text(encoding="utf-8").strip() if stamp.exists() else None,
+    }
+
+
+def status(root: Path, json_output: bool = False) -> int:
+    payload = status_payload(root)
+    if json_output:
+        print(json.dumps(payload, indent=2, sort_keys=True))
+        return 0
+    print(f"label: {payload['label']}")
+    print(f"plist: {payload['plist']}")
+    print(f"loaded: {'yes' if payload['loaded'] else 'no'}")
+    print(f"timezone: {payload['timezone']} ({payload['timezoneLabel']})")
+    print(f"time: {payload['time']}")
+    print(f"catchup_interval_seconds: {payload['catchupIntervalSeconds']}")
+    print(f"retry_attempts: {payload['retryAttempts']}")
+    print(f"retry_delay_seconds: {payload['retryDelaySeconds']}")
+    print(f"last_refresh_date: {payload['lastRefreshDate'] or 'none'}")
     return 0
 
 
@@ -244,7 +263,8 @@ def main(argv: list[str] | None = None) -> int:
     for name in ("register", "unregister"):
         command = subparsers.add_parser(name)
         command.add_argument("--dry-run", action="store_true")
-    subparsers.add_parser("status")
+    status_parser = subparsers.add_parser("status")
+    status_parser.add_argument("--json", action="store_true", help="Emit machine-readable status JSON.")
     subparsers.add_parser("run-due")
     args = parser.parse_args(argv)
 
@@ -254,7 +274,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "unregister":
         return unregister(root, args.dry_run)
     if args.command == "status":
-        return status(root)
+        return status(root, json_output=args.json)
     if args.command == "run-due":
         return run_due(root)
     return 2

@@ -2,9 +2,9 @@
 type: agent-reference
 status: enabled
 ---
-# SCRIPT-REFERENCE
+# Script Reference
 
-This is the fuller script reference. Use `_master/system/context/SCRIPTS.md` for normal workflows.
+This is the fuller script reference. Use `_master/system/context/README-scripts.md` for normal workflows.
 
 ## Main Scripts
 
@@ -27,11 +27,11 @@ This is the fuller script reference. Use `_master/system/context/SCRIPTS.md` for
 
 - `_master/system/bootstrap/init_vault.sh`: first-run fresh/exported vault setup entrypoint.
 - `_master/system/bootstrap/bootstrap_vault.py`: scaffolds/reconciles context folders, templates, Bases, starter notes, and generated setup docs.
-- `_master/system/bootstrap/generate_agents.py`: renders root `AGENTS.md` from `AGENTS.template.md` and discovered context folders with folder-note frontmatter.
+- `_master/system/bootstrap/agents/ensure-agent-file-symlinks.py`: ensures `CLAUDE.md`, `.agents/skills`, and `.claude/skills` symlinks/dirs without rewriting `AGENTS.md`.
 - `_master/system/bootstrap/Brewfile`: Homebrew formulas for bootstrap-managed CLI dependencies.
 - `_master/system/bootstrap/install_dependencies.sh`: installs/checks local CLI dependencies from the bootstrap Brewfile.
 - `_master/system/bootstrap/install_vault_command.py`: installs the `vault` dispatcher symlink.
-- `_master/system/bootstrap/sync-agent-skills.sh`: links local coding-agent skill folders to `_master/agents/skills` and manual skill packs.
+- `_master/system/bootstrap/agents/ensure-agent-skill-symlinks.sh`: links local coding-agent skill folders to `_master/agents/skills` and manual skills.
 
 ## Secondary Scripts
 

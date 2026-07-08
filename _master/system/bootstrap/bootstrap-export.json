@@ -50,7 +50,7 @@
   "root_files": [
     "AGENTS.md",
     {
-      "source": "_master/system/bootstrap/bootstrap-public-README.md",
+      "source": "_master/system/bootstrap/README-public-vault-template.md",
       "target": "README.md"
     },
     {
@@ -80,8 +80,8 @@
   "generated_exclude_globs": [
     "_master/_obsidian/periodic/**",
     "_master/_obsidian/attachments/**",
-    "_master/agents/skill-packs/**",
-    "_master/agents/skills/manual/**",
+    "_master/agents/manual-skills/**",
+    "_master/agents/gh-skills/**",
     "_master/agents/skills/personal-folder-structure/**",
     "_master/agents/skills-dump/**",
     "_master/system/context/2026*.md",

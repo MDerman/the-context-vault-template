@@ -8,13 +8,13 @@ The big idea: this workspace is one Obsidian vault. The root `.obsidian` folder 
 
 Use these references before changing Obsidian behavior:
 
-- [[_master/system/context/OBSIDIAN-PROFILE|OBSIDIAN-PROFILE]]: root `.obsidian`, plugins, templates, Bases, colors, icons, and snippets.
+- [[_master/system/context/README-obsidian-profile|Obsidian Profile]]: root `.obsidian`, plugins, templates, Bases, colors, icons, and snippets.
 - [[_master/system/context/01-Context|01-Context]]: full technical map of the vault, context folders, TaskNotes, Bases, content, periodic notes, and bootstrap.
-- [[_master/system/context/SCRIPTS|SCRIPTS]]: main `vault` commands and when to run them.
-- [[_master/system/context/SCRIPT-REFERENCE|SCRIPT-REFERENCE]]: fuller script inventory.
+- [[_master/system/context/README-scripts|Scripts README]]: main `vault` commands and when to run them.
+- [[_master/system/context/README-script-reference|Script Reference]]: fuller script inventory.
 - [[_master/system/obsidian_notes/obsidian-plugins-reference|obsidian-plugins-reference]]: plugin-level notes.
 - [[_master/system/obsidian_notes/obsidian-core-features|obsidian-core-features]]: Obsidian features that are not plugin-specific.
-- [[_master/00-StartHere|_master/00-StartHere]]: where non-vault reusable tools and scripts belong.
+- [[_master/README|Master README]]: where non-vault reusable tools and scripts belong.
 
 ## Runtime Vs Source
 
@@ -376,7 +376,7 @@ Keep vault operating-model scripts under `_master/system/scripts/`. Put reusable
 Before editing:
 
 1. Decide whether the behavior is profile config, generated vault files, CSS/theme, TaskNotes data, a community plugin setting, or custom plugin code.
-2. Check [[_master/system/context/OBSIDIAN-PROFILE|OBSIDIAN-PROFILE]] and [[_master/system/context/SCRIPTS|SCRIPTS]].
+2. Check [[_master/system/context/README-obsidian-profile|Obsidian Profile]] and [[_master/system/context/README-scripts|Scripts README]].
 3. If a file has a managed marker, edit the generator instead.
 4. If changing a plugin setting through Obsidian, verify which `.obsidian/plugins/<plugin-id>/data.json` file changed.
 5. If changing the custom master plugin, edit `~/Code/context_nine_obsidian_plugin`, then build/install.
@@ -385,7 +385,7 @@ After editing:
 
 1. Test in Obsidian.
 2. Run the relevant generator command after generated-file changes, such as `vault context`, `vault content`, or `vault epic sync`.
-3. Update this note, [[_master/system/context/OBSIDIAN-PROFILE|OBSIDIAN-PROFILE]], or [[_master/system/context/01-Context|01-Context]] when the mental model changes.
+3. Update this note, [[_master/system/context/README-obsidian-profile|Obsidian Profile]], or [[_master/system/context/01-Context|01-Context]] when the mental model changes.
 
 ## Common Decisions
 

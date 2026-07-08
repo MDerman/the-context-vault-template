@@ -339,6 +339,16 @@ class BootstrapExporter:
             relative = item.relative_to(self.root)
             if self.should_skip_master_shared(relative, item.is_dir()):
                 continue
+            if (
+                item.is_symlink()
+                and len(relative.parts) == 4
+                and relative.parts[:3] == ("_master", "agents", "skills")
+                and (
+                    os.readlink(item).startswith("../manual-skills/")
+                    or os.readlink(item).startswith("../gh-skills/")
+                )
+            ):
+                continue
             target = self.export_root / relative
             if item.is_symlink():
                 self.create_symlink(target, os.readlink(item))
@@ -360,6 +370,10 @@ class BootstrapExporter:
             return True
         if rel in self.generated_exclude_paths:
             return True
+        if len(relative.parts) >= 4 and relative.parts[:3] == ("_master", "agents", "skills"):
+            wrapper_root = self.root.joinpath(*relative.parts[:4])
+            if (wrapper_root / ".manual-skill-wrapper.json").exists():
+                return True
         for pattern in self.generated_exclude_globs:
             if fnmatch.fnmatch(rel, pattern):
                 return True
@@ -559,7 +573,7 @@ class BootstrapExporter:
             coding_agents=[],
             content_entities=self.public_content_contexts(),
             install_vault_command_enabled=False,
-            generate_agents_enabled=False,
+            agent_symlinks_enabled=False,
             dry_run=self.dry_run,
             run_date=datetime.now(timezone.utc).date(),
         )

@@ -31,8 +31,8 @@ Each repo can define projections. A projection maps one repo folder into a vault
 Manual skill projection rules:
 
 - Source stays in the external repo checkout.
-- Target is usually `_master/agents/skill-packs/<skill>`.
-- The vault creates a managed wrapper dir at the target.
+- Target is usually `_master/agents/manual-skills/<skill>`.
+- The vault creates a managed projection dir at the target.
 - `SKILL.md` and source assets are symlinked from the repo.
 - `agents/openai.yaml` is vault-owned and sets `policy.allow_implicit_invocation: false`.
 - Existing unmanaged targets are backed up before replacement.
@@ -59,6 +59,6 @@ When adding a new external repo with skills:
 4. Run `vault deps sync --dry-run`.
 5. If output is right, run `vault deps sync --apply`.
 
-`vault deps sync --apply` clones missing repos, fast-forward pulls existing clean repos, rebuilds managed projections, then runs `_master/system/bootstrap/sync-agent-skills.sh --apply` when skill projections changed.
+`vault deps sync --apply` clones missing repos, fast-forward pulls existing clean repos, rebuilds managed projections, then runs `_master/system/bootstrap/agents/ensure-agent-skill-symlinks.sh --apply` when skill projections changed. Manual-skill projections remain sourced under `_master/agents/manual-skills`; sync exposes each one as an individual symlink in `_master/agents/skills` so Codex and Claude can discover it.
 
 Dirty or divergent dependency repos stop the sync with a clear error. Resolve local changes in the dependency repo first, then retry.

@@ -2,7 +2,7 @@
 type: agent-reference
 status: enabled
 ---
-# OBSIDIAN-PROFILE
+# Obsidian Profile
 
 This note holds Obsidian profile, plugin, and UI configuration details that should not crowd `AGENTS.md`.
 
@@ -98,9 +98,9 @@ Templater folder templates route note creation by folder path. Settings live at:
 Useful examples:
 
 ```md
-<% tp.file.title %>
-<% tp.date.now("YYYY-MM-DD") %>
-<% tp.file.folder(true).split('/')[0] %>
+README-obsidian-profile
+2026-07-08
+_master
 ```
 
 Each context folder owns its local periodic templates:

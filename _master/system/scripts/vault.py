@@ -5,11 +5,14 @@ from __future__ import annotations
 
 import subprocess
 import sys
+import shutil
 from pathlib import Path
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT = SCRIPT_DIR.parents[2]
+CONTEXT_NINE_PLUGIN_ROOT = Path.home() / "Code/context_nine_obsidian_plugin"
+CONTEXT_NINE_TUI_ROOT = CONTEXT_NINE_PLUGIN_ROOT / "python"
 
 COMMANDS = {
     "refresh": SCRIPT_DIR / "refresh.py",
@@ -67,6 +70,7 @@ Common commands:
   path-audit   Find persisted vault-root paths that make the vault non-portable.
   triage       Prepare/apply Brain Dump organizer proposals.
   upgrade      Preview/apply public bootstrap vault upgrades.
+  tui          Open the Textual vault command control room.
 
 Examples:
   cd "$(vault root)"
@@ -97,9 +101,25 @@ Examples:
   vault path-audit
   vault triage prepare
   vault upgrade --dry-run
+  vault tui
 
 Run `vault <command> --help` for command-specific flags."""
     )
+
+
+def run_tui(args: list[str]) -> int:
+    tui_args = ["--vault-root", str(ROOT), *args]
+    uv = shutil.which("uv")
+    if uv and (CONTEXT_NINE_TUI_ROOT / "pyproject.toml").exists():
+        return subprocess.run([uv, "run", "vault-tui", *tui_args], cwd=CONTEXT_NINE_TUI_ROOT).returncode
+    installed = shutil.which("vault-tui")
+    if installed:
+        return subprocess.run([installed, *tui_args], cwd=ROOT).returncode
+    print(
+        "Vault TUI not available. Install uv (`brew install uv`) or install context-nine-vault-tui.",
+        file=sys.stderr,
+    )
+    return 2
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -112,6 +132,8 @@ def main(argv: list[str] | None = None) -> int:
     if command == "root":
         print(ROOT)
         return 0
+    if command == "tui":
+        return run_tui(args)
 
     script = COMMANDS.get(command)
     if script is None:

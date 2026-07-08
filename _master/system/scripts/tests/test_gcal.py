@@ -154,6 +154,16 @@ class GCalMirrorTests(unittest.TestCase):
                     with self.assertRaisesRegex(gcal.GwsAuthError, "gws auth login"):
                         gcal.api_request(env(root), "GET", "/users/me/calendarList")
 
+    def test_gws_insufficient_scope_tells_user_to_login_with_scopes(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            completed = mock.Mock(returncode=1, stdout="", stderr="error[api]: Request had insufficient authentication scopes.")
+
+            with mock.patch.object(gcal.shutil, "which", return_value="/opt/homebrew/bin/gws"):
+                with mock.patch.object(gcal.subprocess, "run", return_value=completed):
+                    with self.assertRaisesRegex(gcal.GwsAuthError, "--services calendar,drive"):
+                        gcal.api_request(env(root), "GET", "/users/me/calendarList")
+
     def test_prunes_owned_event_when_no_task_references_event_id(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

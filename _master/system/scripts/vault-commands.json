@@ -2,298 +2,462 @@
   {
     "id": "refresh",
     "label": "Refresh",
-    "description": "Run Google Calendar task sync, regenerate agent context, the dashboard, content schedules, and current agent periodic rollups.",
-    "args": [
-      "refresh"
-    ],
+    "description": "Run the daily refresh pipeline and rebuild generated vault context.",
+    "group": "Daily Ops",
+    "risk": "apply",
+    "mode": "long-running",
+    "confirm": true,
+    "args": ["refresh"],
+    "statusArgs": ["refresh-schedule", "status", "--json"],
     "cockpit": true,
-    "palette": true
-  },
-  {
-    "id": "refresh-schedule-register",
-    "label": "Refresh Schedule Register",
-    "description": "Register the macOS LaunchAgent that refreshes at load, at the configured morning time, and via short due checks after wake/login until today's refresh succeeds.",
-    "args": [
-      "refresh-schedule",
-      "register"
-    ],
-    "palette": true
-  },
-  {
-    "id": "refresh-schedule-unregister",
-    "label": "Refresh Schedule Unregister",
-    "description": "Unload and remove the macOS LaunchAgent for the daily vault refresh.",
-    "args": [
-      "refresh-schedule",
-      "unregister"
-    ],
-    "palette": true
-  },
-  {
-    "id": "refresh-schedule-status",
-    "label": "Refresh Schedule Status",
-    "description": "Show the configured LaunchAgent label, schedule, catch-up interval, retry settings, load state, and last successful refresh date.",
-    "args": [
-      "refresh-schedule",
-      "status"
-    ]
-  },
-  {
-    "id": "folder-register",
-    "label": "Folder Register",
-    "description": "Register an existing context folder and regenerate vault wiring.",
-    "args": [
-      "folder",
-      "register"
-    ],
     "palette": true,
-    "promptArgs": [
-      {
-        "label": "Context folder",
-        "placeholder": "business",
-        "argName": "name"
-      }
-    ]
+    "tui": true
   },
   {
     "id": "sync",
     "label": "Sync Apple Notes",
-    "description": "Import the configured Brain Dump Apple Note into the vault inbox and copy attachments according to the vault Brain Dump ingest config.",
-    "args": [
-      "sync"
-    ],
-    "cockpit": true
+    "description": "Import the configured Brain Dump Apple Note and attachments.",
+    "group": "Daily Ops",
+    "risk": "apply",
+    "mode": "long-running",
+    "confirm": true,
+    "args": ["sync"],
+    "cockpit": true,
+    "palette": true,
+    "tui": true
   },
   {
     "id": "context",
     "label": "Context",
-    "description": "Regenerate compact agent-readable context, realized system notes, the dashboard, content schedules, and current periodic rollups.",
-    "args": [
-      "context"
-    ]
+    "description": "Regenerate agent context, dashboard, schedules, and rollups.",
+    "group": "Daily Ops",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["context"],
+    "tui": true
   },
   {
     "id": "inventory",
     "label": "Inventory",
-    "description": "Print agent-friendly context folders, task statuses, epics, and projects for low-context task routing.",
-    "args": [
-      "inventory"
-    ]
+    "description": "Show context folders, task statuses, epics, and projects.",
+    "group": "Inspect",
+    "risk": "read",
+    "mode": "run",
+    "args": ["inventory"],
+    "tui": true
   },
   {
     "id": "content",
     "label": "Content Schedules",
-    "description": "Generate current 4-week content schedule notes from enabled cadence JSON and maintain each enabled context folder's current schedule link.",
-    "args": [
-      "content"
-    ]
+    "description": "Generate current content schedules from cadence config.",
+    "group": "Daily Ops",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["content"],
+    "tui": true
+  },
+  {
+    "id": "refresh-schedule-status",
+    "label": "Refresh Schedule Status",
+    "description": "Show refresh LaunchAgent state and last run date.",
+    "group": "Automation",
+    "risk": "read",
+    "mode": "run",
+    "args": ["refresh-schedule", "status"],
+    "statusArgs": ["refresh-schedule", "status", "--json"],
+    "tui": true
+  },
+  {
+    "id": "refresh-schedule-register",
+    "label": "Refresh Schedule Register",
+    "description": "Register the macOS LaunchAgent for daily refresh.",
+    "group": "Automation",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["refresh-schedule", "register"],
+    "palette": true,
+    "tui": true
+  },
+  {
+    "id": "refresh-schedule-unregister",
+    "label": "Refresh Schedule Unregister",
+    "description": "Unload and remove the macOS LaunchAgent for daily vault refresh.",
+    "group": "Automation",
+    "risk": "destructive",
+    "mode": "run",
+    "confirm": "strong",
+    "args": ["refresh-schedule", "unregister"],
+    "palette": true,
+    "tui": true
   },
   {
     "id": "attachments-dry-run",
     "label": "Attachments Dry Run",
-    "description": "Preview attachment routing and cleanup without changing files, showing planned destination moves, unresolved links, and rewrite counts.",
-    "args": [
-      "attachments"
-    ]
+    "description": "Preview attachment routing and cleanup without changing files.",
+    "group": "Maintenance",
+    "risk": "dry-run",
+    "mode": "run",
+    "args": ["attachments"],
+    "tui": true
   },
   {
     "id": "attachments-apply",
     "label": "Attachments Apply",
-    "description": "Apply planned attachment routing and cleanup so note attachments live under each owning root folder's _obsidian/attachments directory.",
-    "args": [
-      "attachments",
-      "--apply"
-    ]
+    "description": "Move note attachments into owning context attachment folders.",
+    "group": "Maintenance",
+    "risk": "apply",
+    "mode": "long-running",
+    "confirm": true,
+    "args": ["attachments", "--apply"],
+    "tui": true
   },
   {
     "id": "epic-sync",
     "label": "Epic Views Sync",
-    "description": "Regenerate per-epic task Kanban Bases and the managed epic views in the master tasks kanban.",
-    "args": [
-      "epic",
-      "sync"
-    ]
+    "description": "Regenerate per-epic task Bases and master epic views.",
+    "group": "Maintenance",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["epic", "sync"],
+    "tui": true
   },
   {
     "id": "gcal-list-week",
     "label": "GCal List Week",
-    "description": "List the next 7 days of Google Calendar events across all calendars as agent-friendly JSON.",
-    "args": [
-      "gcal",
-      "list",
-      "--days",
-      "7",
-      "--calendar",
-      "all",
-      "--json"
-    ]
+    "description": "List the next week of Google Calendar events as JSON.",
+    "group": "Calendar",
+    "risk": "read",
+    "mode": "run",
+    "args": ["gcal", "list", "--days", "7", "--calendar", "all", "--json"],
+    "tui": true
   },
   {
     "id": "gcal-ensure-calendars",
     "label": "GCal Ensure Calendars",
-    "description": "Create or find the Time Blocks, Scheduled Tasks, and Due Tasks calendars used by vault scripts.",
-    "args": [
-      "gcal",
-      "calendars",
-      "ensure",
-      "--apply"
-    ]
+    "description": "Ensure required vault Google Calendars exist.",
+    "group": "Calendar",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["gcal", "calendars", "ensure", "--apply"],
+    "tui": true
   },
   {
     "id": "gcal-sync-tasks-dry-run",
     "label": "GCal Sync Tasks Dry Run",
-    "description": "Preview the two-way TaskNotes due/scheduled mirror without changing tasks or Google Calendar.",
-    "args": [
-      "gcal",
-      "sync-tasks",
-      "--dry-run"
-    ]
+    "description": "Preview TaskNotes date sync with Google Calendar.",
+    "group": "Calendar",
+    "risk": "dry-run",
+    "mode": "run",
+    "args": ["gcal", "sync-tasks", "--dry-run"],
+    "tui": true
   },
   {
-    "id": "git-maintenance",
-    "label": "Git Maintenance",
-    "description": "Keep local Git history shallow at 5 commits and prune local unreachable objects.",
-    "args": [
-      "git-maintenance"
-    ]
-  },
-  {
-    "id": "mobile-profile",
-    "label": "Mobile Profile",
-    "description": "Refresh .obsidian-mobile with the safe mobile plugin set plus theme, style, color, icon, and snippet settings.",
-    "args": [
-      "mobile-profile"
-    ]
-  },
-  {
-    "id": "profile-upgrade-dry-run",
-    "label": "Profile Upgrade Dry Run",
-    "description": "Preview Obsidian profile updates only: plugins, theme, hotkeys, snippets, and safe profile settings.",
-    "args": [
-      "profile",
-      "upgrade",
-      "--dry-run"
-    ]
-  },
-  {
-    "id": "profile-upgrade-apply",
-    "label": "Profile Upgrade Apply",
-    "description": "Apply Obsidian profile updates only and install active plugin bundles without touching vault content.",
-    "args": [
-      "profile",
-      "upgrade",
-      "--apply"
-    ]
-  },
-  {
-    "id": "path-audit",
-    "label": "Path Audit",
-    "description": "Find persisted vault-root paths that would break after moving the vault.",
-    "args": [
-      "path-audit"
-    ]
+    "id": "gcal-sync-tasks-apply",
+    "label": "GCal Sync Tasks",
+    "description": "Apply the two-way TaskNotes due/scheduled mirror with Google Calendar.",
+    "group": "Calendar",
+    "risk": "apply",
+    "mode": "long-running",
+    "confirm": true,
+    "args": ["gcal", "sync-tasks", "--apply"],
+    "tui": true
   },
   {
     "id": "backup",
     "label": "Obsidian Profile Backup",
-    "description": "Back up root .obsidian under _master/system/backup.",
-    "args": [
-      "backup"
-    ]
+    "description": "Back up root Obsidian config under system backup.",
+    "group": "Backup Sync",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["backup"],
+    "tui": true
+  },
+  {
+    "id": "backup-sync-status",
+    "label": "Backup Sync Status",
+    "description": "Show rclone remotes, sources, mounts, logs, and locks.",
+    "group": "Backup Sync",
+    "risk": "read",
+    "mode": "run",
+    "args": ["backup-sync", "status"],
+    "statusArgs": ["backup-sync", "status", "--json"],
+    "tui": true
+  },
+  {
+    "id": "backup-sync-overview",
+    "label": "Backup Sync Overview",
+    "description": "Show backup/sync jobs, mounts, progress, and processes.",
+    "group": "Backup Sync",
+    "risk": "read",
+    "mode": "run",
+    "args": ["backup-sync", "overview"],
+    "statusArgs": ["backup-sync", "overview", "--json"],
+    "tui": true
+  },
+  {
+    "id": "backup-sync-progress",
+    "label": "Backup Sync Progress",
+    "description": "Parse latest rclone transfer stats from active or recent logs.",
+    "group": "Backup Sync",
+    "risk": "read",
+    "mode": "run",
+    "args": ["backup-sync", "progress"],
+    "statusArgs": ["backup-sync", "progress", "--json"],
+    "tui": true
   },
   {
     "id": "backup-sync-setup",
     "label": "Backup Sync Setup",
     "description": "Run the interactive rclone Google Drive backup/sync setup wizard.",
-    "args": [
-      "backup-sync",
-      "setup"
-    ],
-    "palette": true
-  },
-  {
-    "id": "backup-sync-status",
-    "label": "Backup Sync Status",
-    "description": "Show rclone backup/sync remotes, sources, mounts, LaunchAgents, logs, and locks.",
-    "args": [
-      "backup-sync",
-      "status"
-    ]
+    "group": "Backup Sync",
+    "risk": "interactive",
+    "mode": "interactive",
+    "confirm": true,
+    "args": ["backup-sync", "setup"],
+    "palette": true,
+    "tui": true
   },
   {
     "id": "backup-sync-shared-drives",
-    "label": "Backup Sync Shared Drives",
-    "description": "Open the Shared Drive picker to add/remove rclone Shared Drive remotes and read-only mounts.",
-    "args": [
-      "backup-sync",
-      "shared-drives"
-    ],
-    "palette": true
+    "label": "Backup Shared Drives",
+    "description": "Manage Shared Drive remotes and read-only mounts.",
+    "group": "Backup Sync",
+    "risk": "interactive",
+    "mode": "interactive",
+    "confirm": true,
+    "args": ["backup-sync", "shared-drives"],
+    "palette": true,
+    "tui": true
   },
   {
-    "id": "bootstrap-export",
+    "id": "backup-sync-pause",
+    "label": "Backup Sync Pause",
+    "description": "Stop managed syncs and mounts, then set pause flags.",
+    "group": "Backup Sync",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["backup-sync", "pause"],
+    "tui": true
+  },
+  {
+    "id": "backup-sync-resume",
+    "label": "Backup Sync Resume",
+    "description": "Clear pause flags and let supervisor remount drives.",
+    "group": "Backup Sync",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["backup-sync", "resume"],
+    "tui": true
+  },
+  {
+    "id": "backup-sync-clean-uninstall",
+    "label": "Backup Sync Clean Uninstall",
+    "description": "Remove automation, runtime, locks, state, and managed mounts for backup/sync.",
+    "group": "Backup Sync",
+    "risk": "destructive",
+    "mode": "long-running",
+    "confirm": "strong",
+    "args": ["backup-sync", "clean-uninstall"],
+    "tui": true
+  },
+  {
+    "id": "bootstrap-export-dry-run",
+    "label": "Bootstrap Export Dry Run",
+    "description": "Preview public bootstrap vault export from the current vault.",
+    "group": "Bootstrap",
+    "risk": "dry-run",
+    "mode": "run",
+    "args": ["bootstrap-export", "--dry-run"],
+    "tui": true
+  },
+  {
+    "id": "bootstrap-export-force",
     "label": "Bootstrap Export",
-    "description": "Export the public bootstrap vault from the current vault into the configured export root.",
-    "args": [
-      "bootstrap-export"
-    ]
+    "description": "Export public bootstrap vault files into the configured export root.",
+    "group": "Bootstrap",
+    "risk": "apply",
+    "mode": "long-running",
+    "confirm": true,
+    "args": ["bootstrap-export", "--force"],
+    "tui": true
   },
   {
     "id": "deps-status",
     "label": "Dependency Repos Status",
     "description": "Show external dependency repo checkout state and managed projection health.",
-    "args": [
-      "deps",
-      "status"
-    ]
+    "group": "Upgrade",
+    "risk": "read",
+    "mode": "run",
+    "args": ["deps", "status"],
+    "statusArgs": ["deps", "status", "--json"],
+    "tui": true
   },
   {
     "id": "deps-sync-dry-run",
     "label": "Dependency Repos Dry Run",
-    "description": "Preview cloning, fast-forward pulls, and managed projection rebuilds for external dependency repos.",
-    "args": [
-      "deps",
-      "sync",
-      "--dry-run"
-    ]
+    "description": "Preview dependency repo pulls and projection rebuilds.",
+    "group": "Upgrade",
+    "risk": "dry-run",
+    "mode": "long-running",
+    "args": ["deps", "sync", "--dry-run"],
+    "tui": true
   },
   {
     "id": "deps-sync-apply",
     "label": "Dependency Repos Sync",
-    "description": "Clone or fast-forward pull external dependency repos, rebuild managed projections, and refresh skill links.",
-    "args": [
-      "deps",
-      "sync",
-      "--apply"
-    ],
-    "palette": true
+    "description": "Pull dependency repos and rebuild managed projections.",
+    "group": "Upgrade",
+    "risk": "apply",
+    "mode": "long-running",
+    "confirm": true,
+    "args": ["deps", "sync", "--apply"],
+    "palette": true,
+    "tui": true
   },
   {
-    "id": "upgrade-dry-run",
-    "label": "Upgrade Dry Run",
-    "description": "Preview public bootstrap vault updates plus external dependency repo sync and write an upgrade report.",
-    "args": [
-      "upgrade",
-      "--dry-run"
-    ]
-  },
-  {
-    "id": "upgrade-apply",
-    "label": "Upgrade",
-    "description": "Apply public bootstrap vault updates, then sync external dependency repos and projections.",
-    "args": [
-      "upgrade",
-      "--apply"
-    ],
-    "palette": true
+    "id": "upgrade-status",
+    "label": "Upgrade Status",
+    "description": "Show public bootstrap upgrade state and latest report pointer.",
+    "group": "Upgrade",
+    "risk": "read",
+    "mode": "run",
+    "args": ["upgrade", "status"],
+    "statusArgs": ["upgrade", "status", "--json"],
+    "tui": true
   },
   {
     "id": "upgrade-doctor",
     "label": "Upgrade Doctor",
-    "description": "Check public bootstrap upgrade state, hidden upstream Git wiring, and repo metadata.",
-    "args": [
-      "upgrade",
-      "doctor"
+    "description": "Check bootstrap upgrade state and hidden Git wiring.",
+    "group": "Upgrade",
+    "risk": "read",
+    "mode": "run",
+    "args": ["upgrade", "doctor"],
+    "statusArgs": ["upgrade", "doctor", "--json"],
+    "tui": true
+  },
+  {
+    "id": "upgrade-dry-run",
+    "label": "Upgrade Dry Run",
+    "description": "Preview upgrade changes and write an upgrade report.",
+    "group": "Upgrade",
+    "risk": "dry-run",
+    "mode": "long-running",
+    "args": ["upgrade", "--dry-run"],
+    "tui": true
+  },
+  {
+    "id": "upgrade-apply",
+    "label": "Upgrade",
+    "description": "Apply vault upgrade and sync dependency projections.",
+    "group": "Upgrade",
+    "risk": "apply",
+    "mode": "long-running",
+    "confirm": true,
+    "args": ["upgrade", "--apply"],
+    "palette": true,
+    "tui": true
+  },
+  {
+    "id": "upgrade-repair-prompt",
+    "label": "Upgrade Repair Prompt",
+    "description": "Print a repair prompt for the latest upgrade report.",
+    "group": "Upgrade",
+    "risk": "read",
+    "mode": "run",
+    "args": ["upgrade", "repair-prompt"],
+    "tui": true
+  },
+  {
+    "id": "git-maintenance",
+    "label": "Git Maintenance",
+    "description": "Keep vault Git history shallow and prune objects.",
+    "group": "Maintenance",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["git-maintenance"],
+    "tui": true
+  },
+  {
+    "id": "mobile-profile",
+    "label": "Mobile Profile",
+    "description": "Refresh the safe mobile Obsidian profile.",
+    "group": "Profile",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["mobile-profile"],
+    "tui": true
+  },
+  {
+    "id": "profile-upgrade-dry-run",
+    "label": "Profile Upgrade Dry Run",
+    "description": "Preview Obsidian profile and plugin updates.",
+    "group": "Profile",
+    "risk": "dry-run",
+    "mode": "run",
+    "args": ["profile", "upgrade", "--dry-run"],
+    "tui": true
+  },
+  {
+    "id": "profile-upgrade-apply",
+    "label": "Profile Upgrade Apply",
+    "description": "Apply Obsidian profile and plugin updates.",
+    "group": "Profile",
+    "risk": "apply",
+    "mode": "long-running",
+    "confirm": true,
+    "args": ["profile", "upgrade", "--apply"],
+    "tui": true
+  },
+  {
+    "id": "path-audit",
+    "label": "Path Audit",
+    "description": "Find persisted vault-root paths that would break after moving the vault.",
+    "group": "Inspect",
+    "risk": "read",
+    "mode": "run",
+    "args": ["path-audit"],
+    "tui": true
+  },
+  {
+    "id": "folder-register",
+    "label": "Folder Register",
+    "description": "Register an existing context folder and regenerate vault wiring.",
+    "group": "Contexts",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["folder", "register"],
+    "palette": true,
+    "tui": true,
+    "promptArgs": [
+      {
+        "label": "Context folder",
+        "placeholder": "business",
+        "argName": "name",
+        "type": "text"
+      }
     ]
+  },
+  {
+    "id": "triage-prepare",
+    "label": "Brain Dump Triage Prepare",
+    "description": "Create Brain Dump organizer backups/proposals and maintain the triage Base.",
+    "group": "Daily Ops",
+    "risk": "apply",
+    "mode": "long-running",
+    "confirm": true,
+    "args": ["triage", "prepare"],
+    "tui": true
   }
 ]

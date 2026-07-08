@@ -175,19 +175,22 @@ Reusable cross-context assets, agent skills, Mac automation, scripts, generated 
 
 ## Master Folder
 
-`_master` is the operating layer. Use `[[_master/README|_master README]]` for the current folder map, tooling SOP, skill SOP, and docs routing.
+`_master` is the operating layer. Use root [[AGENTS]] for routing, `[[_master/README|master README]]` for the operating-layer map, `[[_master/agents/README|agents README]]` for skills, `[[_master/general-tools/README|general tools README]]` for tools, and `[[_master/system/context/README-scripts|scripts README]]` for `vault` commands.
 
 Generated files contain a managed marker. The bootstrap updates generated files, but skips existing non-managed files.
 
 Root agent files:
 
-- `AGENTS.md`: generated instructions for Codex, Claude, and other coding agents. Edit `_master/system/bootstrap/AGENTS.template.md`, then rerun `python3 _master/system/bootstrap/generate_agents.py`.
+- `AGENTS.md`: direct-edit instructions for Codex, Claude, and other coding agents. Bootstrap/export copies this file; setup scripts do not rewrite it.
 - `CLAUDE.md`: symlink to `AGENTS.md`.
 - `_master/agents/skills`: active shared agent skills.
-- `_master/agents/skill-packs`: manual-only skill pack sources, symlinked through `_master/agents/skills/manual` with implicit invocation disabled.
+- `_master/agents/manual-skills`: manual-only skill sources, exposed as individual symlinks under `_master/agents/skills`.
+- `_master/agents/gh-skills`: skills installed with `gh skill --dir`, exposed as individual symlinks under `_master/agents/skills`.
 - `_master/agents/skills-dump`: dormant non-discoverable skill storage.
 - `.agents/skills`: real repo-local folder for repo-scoped skills; never symlink this path.
 - `.claude/skills`: symlink to `../.agents/skills` so Claude reads the same repo-scoped skills.
+
+Agent symlink helper scripts live under `_master/system/bootstrap/agents/`.
 
 Context folders do not have their own Obsidian profiles or agent symlinks. Open the root workspace for Obsidian and agent work.
 
@@ -646,7 +649,7 @@ impression -> business
 
 The export copies root agent wiring, root `.obsidian` profile files with configured exclusions, `_master` minus generated outputs, empty `_library`, and `_wiki/AGENTS.md`. Context exports create sanitized public folder notes named after the target folder and copy public `_obsidian` Bases and templates.
 
-The root public `README.md` is exported from `_master/system/bootstrap/bootstrap-public-README.md`. It documents the new-machine clone-to-iCloud flow. Internal bootstrap/export mechanics live in `_master/system/README-vault-system-and-bootstrapped.md`. `--force` mirrors export-owned content into `~/Code/vault-public` without deleting the export root or repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, or contribution docs. Export ownership is tracked in `.bootstrap-export-manifest.json`; legacy exports without a manifest are cleaned at the export-root child level while preserving repo metadata.
+The root public `README.md` is exported from `_master/system/bootstrap/README-public-vault-template.md`. It documents the new-machine clone-to-iCloud flow. Internal bootstrap/export mechanics live in `_master/system/README.md`. `--force` mirrors export-owned content into `~/Code/vault-public` without deleting the export root or repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, or contribution docs. Export ownership is tracked in `.bootstrap-export-manifest.json`; legacy exports without a manifest are cleaned at the export-root child level while preserving repo metadata.
 
 Root `.obsidian` is exported through the bootstrap exporter with sensitive path-name exclusions. Plugin directories export public metadata/styles and non-sensitive settings; Context Nine and Relay also export their bundles. Third-party plugin bundles and integration config files that may contain local settings or credentials are excluded from public export.
 

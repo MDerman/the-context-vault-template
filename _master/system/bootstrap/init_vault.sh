@@ -30,9 +30,8 @@ Usage: init_vault.sh [options]
 Initialize a fresh/exported vault after placing it in iCloud.
 
 The script installs/checks dependencies, asks which context folders should
-exist, runs the vault bootstrap, generates AGENTS.md, syncs agent skills,
-installs the `vault` command, then optionally moves the real Git directory
-outside iCloud.
+exist, runs the vault bootstrap, ensures agent symlinks, installs the `vault`
+command, then optionally moves the real Git directory outside iCloud.
 
 Options:
   --non-interactive        Use init-vault-config.json if present, otherwise defaults.
@@ -511,14 +510,14 @@ main() {
     --context-types "${CONTEXT_TYPES}" \
     --default-context-folder "${DEFAULT_CONTEXT_FOLDER}" \
     --skip-install-vault-command \
-    --skip-generate-agents
+    --skip-agent-symlinks
 
-  run_with_optional_dry_run "${PYTHON_BIN}" "${SCRIPT_DIR}/generate_agents.py" --root "${VAULT_ROOT}"
+  run_with_optional_dry_run "${PYTHON_BIN}" "${SCRIPT_DIR}/agents/ensure-agent-file-symlinks.py" --root "${VAULT_ROOT}"
 
   if [[ "${DRY_RUN}" -eq 1 ]]; then
-    run_dry_capable "${SCRIPT_DIR}/sync-agent-skills.sh" --dry-run
+    run_dry_capable "${SCRIPT_DIR}/agents/ensure-agent-skill-symlinks.sh" --dry-run
   else
-    run_dry_capable "${SCRIPT_DIR}/sync-agent-skills.sh" --apply
+    run_dry_capable "${SCRIPT_DIR}/agents/ensure-agent-skill-symlinks.sh" --apply
   fi
 
   run_with_optional_dry_run "${PYTHON_BIN}" "${SCRIPT_DIR}/install_vault_command.py" --root "${VAULT_ROOT}"

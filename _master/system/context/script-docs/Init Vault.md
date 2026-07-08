@@ -16,7 +16,7 @@ Dry-run the default/configured setup:
 _master/system/bootstrap/init_vault.sh --dry-run --non-interactive
 ```
 
-The init script installs/checks dependencies, prompts for context folders, runs bootstrap, generates `AGENTS.md`, syncs agent skills, installs the `vault` command, and optionally sets up Git/LFS with the Git directory outside iCloud.
+The init script installs/checks dependencies, prompts for context folders, runs bootstrap, ensures agent symlinks, installs the `vault` command, and optionally sets up Git/LFS with the Git directory outside iCloud.
 User Git/LFS is off by default; pass `--enable-git` when intentionally creating a personal vault repository.
 
 Context-folder answers are stored in:
@@ -49,7 +49,7 @@ cd "$(vault root)"
 vault folder register business
 ```
 
-`register` is an alias for the create/register path. It preserves the existing folder contents, reads status, context type, and content settings from the context folder note, regenerates context-aware Obsidian bases/templates, and refreshes generated agent files.
+`register` is an alias for the create/register path. It preserves the existing folder contents, reads status, context type, and content settings from the context folder note, regenerates context-aware Obsidian bases/templates, and refreshes agent symlinks.
 
 Unregister a context folder while keeping its files:
 
@@ -58,7 +58,7 @@ vault folder unregister business --dry-run
 vault folder unregister business
 ```
 
-Unregister writes `context_registered: false` to the folder note, then regenerates vault context wiring so dashboards, agent files, and default script discovery ignore it. Re-register later with `vault folder register business`.
+Unregister writes `context_registered: false` to the folder note, then regenerates vault context wiring so dashboards and default script discovery ignore it. Re-register later with `vault folder register business`.
 
 Remove a context folder from disk:
 
@@ -69,8 +69,8 @@ vault folder remove business --apply
 
 `remove` is dry-run by default and only deletes files with `--apply`.
 
-Root `AGENTS.md` is generated from:
+Root `AGENTS.md` is direct-edit source of truth. Agent setup ensures symlinks with:
 
-```text
-_master/system/bootstrap/AGENTS.template.md
+```bash
+python3 _master/system/bootstrap/agents/ensure-agent-file-symlinks.py --root . --dry-run
 ```

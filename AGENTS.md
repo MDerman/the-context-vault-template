@@ -1,64 +1,65 @@
----
-generated: true
-generated_at: 2026-07-05T14:05:31
-managed_by: "managed-by: _master/system/bootstrap/generate_agents.py"
----
-If editing this agent file, edit `_master/system/bootstrap/AGENTS.template.md`, then rerun `python3 _master/system/bootstrap/generate_agents.py`.
-
 # Agent Instructions
 
-Root workspace is one Obsidian vault with context folders. `CLAUDE.md` is a symlink to this file.
+Root workspace is one Obsidian vault with context folders. `AGENTS.md` is direct-edit source of truth. `CLAUDE.md` is a symlink to it. Bootstrap/export copies root `AGENTS.md`; agent setup scripts only ensure symlinks.
 
 ## Always
 
 - Do not read plaintext `.env`, token, key, kubeconfig, or secrets paths unless explicitly asked.
 - Use `[[Obsidian links]]`, not Markdown links, inside vault notes.
+- Follow README breadcrumbs before acting: nearest `README.md`, then relevant `README-<topic>.md`, then command/tool docs.
+- If a workflow needs SOP or quick start docs, put it in the relevant folder as `README-<topic>.md`.
+- Use skills for reusable agent capabilities with trigger rules; use folder READMEs for vault SOPs and tool usage.
 - Put future agent plans in `.agents/plans/`.
 - Put repo-scoped skills in `.agents/skills/`.
-- Put active shared agent skills in `_master/agents/skills/`.
-- Put manual-only skill pack sources in `_master/agents/skill-packs/`; expose them through `_master/agents/skills/manual/` with implicit invocation disabled.
-- Put dormant non-discoverable skills in `_master/agents/skills-dump/`.
+- Put `gh skill --dir` installed shared skills in `_master/agents/gh-skills/`, then run `_master/system/bootstrap/agents/ensure-agent-skill-symlinks.sh --dry-run` and `--apply`.
 - Ignore incidental `.obsidian/` git churn.
 - Do not bulk-move, restructure, delete, or overwrite user content unless explicitly asked.
+- Repos usually live under `~/Code/`; use folder/repo docs before changing them.
 
 ## First Read
 
-1. Read `_master/system/context/CONTEXT.md` | current generated vault state, active periods, tasks, schedules, first-look files.
-2. Use `_master/README.md#Agent Routing Index` to choose the next doc/path for the task type.
-3. Read relevant context folder note, for example `business/impression.md`, before routing or storing info.
+1. Read `_master/system/context/CONTEXT.md` for current generated state.
+2. Run `vault inventory` for low-context routing.
+3. Use the routing index below, then follow folder READMEs until reaching the relevant SOP/tool/command doc.
 4. Read relevant `<context-folder>/<context-folder>.md` before changing entity operating rules.
-5. For public bootstrap/export work, read `_master/system/bootstrap/bootstrap-public-README.md` and `_master/system/README-vault-system-and-bootstrapped.md`.
+5. For public bootstrap/export work, read `_master/system/README.md` and `_master/system/context/script-docs/Bootstrap Export.md`.
 
-## Map
+## Folder Map
 
-- Active context folders: `business`, `personal-brand`, `personal`.
-- Archived context folders: `claudeche`, `ctx9`, `dev`.
-- Configured context folders: `claudeche`, `ctx9`, `dev`, `business`, `personal-brand`, `personal`.
-- Content-enabled context folders: `business`, `personal-brand`.
-- Default task/periodic note capture context folder: `personal`.
-- `_master/`: operating layer. Read `_master/README.md` for its folder map, docs, tooling SOPs, and skill SOPs.
-- `_library/`: learning, research dumps, swipe files, source material, random thoughts.
+- `_master/`: operating layer, scripts, bootstrap, generated context, agent skills, reusable tools. Read `_master/README.md`.
+- `_master/agents/`: shared skills and skill storage. Read `_master/agents/README.md`.
+- `_master/general-tools/`: reusable tools outside `vault`. Read `_master/general-tools/README.md`.
+- `_master/system/`: bootstrap, public export, `vault` scripts, generated context, system docs.
+- `_master/env/`: env tooling docs and tracked placeholders; real values stay ignored.
+- `_library/`: learning, research dumps, swipe files, source material, thoughts. Read `_library/LIBRARY.md` before organizing it.
 - `_wiki/`: synthesized reusable knowledge.
-- `other/`: archive/holding area for old, excess, uncertain, or random dumps. Only used if explicitly asked.
+- `other/`: archive/holding area only when explicitly asked.
+- Context folders: source-of-truth workspaces with local `<context-folder>.md` routing notes and `_obsidian/` operating folders.
 
-Use each context folder's inside-folder note for local routing. Use `_master/01-Context.md` for exact folder shapes, content schemas, TaskNotes details, attachments, and Obsidian profile model.
-Before renaming, organizing, adding, or removing files under `_library/`, read `_library/LIBRARY.md`.
+## Core Docs
 
-## Agent Routing
+- `_master/01-Context.md`: vault architecture, folder model, data model, context folder rules.
+- `_master/system/context/README-scripts.md`: `vault` command index and command docs routing.
+- `_master/system/context/README-script-reference.md`: full script inventory and one-time script cautions.
+- `_master/system/context/README-obsidian-profile.md`: Obsidian profile/plugins/templates/UI.
+- `_master/system/README.md`: bootstrap/export/system mechanics.
+- `_master/env/README.md`: env workflow; placeholders only in tracked files.
 
-For detailed routing and common `rg` commands, read `_master/README.md#Agent Routing Index`.
+## Agent Routing Index
 
-- Current state and work routing: `vault inventory`, `_master/system/context/CONTEXT.md`, `_master/Dashboard.md`.
+- Current state: `vault inventory`, `_master/system/context/CONTEXT.md`, `_master/Dashboard.md`.
 - Tasks/projects/epics: `_master/system/context/script-docs/Tasks And Projects.md`, then `<context-folder>/_obsidian/<tasks|projects|epics>/`.
+- Calendar/time blocks: `_master/system/context/script-docs/Google Calendar.md`, then `vault gcal`.
 - Content: `_master/01-Context.md#Content`, `_master/system/context/script-docs/Content Schedules.md`, then content-enabled `<context-folder>/_obsidian/content/`.
-- Calendar: `_master/system/context/script-docs/Google Calendar.md`, then `vault gcal`.
-- Scripts/tools: `_master/README.md`, `_master/system/context/SCRIPTS.md`, `_master/system/context/SCRIPT-REFERENCE.md`, `_master/general-tools/`, `_master/system/bootstrap/Brewfile`.
+- Scripts and `vault` commands: `_master/system/context/README-scripts.md`; open only the needed script doc.
+- General tools and invoices: `_master/general-tools/README.md`, then relevant `README-<topic>.md` or tool README.
+- Skills: `_master/agents/README.md`, `_master/agents/README-skills.md`, `_master/system/context/script-docs/Agent Skills Sync.md`.
 - Dependency repos: `_master/system/context/script-docs/Dependency Repos.md`, then `vault deps`.
-- Skills: `_master/README.md#Skill SOP`, `_master/system/context/script-docs/Agent Skills Sync.md`.
-- Bootstrap/export/upgrade: `_master/system/README-vault-system-and-bootstrapped.md`, `_master/system/context/script-docs/Bootstrap Export.md`, `_master/system/context/script-docs/Public Vault Upgrade.md`.
-- Obsidian profile/UI/theme: `_master/system/context/OBSIDIAN-PROFILE.md`, `_master/system/obsidian_notes/editing_obsidian.md`.
-- Attachments: `_master/system/context/script-docs/Attachments.md`; attachments live under owning root's `_obsidian/attachments/`.
-- Env/auth: `_master/env/README-env-tooling.md`; keep real values in ignored local env files only.
+- Bootstrap/export/upgrade: `_master/system/README.md`, `_master/system/context/script-docs/<Bootstrap Export|Public Vault Upgrade>.md`.
+- Obsidian profile/UI/theme: `_master/system/context/README-obsidian-profile.md`, then `_master/system/obsidian_notes/editing_obsidian.md` if editing UI/CSS/plugin behavior.
+- Attachments: `_master/system/context/script-docs/Attachments.md`.
+- Env/auth: `_master/env/README.md`.
+- Library changes: `_library/LIBRARY.md`.
 
 ## Core Paths
 
@@ -66,44 +67,20 @@ For detailed routing and common `rg` commands, read `_master/README.md#Agent Rou
 - Projects: `<context-folder>/_obsidian/projects/`
 - Epics: `<context-folder>/_obsidian/epics/`
 - Periodic notes: `<context-folder>/_obsidian/periodic/<daily|weekly|monthly|quarterly|yearly>/`
-- Entity operating rules: `<context-folder>/<context-folder>.md`
+- Entity operating notes: `<context-folder>/<context-folder>.md`
 - Content: `<context-folder>/_obsidian/content/`
 - Content schedules: `<context-folder>/_obsidian/content-schedules/`
-- Note attachments: owning top-level folder's `_obsidian/attachments/`
+- Attachments: owning top-level folder's `_obsidian/attachments/`
 - Brain Dump import: `_master/system/inbox/BRAIN_DUMP.md`
 
-Low-context lookup: run `vault inventory` first, then use `rg --files` or the common searches in `_master/README.md#Low-Context Searches`. Inspect only frontmatter/opening lines unless more is needed. If exact Obsidian Base order matters, check `tasknotes_manual_order` or use Obsidian.
-
-## Vault Commands
-
-Use `vault --help` first. Main vault-related scripts that complement Obsidian workflows live in `_master/system/scripts/`.
-Other random tools and scripts live in `_master/general-tools/`; document their dependencies in `_master/system/bootstrap/Brewfile` when possible.
-
-Run first-time setup with:
-
-```bash
-_master/system/bootstrap/init_vault.sh
-```
-
-`vault attachments` writes reports and quarantined import leftovers outside the vault under `~/Downloads/vault-generated/`, then opens that folder in Finder.
-
-Read `_master/system/context/SCRIPTS.md` before refresh/setup commands. Read `_master/system/context/SCRIPT-REFERENCE.md` before secondary or one-time scripts.
-
-## Operating Rules
+## Operating SOPs
 
 - Create TaskNotes tasks only for executable next actions, reminders, or decisions needing follow-up.
-- Route tasks by context: `business`, `personal-brand`, `personal` unless user names another context.
-- Link projects and epics when obvious.
-- Use native TaskNotes dates: `scheduled` = work/surface date; `due` = deadline. Do not add dates unless explicitly asked or clearly needed.
-- Use native time fields: `timeEstimate`, `timeEntries`, `pomodoros`. Do not use `duration`.
-- Use `vault gcal create-event` for appointments/travel/meetings/reservations; use `vault gcal create-block` only for explicit time blocking.
-- Agents may read calendars with `vault gcal list --days 7 --calendar all --json`; `Scheduled Tasks` and `Due Tasks` mirror TaskNotes dates.
-- Missed cadence: create one recovery task or recommendation, not repeated guilt tasks.
-- Use `_obsidian/content` for owned content items, ideas, and publication definitions; use `_obsidian/tasks` for executable work about content.
-- Content storage is enabled for: `business`, `personal-brand`.
-- `<context-folder>/<context-folder>.md` stores entity/context operating rules.
-- Proof sources should state commitment, data source, manual/automated status, and missing-proof task/warning.
-- Until proof automation exists, ask user to confirm missing facts or mark them manual.
-- Custom plugin / `context_nine_obsidian_plugin`: `~/Code/context_nine_obsidian_plugin/`.
-- External dependency repos live under `~/Code/open_source/<repo-name>` and are tracked in `_master/system/config/deps.json`; use `vault deps` to clone, pull, and rebuild projections.
-- If asked to create shared active skills, use `_master/agents/skills`; manual-only discoverable skills use `_master/agents/skill-packs`; non-discoverable stored skills use `_master/agents/skills-dump`.
+- Route unspecific capture to current default context from `CONTEXT.md`/`vault inventory`.
+- Use `scheduled` for work/surface date and `due` for deadline.
+- Use native time fields: `timeEstimate`, `timeEntries`, `pomodoros`; do not use `duration`.
+- Use `vault gcal create-event` for concrete appointments/travel/meetings/reservations; use `create-block` only for explicit time blocking.
+- Use `_obsidian/content` for owned content items/ideas/publication definitions; use `_obsidian/tasks` for executable work about content.
+- Keep proof-source notes explicit: commitment, data source, manual/automated status, missing-proof task/warning.
+- External dependency repos live under `~/Code/open_source/<repo-name>` and are tracked in `_master/system/config/deps.json`.
+- GitHub-managed shared skills live under `_master/agents/gh-skills` and are exposed through `_master/agents/skills` by the skill sync script.

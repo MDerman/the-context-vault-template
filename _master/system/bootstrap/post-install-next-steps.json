@@ -11,7 +11,7 @@
       "description": "Use GWS for Google Calendar credentials, then create the vault-owned calendars used for TaskNotes mirrors.",
       "commands": [
         "gws auth setup",
-        "gws auth login --scopes calendar,drive",
+        "gws auth login --services calendar,drive",
         "vault gcal calendars ensure --apply"
       ]
     },

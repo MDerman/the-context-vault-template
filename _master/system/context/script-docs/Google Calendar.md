@@ -10,7 +10,7 @@ The vault Google Calendar helper uses GWS credentials. `vault gcal` keeps the Ta
 
 ```bash
 gws auth setup
-gws auth login --scopes calendar,drive
+gws auth login --services calendar,drive
 ```
 
 `gws auth setup` creates or configures the Google Cloud/OAuth pieces. `gws auth login` opens browser OAuth and stores encrypted credentials in GWS's normal config outside the vault.
@@ -70,4 +70,8 @@ Agents should use `vault gcal create-event` for concrete appointments, travel, m
 
 When Obsidian is open, Context Nine runs `vault gcal sync-tasks --apply` every 5 minutes. `vault refresh` runs `vault gcal sync-tasks --apply --prune-orphaned-task-events` once before regenerating context.
 
-Implementation script: `_master/system/scripts/gcal.py`. GWS credentials live outside the vault. Tracked vault calendar behavior config lives in `_master/system/config/calendar.json`. Process environment variables can still override calendar settings for local emergency runs, but `_master/env/.env` is no longer part of normal calendar config.
+Implementation script: `_master/system/scripts/gcal.py`. GWS credentials live outside the vault. Tracked vault calendar behavior config lives in `_master/system/config/calendar.json`; `_master/env/.env` is no longer part of calendar config.
+
+### Gotchas
+
+If `gws auth status` shows Calendar scope but Calendar commands still fail with `insufficient authentication scopes`, the GWS access-token cache may be stale. Remove `~/.config/gws/token_cache.json`, then run `gws auth login --services calendar,drive` again.
