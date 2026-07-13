@@ -22,7 +22,7 @@
       "url": "https://github.com/googleworkspace/cli.git"
     }
   ],
-  "generated_at": "2026-07-13T14:29:34Z",
+  "generated_at": "2026-07-13T15:20:35Z",
   "github_cli": {
     "available": true,
     "skill_available": true,
@@ -457,7 +457,7 @@
       "version": "4.5.3"
     }
   ],
-  "release_tag": "v0.1.0",
-  "release_version": "0.1.0",
+  "release_tag": "v0.1.1",
+  "release_version": "0.1.1",
   "schema_version": 1
 }

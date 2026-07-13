@@ -22,6 +22,27 @@ def repo(path: Path, setup_script: str | None = None) -> deps.Repo:
 
 
 class DependencySetupTests(unittest.TestCase):
+    def test_active_skill_projection_uses_directory_symlink(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "vault"
+            checkout = Path(tmp) / "checkout"
+            source = checkout / "skills/example"
+            source.mkdir(parents=True)
+            (source / "SKILL.md").write_text("---\nname: example\n---\n")
+            projection = deps.Projection(
+                repo_id="example",
+                repo_path=checkout,
+                source=Path("skills/example"),
+                target=Path("_master/agents/skills/example"),
+                type="active-skill",
+                managed=True,
+            )
+            deps.create_active_skill_projection(root, projection, apply=True)
+            target = root / projection.target
+            self.assertTrue(target.is_symlink())
+            self.assertEqual(target.resolve(), source.resolve())
+            self.assertTrue(deps.projection_health(root, projection)["marker"])
+
     def test_setup_script_must_stay_inside_vault(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "vault"

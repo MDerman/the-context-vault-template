@@ -88,8 +88,8 @@ def expand_path(raw: str) -> Path:
 def vault_path(root: Path, raw: str) -> Path:
     path = Path(os.path.expanduser(raw))
     if path.is_absolute():
-        return path.resolve()
-    return (root / path).resolve()
+        return Path(os.path.abspath(path))
+    return Path(os.path.abspath(root / path))
 
 
 def load_config(root: Path) -> list[Repo]:
@@ -209,6 +209,11 @@ def projection_health(root: Path, projection: Projection) -> dict[str, Any]:
     source = projection.repo_path / projection.source
     target = vault_path(root, projection.target)
     marker = read_marker(target)
+    active_link_ok = (
+        projection.type == "active-skill"
+        and target.is_symlink()
+        and target.resolve() == source.resolve()
+    )
     return {
         "source": str(source),
         "target": str(target),
@@ -216,8 +221,8 @@ def projection_health(root: Path, projection: Projection) -> dict[str, Any]:
         "managed": projection.managed,
         "source_exists": source.exists(),
         "target_exists": target.exists() or target.is_symlink(),
-        "marker": bool(marker),
-        "marker_repo_id": marker.get("repo_id"),
+        "marker": active_link_ok or bool(marker),
+        "marker_repo_id": projection.repo_id if active_link_ok else marker.get("repo_id"),
     }
 
 
@@ -444,26 +449,6 @@ def manual_skill_projection_current(target: Path, source: Path, projection: Proj
     return True
 
 
-def symlink_projection_current(target: Path, source: Path, projection: Projection) -> bool:
-    marker = read_marker(target)
-    if marker != marker_payload(projection):
-        return False
-    expected = {child.name: child for child in expected_projection_children(source, skip_agents=False)}
-    actual = {
-        child.name: child
-        for child in target.iterdir()
-        if child.name not in {MANAGED_MARKER, ".DS_Store"}
-    }
-    if set(actual) != set(expected):
-        return False
-    for name, target_child in actual.items():
-        if not target_child.is_symlink():
-            return False
-        if target_child.resolve() != expected[name].resolve():
-            return False
-    return True
-
-
 def create_manual_skill_projection(root: Path, projection: Projection, apply: bool) -> bool:
     source = projection.repo_path / projection.source
     target = vault_path(root, projection.target)
@@ -511,10 +496,10 @@ def create_active_skill_projection(root: Path, projection: Projection, apply: bo
     existing = target.exists() or target.is_symlink()
     marker = read_marker(target)
     if existing:
+        if target.is_symlink() and target.resolve() == source.resolve():
+            log(f"Projection current: {target}")
+            return False
         if marker.get("managed_by") == "vault deps":
-            if target.is_dir() and symlink_projection_current(target, source, projection):
-                log(f"Projection current: {target}")
-                return False
             log(f"Rebuild managed projection: {target}")
             if apply:
                 remove_path(target)
@@ -525,10 +510,8 @@ def create_active_skill_projection(root: Path, projection: Projection, apply: bo
     if not apply:
         return True
 
-    target.mkdir(parents=True, exist_ok=True)
-    for child in expected_projection_children(source, skip_agents=False):
-        (target / child.name).symlink_to(child)
-    write_json(projection_marker(target), marker_payload(projection))
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.symlink_to(source, target_is_directory=True)
     return True
 
 
