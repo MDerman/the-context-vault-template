@@ -36,6 +36,7 @@ COMMANDS = {
     "mobile-profile": SCRIPT_DIR / "mobile_profile.py",
     "profile": SCRIPT_DIR / "profile.py",
     "path-audit": SCRIPT_DIR / "path_audit.py",
+    "release": SCRIPT_DIR / "release.py",
     "triage": ROOT / "_master/agents/skills/brain-dump-organizer/scripts/triage.py",
     "upgrade": SCRIPT_DIR / "upgrade.py",
 }
@@ -68,6 +69,7 @@ Common commands:
   mobile-profile  Create/update .obsidian-mobile with safe mobile plugins and theme settings.
   profile      Preview/apply Obsidian profile, theme, hotkey, and plugin upgrades.
   path-audit   Find persisted vault-root paths that make the vault non-portable.
+  release      Publish SemVer public vault releases.
   triage       Prepare/apply Brain Dump organizer proposals.
   upgrade      Preview/apply public bootstrap vault upgrades.
   tui          Open the Textual vault command control room.
@@ -99,6 +101,7 @@ Examples:
   vault mobile-profile
   vault profile upgrade --dry-run
   vault path-audit
+  vault release publish --dry-run
   vault triage prepare
   vault upgrade --dry-run
   vault tui

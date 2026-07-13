@@ -146,6 +146,26 @@ class BootstrapExporter:
         self.manifest_name = config.get("manifest_name", DEFAULT_MANIFEST_NAME)
         self.exported_paths: set[str] = set()
         self.explicit_root_names = self.collect_explicit_root_names()
+        self.dependency_projection_targets = self.load_dependency_projection_targets()
+
+    def load_dependency_projection_targets(self) -> set[Path]:
+        config_path = self.root / "_master/system/config/deps.json"
+        if not config_path.is_file():
+            return set()
+        try:
+            data = json.loads(config_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return set()
+        targets: set[Path] = set()
+        for repo in data.get("repos", []):
+            for projection in repo.get("projections", []):
+                if not projection.get("managed", True):
+                    continue
+                target = Path(str(projection.get("target", "")))
+                if not target.parts or target.is_absolute() or ".." in target.parts:
+                    continue
+                targets.add(target)
+        return targets
 
     def log(self, message: str) -> None:
         prefix = "[dry-run] " if self.dry_run else ""
@@ -359,6 +379,8 @@ class BootstrapExporter:
 
     def should_skip_master_shared(self, relative: Path, is_dir: bool) -> bool:
         rel = posix(relative)
+        if any(relative == target or is_relative_to(relative, target) for target in self.dependency_projection_targets):
+            return True
         if self.is_global_exclude_path(relative):
             return True
         if self.is_sensitive_path(relative):

@@ -290,6 +290,28 @@
     "tui": true
   },
   {
+    "id": "release-publish-dry-run",
+    "label": "Release Publish Dry Run",
+    "description": "Preview SemVer public vault release, dependency lock, export, commit, tag, push, and GitHub release.",
+    "group": "Bootstrap",
+    "risk": "dry-run",
+    "mode": "long-running",
+    "args": ["release", "publish", "--dry-run", "--bump", "patch"],
+    "tui": true
+  },
+  {
+    "id": "release-publish",
+    "label": "Release Publish",
+    "description": "Publish the next patch SemVer public vault release.",
+    "group": "Bootstrap",
+    "risk": "apply",
+    "mode": "long-running",
+    "confirm": "strong",
+    "args": ["release", "publish", "--bump", "patch"],
+    "palette": true,
+    "tui": true
+  },
+  {
     "id": "deps-status",
     "label": "Dependency Repos Status",
     "description": "Show external dependency repo checkout state and managed projection health.",

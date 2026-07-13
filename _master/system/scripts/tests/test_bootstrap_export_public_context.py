@@ -21,6 +21,26 @@ from folder import has_content_structure  # noqa: E402
 
 
 class PublicContextExportTests(unittest.TestCase):
+    def test_managed_dependency_projection_is_not_exported(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "source"
+            export_root = Path(tmp) / "public"
+            config_dir = root / "_master/system/config"
+            projection = root / "_master/agents/skills/agent-canvas"
+            checkout = Path(tmp) / "checkout/skills/agent-canvas"
+            config_dir.mkdir(parents=True)
+            checkout.mkdir(parents=True)
+            (checkout / "SKILL.md").write_text("external\n")
+            projection.parent.mkdir(parents=True)
+            projection.symlink_to(checkout)
+            (config_dir / "deps.json").write_text(
+                '{"repos":[{"projections":[{"target":"_master/agents/skills/agent-canvas","managed":true}]}]}\n'
+            )
+            config = {"export_root": str(export_root), "copy_obsidian": "exact"}
+            exporter = BootstrapExporter(root=root, config=config, export_root=export_root, force=True, dry_run=False)
+            exporter.copy_master_or_shared("_master")
+            self.assertFalse((export_root / "_master/agents/skills/agent-canvas").exists())
+
     def test_patched_simple_folder_note_bundle_is_exported(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "source"

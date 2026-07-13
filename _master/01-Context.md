@@ -626,7 +626,16 @@ The linear calendar belongs in `_master` because it is a workflow/reference patt
 
 ## Bootstrap Export Workflow
 
-The current vault is the source of truth. Public bootstrap export copies a runnable subset to the configured export root:
+The current vault is the source of truth. Public releases must go through the SemVer release command:
+
+```bash
+vault release publish --dry-run --bump patch
+vault release publish --bump patch
+```
+
+The release command bumps `_master/system/bootstrap/state/release.json`, writes `_master/system/config/dependencies.lock.json`, exports the public vault, commits `~/Code/vault-public`, creates tag `vX.Y.Z`, pushes, and creates the GitHub Release. Use `--bump minor`, `--bump major`, or `--version X.Y.Z` when needed.
+
+Raw bootstrap export copies a runnable subset to the configured export root and is for local inspection or repair:
 
 ```bash
 vault bootstrap-export --dry-run
@@ -649,11 +658,11 @@ impression -> business
 
 The export copies root agent wiring, root `.obsidian` profile files with configured exclusions, `_master` minus generated outputs, empty `_library`, and `_wiki/AGENTS.md`. Context exports create sanitized public folder notes named after the target folder and copy public `_obsidian` Bases and templates.
 
-The root public `README.md` is exported from `_master/system/bootstrap/README-public-vault-template.md`. It documents the new-machine clone-to-iCloud flow. Internal bootstrap/export mechanics live in `_master/system/README.md`. `--force` mirrors export-owned content into `~/Code/vault-public` without deleting the export root or repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, or contribution docs. Export ownership is tracked in `.bootstrap-export-manifest.json`; legacy exports without a manifest are cleaned at the export-root child level while preserving repo metadata.
+The root public `README.md` is exported from `_master/system/bootstrap/README-public-vault-template.md`. It documents the new-machine clone-to-iCloud flow. Internal bootstrap/export mechanics live in `_master/system/README.md`. `--force` mirrors export-owned content into `~/Code/vault-public` without deleting the export root or repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, or contribution docs. Export ownership is tracked in `_master/system/bootstrap/state/export-manifest.json`; legacy exports without a manifest are cleaned at the export-root child level while preserving repo metadata.
 
 Root `.obsidian` is exported through the bootstrap exporter with sensitive path-name exclusions. Plugin directories export public metadata/styles and non-sensitive settings; Context Nine and Relay also export their bundles. Third-party plugin bundles and integration config files that may contain local settings or credentials are excluded from public export.
 
-Public installs run `init_vault.sh --no-git` by default. Their installer stores upstream public repo Git state outside iCloud under `~/Library/Application Support/matt-vault-bootstrap/<install-id>/upstream.git`, removes the vault `.git` pointer, and writes `.vault-bootstrap/install.json`. Future setup updates use:
+Public installs run `init_vault.sh --no-git` by default. Their installer stores upstream public repo Git state outside iCloud under `~/Library/Application Support/context-nine-vault-bootstrap/<install-id>/upstream.git`, removes the vault `.git` pointer, and writes `_master/system/bootstrap/state/install.json`. Future setup updates use:
 
 ```bash
 vault upgrade --dry-run
@@ -661,7 +670,7 @@ vault upgrade --apply
 vault upgrade doctor
 ```
 
-Upgrade behavior is controlled by `.vault-bootstrap/policy.json`: scripts/tools/plugin code/root wiring are replaced from upstream, user notes/tasks/entity operating notes are preserved, and versioned migrations under `_master/system/migrations/` handle user-owned schema changes when a release enables them. The `vault-upgrade-repair` skill is the fallback for failed migrations or report-driven manual fixes.
+Upgrade behavior is controlled by `_master/system/bootstrap/state/policy.json`: scripts/tools/plugin code/root wiring are replaced from upstream, user notes/tasks/entity operating notes are preserved, and versioned migrations under `_master/system/migrations/` handle user-owned schema changes when a release enables them. Upgrade reports record from/to version and commit, target tag, dependency lock hash, result, error, and timestamps. The `vault-upgrade-repair` skill is the fallback for failed migrations or report-driven manual fixes.
 
 Add a new context folder with:
 

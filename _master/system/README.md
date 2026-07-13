@@ -40,9 +40,23 @@ Generated copies under `_master/system/context/*.md` are agent-readable outputs 
 The exporter:
 
 - copies root agent wiring, selected root files, root `.obsidian` and `.obsidian-mobile` profile files with configured exclusions, `_master` minus generated/private outputs, empty `_library`, `_wiki/AGENTS.md`, and configured context folder scaffolds;
+- derives managed dependency projection targets from `_master/system/config/deps.json` and omits them; fresh installs recreate local projections without exporting machine-specific absolute symlinks;
 - writes `_master/system/bootstrap/state/export-manifest.json` so future exports can remove stale export-owned files;
 - preserves repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, and contribution docs;
 - refuses to export inside the source vault.
+
+Use raw export for inspection and repair only. Normal public publishing goes through:
+
+```bash
+vault release publish --dry-run --bump patch
+vault release publish --bump patch
+```
+
+`vault release publish` bumps the public SemVer release metadata, writes `_master/system/config/dependencies.lock.json`, exports the public vault, commits `~/Code/vault-public`, creates annotated tag `vX.Y.Z`, pushes the commit/tag, and creates the GitHub Release. Use `--bump minor`, `--bump major`, or `--version X.Y.Z` when the release should not be a patch bump.
+
+Release metadata lives in `_master/system/bootstrap/state/release.json`. It stores the SemVer, tag, release timestamp, dependency lock path, and dependency lock SHA-256. Any public release must update this file through `vault release publish`; do not commit a public export with stale release metadata.
+
+Dependency lock metadata lives in `_master/system/config/dependencies.lock.json`. It records tested Homebrew dependency versions, exact external repo commits from `deps.json`, Obsidian plugin manifest versions, and GitHub CLI/`gh skill` availability for the release.
 
 ## Plugin Code
 
@@ -91,6 +105,7 @@ Public install script:
 - removes the public-repo `.git` pointer from the vault;
 - runs `_master/system/bootstrap/init_vault.sh`, which asks for three exact context-folder slugs; user Git is off by default.
 - downloads active third-party Obsidian plugin bundles, while Context Nine and Relay are already shipped in the vault export.
+- clones every repo from `_master/system/config/deps.json` at release-locked commits, creates projections, and runs vault-owned setup hooks. Agent Canvas setup builds editable checkout, links Bun package, and installs `~/.local/bin/agent-canvas`.
 
 Public README invokes root `install.sh` through the GitHub raw URL and shows only the default command plus a custom-target example.
 
@@ -113,6 +128,7 @@ Profile upgrade does not advance the installed public commit. A later full `vaul
 - Legacy root state paths (`.vault-bootstrap`, `.vault-upgrade`, `.bootstrap-export-manifest.json`) are not part of new installs. Upgrade keeps legacy fallbacks and migrates old install/report state into `_master/system/bootstrap/state`.
 - Plugin config: excluded plugin config means users must sign in/configure local integrations after install.
 - Upgrade command: README currently documents planned `vault upgrade` commands; keep this only if the command exists or is intentionally being previewed before implementation.
+- Upgrade reports include from/to version and commit, target release tag, dependency lock hash, result, error, and timestamps. Install state advances only after file changes, migrations, and dependency sync succeed; failed upgrades leave the previous installed version/commit in place and expose the failed attempt through `vault upgrade status`.
 
 ## System Folder Map
 

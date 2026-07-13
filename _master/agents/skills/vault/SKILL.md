@@ -81,13 +81,13 @@ After changing skills, run `vault context` only if agent-readable generated docs
 
 ## Public Vault Export
 
-If user says "export the public vault", "publish the public vault", or similar:
+If user says "publish the public vault", "release the public vault", or similar:
 
 1. Finish requested source-vault changes first.
-2. Run `vault bootstrap-export --force`.
-3. `cd ~/Code/vault-public`.
-4. Inspect `git status` and diff for secrets, local config, accidental backups, or unrelated files.
-5. Commit all intended public export changes with a relevant message.
-6. Push the public repo remote.
+2. Run `vault release publish --dry-run --bump patch` and inspect the planned SemVer, dependency lock hash, and public repo actions.
+3. Run `vault release publish --bump patch` unless the user requested `--bump minor`, `--bump major`, or `--version X.Y.Z`.
+4. Confirm `~/Code/vault-public` is clean and the GitHub release/tag exists.
 
-This updates `MDerman/the-context-vault-template` from the source vault export.
+This updates `MDerman/the-context-vault-template` from the source vault export, bumps `_master/system/bootstrap/state/release.json`, snapshots `_master/system/config/dependencies.lock.json`, commits public export, tags `vX.Y.Z`, pushes, and creates a GitHub Release.
+
+Use `vault bootstrap-export --force` only for local export inspection or exceptional manual repair. Public releases must use `vault release publish` so installed vaults can report installed and attempted upgrade versions.

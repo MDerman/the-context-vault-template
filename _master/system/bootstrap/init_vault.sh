@@ -515,6 +515,12 @@ main() {
   run_with_optional_dry_run "${PYTHON_BIN}" "${SCRIPT_DIR}/agents/ensure-agent-file-symlinks.py" --root "${VAULT_ROOT}"
 
   if [[ "${DRY_RUN}" -eq 1 ]]; then
+    run_dry_capable "${PYTHON_BIN}" "${VAULT_ROOT}/_master/system/scripts/deps.py" sync --root "${VAULT_ROOT}" --dry-run
+  else
+    run_dry_capable "${PYTHON_BIN}" "${VAULT_ROOT}/_master/system/scripts/deps.py" sync --root "${VAULT_ROOT}" --apply
+  fi
+
+  if [[ "${DRY_RUN}" -eq 1 ]]; then
     run_dry_capable "${SCRIPT_DIR}/agents/ensure-agent-skill-symlinks.sh" --dry-run
   else
     run_dry_capable "${SCRIPT_DIR}/agents/ensure-agent-skill-symlinks.sh" --apply

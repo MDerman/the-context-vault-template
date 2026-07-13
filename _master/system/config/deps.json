@@ -16,6 +16,23 @@
       ]
     },
     {
+      "id": "agent-canvas",
+      "url": "https://github.com/whq25/agent-canvas.git",
+      "path": "~/Code/open_source/agent-canvas",
+      "ref": "main",
+      "setup": {
+        "script": "_master/system/bootstrap/install_agent_canvas.py"
+      },
+      "projections": [
+        {
+          "source": "skills/agent-canvas",
+          "target": "_master/agents/skills/agent-canvas",
+          "type": "active-skill",
+          "managed": true
+        }
+      ]
+    },
+    {
       "id": "googleworkspace-cli",
       "url": "https://github.com/googleworkspace/cli.git",
       "path": "~/Code/open_source/googleworkspace-cli",

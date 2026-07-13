@@ -106,6 +106,8 @@ run_as_install_user mkdir -p "${STATE_DIR}"
 run_as_install_user "${GIT_BIN}" clone --separate-git-dir "${UPSTREAM_GIT}" "${REPO_URL}" "${TARGET}"
 installed_commit="$(run_as_install_user "${GIT_BIN}" --git-dir "${UPSTREAM_GIT}" --work-tree "${TARGET}" rev-parse HEAD)"
 installed_version="$(sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "${TARGET}/${BOOTSTRAP_STATE_RELATIVE}/release.json" | head -1)"
+installed_tag="$(sed -n 's/.*"tag"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "${TARGET}/${BOOTSTRAP_STATE_RELATIVE}/release.json" | head -1)"
+dependency_lock_sha256="$(sed -n 's/.*"dependency_lock_sha256"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "${TARGET}/${BOOTSTRAP_STATE_RELATIVE}/release.json" | head -1)"
 
 json_escape() {
   local value="$1"
@@ -123,7 +125,9 @@ install_json="$(cat <<EOF
   "state_dir": "$(json_escape "${STATE_DIR}")",
   "upstream_git_dir": "$(json_escape "${UPSTREAM_GIT}")",
   "installed_commit": "$(json_escape "${installed_commit}")",
-  "installed_version": "$(json_escape "${installed_version:-unknown}")"
+  "installed_version": "$(json_escape "${installed_version:-unknown}")",
+  "installed_tag": "$(json_escape "${installed_tag:-unknown}")",
+  "dependency_lock_sha256": "$(json_escape "${dependency_lock_sha256:-unknown}")"
 }
 EOF
 )"

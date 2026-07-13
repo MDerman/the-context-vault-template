@@ -47,6 +47,10 @@ def utc_stamp() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
 
+def utc_iso() -> str:
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
 def read_json(path: Path, default: dict[str, Any] | None = None) -> dict[str, Any]:
     if not path.exists():
         return {} if default is None else default
@@ -461,6 +465,17 @@ def write_report(root: Path, payload: dict[str, Any]) -> Path:
     return report_path
 
 
+def finish_report(root: Path, payload: dict[str, Any], result: str, error: str | None = None) -> Path:
+    payload["result"] = result
+    payload["error"] = error
+    payload["finished_at"] = utc_iso()
+    return write_report(root, payload)
+
+
+def failed_entries(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [entry for entry in entries if entry.get("result") == "failed"]
+
+
 def write_install(root: Path, install: dict[str, Any]) -> None:
     write_json(root / INSTALL_PATH, install)
 
@@ -472,33 +487,29 @@ def run_upgrade(root: Path, apply: bool) -> int:
     policy = load_policy(root, upstream_git_dir, latest_rev)
     release = latest_release(root, upstream_git_dir, latest_rev)
     timestamp = utc_stamp()
+    started_at = utc_iso()
     backup_root = state_dir / "backups" / timestamp
 
     changes = changed_paths(root, upstream_git_dir, installed_rev, latest_rev)
     entries: list[dict[str, Any]] = []
-    for change in changes:
-        action = classify(policy, change.path)
-        entries.append(
-            apply_change(
-                root=root,
-                git_dir=upstream_git_dir,
-                latest_rev=latest_rev,
-                change=change,
-                action=action,
-                policy=policy,
-                apply=apply,
-                backup_root=backup_root,
-            )
-        )
-
     report_payload: dict[str, Any] = {
         "timestamp": timestamp,
+        "started_at": started_at,
+        "finished_at": None,
         "mode": "apply" if apply else "dry-run",
         "repo_url": install.get("repo_url") or release.get("repo_url") or DEFAULT_REPO_URL,
+        "from_commit": installed_rev,
+        "to_commit": latest_rev,
+        "from_version": install.get("installed_version"),
+        "to_version": release.get("version"),
+        "release_tag": release.get("tag"),
+        "dependency_lock_sha256": release.get("dependency_lock_sha256"),
         "installed_commit": installed_rev,
         "latest_commit": latest_rev,
         "installed_version": install.get("installed_version"),
         "latest_version": release.get("version"),
+        "result": "running",
+        "error": None,
         "backup_root": backup_root.as_posix(),
         "changes": entries,
         "migrations": [],
@@ -507,53 +518,94 @@ def run_upgrade(root: Path, apply: bool) -> int:
     }
     report_path = write_report(root, report_payload)
 
-    migrations: list[dict[str, Any]] = []
-    if apply:
-        migrations = run_migrations(root, policy, report_path.parent, apply=True)
-        git(root, upstream_git_dir, ["reset", "--mixed", latest_rev])
-        install["installed_commit"] = latest_rev
-        install["installed_version"] = release.get("version") or install.get("installed_version")
-        install["last_upgrade_report"] = str(report_path.relative_to(root))
-        write_install(root, install)
-        report_payload["state_migration"] = migrate_legacy_state(root)
-    else:
-        migrations = run_migrations(root, policy, report_path.parent, apply=False)
+    try:
+        for change in changes:
+            action = classify(policy, change.path)
+            entries.append(
+                apply_change(
+                    root=root,
+                    git_dir=upstream_git_dir,
+                    latest_rev=latest_rev,
+                    change=change,
+                    action=action,
+                    policy=policy,
+                    apply=apply,
+                    backup_root=backup_root,
+                )
+            )
+        report_payload["changes"] = entries
+        write_report(root, report_payload)
 
-    report_payload["migrations"] = migrations
-    dependencies = run_dependency_sync(root, apply=apply)
-    report_payload["dependencies"] = dependencies
-    report_path = write_report(root, report_payload)
-    if dependencies.get("stdout"):
-        print(dependencies["stdout"])
-    if dependencies.get("stderr"):
-        print(dependencies["stderr"], file=sys.stderr)
-    if dependencies.get("result") == "failed":
-        raise SystemExit(f"Dependency sync failed. See report: {report_path}")
+        migrations = run_migrations(root, policy, report_path.parent, apply=apply)
+        report_payload["migrations"] = migrations
+        migration_failures = failed_entries(migrations)
+        if migration_failures:
+            report_path = finish_report(root, report_payload, "failed", "Migration failed.")
+            raise SystemExit(f"Migration failed. See report: {report_path}")
+
+        dependencies = run_dependency_sync(root, apply=apply)
+        report_payload["dependencies"] = dependencies
+        if dependencies.get("stdout"):
+            print(dependencies["stdout"])
+        if dependencies.get("stderr"):
+            print(dependencies["stderr"], file=sys.stderr)
+        if dependencies.get("result") == "failed":
+            report_path = finish_report(root, report_payload, "failed", "Dependency sync failed.")
+            raise SystemExit(f"Dependency sync failed. See report: {report_path}")
+
+        if apply:
+            git(root, upstream_git_dir, ["reset", "--mixed", latest_rev])
+            install["installed_commit"] = latest_rev
+            install["installed_version"] = release.get("version") or install.get("installed_version")
+            install["installed_tag"] = release.get("tag") or install.get("installed_tag")
+            install["dependency_lock_sha256"] = release.get("dependency_lock_sha256")
+            install["last_upgrade_report"] = str(report_path.relative_to(root))
+            write_install(root, install)
+            report_payload["state_migration"] = migrate_legacy_state(root)
+
+        report_path = finish_report(root, report_payload, "ok")
+    except SystemExit as exc:
+        if report_payload.get("result") == "running":
+            report_path = finish_report(root, report_payload, "failed", str(exc) or "Upgrade failed.")
+        raise
+
     print(f"{'Applied' if apply else 'Dry-run'} upgrade report: {report_path}")
     print(f"changes: {len(entries)}")
-    print(f"migrations: {len(migrations)}")
+    print(f"migrations: {len(report_payload['migrations'])}")
     return 0
 
 
 def run_dependency_only_upgrade(root: Path, apply: bool) -> int:
     timestamp = utc_stamp()
+    started_at = utc_iso()
     dependencies = run_dependency_sync(root, apply=apply)
     report_payload: dict[str, Any] = {
         "timestamp": timestamp,
+        "started_at": started_at,
+        "finished_at": None,
         "mode": "apply" if apply else "dry-run",
         "public_bootstrap": "skipped_missing_install_state",
+        "from_version": None,
+        "to_version": None,
+        "from_commit": None,
+        "to_commit": None,
+        "release_tag": None,
+        "dependency_lock_sha256": None,
+        "result": "running",
+        "error": None,
         "changes": [],
         "migrations": [],
         "state_migration": [],
         "dependencies": dependencies,
     }
-    report_path = write_report(root, report_payload)
     if dependencies.get("stdout"):
         print(dependencies["stdout"])
     if dependencies.get("stderr"):
         print(dependencies["stderr"], file=sys.stderr)
     if dependencies.get("result") == "failed":
+        report_path = finish_report(root, report_payload, "failed", "Dependency sync failed.")
         raise SystemExit(f"Dependency sync failed. See report: {report_path}")
+    report_path = finish_report(root, report_payload, "ok")
     print("Skipped public bootstrap upgrade: missing install state.")
     print(f"{'Applied' if apply else 'Dry-run'} dependency sync report: {report_path}")
     return 0
@@ -572,7 +624,20 @@ def upgrade_status_payload(root: Path) -> dict[str, Any]:
         "latestVersion": None,
         "upToDate": None,
         "latestReport": str(report) if report else None,
+        "latestFailedAttempt": None,
     }
+    if report:
+        report_payload = read_json(report)
+        if report_payload.get("result") == "failed":
+            payload["latestFailedAttempt"] = {
+                "report": str(report),
+                "fromVersion": report_payload.get("from_version") or report_payload.get("installed_version"),
+                "toVersion": report_payload.get("to_version") or report_payload.get("latest_version"),
+                "fromCommit": report_payload.get("from_commit") or report_payload.get("installed_commit"),
+                "toCommit": report_payload.get("to_commit") or report_payload.get("latest_commit"),
+                "error": report_payload.get("error"),
+                "finishedAt": report_payload.get("finished_at"),
+            }
     if not install:
         payload["state"] = "missing-install-state"
         payload["message"] = "No public bootstrap install state; upgrade runs dependency sync only."
@@ -589,6 +654,8 @@ def upgrade_status_payload(root: Path) -> dict[str, Any]:
             "hiddenUpstreamGitExists": upstream_git_dir.exists(),
             "installedCommit": install.get("installed_commit") or "unknown",
             "installedVersion": install.get("installed_version") or "unknown",
+            "installedTag": install.get("installed_tag") or "unknown",
+            "dependencyLockSha256": install.get("dependency_lock_sha256") or "unknown",
         }
     )
     if not upstream_git_dir.exists():
@@ -622,8 +689,21 @@ def status(root: Path, json_output: bool = False) -> int:
     print(f"installed commit: {installed_rev}")
     print(f"latest commit:    {latest_rev}")
     print(f"installed version: {install.get('installed_version') or 'unknown'}")
+    print(f"installed tag:     {install.get('installed_tag') or 'unknown'}")
     print(f"latest version:    {release.get('version') or 'unknown'}")
+    print(f"dependency lock:   {install.get('dependency_lock_sha256') or 'unknown'}")
     print("up to date: " + ("yes" if installed_rev == latest_rev else "no"))
+    report = latest_report(root)
+    if report:
+        report_payload = read_json(report)
+        if report_payload.get("result") == "failed":
+            print(
+                "latest failed attempt: "
+                f"{report_payload.get('from_version') or report_payload.get('installed_version') or 'unknown'}"
+                " -> "
+                f"{report_payload.get('to_version') or report_payload.get('latest_version') or 'unknown'}"
+                f" ({report})"
+            )
     return 0
 
 

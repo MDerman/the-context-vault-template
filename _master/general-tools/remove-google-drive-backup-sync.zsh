@@ -60,22 +60,22 @@ run() {
 }
 
 run_sudo_rm_rf() {
-  local path
-  for path in "$@"; do
-    [[ -e "$path" || -L "$path" ]] || continue
+  local target
+  for target in "$@"; do
+    [[ -e "$target" || -L "$target" ]] || continue
     if (( APPLY )); then
-      sudo rm -rf -- "$path"
+      sudo rm -rf -- "$target"
     else
-      printf '[dry-run] sudo rm -rf -- %q\n' "$path"
+      printf '[dry-run] sudo rm -rf -- %q\n' "$target"
     fi
   done
 }
 
 run_rm_rf_globs() {
-  local path
-  for path in "$@"; do
-    [[ -e "$path" || -L "$path" ]] || continue
-    run rm -rf -- "$path"
+  local target
+  for target in "$@"; do
+    [[ -e "$target" || -L "$target" ]] || continue
+    run rm -rf -- "$target"
   done
 }
 

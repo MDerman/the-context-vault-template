@@ -20,6 +20,7 @@ from script_utils import resolve_vault_root
 SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT = SCRIPT_DIR.parents[2]
 CONFIG_PATH = Path("_master/system/config/deps.json")
+LOCK_PATH = Path("_master/system/config/dependencies.lock.json")
 BACKUP_ROOT = Path("_master/agents/backups/deps-projections")
 SKILL_SYNC = Path("_master/system/bootstrap/agents/ensure-agent-skill-symlinks.sh")
 MANAGED_MARKER = ".vault-deps-projection.json"
@@ -41,6 +42,8 @@ class Repo:
     url: str
     path: Path
     ref: str
+    locked_commit: str | None
+    setup_script: str | None
     projections: list[Projection]
 
 
@@ -91,6 +94,12 @@ def vault_path(root: Path, raw: str) -> Path:
 
 def load_config(root: Path) -> list[Repo]:
     data = read_json(root / CONFIG_PATH)
+    lock_data = read_json(root / LOCK_PATH) if (root / LOCK_PATH).exists() else {}
+    locked_repos = {
+        str(item.get("id")): str(item.get("resolved_commit"))
+        for item in lock_data.get("external_repos", [])
+        if item.get("id") and item.get("resolved_commit")
+    }
     repos: list[Repo] = []
     for item in data.get("repos", []):
         repo_id = str(item["id"])
@@ -112,6 +121,12 @@ def load_config(root: Path) -> list[Repo]:
                 url=str(item["url"]),
                 path=repo_path,
                 ref=str(item.get("ref") or "main"),
+                locked_commit=locked_repos.get(repo_id),
+                setup_script=(
+                    str(item["setup"]["script"])
+                    if isinstance(item.get("setup"), dict) and item["setup"].get("script")
+                    else None
+                ),
                 projections=projections,
             )
         )
@@ -157,6 +172,7 @@ def repo_summary(repo: Repo) -> dict[str, Any]:
         "url": repo.url,
         "path": str(repo.path),
         "ref": repo.ref,
+        "locked_commit": repo.locked_commit,
         "exists": exists,
         "git": False,
         "dirty": None,
@@ -205,6 +221,47 @@ def projection_health(root: Path, projection: Projection) -> dict[str, Any]:
     }
 
 
+def repo_setup_script(root: Path, repo: Repo) -> Path | None:
+    if not repo.setup_script:
+        return None
+    root = root.resolve()
+    raw = Path(os.path.expanduser(repo.setup_script))
+    script = raw.resolve() if raw.is_absolute() else (root / raw).resolve()
+    try:
+        script.relative_to(root)
+    except ValueError as exc:
+        raise SystemExit(f"Dependency setup script must stay inside vault: {repo.setup_script}") from exc
+    if not script.is_file():
+        raise SystemExit(f"Dependency setup script missing: {script}")
+    return script
+
+
+def repo_setup_health(root: Path, repo: Repo) -> dict[str, Any] | None:
+    script = repo_setup_script(root, repo)
+    if not script:
+        return None
+    if not repo.path.exists():
+        return {"script": repo.setup_script, "state": "pending", "detail": "repo missing"}
+    result = run(
+        [
+            sys.executable,
+            str(script),
+            "--root",
+            str(root),
+            "--repo",
+            str(repo.path),
+            "--check",
+        ],
+        check=False,
+    )
+    detail = result.stdout.strip() or result.stderr.strip()
+    return {
+        "script": repo.setup_script,
+        "state": "ok" if result.returncode == 0 else "needs-setup",
+        "detail": detail,
+    }
+
+
 def status_payload(root: Path, repos: list[Repo]) -> dict[str, Any]:
     payload_repos: list[dict[str, Any]] = []
     for repo in repos:
@@ -221,9 +278,18 @@ def status_payload(root: Path, repos: list[Repo]) -> dict[str, Any]:
                 }
             )
         up_to_date = None
-        if summary.get("local_commit") and summary.get("remote_commit"):
+        if summary.get("local_commit") and repo.locked_commit:
+            up_to_date = summary["local_commit"] == repo.locked_commit
+        elif summary.get("local_commit") and summary.get("remote_commit"):
             up_to_date = summary["local_commit"] == summary["remote_commit"]
-        payload_repos.append({**summary, "up_to_date": up_to_date, "projections": projections})
+        payload_repos.append(
+            {
+                **summary,
+                "up_to_date": up_to_date,
+                "projections": projections,
+                "setup": repo_setup_health(root, repo),
+            }
+        )
     return {"config": str(root / CONFIG_PATH), "repos": payload_repos}
 
 
@@ -233,18 +299,27 @@ def print_status(root: Path, repos: list[Repo]) -> int:
         log(f"{repo.id}")
         log(f"  path: {summary['path']}")
         log(f"  ref: {repo.ref}")
+        if repo.locked_commit:
+            log(f"  locked: {short(repo.locked_commit)}")
         log(f"  exists: {'yes' if summary['exists'] else 'no'}")
         if summary["exists"]:
             log(f"  git: {'yes' if summary['git'] else 'no'}")
             log(f"  dirty: {'yes' if summary['dirty'] else 'no'}")
             log(f"  local: {short(summary['local_commit'])}")
         log(f"  remote: {short(summary['remote_commit'])}")
-        if summary.get("local_commit") and summary.get("remote_commit"):
+        if repo.locked_commit and summary.get("local_commit"):
+            log("  up to date: " + ("yes" if summary["local_commit"] == repo.locked_commit else "no"))
+        elif summary.get("local_commit") and summary.get("remote_commit"):
             log("  up to date: " + ("yes" if summary["local_commit"] == summary["remote_commit"] else "no"))
         for projection in repo.projections:
             health = projection_health(root, projection)
             state = "ok" if health["source_exists"] and health["target_exists"] and health["marker"] else "needs-sync"
             log(f"  projection {projection.target}: {state}")
+        setup = repo_setup_health(root, repo)
+        if setup:
+            log(f"  setup: {setup['state']} ({setup['script']})")
+            if setup.get("detail") and setup["state"] != "ok":
+                log(f"    {setup['detail']}")
         log("")
     return 0
 
@@ -269,7 +344,8 @@ def sync_repo(repo: Repo, apply: bool) -> bool:
         log(f"Clone {repo.url} -> {repo.path}")
         if apply:
             repo.path.parent.mkdir(parents=True, exist_ok=True)
-            run(["git", "clone", "--branch", repo.ref, "--single-branch", repo.url, str(repo.path)])
+            run(["git", "clone", repo.url, str(repo.path)])
+            run(["git", "checkout", repo.locked_commit or repo.ref], cwd=repo.path)
         return True
 
     ensure_clean_repo(repo)
@@ -277,6 +353,16 @@ def sync_repo(repo: Repo, apply: bool) -> bool:
         raise SystemExit(f"Dependency path exists but is not a Git repo: {repo.path}")
 
     local = git_rev(repo.path, "HEAD")
+    if repo.locked_commit:
+        if local == repo.locked_commit:
+            log(f"Repo locked current: {repo.id} ({short(local)})")
+            return False
+        log(f"Checkout locked {repo.id}: {short(local)} -> {short(repo.locked_commit)}")
+        if apply:
+            run(["git", "fetch", "--prune", "--tags", "origin"], cwd=repo.path)
+            run(["git", "checkout", repo.locked_commit], cwd=repo.path)
+        return True
+
     remote = remote_rev(repo)
     if not remote:
         raise SystemExit(f"Could not resolve remote ref {repo.ref} for {repo.url}")
@@ -465,20 +551,49 @@ def run_skill_sync(root: Path, apply: bool) -> None:
         subprocess.run([str(script), flag], cwd=root, check=True)
 
 
+def run_repo_setup(root: Path, repo: Repo, apply: bool, force_build: bool) -> None:
+    script = repo_setup_script(root, repo)
+    if not script:
+        return
+    flag = "--apply" if apply else "--dry-run"
+    args = [
+        sys.executable,
+        str(script),
+        "--root",
+        str(root),
+        "--repo",
+        str(repo.path),
+        flag,
+    ]
+    if force_build:
+        args.append("--force-build")
+    log(f"Run dependency setup: {repo.id} ({flag})")
+    result = run(args, cwd=root, check=False)
+    if result.stdout.strip():
+        log(result.stdout.strip())
+    if result.returncode != 0:
+        detail = result.stderr.strip() or result.stdout.strip()
+        raise SystemExit(f"Dependency setup failed for {repo.id}: {detail}")
+
+
 def sync(root: Path, repos: list[Repo], apply: bool) -> int:
     skill_projection_touched = False
+    setup_queue: list[tuple[Repo, bool]] = []
     for repo in repos:
         repo_missing_before = not repo.path.exists()
-        sync_repo(repo, apply)
+        repo_changed = sync_repo(repo, apply)
         if repo_missing_before and not apply:
             for projection in repo.projections:
                 log(f"Projection pending after clone: {projection.target}")
-            continue
-        for projection in repo.projections:
-            if apply_projection(root, projection, apply) and projection.type in {"manual-skill", "active-skill"}:
-                skill_projection_touched = True
+        else:
+            for projection in repo.projections:
+                if apply_projection(root, projection, apply) and projection.type in {"manual-skill", "active-skill"}:
+                    skill_projection_touched = True
+        setup_queue.append((repo, repo_changed))
     if skill_projection_touched:
         run_skill_sync(root, apply)
+    for repo, repo_changed in setup_queue:
+        run_repo_setup(root, repo, apply, force_build=repo_changed)
     log("Done." if apply else "Dry run complete. Re-run with --apply to make these changes.")
     return 0
 

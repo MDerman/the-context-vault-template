@@ -35,7 +35,8 @@ This is made possible by a custom plugin called Context Nine and by the Relay pl
 - Vault-local bootstrap metadata lives under `_master/system/bootstrap/state/`.
 - The installer runs with `sudo`, but writes the vault and bootstrap state as the user who invoked sudo.
 - Vault folder has no public-repo `.git` pointer after install.
-- `init_vault.sh` installs/checks command dependencies, creates starter context folders named `personal`, `personal-brand`, and `business`, asks whether to rename them, ensures agent symlinks, installs `vault` to `~/.local/bin/vault`, and adds that directory to zsh startup files.
+- `init_vault.sh` installs/checks command dependencies, clones release-locked external repos, runs their setup hooks, creates starter context folders named `personal`, `personal-brand`, and `business`, asks whether to rename them, ensures agent symlinks, installs `vault` to `~/.local/bin/vault`, and adds that directory to zsh startup files.
+- Agent Canvas installs as editable source under `~/Code/open_source/agent-canvas`. Setup builds it, projects its skill globally, links Bun package, and installs `~/.local/bin/agent-canvas`. Run `vault deps sync --apply` to repair it after local edits or upgrades.
 - On macOS, the installer registers or updates the daily `vault refresh` LaunchAgent. If registration fails, run `vault refresh-schedule register` after setup.
 - Context folder names must start and end with a letter or number and may use letters, numbers, dots, and hyphens, for example `business` or `business.nosync`. If you rename a starter folder during setup, the installer moves the folder and rewrites structured references such as paths, Obsidian links, plugin settings, frontmatter identity values, and `@context` tokens. It does not blindly rewrite normal prose.
 - The one-line `sudo bash` installer also installs `/usr/local/bin/vault`, so `vault` works even before a new shell has loaded `~/.local/bin`.
@@ -82,6 +83,8 @@ Content-enabled workspaces use `_obsidian/content/publications`, `_obsidian/cont
 
 ## Upgrade Installed Vault
 
+Public vault updates are published as SemVer GitHub Releases such as `v0.1.0`. Each release records the public commit, release version, and dependency lock used by upgrade reports.
+
 Preview future public updates:
 
 ```bash
@@ -109,3 +112,5 @@ vault upgrade status
 vault upgrade doctor
 vault upgrade repair-prompt
 ```
+
+If an upgrade fails, `vault upgrade status` shows the installed version/commit plus the failed target version/commit. The full report is written under `_master/system/bootstrap/state/upgrade-reports/`. Failed upgrades keep the previous installed version in install state so repair work can see what was attempted.
