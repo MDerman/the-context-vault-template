@@ -47,6 +47,14 @@ Manual skill projection rules:
 - `agents/openai.yaml` is vault-owned and sets `policy.allow_implicit_invocation: false`.
 - Existing unmanaged targets are backed up before replacement.
 
+Active skill projection rules:
+
+- Target is `_master/agents/skills/<skill>`.
+- Target itself must be whole-directory symlink to dependency checkout skill folder.
+- `SKILL.md` must be regular source file reached through directory symlink, never symlink inside real target directory.
+- Reason: Codex omits real directories containing symlinked `SKILL.md` from skill catalog.
+- `vault deps sync --apply` migrates old managed per-file layouts automatically.
+
 Current tracked repos:
 
 - `frontend-slides` -> `~/Code/open_source/frontend-slides`
@@ -73,6 +81,7 @@ When adding a new external repo with skills:
 3. Use `type: manual-skill` for manual-only skills, or `type: active-skill` when a skill should live in `_master/agents/skills`.
 4. Run `vault deps sync --dry-run`.
 5. If output is right, run `vault deps sync --apply`.
+6. For active skill, start fresh Codex task and confirm `$<skill>` autocomplete or run catalog probe from [[_master/agents/README-skills|Skill SOP]].
 
 `vault deps sync --apply` clones missing repos, checks out release-locked commits when present, rebuilds managed projections, runs `_master/system/bootstrap/agents/ensure-agent-skill-symlinks.sh --apply` when skill projections changed, then runs setup hooks. Manual-skill projections remain sourced under `_master/agents/manual-skills`; sync exposes each one as an individual symlink in `_master/agents/skills` so Codex and Claude can discover it.
 

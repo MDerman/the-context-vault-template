@@ -32,8 +32,8 @@ class DependencySetupTests(unittest.TestCase):
             projection = deps.Projection(
                 repo_id="example",
                 repo_path=checkout,
-                source=Path("skills/example"),
-                target=Path("_master/agents/skills/example"),
+                source="skills/example",
+                target="_master/agents/skills/example",
                 type="active-skill",
                 managed=True,
             )
@@ -41,7 +41,33 @@ class DependencySetupTests(unittest.TestCase):
             target = root / projection.target
             self.assertTrue(target.is_symlink())
             self.assertEqual(target.resolve(), source.resolve())
+            self.assertFalse((target / "SKILL.md").is_symlink())
             self.assertTrue(deps.projection_health(root, projection)["marker"])
+
+    def test_active_skill_projection_migrates_per_file_layout(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "vault"
+            checkout = Path(tmp) / "checkout"
+            source = checkout / "skills/example"
+            source.mkdir(parents=True)
+            (source / "SKILL.md").write_text("---\nname: example\n---\n")
+            projection = deps.Projection(
+                repo_id="example",
+                repo_path=checkout,
+                source="skills/example",
+                target="_master/agents/skills/example",
+                type="active-skill",
+                managed=True,
+            )
+            target = root / projection.target
+            target.mkdir(parents=True)
+            (target / "SKILL.md").symlink_to(source / "SKILL.md")
+            deps.write_json(deps.projection_marker(target), deps.marker_payload(projection))
+
+            deps.create_active_skill_projection(root, projection, apply=True)
+
+            self.assertTrue(target.is_symlink())
+            self.assertEqual(target.resolve(), source.resolve())
 
     def test_setup_script_must_stay_inside_vault(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -486,6 +486,9 @@ def create_manual_skill_projection(root: Path, projection: Projection, apply: bo
 
 
 def create_active_skill_projection(root: Path, projection: Projection, apply: bool) -> bool:
+    # Codex discovers a projected skill only when the skill directory is the
+    # symlink. A real directory containing a symlinked SKILL.md is omitted from
+    # the catalog. Keep this as one whole-directory link.
     source = projection.repo_path / projection.source
     target = vault_path(root, projection.target)
     if not source.exists():

@@ -14,6 +14,14 @@ Put shared, implicitly discoverable skills in `_master/agents/skills/<skill>/`.
 
 Use active skills only for reusable agent capability with clear trigger rules. Put ordinary vault procedures in folder READMEs instead.
 
+Active skills projected from dependency repos must use one whole-directory symlink:
+
+```text
+_master/agents/skills/<skill> -> ~/Code/open_source/<repo>/<skill-path>
+```
+
+Never create a real projection directory containing a symlinked `SKILL.md`. Codex omits that layout from its skill catalog even though file resolves normally. `vault deps sync --apply` owns active dependency projection creation and migrates old per-file layouts.
+
 ## Manual-Only Skills
 
 Manual-only skills live in `_master/agents/manual-skills/<skill>/` and are exposed as symlinks in `_master/agents/skills/<skill>`.
@@ -86,3 +94,15 @@ vault deps sync --apply
 ```
 
 `vault deps sync --apply` rebuilds projections and runs skill symlink sync when skill projections changed.
+
+For `type: active-skill`, verify discovery after sync:
+
+```bash
+test -L _master/agents/skills/<skill>
+test ! -L _master/agents/skills/<skill>/SKILL.md
+vault deps status
+codex exec --ephemeral --sandbox read-only -C "$(vault root)" \
+  'Inspect only your available skills catalog. Is a skill with exact name <skill> present? Reply exactly PRESENT or ABSENT.'
+```
+
+Expected result: `PRESENT`. Existing Codex tasks cache skill catalog; verify in new task or restart Codex before treating `$<skill>` autocomplete absence as install failure.

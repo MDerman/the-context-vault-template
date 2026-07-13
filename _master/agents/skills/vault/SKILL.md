@@ -66,6 +66,7 @@ Use `vault gcal create-block` only when user explicitly asks for time blocking o
 ## Skills
 
 Active shared agent skills live in `_master/agents/skills`.
+Dependency-projected active skill must use whole-directory symlink at `_master/agents/skills/<skill>`. Never use real directory containing symlinked `SKILL.md`; Codex omits that layout from skill catalog. Run `vault deps sync --apply`, then verify discovery in fresh Codex task because existing tasks cache catalog.
 Manual-only skills live in `_master/agents/manual-skills` and are exposed as individual symlinks in `_master/agents/skills`, for example `_master/agents/skills/gws-gmail -> ../manual-skills/gws-gmail`. They must include `agents/openai.yaml` with `policy.allow_implicit_invocation: false`.
 GitHub-managed skills installed with `gh skill --dir` live in `_master/agents/gh-skills` and are exposed as individual symlinks in `_master/agents/skills`, for example `_master/agents/skills/skybridge -> ../gh-skills/skybridge`.
 After adding a new manual-only skill, run `_master/system/bootstrap/agents/ensure-agent-skill-symlinks.sh --dry-run`, then `_master/system/bootstrap/agents/ensure-agent-skill-symlinks.sh --apply` to create the `_master/agents/skills/<skill> -> ../manual-skills/<skill>` symlink. Do not create manual-skill symlinks by hand.
