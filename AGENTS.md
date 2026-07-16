@@ -11,10 +11,10 @@ Root workspace is one Obsidian vault with context folders. `AGENTS.md` is direct
 - Use skills for reusable agent capabilities with trigger rules; use folder READMEs for vault SOPs and tool usage.
 - Put future agent plans in `.agents/plans/`.
 - Put repo-scoped skills in `.agents/skills/`.
-- Put `gh skill --dir` installed shared skills in `_master/agents/gh-skills/`, then run `_master/system/bootstrap/agents/ensure-agent-skill-symlinks.sh --dry-run` and `--apply`.
+- Put implicit shared skills in `_master/agents/auto-skills/`, explicit-only skills in `_master/agents/manual-skills/`, and `gh skill --dir` installs in `_master/agents/gh-skills/`; organize recursively with `_lower-kebab` group folders, then run `vault skills sync --dry-run` and `--apply`.
 - Ignore incidental `.obsidian/` git churn.
 - Do not bulk-move, restructure, delete, or overwrite user content unless explicitly asked.
-- Repos usually live under `~/Code/`; use folder/repo docs before changing them.
+- Computers and Code Topology auto skill is private source of truth for machine access and general `~/Code/` placement; use folder/repo docs before changing code.
 
 ## First Read
 
@@ -83,4 +83,4 @@ Root workspace is one Obsidian vault with context folders. `AGENTS.md` is direct
 - Use `_obsidian/content` for owned content items/ideas/publication definitions; use `_obsidian/tasks` for executable work about content.
 - Keep proof-source notes explicit: commitment, data source, manual/automated status, missing-proof task/warning.
 - External dependency repos live under `~/Code/open_source/<repo-name>` and are tracked in `_master/system/config/deps.json`.
-- GitHub-managed shared skills live under `_master/agents/gh-skills` and are exposed through `_master/agents/skills` by the skill sync script.
+- `_master/agents/skills` is generated symlink-only catalog. Never install content there; `vault skills sync --apply` projects auto, manual, and GitHub-managed sources into it.

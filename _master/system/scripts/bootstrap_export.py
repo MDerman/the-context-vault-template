@@ -131,6 +131,9 @@ class BootstrapExporter:
         self.rewrite_pairs = sorted(self.context_pairs, key=lambda pair: len(pair[0]), reverse=True)
         self.generated_exclude_paths = set(config.get("generated_exclude_paths", []))
         self.generated_exclude_globs = list(config.get("generated_exclude_globs", []))
+        self.master_root_markdown_allow_paths = set(
+            config.get("master_root_markdown_allow_paths", [])
+        )
         self.global_exclude_names = set(config.get("global_exclude_names", []))
         self.sensitive_exclude_names = {name.lower() for name in config.get("sensitive_exclude_names", [])}
         self.text_rewrite_suffixes = set(config.get("text_rewrite_suffixes", []))
@@ -363,10 +366,7 @@ class BootstrapExporter:
                 item.is_symlink()
                 and len(relative.parts) == 4
                 and relative.parts[:3] == ("_master", "agents", "skills")
-                and (
-                    os.readlink(item).startswith("../manual-skills/")
-                    or os.readlink(item).startswith("../gh-skills/")
-                )
+                and self.should_skip_catalog_link(item)
             ):
                 continue
             target = self.export_root / relative
@@ -376,6 +376,16 @@ class BootstrapExporter:
                 self.ensure_dir(target)
             elif item.is_file():
                 self.copy_file(item, target)
+
+    def should_skip_catalog_link(self, item: Path) -> bool:
+        raw = os.readlink(item)
+        if raw.startswith("../manual-skills/") or raw.startswith("../gh-skills/"):
+            return True
+        resolved = item.resolve(strict=False)
+        return any(
+            resolved == (self.root / target).resolve(strict=False)
+            for target in self.dependency_projection_targets
+        )
 
     def should_skip_master_shared(self, relative: Path, is_dir: bool) -> bool:
         rel = posix(relative)
@@ -389,6 +399,13 @@ class BootstrapExporter:
             self.ensure_dir(self.export_root / relative)
             return False
         if rel.startswith("_master/env/"):
+            return True
+        if (
+            len(relative.parts) == 2
+            and relative.parts[0] == "_master"
+            and relative.suffix.lower() == ".md"
+            and rel not in self.master_root_markdown_allow_paths
+        ):
             return True
         if rel in self.generated_exclude_paths:
             return True

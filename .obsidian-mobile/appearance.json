@@ -1,9 +1,10 @@
 {
-  "cssTheme": "Primary",
+  "cssTheme": "Baseline",
   "accentColor": "#94a0ff",
   "translucency": true,
   "enabledCssSnippets": [
-    "tasknotes-swimlanes"
+    "tasknotes-swimlanes",
+    "custom-backgrounds"
   ],
   "showRibbon": false
 }

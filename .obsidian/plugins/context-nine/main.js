@@ -1391,6 +1391,24 @@ function normalizeCommand(value) {
   if (value.palette !== void 0 && typeof value.palette !== "boolean") {
     return null;
   }
+  if (value.group !== void 0 && typeof value.group !== "string") {
+    return null;
+  }
+  if (value.risk !== void 0 && !isRisk(value.risk)) {
+    return null;
+  }
+  if (value.tui !== void 0 && typeof value.tui !== "boolean") {
+    return null;
+  }
+  if (value.mode !== void 0 && !isMode(value.mode)) {
+    return null;
+  }
+  if (value.confirm !== void 0 && typeof value.confirm !== "boolean" && value.confirm !== "strong") {
+    return null;
+  }
+  if (value.statusArgs !== void 0 && (!Array.isArray(value.statusArgs) || !value.statusArgs.every((arg) => typeof arg === "string"))) {
+    return null;
+  }
   if (value.promptArgs !== void 0 && (!Array.isArray(value.promptArgs) || !value.promptArgs.every(isPromptArg))) {
     return null;
   }
@@ -1402,6 +1420,12 @@ function normalizeCommand(value) {
     aliases: value.aliases,
     cockpit: value.cockpit,
     palette: value.palette,
+    group: value.group,
+    risk: value.risk,
+    tui: value.tui,
+    mode: value.mode,
+    confirm: value.confirm,
+    statusArgs: value.statusArgs,
     promptArgs: value.promptArgs
   };
 }
@@ -1418,7 +1442,19 @@ function isPromptArg(value) {
   if (value.argName !== void 0 && typeof value.argName !== "string") {
     return false;
   }
+  if (value.type !== void 0 && value.type !== "text" && value.type !== "choice") {
+    return false;
+  }
+  if (value.choices !== void 0 && (!Array.isArray(value.choices) || !value.choices.every((choice) => typeof choice === "string"))) {
+    return false;
+  }
   return true;
+}
+function isRisk(value) {
+  return ["read", "dry-run", "apply", "interactive", "destructive"].includes(String(value));
+}
+function isMode(value) {
+  return ["run", "interactive", "long-running"].includes(String(value));
 }
 function messageForError(error) {
   return error instanceof Error ? error.message : String(error);
@@ -3042,11 +3078,21 @@ var ContextNinePlugin = class extends import_obsidian9.Plugin {
     this.addRibbonIcon("square-terminal", "Open vault command center", () => {
       void this.openVaultCockpit();
     });
+    this.addRibbonIcon("terminal", "Open vault TUI", () => {
+      this.openVaultTui();
+    });
     this.addCommand({
       id: "open-vault-cockpit",
       name: "Open vault command center",
       callback: () => {
         void this.openVaultCockpit();
+      }
+    });
+    this.addCommand({
+      id: "open-vault-tui",
+      name: "Open vault TUI",
+      callback: () => {
+        this.openVaultTui();
       }
     });
     await this.registerVaultPaletteCommands();
@@ -3189,6 +3235,35 @@ var ContextNinePlugin = class extends import_obsidian9.Plugin {
   }
   getVaultCommand(command, cwd) {
     return command === "vault" ? (0, import_path2.join)(cwd, "_master/system/scripts/vault.py") : command;
+  }
+  openVaultTui() {
+    const cwd = this.settings.vaultRoot || this.getCurrentVaultRoot() || DEFAULT_SETTINGS.vaultRoot;
+    if (!cwd) {
+      new import_obsidian9.Notice("Vault root is not configured.");
+      return;
+    }
+    const command = `export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"; cd ${shellQuote2(cwd)} && vault tui`;
+    const script = [
+      'tell application "Terminal"',
+      "activate",
+      `do script ${appleScriptQuote(command)}`,
+      "end tell"
+    ].join("\n");
+    const child = (0, import_child_process3.spawn)("osascript", ["-e", script], {
+      cwd,
+      env: {
+        ...process.env,
+        PATH: process.env.PATH ? `${process.env.HOME}/.local/bin:${process.env.PATH}` : `${process.env.HOME}/.local/bin`
+      }
+    });
+    child.on("error", (error) => {
+      new import_obsidian9.Notice(`Could not open vault TUI: ${error.message}`);
+    });
+    child.on("close", (exitCode) => {
+      if (exitCode !== 0) {
+        new import_obsidian9.Notice(`Could not open vault TUI: osascript exited ${exitCode}`);
+      }
+    });
   }
   async openVaultCockpit() {
     await this.getVaultCockpitView();
@@ -3499,3 +3574,9 @@ var ObsidianMasterSettingTab = class extends import_obsidian9.PluginSettingTab {
     });
   }
 };
+function shellQuote2(value) {
+  return `'${value.replace(/'/g, "'\\''")}'`;
+}
+function appleScriptQuote(value) {
+  return `"${value.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
+}

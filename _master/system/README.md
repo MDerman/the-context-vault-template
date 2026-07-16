@@ -132,7 +132,7 @@ Profile upgrade does not advance the installed public commit. A later full `vaul
 
 ## System Folder Map
 
-- `_master/system/bootstrap`: first install, public export config, root agent symlink helpers, dependency install, plugin install, and skill sync scripts.
+- `_master/system/bootstrap`: first install, public export config, root agent symlink helpers, dependency install, plugin install, and compatibility skill-sync wrapper. Canonical skill sync lives under `_master/agents`.
 - `_master/system/context`: agent-readable generated context, durable command docs, Obsidian profile docs, and current rollups.
 - `_master/system/scripts`: implementations behind the `vault` dispatcher and supporting script utilities.
 - `_master/system/migrations`: versioned migrations for public bootstrap upgrades.

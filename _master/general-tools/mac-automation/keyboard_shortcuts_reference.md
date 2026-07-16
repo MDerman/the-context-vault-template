@@ -367,3 +367,38 @@ Source notes: [[01-Context]] and [[obsidian-keyboard-shortcuts]].
 ![[_master/_obsidian/attachments/Untitled.png]]
 
 ![[_master/_obsidian/attachments/Untitled 1.png]]
+
+## cmux (Ghostty-Powered Terminal)
+
+These shortcuts belong to cmux. cmux embeds the Ghostty terminal engine; standalone Ghostty is not required.
+
+| Shortcut | Action | Notes |
+| --- | --- | --- |
+| `Cmd+I` | Open notifications | Current installed cmux binding. |
+| `Cmd+Shift+U` | Jump to latest unread notification | Switches directly to the workspace needing attention. |
+| `Cmd+D` | Split pane right | Creates a side-by-side terminal pane. |
+| `Cmd+Shift+D` | Split pane down | Creates a terminal pane below the current pane. |
+| `Cmd+Shift+P` | Open Command Palette | Search cmux commands and see their shortcuts. |
+
+## btop
+
+Run `btop` for an interactive terminal system monitor. Press `F1`, `?`, or `h` inside btop for full help.
+
+| Shortcut | Action | Notes |
+| --- | --- | --- |
+| `q`, `Ctrl+C` | Quit btop | Exits the program. |
+| `Esc`, `m` | Toggle main menu | Open settings, help, or quit menu. |
+| `F1`, `?`, `h` | Show help | Displays complete built-in key reference. |
+| `Up`, `Down` | Select process | Navigate process list. |
+| `Enter` | Show process details | Opens details for selected process. |
+| `f`, `/` | Filter processes | Start filter with `!` for regex. |
+| `Delete` | Clear process filter | Removes active filter. |
+| `e` | Toggle process tree | Groups processes by parent/child relationship. |
+| `Left`, `Right` | Change process sort column | Select previous or next sorting column. |
+| `r` | Reverse process sorting | Reverses current sort order. |
+| `t` | Terminate selected process | Sends `SIGTERM` (`15`). |
+| `k` | Kill selected process | Sends `SIGKILL` (`9`); use carefully. |
+| `1` | Toggle CPU panel | Show or hide CPU box. |
+| `2` | Toggle memory panel | Show or hide memory box. |
+| `3` | Toggle network panel | Show or hide network box. |
+| `4` | Toggle process panel | Show or hide process box. |

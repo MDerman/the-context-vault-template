@@ -9,8 +9,18 @@ Read next:
 
 Folders:
 
-- `skills/`: active shared skills and manual-skill symlinks.
-- `manual-skills/`: manual-only skill sources.
-- `gh-skills/`: skills installed with `gh skill --dir`; sync exposes valid children as active skill symlinks.
+- `auto-skills/`: implicitly invokable skill sources, organized under recursive `_lower-kebab` groups.
+- `manual-skills/`: explicit-only skill sources, organized under recursive `_lower-kebab` groups.
+- `gh-skills/`: publisher-managed skills installed with `gh skill --dir`.
+- `skills/`: generated flat symlink-only catalog. Never install or move source content here.
 - `skills-dump/`: dormant non-discoverable skills.
 - `backups/`: generated backups from skill/deps sync flows.
+
+Canonical command:
+
+```bash
+vault skills sync --dry-run
+vault skills sync --apply
+```
+
+Implementation lives at `_master/agents/sync_skills.py`. Bootstrap compatibility wrapper remains at `_master/system/bootstrap/agents/ensure-agent-skill-symlinks.sh`.

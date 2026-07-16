@@ -22,7 +22,7 @@ def repo(path: Path, setup_script: str | None = None) -> deps.Repo:
 
 
 class DependencySetupTests(unittest.TestCase):
-    def test_active_skill_projection_uses_directory_symlink(self) -> None:
+    def test_auto_skill_projection_uses_policy_wrapper(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "vault"
             checkout = Path(tmp) / "checkout"
@@ -33,18 +33,20 @@ class DependencySetupTests(unittest.TestCase):
                 repo_id="example",
                 repo_path=checkout,
                 source="skills/example",
-                target="_master/agents/skills/example",
-                type="active-skill",
+                target="_master/agents/auto-skills/_creative/example",
+                type="auto-skill",
                 managed=True,
             )
-            deps.create_active_skill_projection(root, projection, apply=True)
+            deps.create_auto_skill_projection(root, projection, apply=True)
             target = root / projection.target
-            self.assertTrue(target.is_symlink())
-            self.assertEqual(target.resolve(), source.resolve())
+            self.assertTrue(target.is_dir())
+            self.assertTrue((target / "SKILL.md").is_file())
             self.assertFalse((target / "SKILL.md").is_symlink())
+            self.assertEqual((target / "SKILL.md").read_text(), (source / "SKILL.md").read_text())
+            self.assertIn("allow_implicit_invocation: true", (target / "agents/openai.yaml").read_text())
             self.assertTrue(deps.projection_health(root, projection)["marker"])
 
-    def test_active_skill_projection_migrates_per_file_layout(self) -> None:
+    def test_legacy_active_skill_alias_uses_auto_wrapper(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "vault"
             checkout = Path(tmp) / "checkout"
@@ -55,19 +57,16 @@ class DependencySetupTests(unittest.TestCase):
                 repo_id="example",
                 repo_path=checkout,
                 source="skills/example",
-                target="_master/agents/skills/example",
+                target="_master/agents/auto-skills/_creative/example",
                 type="active-skill",
                 managed=True,
             )
-            target = root / projection.target
-            target.mkdir(parents=True)
-            (target / "SKILL.md").symlink_to(source / "SKILL.md")
-            deps.write_json(deps.projection_marker(target), deps.marker_payload(projection))
-
             deps.create_active_skill_projection(root, projection, apply=True)
-
-            self.assertTrue(target.is_symlink())
-            self.assertEqual(target.resolve(), source.resolve())
+            target = root / projection.target
+            self.assertTrue(target.is_dir())
+            self.assertTrue((target / "SKILL.md").is_file())
+            self.assertFalse((target / "SKILL.md").is_symlink())
+            self.assertIn("allow_implicit_invocation: true", (target / "agents/openai.yaml").read_text())
 
     def test_setup_script_must_stay_inside_vault(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

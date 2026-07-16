@@ -35,7 +35,7 @@ Examples:
 - `.obsidian/hotkeys.json`
 - `.obsidian/snippets/*.css`
 - `.obsidian/plugins/*/data.json`
-- `.obsidian/themes/Primary/theme.css`
+- `.obsidian/themes/<current-theme>/theme.css`
 
 This is what Obsidian is actually using right now.
 
@@ -82,7 +82,7 @@ Use `vault --help` to see the command wrapper.
 The custom plugin is not authored inside the vault. It is developed here:
 
 ```text
-~/Code/context_nine_obsidian_plugin/
+~/Code/ctx9/context_nine_obsidian_plugin/
 ```
 
 It is installed into the active vault here:
@@ -94,7 +94,7 @@ It is installed into the active vault here:
 To edit it:
 
 ```bash
-cd ~/Code/context_nine_obsidian_plugin
+cd ~/Code/ctx9/context_nine_obsidian_plugin
 npm run build
 npm run test
 npm run install-vault
@@ -260,13 +260,13 @@ Current examples:
 - `tasknotes-swimlanes.css`: TaskNotes Kanban swimlane/card style.
 - `tabs.css`: workspace tab styling.
 
-Use theme files for deeper theme-level changes:
+Use theme files for deeper theme-level changes. Current theme is Minimal:
 
 ```text
-.obsidian/themes/Primary/theme.css
+.obsidian/themes/Minimal/theme.css
 ```
 
-There are helper scripts for some theme/snippet edits:
+These legacy helper scripts only target Primary. Do not run them while Minimal is active:
 
 ```text
 _master/system/scripts/setup_tabs_css.py
@@ -354,7 +354,7 @@ _master/system/bootstrap/
 Put local custom plugin work in:
 
 ```text
-~/Code/context_nine_obsidian_plugin/
+~/Code/ctx9/context_nine_obsidian_plugin/
 ```
 
 Put reusable non-vault utilities in:
@@ -379,7 +379,7 @@ Before editing:
 2. Check [[_master/system/context/README-obsidian-profile|Obsidian Profile]] and [[_master/system/context/README-scripts|Scripts README]].
 3. If a file has a managed marker, edit the generator instead.
 4. If changing a plugin setting through Obsidian, verify which `.obsidian/plugins/<plugin-id>/data.json` file changed.
-5. If changing the custom master plugin, edit `~/Code/context_nine_obsidian_plugin`, then build/install.
+5. If changing the custom master plugin, edit `~/Code/ctx9/context_nine_obsidian_plugin`, then build/install.
 
 After editing:
 

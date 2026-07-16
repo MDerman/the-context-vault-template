@@ -1,108 +1,81 @@
 # Skill SOP
 
-## Paths
+## Source And Catalog Contract
 
-- Active shared skills: `_master/agents/skills/<skill>/SKILL.md`
-- Manual-only skills: `_master/agents/manual-skills/<skill>/SKILL.md`
-- GitHub-managed skills: `_master/agents/gh-skills/<skill>/SKILL.md`
-- Dormant skills: `_master/agents/skills-dump/<skill>/`
+- Implicit source: `_master/agents/auto-skills/<_group>/<skill>/SKILL.md`
+- Explicit-only source: `_master/agents/manual-skills/<_group>/<skill>/SKILL.md`
+- GitHub-managed source: `_master/agents/gh-skills/<skill>/SKILL.md`
+- Generated catalog: `_master/agents/skills/<skill>`
+- Dormant storage: `_master/agents/skills-dump/<skill>/`
 - Repo-local skills: `.agents/skills/`
 
-## Active Skills
+`skills/` contains symlinks only. Put new or moved skills under auto, manual, or GH source, then sync. Never install content into generated catalog.
 
-Put shared, implicitly discoverable skills in `_master/agents/skills/<skill>/`.
+Organizer folders must use `_lower-kebab`, may nest recursively, and never contain `SKILL.md`. Skill folder must contain `SKILL.md`; folder basename must equal frontmatter `name`. Names must be globally unique.
 
-Use active skills only for reusable agent capability with clear trigger rules. Put ordinary vault procedures in folder READMEs instead.
+## Invocation Policy
 
-Active skills projected from dependency repos must use one whole-directory symlink:
+Sync preserves other `agents/openai.yaml` fields and enforces:
 
-```text
-_master/agents/skills/<skill> -> ~/Code/open_source/<repo>/<skill-path>
+```yaml
+policy:
+  allow_implicit_invocation: true
 ```
 
-Never create a real projection directory containing a symlinked `SKILL.md`. Codex omits that layout from its skill catalog even though file resolves normally. `vault deps sync --apply` owns active dependency projection creation and migrates old per-file layouts.
-
-## Manual-Only Skills
-
-Manual-only skills live in `_master/agents/manual-skills/<skill>/` and are exposed as symlinks in `_master/agents/skills/<skill>`.
-
-Each manual-only skill must include:
+for auto skills, and:
 
 ```yaml
 policy:
   allow_implicit_invocation: false
 ```
 
-at `_master/agents/manual-skills/<skill>/agents/openai.yaml`.
-
-Do not create `_master/agents/skills/<skill>` symlinks by hand.
-
-## GitHub-Managed Skills
-
-Use `_master/agents/gh-skills/` for skills installed with GitHub CLI `gh skill`.
-
-Install or update skills in that folder, then run the sync script so Codex and Claude discover them through `_master/agents/skills`.
-
-```bash
-GH_SKILLS_DIR="$(vault root)/_master/agents/gh-skills"
-
-gh skill preview alpic-ai/skybridge skills/skybridge
-gh skill install alpic-ai/skybridge skills/skybridge --dir "$GH_SKILLS_DIR"
-
-gh skill install owner/repo packages/agent-skills/code-review --dir "$GH_SKILLS_DIR"
-
-gh skill list --dir "$GH_SKILLS_DIR" --json skillName,sourceURL,version,path,pinned
-gh skill update --dir "$GH_SKILLS_DIR" --dry-run
-gh skill update --dir "$GH_SKILLS_DIR" --all
-```
-
-If a GitHub-managed skill name conflicts with an existing active or manual skill, the existing active surface wins and sync logs a skip.
+for manual skills. Missing metadata gets created. GH metadata stays publisher-controlled.
 
 ## Sync
 
-Preview, then apply:
-
 ```bash
-_master/system/bootstrap/agents/ensure-agent-skill-symlinks.sh --dry-run
-_master/system/bootstrap/agents/ensure-agent-skill-symlinks.sh --apply
+vault skills sync --dry-run
+vault skills sync --apply
 ```
 
-The sync script:
+Sync performs full preflight before writes. Malformed sources, duplicate names, real content under generated catalog, or unmanaged global name collisions fail with repair instructions.
 
-- links global agent skill targets such as `~/.codex/skills` and `~/.claude/skills` to `_master/agents/skills`;
-- exposes manual skills as individual symlinks under `_master/agents/skills`;
-- exposes valid GitHub-managed skills from `_master/agents/gh-skills` as individual symlinks under `_master/agents/skills`;
-- backs up replaced non-symlink target paths under `_master/agents/backups/skill-sync`.
+Apply:
 
-Root agent file symlinks are separate:
+- repairs dependency target/type metadata after manually moving a managed skill wrapper;
+- removes stale catalog links and rebuilds changed links;
+- maintains per-skill links under `~/.agents/skills`, `~/.claude/skills`, `~/.kilo/skills`, and `~/.kilocode/skills` when Kilocode exists;
+- preserves unrelated global skills;
+- removes vault-owned legacy `~/.codex/skills` whole-directory link;
+- never copies discovery-target content into vault.
 
-```bash
-python3 _master/system/bootstrap/agents/ensure-agent-file-symlinks.py --root . --dry-run
-```
+Existing tasks cache skill catalog. Start new task or restart Codex after sync.
 
-That script ensures `CLAUDE.md -> AGENTS.md`, `.agents/skills` is a real repo-local directory, and `.claude/skills -> ../.agents/skills`.
+## Dependency Skills
 
-## Dependency Repos
+External repos stay under `~/Code/open_source/<repo-name>` and are configured in `_master/system/config/deps.json`.
 
-External repos stay under `~/Code/open_source/<repo-name>` and are tracked in `_master/system/config/deps.json`.
-
-If an external repo contains a skill, add a managed projection in `deps.json`; do not copy the repo into the vault. After projection changes:
+Use `manual-skill` for explicit-only wrapper or `auto-skill` for implicit wrapper. Legacy `active-skill` remains accepted as auto migration alias. Wrapper materializes upstream `SKILL.md` for Codex loader compatibility, projects supporting assets, and keeps invocation policy metadata vault-owned. `vault deps sync` refreshes materialized file.
 
 ```bash
 vault deps sync --dry-run
 vault deps sync --apply
+vault skills sync --dry-run
 ```
 
-`vault deps sync --apply` rebuilds projections and runs skill symlink sync when skill projections changed.
+Moving managed wrapper between source roots or `_group` folders then running skill sync updates `deps.json`, projection marker, target, type, and policy.
 
-For `type: active-skill`, verify discovery after sync:
+## GitHub-Managed Skills
 
 ```bash
-test -L _master/agents/skills/<skill>
-test ! -L _master/agents/skills/<skill>/SKILL.md
-vault deps status
-codex exec --ephemeral --sandbox read-only -C "$(vault root)" \
-  'Inspect only your available skills catalog. Is a skill with exact name <skill> present? Reply exactly PRESENT or ABSENT.'
+GH_SKILLS_DIR="$(vault root)/_master/agents/gh-skills"
+gh skill install owner/repo packages/agent-skills/code-review --dir "$GH_SKILLS_DIR"
+gh skill update --dir "$GH_SKILLS_DIR" --all
+vault skills sync --apply
 ```
 
-Expected result: `PRESENT`. Existing Codex tasks cache skill catalog; verify in new task or restart Codex before treating `$<skill>` autocomplete absence as install failure.
+GH publisher files remain untouched. Name conflict fails preflight.
+
+## Repo-Local Skills
+
+Repo-local `.agents/skills` stays real and outside global sync. Repo `.claude/skills` may link to `../.agents/skills`.

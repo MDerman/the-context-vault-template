@@ -27,7 +27,7 @@
       {
         "id": "5b978711000ded9b",
         "type": "tabs",
-        "dimension": 72.9903536977492,
+        "dimension": 74.08491947291361,
         "children": [
           {
             "id": "12a3aa81c232d265",
@@ -74,7 +74,7 @@
       {
         "id": "4365fdef29381df3",
         "type": "tabs",
-        "dimension": 27.009646302250808,
+        "dimension": 25.91508052708638,
         "children": [
           {
             "id": "1ffc5fcaa195eeb3",
@@ -110,7 +110,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 383
+    "width": 390.5
   },
   "right": {
     "id": "c5da0292b2670f3d",
@@ -197,7 +197,7 @@
             }
           },
           {
-            "id": "65dbc64974f48fa4",
+            "id": "7773edb12e959d01",
             "type": "leaf",
             "state": {
               "type": "system3-sync-status",
@@ -216,6 +216,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "context-nine:Open vault TUI": false,
       "context-nine:Open vault command center": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
@@ -246,7 +247,7 @@
       "periodic-notes:Open today": false
     }
   },
-  "active": "5c8b8746b91d1420",
+  "active": "85eb51e4be02c0df",
   "lastOpenFiles": [
     "README.md"
   ]

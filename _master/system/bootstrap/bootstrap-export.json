@@ -69,8 +69,13 @@
     "CLAUDE.md": "AGENTS.md",
     ".claude/skills": "../.agents/skills"
   },
+  "master_root_markdown_allow_paths": [
+    "_master/01-Context.md",
+    "_master/README.md"
+  ],
   "generated_exclude_paths": [
     "_master/Dashboard.md",
+    "_master/agents/skills/computers-and-code-topology",
     "_master/system/context/01-Context.md",
     "_master/system/context/02-Identity.md",
     "_master/system/context/03-Momentum.md",
@@ -78,11 +83,11 @@
     "_master/system/context/context.json"
   ],
   "generated_exclude_globs": [
+    "_master/agents/auto-skills/_infrastructure/computers-and-code-topology/**",
     "_master/_obsidian/periodic/**",
     "_master/_obsidian/attachments/**",
     "_master/agents/manual-skills/**",
     "_master/agents/gh-skills/**",
-    "_master/agents/skills/personal-folder-structure/**",
     "_master/agents/skills-dump/**",
     "_master/system/context/2026*.md",
     "_master/system/backup/**",

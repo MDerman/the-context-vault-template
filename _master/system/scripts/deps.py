@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -209,11 +210,6 @@ def projection_health(root: Path, projection: Projection) -> dict[str, Any]:
     source = projection.repo_path / projection.source
     target = vault_path(root, projection.target)
     marker = read_marker(target)
-    active_link_ok = (
-        projection.type == "active-skill"
-        and target.is_symlink()
-        and target.resolve() == source.resolve()
-    )
     return {
         "source": str(source),
         "target": str(target),
@@ -221,8 +217,8 @@ def projection_health(root: Path, projection: Projection) -> dict[str, Any]:
         "managed": projection.managed,
         "source_exists": source.exists(),
         "target_exists": target.exists() or target.is_symlink(),
-        "marker": active_link_ok or bool(marker),
-        "marker_repo_id": projection.repo_id if active_link_ok else marker.get("repo_id"),
+        "marker": bool(marker),
+        "marker_repo_id": marker.get("repo_id"),
     }
 
 
@@ -411,8 +407,20 @@ def marker_payload(projection: Projection) -> dict[str, Any]:
     }
 
 
-def manual_skill_metadata() -> str:
-    return "policy:\n  allow_implicit_invocation: false\n"
+def skill_metadata(source: Path, allowed: bool) -> str:
+    metadata = source / "agents/openai.yaml"
+    text = metadata.read_text(encoding="utf-8") if metadata.exists() else ""
+    value = "true" if allowed else "false"
+    policy = re.compile(
+        r"(?m)^(\s*allow_implicit_invocation:\s*)(?:true|false)(\s*(?:#.*)?)$"
+    )
+    if policy.search(text):
+        return policy.sub(rf"\g<1>{value}\g<2>", text, count=1)
+    heading = re.search(r"(?m)^policy:\s*(?:#.*)?$", text)
+    if heading:
+        return text[: heading.end()] + f"\n  allow_implicit_invocation: {value}" + text[heading.end() :]
+    suffix = "" if not text or text.endswith("\n") else "\n"
+    return text + suffix + f"policy:\n  allow_implicit_invocation: {value}\n"
 
 
 def expected_projection_children(source: Path, *, skip_agents: bool) -> list[Path]:
@@ -426,12 +434,18 @@ def expected_projection_children(source: Path, *, skip_agents: bool) -> list[Pat
     ]
 
 
-def manual_skill_projection_current(target: Path, source: Path, projection: Projection) -> bool:
+def skill_projection_current(
+    target: Path,
+    source: Path,
+    projection: Projection,
+    *,
+    allowed: bool,
+) -> bool:
     marker = read_marker(target)
     if marker != marker_payload(projection):
         return False
     metadata = target / "agents/openai.yaml"
-    if not metadata.exists() or metadata.read_text(encoding="utf-8") != manual_skill_metadata():
+    if not metadata.exists() or metadata.read_text(encoding="utf-8") != skill_metadata(source, allowed):
         return False
     expected = {child.name: child for child in expected_projection_children(source, skip_agents=True)}
     actual = {
@@ -442,26 +456,40 @@ def manual_skill_projection_current(target: Path, source: Path, projection: Proj
     if set(actual) != set(expected):
         return False
     for name, target_child in actual.items():
-        if not target_child.is_symlink():
-            return False
-        if target_child.resolve() != expected[name].resolve():
-            return False
+        if name == "SKILL.md":
+            if target_child.is_symlink() or not target_child.is_file():
+                return False
+            if target_child.read_bytes() != expected[name].read_bytes():
+                return False
+        else:
+            if not target_child.is_symlink():
+                return False
+            if target_child.resolve() != expected[name].resolve():
+                return False
     return True
 
 
-def create_manual_skill_projection(root: Path, projection: Projection, apply: bool) -> bool:
+def create_skill_projection(
+    root: Path,
+    projection: Projection,
+    apply: bool,
+    *,
+    allowed: bool,
+) -> bool:
     source = projection.repo_path / projection.source
     target = vault_path(root, projection.target)
     if not source.exists():
         raise SystemExit(f"Projection source missing: {source}")
     if not (source / "SKILL.md").exists():
-        raise SystemExit(f"Manual skill projection source lacks SKILL.md: {source}")
+        raise SystemExit(f"Skill projection source lacks SKILL.md: {source}")
 
     existing = target.exists() or target.is_symlink()
     marker = read_marker(target)
     if existing:
         if marker.get("managed_by") == "vault deps":
-            if target.is_dir() and manual_skill_projection_current(target, source, projection):
+            if target.is_dir() and skill_projection_current(
+                target, source, projection, allowed=allowed
+            ):
                 log(f"Projection current: {target}")
                 return False
             log(f"Rebuild managed projection: {target}")
@@ -470,52 +498,36 @@ def create_manual_skill_projection(root: Path, projection: Projection, apply: bo
         else:
             backup_path(root, target, target.name, apply)
 
-    log(f"Project manual skill {source} -> {target}")
+    kind = "auto" if allowed else "manual"
+    log(f"Project {kind} skill {source} -> {target}")
     if not apply:
         return True
 
     target.mkdir(parents=True, exist_ok=True)
     for child in expected_projection_children(source, skip_agents=True):
-        (target / child.name).symlink_to(child)
+        if child.name == "SKILL.md":
+            shutil.copy2(child, target / child.name)
+        else:
+            (target / child.name).symlink_to(child)
 
     agents_dir = target / "agents"
     agents_dir.mkdir(parents=True, exist_ok=True)
-    (agents_dir / "openai.yaml").write_text(manual_skill_metadata(), encoding="utf-8")
+    (agents_dir / "openai.yaml").write_text(skill_metadata(source, allowed), encoding="utf-8")
     write_json(projection_marker(target), marker_payload(projection))
     return True
 
 
+def create_manual_skill_projection(root: Path, projection: Projection, apply: bool) -> bool:
+    return create_skill_projection(root, projection, apply, allowed=False)
+
+
+def create_auto_skill_projection(root: Path, projection: Projection, apply: bool) -> bool:
+    return create_skill_projection(root, projection, apply, allowed=True)
+
+
 def create_active_skill_projection(root: Path, projection: Projection, apply: bool) -> bool:
-    # Codex discovers a projected skill only when the skill directory is the
-    # symlink. A real directory containing a symlinked SKILL.md is omitted from
-    # the catalog. Keep this as one whole-directory link.
-    source = projection.repo_path / projection.source
-    target = vault_path(root, projection.target)
-    if not source.exists():
-        raise SystemExit(f"Projection source missing: {source}")
-    if not (source / "SKILL.md").exists():
-        raise SystemExit(f"Active skill projection source lacks SKILL.md: {source}")
-
-    existing = target.exists() or target.is_symlink()
-    marker = read_marker(target)
-    if existing:
-        if target.is_symlink() and target.resolve() == source.resolve():
-            log(f"Projection current: {target}")
-            return False
-        if marker.get("managed_by") == "vault deps":
-            log(f"Rebuild managed projection: {target}")
-            if apply:
-                remove_path(target)
-        else:
-            backup_path(root, target, target.name, apply)
-
-    log(f"Project active skill {source} -> {target}")
-    if not apply:
-        return True
-
-    target.parent.mkdir(parents=True, exist_ok=True)
-    target.symlink_to(source, target_is_directory=True)
-    return True
+    """Compatibility alias for legacy active-skill projections."""
+    return create_auto_skill_projection(root, projection, apply)
 
 
 def apply_projection(root: Path, projection: Projection, apply: bool) -> bool:
@@ -524,8 +536,8 @@ def apply_projection(root: Path, projection: Projection, apply: bool) -> bool:
         return False
     if projection.type == "manual-skill":
         return create_manual_skill_projection(root, projection, apply)
-    if projection.type == "active-skill":
-        return create_active_skill_projection(root, projection, apply)
+    if projection.type in {"auto-skill", "active-skill"}:
+        return create_auto_skill_projection(root, projection, apply)
     raise SystemExit(f"Unknown projection type for {projection.target}: {projection.type}")
 
 
@@ -573,7 +585,11 @@ def sync(root: Path, repos: list[Repo], apply: bool) -> int:
                 log(f"Projection pending after clone: {projection.target}")
         else:
             for projection in repo.projections:
-                if apply_projection(root, projection, apply) and projection.type in {"manual-skill", "active-skill"}:
+                if apply_projection(root, projection, apply) and projection.type in {
+                    "manual-skill",
+                    "auto-skill",
+                    "active-skill",
+                }:
                     skill_projection_touched = True
         setup_queue.append((repo, repo_changed))
     if skill_projection_touched:

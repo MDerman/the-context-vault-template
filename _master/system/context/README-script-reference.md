@@ -23,6 +23,7 @@ This is the fuller script reference. Use `_master/system/context/README-scripts.
 - `backup.py`: backs up root `.obsidian` under `_master/system/backup/`.
 - `bootstrap_export.py`: exports the public bootstrap vault from current vault state using `_master/system/bootstrap/bootstrap-export.json`.
 - `release.py`: publishes SemVer public vault releases by bumping release metadata, locking dependencies, exporting, committing, tagging, pushing, and creating the GitHub Release.
+- `_master/agents/sync_skills.py`: validates grouped auto/manual/GH skill sources, enforces invocation policy, repairs dependency moves, and rebuilds flat catalog plus per-skill global links. Use `vault skills sync`.
 
 ## Bootstrap Scripts
 
@@ -33,7 +34,7 @@ This is the fuller script reference. Use `_master/system/context/README-scripts.
 - `_master/system/bootstrap/install_dependencies.sh`: installs/checks local CLI dependencies from the bootstrap Brewfile.
 - `_master/system/bootstrap/install_agent_canvas.py`: checks, builds, and repairs editable Agent Canvas CLI/package links through dependency setup hooks.
 - `_master/system/bootstrap/install_vault_command.py`: installs the `vault` dispatcher symlink.
-- `_master/system/bootstrap/agents/ensure-agent-skill-symlinks.sh`: links local coding-agent skill folders to `_master/agents/skills` and manual skills.
+- `_master/system/bootstrap/agents/ensure-agent-skill-symlinks.sh`: compatibility wrapper for `vault skills sync`.
 
 ## Secondary Scripts
 

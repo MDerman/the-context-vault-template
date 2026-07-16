@@ -379,6 +379,7 @@ class Bootstrap:
     def setup_agent_infrastructure(self) -> None:
         if self.coding_agents:
             self.ensure_dir(self.root / "_master/agents/skills")
+            self.ensure_dir(self.root / "_master/agents/auto-skills")
             self.ensure_dir(self.root / "_master/agents/manual-skills")
             self.ensure_dir(self.root / "_master/agents/gh-skills")
             self.ensure_dir(self.root / "_master/agents/skills-dump")

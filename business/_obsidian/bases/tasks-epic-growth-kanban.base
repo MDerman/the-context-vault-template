@@ -1,16 +1,16 @@
+# impression Epic Kanban - Growth
 generated: true
 generated_at: 2026-05-15T16:43:12
 managed_by: "managed-by: _master/system/scripts/generate_epic_kanban_views.py"
+
 filters:
   and:
     - file.hasTag("task")
-    - epic == link("business/_obsidian/epics/Growth")
+    - 'epic == link("business/_obsidian/epics/Growth")'
+
 views:
   - type: tasknotesKanban
-    name: Growth Kanban
-    groupBy:
-      property: status
-      direction: ASC
+    name: "Growth Kanban"
     order:
       - status
       - priority
@@ -26,8 +26,11 @@ views:
       - complete_instances
       - file.tasks
     sort:
-      - property: tasknotes_manual_order
+      - column: tasknotes_manual_order
         direction: DESC
+    groupBy:
+      property: status
+      direction: ASC
     swimLane: note.projects
     options:
       columnWidth: 280

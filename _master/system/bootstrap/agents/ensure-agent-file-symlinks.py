@@ -81,6 +81,7 @@ def ensure_real_directory(root: Path, directory: Path, dry_run: bool) -> None:
 def ensure_agent_paths(root: Path, dry_run: bool) -> None:
     for directory in [
         Path("_master/agents/skills"),
+        Path("_master/agents/auto-skills"),
         Path("_master/agents/manual-skills"),
         Path("_master/agents/gh-skills"),
         Path("_master/agents/skills-dump"),

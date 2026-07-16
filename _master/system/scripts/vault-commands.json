@@ -94,6 +94,27 @@
     "tui": true
   },
   {
+    "id": "skills-sync-dry-run",
+    "label": "Skills Sync Dry Run",
+    "description": "Validate grouped skill sources and preview catalog/global link changes.",
+    "group": "Maintenance",
+    "risk": "dry-run",
+    "mode": "run",
+    "args": ["skills", "sync", "--dry-run"],
+    "tui": true
+  },
+  {
+    "id": "skills-sync-apply",
+    "label": "Skills Sync",
+    "description": "Enforce invocation policies and rebuild skill catalog/global links.",
+    "group": "Maintenance",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["skills", "sync", "--apply"],
+    "tui": true
+  },
+  {
     "id": "attachments-dry-run",
     "label": "Attachments Dry Run",
     "description": "Preview attachment routing and cleanup without changing files.",

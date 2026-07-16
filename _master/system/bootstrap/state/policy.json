@@ -66,6 +66,9 @@
     },
     {
       "path": "_master/system/migrations/2026_05_30_context_folder_notes.py"
+    },
+    {
+      "path": "_master/system/migrations/2026_07_14_skill_source_architecture.py"
     }
   ]
 }

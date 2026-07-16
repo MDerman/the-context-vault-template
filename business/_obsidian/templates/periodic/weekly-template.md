@@ -12,27 +12,27 @@ generated: false
 
 ## Focus Goals
 
--
--
--
+- 
+- 
+- 
 
 ## Eisenhower Planning
 
 ### Urgent + Important
 
-- [ ]
+- [ ] 
 
 ### Urgent, Not Important
 
-- [ ]
+- [ ] 
 
 ### Important, Not Urgent
 
-- [ ]
+- [ ] 
 
 ### Not Urgent, Not Important
 
-- [ ]
+- [ ] 
 
 ## Product / Business Review
 

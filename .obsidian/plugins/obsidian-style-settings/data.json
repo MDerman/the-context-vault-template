@@ -29,5 +29,21 @@
   "primary-theme@@nav-folder-12-bg-color@@dark": "#222024",
   "primary-theme@@editor-border-width": "1px",
   "primary-theme@@editor-bg-color@@dark": "#181818",
-  "primary-theme@@zero-tab-anim": true
+  "primary-theme@@zero-tab-anim": true,
+  "cupertino@@colorful-frame": true,
+  "cupertino@@tab-icon": true,
+  "cupertino@@nav-action-center": false,
+  "cupertino@@status-bar-baseline": true,
+  "cupertino@@zoom-off": false,
+  "cupertino@@hover-ribbon": false,
+  "cupertino@@hover-sidedock": false,
+  "cupertino@@focus-view": false,
+  "cupertino@@adaptive-mode-off": false,
+  "cupertino@@tab-floating": true,
+  "baseline-style@@tab-full-width": false,
+  "baseline-style@@tab-divider": false,
+  "baseline-style@@tab-left-style": "tab-left-icon",
+  "baseline-style@@tab-right-style": "tab-right-icon",
+  "baseline-style@@nav-item-size": "13px",
+  "baseline-style@@background-contrast-dark": "contrast-dark"
 }

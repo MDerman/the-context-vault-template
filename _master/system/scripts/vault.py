@@ -11,7 +11,7 @@ from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT = SCRIPT_DIR.parents[2]
-CONTEXT_NINE_PLUGIN_ROOT = Path.home() / "Code/context_nine_obsidian_plugin"
+CONTEXT_NINE_PLUGIN_ROOT = Path.home() / "Code/ctx9/context_nine_obsidian_plugin"
 CONTEXT_NINE_TUI_ROOT = CONTEXT_NINE_PLUGIN_ROOT / "python"
 
 COMMANDS = {
@@ -27,6 +27,7 @@ COMMANDS = {
     "backup-sync": SCRIPT_DIR / "backup_sync.py",
     "bootstrap-export": SCRIPT_DIR / "bootstrap_export.py",
     "deps": SCRIPT_DIR / "deps.py",
+    "skills": ROOT / "_master/agents/sync_skills.py",
     "epic": SCRIPT_DIR / "epic.py",
     "project": SCRIPT_DIR / "project.py",
     "task": SCRIPT_DIR / "task.py",
@@ -60,6 +61,7 @@ Common commands:
   backup-sync  Configure and run optional rclone Google Drive backup/sync.
   bootstrap-export  Export the public bootstrap vault.
   deps         Clone/pull external dependency repos and rebuild managed projections.
+  skills       Validate skill sources and rebuild active/global discovery links.
   epic         Create, rename, delete, list epics and sync epic task Bases.
   project      Create and list project notes.
   task         Create TaskNotes tasks with validated project/epic links.
@@ -91,6 +93,8 @@ Examples:
   vault bootstrap-export --dry-run
   vault deps status
   vault deps sync --dry-run
+  vault skills sync --dry-run
+  vault skills sync --apply
   vault folder register business
   vault folder unregister business --dry-run
   vault folder remove business --dry-run
