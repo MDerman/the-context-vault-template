@@ -1,0 +1,43 @@
+/* @settings
+
+name: Translucent Left Sidebar
+id: translucent-left-sidebar
+settings:
+  -
+    id: left-sidebar-opacity
+    title: Background opacity
+    type: variable-number-slider
+    default: 78
+    min: 40
+    max: 100
+    step: 2
+    format: "%"
+  -
+    id: left-sidebar-blur
+    title: Background blur
+    type: variable-number-slider
+    default: 16
+    min: 0
+    max: 32
+    step: 2
+    format: px
+*/
+
+body:not(.is-mobile) .mod-sidedock.mod-left-split {
+  background-color: rgb(
+    from var(--background-secondary) r g b /
+      var(--left-sidebar-opacity, 78%)
+  );
+  -webkit-backdrop-filter: blur(var(--left-sidebar-blur, 16px));
+  backdrop-filter: blur(var(--left-sidebar-blur, 16px));
+}
+
+body:not(.is-mobile) .mod-sidedock.mod-left-split :is(
+    .workspace-tabs,
+    .workspace-tab-container,
+    .workspace-leaf,
+    .workspace-leaf-content,
+    .workspace-tab-header-container
+  ) {
+  background-color: transparent;
+}
