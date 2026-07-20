@@ -1,0 +1,156 @@
+{
+  "export_root": "~/Code/vault-public",
+  "manifest_name": "_system/state/export-manifest.json",
+  "copy_obsidian": "exact",
+  "context_folders": [
+    {
+      "source": "personal",
+      "target": "personal",
+      "public_home_description": [
+        "This is your personal home for goals, tasks, routines, reflection, and durable life notes.",
+        "Use it to keep personal plans and reference material separate from public brand or business work."
+      ]
+    },
+    {
+      "source": "personal-brand",
+      "target": "personal-brand",
+      "public_home_description": [
+        "This is your personal-brand home for content ideas, audience notes, brand strategy, offers, CRM context, and publishing plans.",
+        "Use it to keep public-facing strategy and creative work separate from private personal notes."
+      ]
+    },
+    {
+      "source": "business",
+      "target": "business",
+      "public_home_description": [
+        "This is your business home for tasks, projects, team notes, leads, resources, and operating docs.",
+        "Use it for company work that needs structure without mixing into personal or personal-brand material."
+      ]
+    }
+  ],
+  "public_context_scaffold_dirs": {
+    "business": [
+      "meetings/1-on-1s",
+      "meetings/general-meetings",
+      "meetings/customer-calls",
+      "meetings/founder-notes",
+      "product/specs",
+      "product/decisions",
+      "product/experiments",
+      "product/user-signals",
+      "gtm/campaigns",
+      "gtm/offers",
+      "gtm/icp",
+      "gtm/competitors",
+      "ops/metrics-snapshots",
+      "ops/sops",
+      "skills"
+    ]
+  },
+  "root_files": [
+    "AGENTS.md",
+    {
+      "source": "_system/bootstrap/README-public-vault-template.md",
+      "target": "README.md"
+    },
+    {
+      "source": "_system/bootstrap/install.sh",
+      "target": "install.sh"
+    },
+    {
+      "source": ".agents/skills/.gitkeep",
+      "target": ".agents/skills/.gitkeep"
+    }
+  ],
+  "root_dirs": [
+    ".agents/skills",
+    "_system/agents/manual-skills",
+    "_system/agents/gh-skills"
+  ],
+  "root_symlinks": {
+    "CLAUDE.md": "AGENTS.md",
+    ".claude/skills": "../.agents/skills"
+  },
+  "system_root_markdown_allow_paths": [
+    "_system/README.md",
+    "_system/docs/workflows/README-relay-collaboration.md"
+  ],
+  "generated_exclude_paths": [
+    "Dashboard.md",
+    "_system/agents/skills/code-folder-and-computer-topology",
+    "_system/config/dashboard-action-links.md",
+    "_system/config/machines.private.json"
+  ],
+  "generated_exclude_globs": [
+    "_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/**",
+    "_system/_obsidian/periodic/**",
+    "_system/_obsidian/attachments/**",
+    "_system/agents/manual-skills/**",
+    "_system/agents/gh-skills/**",
+    "_system/agents/skills-dump/**",
+    "_system/state/**",
+    "_system/inbox/**",
+    "_system/sync/**",
+    "_system/tools/gmail-invoice-collector/**",
+    "_system/tools/invoice-generation/**"
+  ],
+  "global_exclude_names": [
+    ".DS_Store",
+    "__pycache__"
+  ],
+  "repo_preserve_names": [
+    ".git",
+    ".github",
+    ".gitignore",
+    ".gitattributes",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "LICENSE.md"
+  ],
+  "sensitive_exclude_names": [
+    ".env",
+    ".env.base",
+    ".gcal-token.json",
+    "secrets",
+    "secret",
+    "kubeconfig"
+  ],
+  "obsidian_exclude_globs": [
+    ".obsidian/text-generator.json",
+    ".obsidian/plugins/context-nine/data.json",
+    ".obsidian/plugins/obsidian-textgenerator-plugin/data.json",
+    ".obsidian/plugins/share-note/data.json",
+    ".obsidian/plugins/system3-relay/data.json",
+    ".obsidian/plugins/system3-relay/relay.log*",
+    ".obsidian/plugins/system3-relay/relay*.log*",
+    ".obsidian-mobile/plugins/system3-relay/data.json",
+    ".obsidian-mobile/plugins/system3-relay/relay.log*",
+    ".obsidian-mobile/plugins/system3-relay/relay*.log*",
+    ".obsidian/plugins/terminal/data.json",
+    ".obsidian/plugins/todoist-sync-plugin/data.json"
+  ],
+  "obsidian_plugin_exact_copy_plugins": [
+    "context-nine",
+    "simple-folder-note",
+    "system3-relay"
+  ],
+  "obsidian_plugin_public_files": [
+    "data.json",
+    "manifest.json",
+    "styles.css"
+  ],
+  "text_rewrite_suffixes": [
+    ".base",
+    ".css",
+    ".json",
+    ".md",
+    ".py",
+    ".sh",
+    ".toml",
+    ".txt",
+    ".yaml",
+    ".yml",
+    ".zsh"
+  ]
+}

@@ -1,7 +1,7 @@
 # impression Epic Kanban - Focus
 generated: true
 generated_at: 2026-05-18T10:16:34
-managed_by: "managed-by: _master/system/scripts/generate_epic_kanban_views.py"
+managed_by: "vault.epic-views"
 
 filters:
   and:

@@ -1,7 +1,7 @@
 # impression Epic Kanban - Growth
 generated: true
 generated_at: 2026-05-15T16:43:12
-managed_by: "managed-by: _master/system/scripts/generate_epic_kanban_views.py"
+managed_by: "vault.epic-views"
 
 filters:
   and:

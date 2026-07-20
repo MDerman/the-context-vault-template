@@ -9,7 +9,7 @@ generated: false
 - [[<% tp.file.folder(true).split('/')[0] %>/_obsidian/periodic/weekly/<% tp.date.now("GGGG-[W]WW", 0, tp.file.title, "YYYY-MM-DD") %>|Weekly note]]
 - [[<% tp.file.folder(true).split('/')[0] %>/_obsidian/periodic/quarterly/<% tp.date.now("YYYY-[Q]Q", 0, tp.file.title, "YYYY-MM-DD") %>|Quarterly note]]
 - [[Dashboard]]
-- [[_master/_obsidian/bases/tasks-kanban.base|tasks-kanban]]
+- [[_system/_obsidian/bases/tasks-kanban.base|tasks-kanban]]
 - [[personal#Momentum|Personal Momentum]]
 - [[Keep in minds]]
 

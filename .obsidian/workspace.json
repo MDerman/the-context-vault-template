@@ -27,7 +27,7 @@
       {
         "id": "5b978711000ded9b",
         "type": "tabs",
-        "dimension": 74.08491947291361,
+        "dimension": 75.37260468417317,
         "children": [
           {
             "id": "12a3aa81c232d265",
@@ -74,7 +74,7 @@
       {
         "id": "4365fdef29381df3",
         "type": "tabs",
-        "dimension": 25.91508052708638,
+        "dimension": 24.62739531582683,
         "children": [
           {
             "id": "1ffc5fcaa195eeb3",
@@ -92,8 +92,8 @@
             "state": {
               "type": "tasknotes-pomodoro-view",
               "state": {},
-              "icon": "clock",
-              "title": "Pomodoro"
+              "icon": "lucide-ghost",
+              "title": "tasknotes-pomodoro-view"
             }
           },
           {
@@ -110,7 +110,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 383.5
+    "width": 412.5
   },
   "right": {
     "id": "c5da0292b2670f3d",
@@ -197,7 +197,7 @@
             }
           },
           {
-            "id": "86b260504082f319",
+            "id": "cfb8559792f0729e",
             "type": "leaf",
             "state": {
               "type": "system3-sync-status",

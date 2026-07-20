@@ -977,7 +977,7 @@ var TaskCaptureService = class {
       this.app,
       captured,
       taskNotes,
-      this.getSettings().knownRoots.filter((root) => root.match(/^\d\d-/)),
+      this.getSettings().knownRoots.filter((root) => !root.startsWith("_")),
       this.getPreferredContext(),
       (data) => {
         void this.createTaskFromFallbackModal(captured, data, taskNotes);
@@ -1227,22 +1227,22 @@ ${details.trimEnd()}
 
 // src/types.ts
 var DEFAULT_KNOWN_ROOTS = [
-  "01-personal",
-  "02-matt-derman",
-  "03-impression",
-  "04-dev",
-  "05-claudeche",
-  "library",
-  "master",
-  "shared",
-  "wiki"
+  "personal",
+  "matt-derman",
+  "impression.nosync",
+  "dev",
+  "claudeche",
+  "ctx9",
+  "_library",
+  "_system",
+  "_wiki"
 ];
 var DEFAULT_SETTINGS = {
-  defaultContext: "03-impression",
-  lastContext: "03-impression",
+  defaultContext: "impression.nosync",
+  lastContext: "impression.nosync",
   knownRoots: DEFAULT_KNOWN_ROOTS,
-  attachmentInboxPath: "master/_obsidian/attachments/_inbox",
-  appleNotesAttachmentsPath: "master/system/inbox/apple-notes-attachments",
+  attachmentInboxPath: "_system/_obsidian/attachments/_inbox",
+  appleNotesAttachmentsPath: "_system/inbox/apple-notes-attachments",
   enableAutoAttachmentRouter: true,
   routeIntervalSeconds: 60,
   enableGcalSync: true,
@@ -1259,13 +1259,12 @@ var DEFAULT_SETTINGS = {
 var import_obsidian5 = require("obsidian");
 
 // src/vault-command-metadata.ts
-var VAULT_COMMAND_METADATA_PATH = "_master/system/scripts/vault-commands.json";
-var LEGACY_VAULT_COMMAND_METADATA_PATH = "master/system/scripts/vault-commands.json";
+var VAULT_COMMAND_METADATA_PATH = "_system/commands/vault-commands.json";
 var FALLBACK_VAULT_COMMANDS = [
   {
     id: "refresh",
     label: "Refresh",
-    description: "Run Google Calendar task sync and regenerate agent context.",
+    description: "Refresh integrations, schedules, periodic rollups, and Dashboard.",
     args: ["refresh"],
     cockpit: true,
     palette: true
@@ -1292,12 +1291,6 @@ var FALLBACK_VAULT_COMMANDS = [
     args: ["sync"],
     aliases: ["apple"],
     cockpit: true
-  },
-  {
-    id: "context",
-    label: "Context",
-    description: "Regenerate compact agent-readable context and dashboard files.",
-    args: ["context"]
   },
   {
     id: "content",
@@ -1364,15 +1357,10 @@ async function loadVaultCommandMetadata(app) {
     const json = await app.vault.adapter.read(VAULT_COMMAND_METADATA_PATH);
     return parseVaultCommandMetadata(json);
   } catch (error) {
-    try {
-      const json = await app.vault.adapter.read(LEGACY_VAULT_COMMAND_METADATA_PATH);
-      return parseVaultCommandMetadata(json);
-    } catch (e) {
-      return {
-        commands: FALLBACK_VAULT_COMMANDS,
-        warning: `Could not read ${VAULT_COMMAND_METADATA_PATH}: ${messageForError(error)}`
-      };
-    }
+    return {
+      commands: FALLBACK_VAULT_COMMANDS,
+      warning: `Could not read ${VAULT_COMMAND_METADATA_PATH}: ${messageForError(error)}`
+    };
   }
 }
 function normalizeCommand(value) {
@@ -1475,7 +1463,7 @@ var VaultCommandRunner = class {
       return false;
     }
     const startedAt = /* @__PURE__ */ new Date();
-    const resolvedCommand = command === "vault" ? (0, import_path.join)(cwd, "_master/system/scripts/vault.py") : command;
+    const resolvedCommand = command === "vault" ? (0, import_path.join)(cwd, "_system/commands/vault.py") : command;
     events.onStart({ spec, command: resolvedCommand, cwd, startedAt });
     const child = (0, import_child_process.spawn)(resolvedCommand, spec.args, {
       cwd,
@@ -2802,14 +2790,14 @@ var TaskNotesModalUiService = class {
   activeContexts() {
     return this.getSettings().knownRoots.filter((root) => {
       var _a;
-      if (!/^\d\d-/.test(root)) {
+      if (root.startsWith("_")) {
         return false;
       }
-      const home = this.app.vault.getAbstractFileByPath(`${root}/HOME.md`);
-      if (!(home instanceof import_obsidian8.TFile)) {
+      const contextNote = this.app.vault.getAbstractFileByPath(`${root}/${root}.md`);
+      if (!(contextNote instanceof import_obsidian8.TFile)) {
         return false;
       }
-      const cache = this.app.metadataCache.getFileCache(home);
+      const cache = this.app.metadataCache.getFileCache(contextNote);
       return ((_a = cache == null ? void 0 : cache.frontmatter) == null ? void 0 : _a.status) === "active";
     });
   }
@@ -3206,7 +3194,7 @@ var ContextNinePlugin = class extends import_obsidian9.Plugin {
       this.taskNotesModalUi.register(this);
     }
     this.taskNotesUx.register(this);
-    this.addSettingTab(new ObsidianMasterSettingTab(this));
+    this.addSettingTab(new ContextNineSettingTab(this));
   }
   onunload() {
     var _a, _b;
@@ -3234,7 +3222,7 @@ var ContextNinePlugin = class extends import_obsidian9.Plugin {
     return (_b = (_a = adapter.getBasePath) == null ? void 0 : _a.call(adapter)) != null ? _b : "";
   }
   getVaultCommand(command, cwd) {
-    return command === "vault" ? (0, import_path2.join)(cwd, "_master/system/scripts/vault.py") : command;
+    return command === "vault" ? (0, import_path2.join)(cwd, "_system/commands/vault.py") : command;
   }
   openVaultTui() {
     const cwd = this.settings.vaultRoot || this.getCurrentVaultRoot() || DEFAULT_SETTINGS.vaultRoot;
@@ -3492,7 +3480,7 @@ var VaultPromptArgsModal = class extends import_obsidian9.Modal {
     this.onSubmit(this.values);
   }
 };
-var ObsidianMasterSettingTab = class extends import_obsidian9.PluginSettingTab {
+var ContextNineSettingTab = class extends import_obsidian9.PluginSettingTab {
   constructor(plugin) {
     super(plugin.app, plugin);
     this.plugin = plugin;

@@ -1,0 +1,22 @@
+# This Week
+generated: true
+generated_at: 2026-07-20T21:08:31
+managed_by: "vault.bootstrap"
+
+filters:
+  and:
+    - file.hasTag("task")
+    - or:
+      - 'scheduled >= today() && scheduled <= today() + "7d"'
+      - 'due >= today() && due <= today() + "7d"'
+
+views:
+  - type: table
+    name: "This Week"
+    order:
+      - file.name
+      - status
+      - priority
+      - scheduled
+      - due
+      - contexts

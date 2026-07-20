@@ -1,7 +1,7 @@
 {
   "baseTheme": "dark",
   "promptDelete": false,
-  "attachmentFolderPath": "_master/_obsidian/attachments/_inbox",
+  "attachmentFolderPath": "_system/_obsidian/attachments/_inbox",
   "alwaysUpdateLinks": true,
   "newFileLocation": "current",
   "focusNewTab": true,

@@ -1,0 +1,25 @@
+{
+  "brain_dump_ingest": {
+    "enabled": true,
+    "note_name": "Brain Dump",
+    "output_path": "_system/inbox/BRAIN_DUMP.md",
+    "attachments_path": "_system/inbox/BRAIN_DUMP_ATTACHMENTS",
+    "copy_attachments": true,
+    "clear_after_ingest": true,
+    "cleared_note_body": "<div>{note_name}</div><div><br></div>"
+  },
+  "refresh_schedule": {
+    "enabled": true,
+    "label": "com.obsidian-context-vault.refresh",
+    "timezone": "local",
+    "hour": 2,
+    "minute": 0,
+    "catchup_interval_seconds": 60,
+    "retry_attempts": 3,
+    "retry_delay_seconds": 60
+  },
+  "dashboard_checklist": {
+    "end_of_week_day": "sunday",
+    "monthly_sops_reminder_day": "last_day"
+  }
+}

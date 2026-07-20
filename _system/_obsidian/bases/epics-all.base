@@ -1,0 +1,21 @@
+# All Epics
+generated: true
+generated_at: 2026-07-20T21:08:31
+managed_by: "vault.bootstrap"
+
+filters:
+  and:
+    - 'type == "epic"'
+    - or:
+      - file.inFolder("personal/_obsidian/epics")
+      - file.inFolder("personal-brand/_obsidian/epics")
+      - file.inFolder("business/_obsidian/epics")
+
+views:
+  - type: table
+    name: "Active Epics"
+    order:
+      - file.name
+      - status
+      - contexts
+      - file.folder

@@ -1,0 +1,485 @@
+{
+  "external_repos": [
+    {
+      "id": "agent-canvas",
+      "path": "~/Code/open_source/agent-canvas",
+      "ref": "main",
+      "resolved_commit": "d6f122fabdf05c6220fdd174bfaa7a7f7ed7588b",
+      "url": "https://github.com/whq25/agent-canvas.git"
+    },
+    {
+      "id": "frontend-slides",
+      "path": "~/Code/open_source/frontend-slides",
+      "ref": "main",
+      "resolved_commit": "9906a34d640d2111f724544cbc50f7f130569ae1",
+      "url": "https://github.com/zarazhangrui/frontend-slides.git"
+    },
+    {
+      "id": "googleworkspace-cli",
+      "path": "~/Code/open_source/googleworkspace-cli",
+      "ref": "main",
+      "resolved_commit": "a3768d0e82ad83cca2da97724e46bea4ff0e6dbd",
+      "url": "https://github.com/googleworkspace/cli.git"
+    },
+    {
+      "id": "witan-cli",
+      "path": "~/Code/open_source/witan-cli",
+      "ref": "main",
+      "resolved_commit": "b98990be53824be33762f7f5a7f330f2249d37e7",
+      "url": "https://github.com/witanlabs/witan-cli.git"
+    }
+  ],
+  "generated_at": "2026-07-20T19:08:17Z",
+  "github_cli": {
+    "available": true,
+    "skill_available": true,
+    "version": "gh version 2.96.0 (2026-07-02)"
+  },
+  "homebrew": [
+    {
+      "installed_version": "2.55.0",
+      "name": "git",
+      "type": "brew"
+    },
+    {
+      "installed_version": "3.7.1",
+      "name": "git-lfs",
+      "type": "brew"
+    },
+    {
+      "installed_version": "2.96.0",
+      "name": "gh",
+      "type": "brew"
+    },
+    {
+      "installed_version": null,
+      "name": "bun",
+      "type": "brew"
+    },
+    {
+      "installed_version": "1.4.7",
+      "name": "btop",
+      "type": "brew"
+    },
+    {
+      "installed_version": "3.7b",
+      "name": "tmux",
+      "type": "brew"
+    },
+    {
+      "installed_version": "1.26.0",
+      "name": "starship",
+      "type": "brew"
+    },
+    {
+      "installed_version": "1.8.2",
+      "name": "jq",
+      "type": "brew"
+    },
+    {
+      "installed_version": "23.10.0_1",
+      "name": "node",
+      "type": "brew"
+    },
+    {
+      "installed_version": "3.12.13_4",
+      "name": "python@3.12",
+      "type": "brew"
+    },
+    {
+      "installed_version": "15.1.0",
+      "name": "ripgrep",
+      "type": "brew"
+    },
+    {
+      "installed_version": "1.74.3",
+      "name": "rclone",
+      "type": "brew"
+    },
+    {
+      "installed_version": "0.11.28",
+      "name": "uv",
+      "type": "brew"
+    },
+    {
+      "installed_version": "0.22.5",
+      "name": "googleworkspace-cli",
+      "type": "brew"
+    },
+    {
+      "installed_version": "575.0.0",
+      "name": "gcloud-cli",
+      "type": "cask"
+    },
+    {
+      "installed_version": "5.2.0",
+      "name": "macfuse",
+      "type": "cask"
+    }
+  ],
+  "obsidian_plugins": [
+    {
+      "id": "backlink-cache",
+      "manifest_path": ".obsidian/plugins/backlink-cache/manifest.json",
+      "name": "Backlink Cache",
+      "plugin": "backlink-cache",
+      "profile": ".obsidian",
+      "version": "2.12.1"
+    },
+    {
+      "id": "calendar",
+      "manifest_path": ".obsidian/plugins/calendar/manifest.json",
+      "name": "Calendar",
+      "plugin": "calendar",
+      "profile": ".obsidian",
+      "version": "1.5.10"
+    },
+    {
+      "id": "calendar-bases",
+      "manifest_path": ".obsidian/plugins/calendar-bases/manifest.json",
+      "name": "Calendar Bases",
+      "plugin": "calendar-bases",
+      "profile": ".obsidian",
+      "version": "0.2.8"
+    },
+    {
+      "id": "consistent-attachments-and-links",
+      "manifest_path": ".obsidian/plugins/consistent-attachments-and-links/manifest.json",
+      "name": "Consistent Attachments and Links",
+      "plugin": "consistent-attachments-and-links",
+      "profile": ".obsidian",
+      "version": "3.33.4"
+    },
+    {
+      "id": "context-nine",
+      "manifest_path": ".obsidian/plugins/context-nine/manifest.json",
+      "name": "Context Nine",
+      "plugin": "context-nine",
+      "profile": ".obsidian",
+      "version": "1.0.0"
+    },
+    {
+      "id": "dataview",
+      "manifest_path": ".obsidian/plugins/dataview/manifest.json",
+      "name": "Dataview",
+      "plugin": "dataview",
+      "profile": ".obsidian",
+      "version": "0.5.68"
+    },
+    {
+      "id": "folder-new-note-button",
+      "manifest_path": ".obsidian/plugins/folder-new-note-button/manifest.json",
+      "name": "Folder New Note Button",
+      "plugin": "folder-new-note-button",
+      "profile": ".obsidian",
+      "version": "1.0.0"
+    },
+    {
+      "id": "kanban-bases-view",
+      "manifest_path": ".obsidian/plugins/kanban-bases-view/manifest.json",
+      "name": "Kanban Bases View",
+      "plugin": "kanban-bases-view",
+      "profile": ".obsidian",
+      "version": "0.9.0"
+    },
+    {
+      "id": "obsidian-checklist-reset",
+      "manifest_path": ".obsidian/plugins/obsidian-checklist-reset/manifest.json",
+      "name": "Checklist Reset",
+      "plugin": "obsidian-checklist-reset",
+      "profile": ".obsidian",
+      "version": "1.4.2"
+    },
+    {
+      "id": "obsidian-doubleshift",
+      "manifest_path": ".obsidian/plugins/obsidian-doubleshift/manifest.json",
+      "name": "Doubleshift",
+      "plugin": "obsidian-doubleshift",
+      "profile": ".obsidian",
+      "version": "2.3.0"
+    },
+    {
+      "id": "obsidian-editor-shortcuts",
+      "manifest_path": ".obsidian/plugins/obsidian-editor-shortcuts/manifest.json",
+      "name": "Code Editor Shortcuts",
+      "plugin": "obsidian-editor-shortcuts",
+      "profile": ".obsidian",
+      "version": "1.14.0"
+    },
+    {
+      "id": "obsidian-excalidraw-plugin",
+      "manifest_path": ".obsidian/plugins/obsidian-excalidraw-plugin/manifest.json",
+      "name": "Excalidraw",
+      "plugin": "obsidian-excalidraw-plugin",
+      "profile": ".obsidian",
+      "version": "2.22.3"
+    },
+    {
+      "id": "obsidian-file-color",
+      "manifest_path": ".obsidian/plugins/obsidian-file-color/manifest.json",
+      "name": "File Color",
+      "plugin": "obsidian-file-color",
+      "profile": ".obsidian",
+      "version": "1.1.0"
+    },
+    {
+      "id": "obsidian-full-calendar",
+      "manifest_path": ".obsidian/plugins/obsidian-full-calendar/manifest.json",
+      "name": "Full Calendar",
+      "plugin": "obsidian-full-calendar",
+      "profile": ".obsidian",
+      "version": "0.10.7"
+    },
+    {
+      "id": "obsidian-git",
+      "manifest_path": ".obsidian/plugins/obsidian-git/manifest.json",
+      "name": "Git",
+      "plugin": "obsidian-git",
+      "profile": ".obsidian",
+      "version": "2.38.2"
+    },
+    {
+      "id": "obsidian-icon-folder",
+      "manifest_path": ".obsidian/plugins/obsidian-icon-folder/manifest.json",
+      "name": "Iconize",
+      "plugin": "obsidian-icon-folder",
+      "profile": ".obsidian",
+      "version": "2.14.7"
+    },
+    {
+      "id": "obsidian-importer",
+      "manifest_path": ".obsidian/plugins/obsidian-importer/manifest.json",
+      "name": "Importer",
+      "plugin": "obsidian-importer",
+      "profile": ".obsidian",
+      "version": "1.8.6"
+    },
+    {
+      "id": "obsidian-kanban",
+      "manifest_path": ".obsidian/plugins/obsidian-kanban/manifest.json",
+      "name": "Kanban",
+      "plugin": "obsidian-kanban",
+      "profile": ".obsidian",
+      "version": "2.0.51"
+    },
+    {
+      "id": "obsidian-minimal-settings",
+      "manifest_path": ".obsidian/plugins/obsidian-minimal-settings/manifest.json",
+      "name": "Minimal Theme Settings",
+      "plugin": "obsidian-minimal-settings",
+      "profile": ".obsidian",
+      "version": "8.2.2"
+    },
+    {
+      "id": "obsidian-reveal-active-file",
+      "manifest_path": ".obsidian/plugins/obsidian-reveal-active-file/manifest.json",
+      "name": "Automatically reveal active file",
+      "plugin": "obsidian-reveal-active-file",
+      "profile": ".obsidian",
+      "version": "1.0.3"
+    },
+    {
+      "id": "obsidian-show-file-path",
+      "manifest_path": ".obsidian/plugins/obsidian-show-file-path/manifest.json",
+      "name": "Show Current File Path",
+      "plugin": "obsidian-show-file-path",
+      "profile": ".obsidian",
+      "version": "0.5.2"
+    },
+    {
+      "id": "obsidian-style-settings",
+      "manifest_path": ".obsidian/plugins/obsidian-style-settings/manifest.json",
+      "name": "Style Settings",
+      "plugin": "obsidian-style-settings",
+      "profile": ".obsidian",
+      "version": "1.0.9"
+    },
+    {
+      "id": "obsidian-textgenerator-plugin",
+      "manifest_path": ".obsidian/plugins/obsidian-textgenerator-plugin/manifest.json",
+      "name": "Text Generator",
+      "plugin": "obsidian-textgenerator-plugin",
+      "profile": ".obsidian",
+      "version": "0.8.7"
+    },
+    {
+      "id": "obsidian-vimrc-support",
+      "manifest_path": ".obsidian/plugins/obsidian-vimrc-support/manifest.json",
+      "name": "Vimrc Support",
+      "plugin": "obsidian-vimrc-support",
+      "profile": ".obsidian",
+      "version": "0.10.2"
+    },
+    {
+      "id": "obsidian42-brat",
+      "manifest_path": ".obsidian/plugins/obsidian42-brat/manifest.json",
+      "name": "BRAT",
+      "plugin": "obsidian42-brat",
+      "profile": ".obsidian",
+      "version": "2.0.4"
+    },
+    {
+      "id": "omnisearch",
+      "manifest_path": ".obsidian/plugins/omnisearch/manifest.json",
+      "name": "Omnisearch",
+      "plugin": "omnisearch",
+      "profile": ".obsidian",
+      "version": "1.29.0"
+    },
+    {
+      "id": "open-tab-settings",
+      "manifest_path": ".obsidian/plugins/open-tab-settings/manifest.json",
+      "name": "Open Tab Settings",
+      "plugin": "open-tab-settings",
+      "profile": ".obsidian",
+      "version": "2.0.3"
+    },
+    {
+      "id": "periodic-notes",
+      "manifest_path": ".obsidian/plugins/periodic-notes/manifest.json",
+      "name": "Periodic Notes",
+      "plugin": "periodic-notes",
+      "profile": ".obsidian",
+      "version": "0.0.17"
+    },
+    {
+      "id": "share-note",
+      "manifest_path": ".obsidian/plugins/share-note/manifest.json",
+      "name": "Share Note",
+      "plugin": "share-note",
+      "profile": ".obsidian",
+      "version": "1.3.1"
+    },
+    {
+      "id": "simple-folder-note",
+      "manifest_path": ".obsidian/plugins/simple-folder-note/manifest.json",
+      "name": "Simple Folder Note",
+      "plugin": "simple-folder-note",
+      "profile": ".obsidian",
+      "version": "1.0.0"
+    },
+    {
+      "id": "sync-embeds",
+      "manifest_path": ".obsidian/plugins/sync-embeds/manifest.json",
+      "name": "Sync Embeds",
+      "plugin": "sync-embeds",
+      "profile": ".obsidian",
+      "version": "2.0.2"
+    },
+    {
+      "id": "sync-embeds",
+      "manifest_path": ".obsidian/plugins/sync-embeds.patched.20260519-083828/manifest.json",
+      "name": "Sync Embeds",
+      "plugin": "sync-embeds.patched.20260519-083828",
+      "profile": ".obsidian",
+      "version": "2.0.1"
+    },
+    {
+      "id": "system3-relay",
+      "manifest_path": ".obsidian/plugins/system3-relay/manifest.json",
+      "name": "Relay",
+      "plugin": "system3-relay",
+      "profile": ".obsidian",
+      "version": "0.8.4-5-g0364ad1"
+    },
+    {
+      "id": "tasknotes",
+      "manifest_path": ".obsidian/plugins/tasknotes/manifest.json",
+      "name": "TaskNotes",
+      "plugin": "tasknotes",
+      "profile": ".obsidian",
+      "version": "4.5.3"
+    },
+    {
+      "id": "templater-obsidian",
+      "manifest_path": ".obsidian/plugins/templater-obsidian/manifest.json",
+      "name": "Templater",
+      "plugin": "templater-obsidian",
+      "profile": ".obsidian",
+      "version": "2.20.3"
+    },
+    {
+      "id": "terminal",
+      "manifest_path": ".obsidian/plugins/terminal/manifest.json",
+      "name": "Terminal",
+      "plugin": "terminal",
+      "profile": ".obsidian",
+      "version": "3.24.0"
+    },
+    {
+      "id": "todoist-sync-plugin",
+      "manifest_path": ".obsidian/plugins/todoist-sync-plugin/manifest.json",
+      "name": "Todoist Sync",
+      "plugin": "todoist-sync-plugin",
+      "profile": ".obsidian",
+      "version": "2.6.0"
+    },
+    {
+      "id": "calendar",
+      "manifest_path": ".obsidian-mobile/plugins/calendar/manifest.json",
+      "name": "Calendar",
+      "plugin": "calendar",
+      "profile": ".obsidian-mobile",
+      "version": "1.5.10"
+    },
+    {
+      "id": "obsidian-file-color",
+      "manifest_path": ".obsidian-mobile/plugins/obsidian-file-color/manifest.json",
+      "name": "File Color",
+      "plugin": "obsidian-file-color",
+      "profile": ".obsidian-mobile",
+      "version": "1.1.0"
+    },
+    {
+      "id": "obsidian-icon-folder",
+      "manifest_path": ".obsidian-mobile/plugins/obsidian-icon-folder/manifest.json",
+      "name": "Iconize",
+      "plugin": "obsidian-icon-folder",
+      "profile": ".obsidian-mobile",
+      "version": "2.14.7"
+    },
+    {
+      "id": "obsidian-style-settings",
+      "manifest_path": ".obsidian-mobile/plugins/obsidian-style-settings/manifest.json",
+      "name": "Style Settings",
+      "plugin": "obsidian-style-settings",
+      "profile": ".obsidian-mobile",
+      "version": "1.0.9"
+    },
+    {
+      "id": "periodic-notes",
+      "manifest_path": ".obsidian-mobile/plugins/periodic-notes/manifest.json",
+      "name": "Periodic Notes",
+      "plugin": "periodic-notes",
+      "profile": ".obsidian-mobile",
+      "version": "0.0.17"
+    },
+    {
+      "id": "sync-embeds",
+      "manifest_path": ".obsidian-mobile/plugins/sync-embeds/manifest.json",
+      "name": "Sync Embeds",
+      "plugin": "sync-embeds",
+      "profile": ".obsidian-mobile",
+      "version": "2.0.2"
+    },
+    {
+      "id": "system3-relay",
+      "manifest_path": ".obsidian-mobile/plugins/system3-relay/manifest.json",
+      "name": "Relay",
+      "plugin": "system3-relay",
+      "profile": ".obsidian-mobile",
+      "version": "0.8.4-5-g0364ad1"
+    },
+    {
+      "id": "tasknotes",
+      "manifest_path": ".obsidian-mobile/plugins/tasknotes/manifest.json",
+      "name": "TaskNotes",
+      "plugin": "tasknotes",
+      "profile": ".obsidian-mobile",
+      "version": "4.5.3"
+    }
+  ],
+  "release_tag": "v0.2.0",
+  "release_version": "0.2.0",
+  "schema_version": 1
+}

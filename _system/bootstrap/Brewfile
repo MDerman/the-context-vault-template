@@ -1,0 +1,21 @@
+brew "git"
+brew "git-lfs"
+brew "gh"
+brew "bun"
+legacy_intel_macos = OS.mac? && Hardware::CPU.intel? && MacOS.version <= :monterey
+
+brew "btop" unless legacy_intel_macos
+brew "tmux"
+brew "starship" unless legacy_intel_macos
+brew "jq"
+brew "node"
+brew "python@3.12"
+brew "ripgrep"
+brew "rclone"
+brew "uv"
+# Provides Google Workspace CLI binary `gws`; do not replace with unrelated `gws` formula.
+brew "googleworkspace-cli"
+# Required by `gws auth setup` for OAuth client/project setup.
+cask "gcloud-cli"
+# Required for rclone Finder mounts.
+cask "macfuse"

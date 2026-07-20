@@ -4,9 +4,7 @@
   "translucency": true,
   "enabledCssSnippets": [
     "tasknotes-swimlanes",
-    "custom-backgrounds",
-    "compact-file-explorer",
-    "translucent-left-sidebar"
+    "custom-backgrounds"
   ],
   "showRibbon": false
 }

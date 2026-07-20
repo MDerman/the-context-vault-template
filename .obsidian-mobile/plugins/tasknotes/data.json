@@ -7,7 +7,7 @@
   "hideIdentifyingTagsInCards": false,
   "taskPropertyName": "",
   "taskPropertyValue": "",
-  "excludedFolders": "_master/_obsidian/templates/shared, _master/system/bootstrap/setup/obsidian-profiles/source",
+  "excludedFolders": "_system/_obsidian/templates/shared",
   "defaultTaskPriority": "normal",
   "defaultTaskStatus": "backlog",
   "taskOrgFiltersCollapsed": false,
@@ -467,12 +467,12 @@
   "enableMdbaseSpec": false,
   "autoCreateDefaultBasesFiles": true,
   "commandFileMapping": {
-    "open-calendar-view": "_master/_obsidian/bases/tasks-mini-calendar.base",
-    "open-kanban-view": "_master/_obsidian/bases/tasks-kanban.base",
-    "open-tasks-view": "_master/_obsidian/bases/tasks-home.base",
-    "open-advanced-calendar-view": "_master/_obsidian/bases/tasks-calendar.base",
-    "open-agenda-view": "_master/_obsidian/bases/tasks-agenda.base",
-    "relationships": "_master/_obsidian/bases/tasks-relationships.base"
+    "open-calendar-view": "_system/_obsidian/bases/tasks-mini-calendar.base",
+    "open-kanban-view": "_system/_obsidian/bases/tasks-kanban.base",
+    "open-tasks-view": "_system/_obsidian/bases/tasks-home.base",
+    "open-advanced-calendar-view": "_system/_obsidian/bases/tasks-calendar.base",
+    "open-agenda-view": "_system/_obsidian/bases/tasks-agenda.base",
+    "relationships": "_system/_obsidian/bases/tasks-relationships.base"
   },
   "maintainDueDateOffsetInRecurring": false,
   "resetCheckboxesOnRecurrence": true,

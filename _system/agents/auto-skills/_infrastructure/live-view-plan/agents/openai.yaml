@@ -1,0 +1,6 @@
+interface:
+  display_name: "Live View Plan"
+  short_description: "Publish temporary plans as live web pages"
+  default_prompt: "Use $live-view-plan to create and publish a live view plan."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,23 @@
+# Today
+generated: true
+generated_at: 2026-07-20T21:08:31
+managed_by: "vault.bootstrap"
+
+filters:
+  and:
+    - file.hasTag("task")
+    - or:
+      - 'scheduled == today()'
+      - 'due == today()'
+      - 'status == "in-progress"'
+
+views:
+  - type: table
+    name: "Today"
+    order:
+      - file.name
+      - status
+      - priority
+      - scheduled
+      - due
+      - contexts
