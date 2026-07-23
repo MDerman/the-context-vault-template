@@ -61,12 +61,13 @@ vault attachments --verify-only
 
 ## Git LFS
 
-This vault uses Git LFS for media, design files, presentations, PDFs, archives, and common image formats including PNG, JPEG, GIF, WebP, HEIC, and raw camera files. New clones should run:
+Private source-vault Git stores notes and code normally. Media uses Git LFS pointer format, but media bodies remain local and are not uploaded to GitHub. Clone pointer metadata without requesting absent bodies:
 
 ```bash
-git lfs install
-git lfs pull
+GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/MDerman/vault.git
 ```
+
+Use `vault git-media status` before pushing. Full setup, manifest workflow, recovery limits, and local paths live in [[_system/docs/commands/README-git|Git Repository]]. Public bootstrap installs keep their separate standard Git LFS behavior.
 
 Remote Git history is not rewritten by normal local maintenance. Use `vault git-maintenance --depth 1` only for local shallow pruning unless a deliberate remote force-rewrite is planned.
 

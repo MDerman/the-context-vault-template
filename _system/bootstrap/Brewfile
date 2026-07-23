@@ -7,6 +7,7 @@ legacy_intel_macos = OS.mac? && Hardware::CPU.intel? && MacOS.version <= :monter
 brew "btop" unless legacy_intel_macos
 brew "tmux"
 brew "starship" unless legacy_intel_macos
+brew "terminal-notifier"
 brew "jq"
 brew "node"
 brew "python@3.12"

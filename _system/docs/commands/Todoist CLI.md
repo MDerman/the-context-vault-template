@@ -22,15 +22,15 @@ td auth login
 td auth status
 ```
 
-For script/env use, keep the real token in ignored `_system/env/.env` and load it before running `td`:
+For script/env use, keep the real token in ignored `_system/config/env/.env` and load it before running `td`:
 
 ```bash
 TODOIST_API_TOKEN=
-source "$(vault root)/_system/env/load-env.sh"
+source "$(vault root)/_system/config/env/load-env.sh"
 td auth status
 ```
 
-`TODOIST_API_TOKEN` in `_system/env/.env.base` is only a placeholder. Do not put real tokens in tracked files.
+`TODOIST_API_TOKEN` in `_system/config/env/.env.base` is only a placeholder. Do not put real tokens in tracked files.
 
 ## Simple Tasks
 

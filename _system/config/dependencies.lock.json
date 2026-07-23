@@ -29,7 +29,7 @@
       "url": "https://github.com/witanlabs/witan-cli.git"
     }
   ],
-  "generated_at": "2026-07-20T19:08:17Z",
+  "generated_at": "2026-07-23T15:46:11Z",
   "github_cli": {
     "available": true,
     "skill_available": true,
@@ -69,6 +69,11 @@
     {
       "installed_version": "1.26.0",
       "name": "starship",
+      "type": "brew"
+    },
+    {
+      "installed_version": "2.0.0",
+      "name": "terminal-notifier",
       "type": "brew"
     },
     {
@@ -479,7 +484,7 @@
       "version": "4.5.3"
     }
   ],
-  "release_tag": "v0.2.0",
-  "release_version": "0.2.0",
+  "release_tag": "v0.2.1",
+  "release_version": "0.2.1",
   "schema_version": 1
 }

@@ -396,10 +396,10 @@ class BootstrapExporter:
             return True
         if self.is_sensitive_path(relative):
             return True
-        if rel == "_system/env":
+        if rel == "_system/config/env":
             self.ensure_dir(self.export_root / relative)
             return False
-        if rel.startswith("_system/env/"):
+        if rel.startswith("_system/config/env/"):
             return True
         if (
             len(relative.parts) == 2
@@ -419,7 +419,7 @@ class BootstrapExporter:
                 return True
             if pattern.endswith("/**"):
                 base = pattern[:-3]
-                if rel == base or rel.startswith(base + "/"):
+                if fnmatch.fnmatch(rel, base) or rel == base or rel.startswith(base + "/"):
                     return True
         return False
 

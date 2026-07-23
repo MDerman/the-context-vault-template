@@ -92,11 +92,15 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--context-folders", default=None, help="Comma-separated context folders for this refresh.")
     parser.add_argument("--date", default=None, help="Refresh date in YYYY-MM-DD form. Defaults to today.")
     parser.add_argument("--skip-git-maintenance", action="store_true", help="Skip local Git shallow prune/gc maintenance.")
-    parser.add_argument("--git-depth", type=int, default=5, help="Local Git commit history depth to keep during maintenance.")
+    parser.add_argument("--skip-git-preflight", action="store_true", help="Skip fetch and fast-forward-only Git preflight.")
+    parser.add_argument("--git-depth", type=int, default=100, help="Local Git commit history depth to keep during maintenance.")
     args = parser.parse_args(argv)
 
     root = resolve_vault_root(args.root, __file__)
     script_dir = root / "_system/commands"
+
+    if not args.skip_git_preflight:
+        run([sys.executable, str(script_dir / "git_preflight.py"), "--root", str(root)], root)
 
     if args.sync_brain_dump:
         ingest_command = [sys.executable, str(script_dir / "brain_dump.py"), "--root", str(root)]

@@ -9,7 +9,7 @@ This is the fuller script reference. Use `_system/docs/commands/README.md` for n
 ## Main Scripts
 
 - `vault.py`: terminal dispatcher installed as `vault` in `~/.local/bin`; forwards subcommands to the scripts below.
-- `refresh.py`: sole full-refresh entrypoint; runs optional Brain Dump ingestion, best-effort Google Calendar mirror, content schedules, source/vault periodic notes, `Dashboard.md`, and best-effort Git maintenance.
+- `refresh.py`: sole full-refresh entrypoint; runs required Git preflight before generated changes, optional Brain Dump ingestion, best-effort Google Calendar mirror, content schedules, source/vault periodic notes, `Dashboard.md`, and best-effort Git maintenance.
 - `refresh_schedule.py`: registers, unregisters, reports, and runs the macOS LaunchAgent daily refresh wrapper.
 - `dashboard.py`: private renderer used by `refresh.py`; it is not a `vault` command.
 - `content.py`: generates fixed 4-week content schedule notes from enabled `_obsidian/content/content-cadence.json` files and maintains the `Current content schedule:` line in each enabled context folder note. Supports `schedule_format`, `publication_order`, and `--force` to regenerate existing managed schedule notes.
@@ -23,6 +23,11 @@ This is the fuller script reference. Use `_system/docs/commands/README.md` for n
 - `backup.py`: backs up root `.obsidian` under `_system/state/backups/obsidian-profile/`.
 - `bootstrap_export.py`: exports the public bootstrap vault from current vault state using `_system/bootstrap/bootstrap-export.json`.
 - `release.py`: publishes SemVer public vault releases by bumping release metadata, locking dependencies, exporting, committing, tagging, pushing, and creating the GitHub Release.
+- `git_media.py`: generates and verifies pointer-only media manifests, checks local LFS objects, and installs no-upload pre-push hook. Use `vault git-media`.
+- `git_maintenance.py`: keeps normal Git history shallow and compacts local Git objects. Use `vault git-maintenance`.
+- `git_preflight.py`: fetches and fast-forwards clean `master` before refresh changes files. Use `vault git-preflight`.
+- `post_commit_worker_sync.py`: queues post-commit pushes, primary worker fan-out, worker polling, hook installation, and sparse worker bootstrap. Use `vault worker-sync`.
+- `deps.py project-auto-skills`: repairs generated auto-skill projections from existing dependency checkouts without pulling or building them; worker sync runs this before global skill projection.
 - `_system/agents/sync_skills.py`: validates grouped auto/manual/GH skill sources, enforces invocation policy, repairs dependency moves, and rebuilds flat catalog plus per-skill global links. Use `vault skills sync`.
 
 ## Bootstrap Scripts

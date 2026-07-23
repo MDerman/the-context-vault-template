@@ -30,7 +30,7 @@ class RefreshTests(unittest.TestCase):
             root.mkdir()
             with mock.patch.object(refresh, "run") as run:
                 with mock.patch.object(refresh, "generate_derived_views") as generate:
-                    result = refresh.main(["--root", str(root), "--skip-gcal", "--skip-git-maintenance"])
+                    result = refresh.main(["--root", str(root), "--skip-gcal", "--skip-git-maintenance", "--skip-git-preflight"])
 
             self.assertEqual(result, 0)
             run.assert_not_called()
@@ -49,7 +49,7 @@ class RefreshTests(unittest.TestCase):
             with mock.patch.object(refresh, "run", side_effect=record_run):
                 with mock.patch.object(refresh, "generate_derived_views", side_effect=lambda *args, **kwargs: events.append("views")):
                     result = refresh.main(
-                        ["--root", str(root), "--sync-brain-dump", "--skip-gcal", "--skip-git-maintenance"]
+                        ["--root", str(root), "--sync-brain-dump", "--skip-gcal", "--skip-git-maintenance", "--skip-git-preflight"]
                     )
 
             self.assertEqual(result, 0)
@@ -66,6 +66,7 @@ class RefreshTests(unittest.TestCase):
                         str(root),
                         "--skip-gcal",
                         "--skip-git-maintenance",
+                        "--skip-git-preflight",
                         "--context-folders",
                         "personal,business",
                         "--date",
@@ -83,7 +84,18 @@ class RefreshTests(unittest.TestCase):
             root.mkdir()
             with mock.patch.object(refresh, "generate_derived_views", side_effect=RuntimeError("dashboard failed")):
                 with self.assertRaisesRegex(RuntimeError, "dashboard failed"):
-                    refresh.main(["--root", str(root), "--skip-gcal", "--skip-git-maintenance"])
+                    refresh.main(["--root", str(root), "--skip-gcal", "--skip-git-maintenance", "--skip-git-preflight"])
+
+    def test_git_preflight_runs_before_generated_views(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "vault"
+            root.mkdir()
+            events: list[str] = []
+            with mock.patch.object(refresh, "run", side_effect=lambda *_: events.append("preflight")):
+                with mock.patch.object(refresh, "generate_derived_views", side_effect=lambda *args, **kwargs: events.append("views")):
+                    result = refresh.main(["--root", str(root), "--skip-gcal", "--skip-git-maintenance"])
+        self.assertEqual(result, 0)
+        self.assertEqual(events, ["preflight", "views"])
 
 
 if __name__ == "__main__":

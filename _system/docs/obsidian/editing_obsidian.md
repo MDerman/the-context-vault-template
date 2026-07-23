@@ -82,7 +82,7 @@ Use `vault --help` to see the command wrapper.
 The custom plugin is not authored inside the vault. It is developed here:
 
 ```text
-~/Code/ctx9/context_nine_obsidian_plugin/
+`context-nine-obsidian-plugin` path from topology repository config
 ```
 
 It is installed into the active vault here:
@@ -94,7 +94,7 @@ It is installed into the active vault here:
 To edit it:
 
 ```bash
-cd ~/Code/ctx9/context_nine_obsidian_plugin
+cd "<configured context-nine-obsidian-plugin path>"
 npm run build
 npm run test
 npm run install-vault
@@ -354,7 +354,7 @@ _system/bootstrap/
 Put local custom plugin work in:
 
 ```text
-~/Code/ctx9/context_nine_obsidian_plugin/
+`context-nine-obsidian-plugin` path from topology repository config
 ```
 
 Put reusable non-vault utilities in:
@@ -379,7 +379,7 @@ Before editing:
 2. Check [[_system/docs/obsidian/README|Obsidian Profile]] and [[_system/docs/commands/README|Scripts README]].
 3. If a file has a managed marker, edit the generator instead.
 4. If changing a plugin setting through Obsidian, verify which `.obsidian/plugins/<plugin-id>/data.json` file changed.
-5. If changing Context Nine, edit `~/Code/ctx9/context_nine_obsidian_plugin`, then build/install.
+5. If changing Context Nine, resolve `context-nine-obsidian-plugin` through topology config, then build/install.
 
 After editing:
 

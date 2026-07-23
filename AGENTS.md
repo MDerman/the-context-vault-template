@@ -25,15 +25,14 @@ Root workspace is one Obsidian vault with context folders. `AGENTS.md` is direct
 
 ## Folder Map
 
-- `_system/`: operating layer for shared Obsidian assets, agents, bootstrap, commands, config, docs, env, inboxes, migrations, state, sync, and tools. Read `_system/README.md`.
+- `_system/`: operating layer for shared Obsidian assets, agents, bootstrap, commands, config, docs, inboxes, migrations, state, sync, and tools. Read `_system/README.md`.
 - `_system/agents/`: shared skills and skill storage. Read `_system/agents/README.md`.
 - `_system/tools/`: reusable tools outside `vault`. Read `_system/tools/README.md`.
 - `_system/bootstrap/`: fresh install, public export, release, and upgrade framework.
 - `_system/commands/`: `vault` dispatcher, commands, internals, and tests.
 - `_system/docs/`: command, Obsidian, and workflow documentation.
-- `_system/config/`: vault, dependency, calendar, and Dashboard configuration.
+- `_system/config/`: vault, dependency, calendar, Dashboard, skill-instance, topology, and env configuration. Read `_system/config/README.md`.
 - `_system/state/`: ignored local reports, backups, and install/export state.
-- `_system/env/`: env tooling docs and tracked placeholders; real values stay ignored.
 - `_library/`: learning, research dumps, swipe files, source material, thoughts. Read `_library/LIBRARY.md` before organizing it.
 - `_wiki/`: synthesized reusable knowledge.
 - `other/`: archive/holding area only when explicitly asked.
@@ -46,7 +45,9 @@ Root workspace is one Obsidian vault with context folders. `AGENTS.md` is direct
 - `_system/docs/commands/README-reference.md`: full command and bootstrap script inventory.
 - `_system/docs/obsidian/README.md`: Obsidian profile/plugins/templates/UI.
 - `_system/bootstrap/README.md`: bootstrap/export/upgrade mechanics.
-- `_system/env/README.md`: env workflow; placeholders only in tracked files.
+- `_system/config/README.md`: config ownership and skill-config separation.
+- `_system/config/env/README.md`: env workflow; placeholders only in tracked files.
+- Machine registry, primary/worker sync, connection routing, and code topology: [[_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/SKILL|Code Folder and Computer Topology skill]].
 
 ## Agent Routing Index
 
@@ -61,7 +62,8 @@ Root workspace is one Obsidian vault with context folders. `AGENTS.md` is direct
 - Bootstrap/export/upgrade: `_system/bootstrap/README.md`, `_system/docs/commands/<Bootstrap Export|Public Vault Upgrade>.md`.
 - Obsidian profile/UI/theme: `_system/docs/obsidian/README.md`, then `_system/docs/obsidian/editing_obsidian.md` if editing UI/CSS/plugin behavior.
 - Attachments: `_system/docs/commands/Attachments.md`.
-- Env/auth: `_system/env/README.md`.
+- Private Git and pointer-only media: `_system/docs/commands/README-git.md`.
+- Env/auth: `_system/config/env/README.md`.
 - Library changes: `_library/LIBRARY.md`.
 
 ## Core Paths

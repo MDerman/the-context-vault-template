@@ -372,6 +372,35 @@ Source notes: [[_system/README|System Operating Layer]] and [[_system/docs/obsid
 
 Terminology, shortcuts, nested tmux, persistent sessions, btop, and Starship prompt setup: [[_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/references/cmux-tmux-terminal-workspaces|cmux and tmux Terminal Workspaces]].
 
+cmux is native macOS app using Ghostty's terminal-rendering library and Ghostty configuration. It is not tab running inside standalone Ghostty app.
+
+### cmux Navigation
+
+| Shortcut | Action | Notes |
+| --- | --- | --- |
+| `Cmd+T` | Create cmux surface/tab | Acts outside tmux. |
+| `Cmd+D` | Split cmux pane right | Creates cmux split, not tmux pane. |
+| `Cmd+Shift+D` | Split cmux pane down | Creates cmux split, not tmux pane. |
+| `Cmd+Shift+P` | Open command palette | Search current cmux commands and bindings. |
+| `Cmd+Shift+,` | Reload cmux and Ghostty configuration | Reloads app/terminal configuration. |
+
+### tmux Navigation Inside Managed cmux Workspaces
+
+tmux uses prefix `Ctrl+b`: press `Ctrl+b`, release, then press command key.
+
+| Shortcut | Action | Notes |
+| --- | --- | --- |
+| `Ctrl+b c` | Create tmux window | Name follows foreground process such as `codex`. |
+| `Ctrl+b 0` | Open `0:btop` | Managed resource-monitor window. |
+| `Ctrl+b 1` | Open `1:shell` | Managed shell window. |
+| `Ctrl+b n` | Next tmux window | Moves through bottom-bar windows. |
+| `Ctrl+b p` | Previous tmux window | Moves backward through bottom-bar windows. |
+| `Ctrl+b ,` | Rename current tmux window | Manual override for automatic process name. |
+| `Ctrl+b r` | Reload managed tmux configuration | Loads `~/.tmux.conf`. |
+| `Ctrl+b Ctrl+s` | Save tmux-resurrect snapshot | Layout/CWD plus allowlisted btop process. |
+| `Ctrl+b Ctrl+r` | Restore latest tmux-resurrect snapshot | Reconstructs saved safe layout. |
+| `Ctrl+b d` | Detach tmux client | Session and remote processes keep running. |
+
 ## btop
 
 `btop` is managed on Mattbook, Wootbook, and Mac mini by [[_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/references/cmux-tmux-terminal-workspaces|cmux and tmux Terminal Workspaces]]. Press `F1`, `?`, or `h` for full help.

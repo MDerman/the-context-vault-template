@@ -18,12 +18,15 @@ SPEC.loader.exec_module(machine)
 class MachineTests(unittest.TestCase):
     def registry(self):
         return {
-            "schema_version": 2,
+            "schema_version": 3,
+            "primary_machine_id": "local-box",
             "machines": [
                 {
                     "id": "local-box",
                     "display_name": "Local Box",
                     "enabled": True,
+                    "role": "primary",
+                    "platform": "macos",
                     "transport": "local",
                     "home": "/Users/matt",
                     "global_agents_eligible": True,
@@ -32,10 +35,18 @@ class MachineTests(unittest.TestCase):
                     "id": "linux-box",
                     "display_name": "Linux Box",
                     "enabled": True,
+                    "role": "worker",
+                    "platform": "linux",
                     "transport": "ssh",
                     "ssh_alias": "linux-box",
                     "home": "/home/matt",
                     "global_agents_eligible": True,
+                    "vault_sync": {
+                        "enabled": True,
+                        "checkout": "sparse",
+                        "repo_path": "/home/matt/Code/vault",
+                        "sparse_paths": ["_system"],
+                    },
                     "vnc": {
                         "kind": "ssh-novnc",
                         "remote_host": "127.0.0.1",
@@ -49,6 +60,8 @@ class MachineTests(unittest.TestCase):
                     "id": "old-box",
                     "display_name": "Old Box",
                     "enabled": False,
+                    "role": "worker",
+                    "platform": "linux",
                     "transport": "ssh",
                     "ssh_alias": "old-box",
                     "home": "/home/old",
@@ -87,6 +100,23 @@ class MachineTests(unittest.TestCase):
         self.assertTrue(args.status)
         args = machine.build_parser().parse_args(["vnc", "linux-box", "--stop"])
         self.assertTrue(args.stop)
+
+    def test_schema_requires_primary_and_worker_sync_path(self):
+        registry = self.registry()
+        registry["primary_machine_id"] = "linux-box"
+        with self.assertRaisesRegex(machine.MachineError, "must reference a primary"):
+            machine.validate_registry(registry)
+        registry = self.registry()
+        del registry["machines"][1]["vault_sync"]["repo_path"]
+        with self.assertRaisesRegex(machine.MachineError, "requires absolute repo_path"):
+            machine.validate_registry(registry)
+
+    def test_identify_writes_clone_local_machine_id(self):
+        args = machine.build_parser().parse_args(["identify", "linux-box", "--root", "/tmp/vault", "--apply"])
+        with mock.patch.object(machine.subprocess, "run") as run:
+            self.assertEqual(machine.command_identify(args, self.registry()), 0)
+        self.assertEqual(run.call_args.args[0], ["git", "config", "--local", "vault.machine-id", "linux-box"])
+        self.assertEqual(run.call_args.kwargs["cwd"], Path("/tmp/vault").resolve())
 
     def test_ssh_command_forwarding(self):
         registry = self.registry()

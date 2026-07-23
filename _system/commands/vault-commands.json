@@ -420,6 +420,38 @@
     "tui": true
   },
   {
+    "id": "git-media-status",
+    "label": "Git Media Status",
+    "description": "Verify pointer-only media manifest, local objects, and no-upload hook.",
+    "group": "Maintenance",
+    "risk": "read",
+    "mode": "run",
+    "args": ["git-media", "status"],
+    "tui": true
+  },
+  {
+    "id": "git-media-write-manifest",
+    "label": "Write Git Media Manifest",
+    "description": "Regenerate tracked SHA-256 manifest from staged LFS pointers.",
+    "group": "Maintenance",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["git-media", "write-manifest"],
+    "tui": true
+  },
+  {
+    "id": "git-media-install-hook",
+    "label": "Install Git Media Hook",
+    "description": "Install pointer verification hook that never uploads LFS objects.",
+    "group": "Maintenance",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["git-media", "install-hook", "--apply"],
+    "tui": true
+  },
+  {
     "id": "git-maintenance",
     "label": "Git Maintenance",
     "description": "Keep vault Git history shallow and prune objects.",
@@ -428,6 +460,27 @@
     "mode": "run",
     "confirm": true,
     "args": ["git-maintenance"],
+    "tui": true
+  },
+  {
+    "id": "git-preflight",
+    "label": "Git Preflight",
+    "description": "Fetch and fast-forward clean master, then refresh skills.",
+    "group": "Maintenance",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["git-preflight"],
+    "tui": true
+  },
+  {
+    "id": "worker-sync-status",
+    "label": "Worker Sync Status",
+    "description": "Show clone identity, queue, hook path, and last worker sync error.",
+    "group": "Maintenance",
+    "risk": "read",
+    "mode": "run",
+    "args": ["worker-sync", "status"],
     "tui": true
   },
   {

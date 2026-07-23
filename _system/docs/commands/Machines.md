@@ -4,18 +4,25 @@ status: enabled
 ---
 # Machines
 
-Private registry: `_system/config/machines.private.json`. It is tracked in private vault Git and excluded from public bootstrap export. Registry owns stable machine ID, display name, enabled state, shell transport, SSH alias, home, global-AGENTS eligibility, and optional VNC definition.
+Private registry: `_system/config/code-folder-and-computer-topology/private/machines.json`. It is tracked in private vault Git and excluded from public bootstrap export. Registry owns stable machine ID, display name, enabled state, shell transport, SSH alias, home, global-AGENTS eligibility, and optional VNC definition.
 
 ## Commands
 
 ```bash
 vault machine list [--json]
+vault machine init --id ID --display-name NAME --platform macos|linux --apply
+vault machine register-worker --id ID --display-name NAME --platform macos|linux --ssh-alias ALIAS --home PATH --repo-path PATH --apply
+vault machine identify ID --apply
 vault machine status [NAME] [--json]
 vault machine ssh NAME [-- COMMAND...]
 vault machine vnc NAME [--no-open] [--local-port PORT]
 vault machine vnc NAME --status
 vault machine vnc NAME --stop
 ```
+
+Registry schema v3 defines one primary, worker roles/platforms, and worker vault-sync settings. `vault.machine-id` is clone-local Git configuration.
+
+Missing registry does not prompt during public bootstrap. Initialize it manually with `vault machine init`, then register workers.
 
 Wootbook VNC creates or reuses SSH control tunnel to loopback noVNC, checks HTTP health, then opens auto-connecting client. Runtime control socket and metadata live under `~/.cache/vault-machine/`, never vault. Occupied default port gets free local port; explicitly requested occupied port fails.
 

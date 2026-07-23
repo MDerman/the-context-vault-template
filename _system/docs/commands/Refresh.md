@@ -12,12 +12,13 @@ vault refresh
 
 Refresh runs, in order:
 
-1. Brain Dump ingestion only when `--sync-brain-dump` is passed.
-2. Best-effort Google Calendar TaskNotes mirror with orphan mirror-event pruning.
-3. Content schedule generation.
-4. Source periodic-note creation, daily checklist carry-forward, and vault Sync Embed rollups.
-5. `Dashboard.md` generation.
-6. Best-effort local Git maintenance.
+1. Required Git fetch/prune and fast-forward-only preflight when remote exists.
+2. Brain Dump ingestion only when `--sync-brain-dump` is passed.
+3. Best-effort Google Calendar TaskNotes mirror with orphan mirror-event pruning.
+4. Content schedule generation.
+5. Source periodic-note creation, daily checklist carry-forward, and vault Sync Embed rollups.
+6. `Dashboard.md` generation.
+7. Best-effort local Git maintenance.
 
 Content, periodic, and Dashboard generation are required. Failure stops refresh so scheduled retries remain useful. Calendar and Git maintenance failures warn and continue.
 
@@ -87,11 +88,17 @@ To skip local Git maintenance:
 vault refresh --skip-git-maintenance
 ```
 
-Git maintenance keeps local history shallow at 5 commits by default and prunes unreachable local objects:
+To skip required Git preflight explicitly:
+
+```bash
+vault refresh --skip-git-preflight
+```
+
+Git maintenance keeps local history shallow at 100 commits by default and prunes unreachable local objects:
 
 ```bash
 vault git-maintenance
-vault git-maintenance --depth 5
+vault git-maintenance --depth 100
 ```
 
 Use `--git-depth N` on `vault refresh` to change the refresh-time depth.

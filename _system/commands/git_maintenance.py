@@ -71,7 +71,7 @@ def trim_shallow_boundary(root: Path, depth: int) -> bool:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Keep local Git history shallow and compact.")
     parser.add_argument("--root", default=None, help="Vault root. Defaults to auto-discovery.")
-    parser.add_argument("--depth", type=int, default=5, help="Number of commits to keep locally.")
+    parser.add_argument("--depth", type=int, default=100, help="Number of commits to keep locally.")
     parser.add_argument("--remote", default="origin", help="Remote used for shallow fetch.")
     parser.add_argument("--branch", default=None, help="Branch to fetch. Defaults to current branch.")
     parser.add_argument("--no-fetch", action="store_true", help="Skip remote fetch and trim local shallow boundary only.")

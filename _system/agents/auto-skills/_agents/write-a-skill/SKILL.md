@@ -5,6 +5,8 @@ description: Create new agent skills with proper structure, progressive disclosu
 
 # Writing Skills
 
+Before editing, read `_system/agents/README.md`, `_system/agents/README-skills.md`, and `_system/config/README.md`.
+
 ## Process
 
 1. **Gather requirements** - ask user about:
@@ -17,6 +19,8 @@ description: Create new agent skills with proper structure, progressive disclosu
    - SKILL.md with concise instructions
    - Additional reference files if content exceeds 500 lines
    - Utility scripts if deterministic operations needed
+   - `_system/config/<skill-name>/README.md` when instance-specific config exists
+   - `_system/config/<skill-name>/private/` for private domains, paths, IDs, machine facts, or deployment access data
 
 3. **Review with user** - present draft and ask:
    - Does this cover your use cases?
@@ -33,6 +37,20 @@ skill-name/
 └── scripts/           # Utility scripts (if needed)
     └── helper.js
 ```
+
+Matching instance config lives outside skill:
+
+```text
+_system/config/skill-name/
+├── README.md
+├── defaults.json          # optional portable defaults
+└── private/
+    └── config.json        # private or changing instance values
+```
+
+Config need not be JSON. Use Markdown for agent-read context; JSON/TOML/YAML for scripts. Keep behavior, schemas, snippets, and components in skill. Move actual domains, personal paths, repository locations, account IDs, machine facts, and secret access instructions into config.
+
+Before adding any secret or variable, read `_system/config/env/README.md`. Add vault-owned variables to `_system/config/env/.env.base` first and values to ignored `.env`. Keep external repository variables in owning repo; reference repository by logical topology ID instead of copying secrets.
 
 ## SKILL.md Template
 
@@ -112,6 +130,9 @@ After drafting, verify:
 - [ ] Description includes triggers ("Use when...")
 - [ ] SKILL.md under 100 lines
 - [ ] No time-sensitive info
+- [ ] Instance-specific values live in `_system/config/<skill-name>/`
+- [ ] Config folder has README and private data sits under `private/`
+- [ ] Env changes followed `_system/config/env/README.md`
 - [ ] Consistent terminology
 - [ ] Concrete examples included
 - [ ] References one level deep

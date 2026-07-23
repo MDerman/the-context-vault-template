@@ -43,6 +43,7 @@ The exporter:
 - derives managed dependency projection targets from `_system/config/deps.json` and omits them; fresh installs recreate local projections without exporting machine-specific absolute symlinks;
 - writes `_system/state/export-manifest.json` so future exports can remove stale export-owned files;
 - preserves repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, and contribution docs;
+- exports config-folder README/defaults but excludes `_system/config/*/private/**` and all `_system/config/env/**` contents;
 - refuses to export inside the source vault.
 
 Use raw export for inspection and repair only. Normal public publishing goes through:

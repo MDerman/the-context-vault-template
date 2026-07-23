@@ -19,10 +19,10 @@ Use this skill for open source contribution work, including one-off patches in r
 
 ## Usual Commands
 
-Prefer the helper script in this repo when available:
+Read `_system/config/gh-open-source-pr/README.md`. Resolve optional helper repository through topology config, then use configured command when available:
 
 ```bash
-pnpm --dir ~/Code/impression oss:pr -- \
+<configured-helper-command> \
   --repo owner/name \
   --branch fix-example \
   --title "Fix example" \

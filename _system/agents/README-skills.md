@@ -13,6 +13,16 @@
 
 Organizer folders must use `_lower-kebab`, may nest recursively, and never contain `SKILL.md`. Skill folder must contain `SKILL.md`; folder basename must equal frontmatter `name`. Names must be globally unique.
 
+## Skill And Config Separation
+
+- Read [[_system/agents/README|Agents]], this file, and [[_system/config/README|System Configuration]] before adding or restructuring skill.
+- Generic instructions, validation, scripts, code snippets, and reusable assets stay in skill folder.
+- Changing domains, personal paths, machine facts, account/project IDs, repository locations, and deployment access details go in `_system/config/<skill-name>/`.
+- Use same basename as skill. Add config-folder `README.md`; use `private/` for private instance data.
+- Config format may be Markdown, JSON, TOML, YAML, or another consumer-appropriate format.
+- Skill must name required config, validate it before mutation, and explain setup when missing. Public-exported skill must remain understandable without private config.
+- Before adding secrets or variables, read [[_system/config/env/README|Env Tooling]]. Add vault-owned keys to `_system/config/env/.env.base` first; values go in ignored `.env`. External-repository variables remain in owning repository env workflow.
+
 ## Invocation Policy
 
 Sync preserves other `agents/openai.yaml` fields and enforces:

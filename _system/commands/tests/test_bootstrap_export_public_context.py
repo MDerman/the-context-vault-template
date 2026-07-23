@@ -69,16 +69,20 @@ class PublicContextExportTests(unittest.TestCase):
             self.assertFalse((export_root / "_system/PRIVATE-NOTE.md").exists())
             self.assertFalse((export_root / "_system/NEW-NOTE.md").exists())
 
-    def test_private_computer_topology_skill_and_agent_link_are_not_exported(self) -> None:
+    def test_generic_topology_skill_exports_but_private_machine_data_does_not(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "source"
             export_root = Path(tmp) / "public"
             skill = root / "_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology"
             skill.mkdir(parents=True)
             (skill / "SKILL.md").write_text(
-                "private computer inventory and topology skill\n",
+                "generic primary and worker topology skill\n",
                 encoding="utf-8",
             )
+            (skill / "README-primary-worker-vault-sync.md").write_text("generic sync rules\n")
+            references = skill / "references"
+            references.mkdir()
+            (references / "private-fleet.md").write_text("private address and alias\n")
             catalog = root / "_system/agents/skills"
             catalog.mkdir(parents=True)
             (catalog / "code-folder-and-computer-topology").symlink_to(
@@ -87,18 +91,15 @@ class PublicContextExportTests(unittest.TestCase):
             (root / "AGENTS.md").write_text(
                 "# Agent Instructions\n\n"
                 "- Public rule.\n"
-                "- [[_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/SKILL|Code Folder and Computer Topology skill]]. %% private-export: drop-line %%\n",
+                "- [[_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/SKILL|Code Folder and Computer Topology skill]].\n",
                 encoding="utf-8",
             )
             config = {
                 "export_root": str(export_root),
                 "copy_obsidian": "exact",
                 "root_files": ["AGENTS.md"],
-                "generated_exclude_paths": [
-                    "_system/agents/skills/code-folder-and-computer-topology",
-                ],
                 "generated_exclude_globs": [
-                    "_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/**",
+                    "_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/references/**",
                 ],
                 "text_rewrite_suffixes": [".md"],
             }
@@ -112,14 +113,40 @@ class PublicContextExportTests(unittest.TestCase):
             exporter.copy_root_files()
             exporter.copy_system_or_shared("_system")
 
-            self.assertFalse(
-                (export_root / "_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology").exists()
-            )
-            self.assertFalse((export_root / "_system/agents/skills/code-folder-and-computer-topology").exists())
+            exported_skill = export_root / "_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology"
+            self.assertTrue((exported_skill / "SKILL.md").exists())
+            self.assertTrue((exported_skill / "README-primary-worker-vault-sync.md").exists())
+            self.assertFalse((exported_skill / "references/private-fleet.md").exists())
+            self.assertTrue((export_root / "_system/agents/skills/code-folder-and-computer-topology").is_symlink())
             exported_agents = (export_root / "AGENTS.md").read_text(encoding="utf-8")
             self.assertIn("Public rule", exported_agents)
-            self.assertNotIn("Code Folder and Computer Topology", exported_agents)
-            self.assertNotIn("private-export", exported_agents)
+            self.assertIn("Code Folder and Computer Topology", exported_agents)
+
+    def test_skill_private_config_and_shared_env_contents_do_not_export(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "source"
+            export_root = Path(tmp) / "public"
+            private = root / "_system/config/example-skill/private"
+            private.mkdir(parents=True)
+            (private / "config.json").write_text('{"domain":"private.example"}\n')
+            config_readme = private.parent / "README.md"
+            config_readme.write_text("portable setup guidance\n")
+            env_dir = root / "_system/config/env"
+            env_dir.mkdir(parents=True)
+            (env_dir / ".env.base").write_text("API_TOKEN=\n")
+            (env_dir / "README.md").write_text("env instructions\n")
+            config = {
+                "export_root": str(export_root),
+                "copy_obsidian": "exact",
+                "generated_exclude_globs": ["_system/config/*/private/**"],
+            }
+            exporter = BootstrapExporter(root=root, config=config, export_root=export_root, force=True, dry_run=False)
+            exporter.copy_system_or_shared("_system")
+
+            self.assertTrue((export_root / "_system/config/example-skill/README.md").exists())
+            self.assertFalse((export_root / "_system/config/example-skill/private").exists())
+            self.assertTrue((export_root / "_system/config/env").is_dir())
+            self.assertEqual(list((export_root / "_system/config/env").iterdir()), [])
 
     def test_managed_dependency_projection_is_not_exported(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

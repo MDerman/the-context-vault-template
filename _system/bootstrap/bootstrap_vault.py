@@ -332,7 +332,7 @@ class Bootstrap:
             "_system/docs/commands",
             "_system/docs/obsidian",
             "_system/docs/workflows",
-            "_system/env",
+            "_system/config/env",
             "_system/inbox",
             "_system/migrations",
             "_system/state",

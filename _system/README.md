@@ -123,9 +123,8 @@ SOP: [[_system/docs/commands/Attachments|Attachments]].
 - `agents/`: auto/manual/GitHub-managed skill sources and generated catalog.
 - `bootstrap/`: public install, export, release, and upgrade framework.
 - `commands/`: `vault` dispatcher, commands, internals, and tests.
-- `config/`: vault, dependency, calendar, and Dashboard configuration.
+- `config/`: vault, dependency, calendar, Dashboard, skill instance, topology, and env configuration. Read [[_system/config/README|System Configuration]].
 - `docs/`: command, Obsidian, and workflow documentation.
-- `env/`: env workflow docs and tracked placeholders.
 - `inbox/`: Brain Dump and attachment ingestion files.
 - `migrations/`: empty registry for future public-upgrade migrations.
 - `state/`: ignored local backups, reports, install state, and export manifest.

@@ -77,12 +77,14 @@
   ],
   "generated_exclude_paths": [
     "Dashboard.md",
-    "_system/agents/skills/code-folder-and-computer-topology",
-    "_system/config/dashboard-action-links.md",
-    "_system/config/machines.private.json"
+    "_system/config/dashboard-action-links.md"
   ],
   "generated_exclude_globs": [
-    "_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/**",
+    "_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/assets/**",
+    "_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/references/**",
+    "_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/scripts/**",
+    "_system/config/*/private",
+    "_system/config/*/private/**",
     "_system/_obsidian/periodic/**",
     "_system/_obsidian/attachments/**",
     "_system/agents/manual-skills/**",

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import filecmp
 import json
 import os
 import re
@@ -455,17 +456,24 @@ def skill_projection_current(
     if set(actual) != set(expected):
         return False
     for name, target_child in actual.items():
-        if name == "SKILL.md":
-            if target_child.is_symlink() or not target_child.is_file():
+        source_child = expected[name]
+        if target_child.is_symlink():
+            return False
+        if source_child.is_dir():
+            if not target_child.is_dir() or not directories_equal(source_child, target_child):
                 return False
-            if target_child.read_bytes() != expected[name].read_bytes():
-                return False
-        else:
-            if not target_child.is_symlink():
-                return False
-            if target_child.resolve() != expected[name].resolve():
-                return False
+        elif not target_child.is_file() or target_child.read_bytes() != source_child.read_bytes():
+            return False
     return True
+
+
+def directories_equal(source: Path, target: Path) -> bool:
+    comparison = filecmp.dircmp(source, target)
+    if comparison.left_only or comparison.right_only or comparison.funny_files:
+        return False
+    if any(not filecmp.cmp(source / name, target / name, shallow=False) for name in comparison.common_files):
+        return False
+    return all(directories_equal(source / name, target / name) for name in comparison.common_dirs)
 
 
 def create_skill_projection(
@@ -504,10 +512,10 @@ def create_skill_projection(
 
     target.mkdir(parents=True, exist_ok=True)
     for child in expected_projection_children(source, skip_agents=True):
-        if child.name == "SKILL.md":
-            shutil.copy2(child, target / child.name)
+        if child.is_dir():
+            shutil.copytree(child, target / child.name)
         else:
-            (target / child.name).symlink_to(child)
+            shutil.copy2(child, target / child.name)
 
     agents_dir = target / "agents"
     agents_dir.mkdir(parents=True, exist_ok=True)
@@ -597,6 +605,24 @@ def sync(root: Path, repos: list[Repo], apply: bool) -> int:
     return 0
 
 
+def project_auto_skills(root: Path, repos: list[Repo], apply: bool) -> int:
+    """Repair auto-skill projections from existing checkouts without pulling or building repos."""
+    touched = False
+    for repo in repos:
+        for projection in repo.projections:
+            if projection.type != "auto-skill" or not projection.managed:
+                continue
+            source = projection.repo_path / projection.source
+            if not source.exists():
+                log(f"Skip missing auto-skill source: {source}")
+                continue
+            touched = apply_projection(root, projection, apply) or touched
+    if touched:
+        run_skill_sync(root, apply)
+    log("Auto-skill projections repaired." if apply else "Auto-skill projection dry run complete.")
+    return 0
+
+
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     raw_args = list(sys.argv[1:] if argv is None else argv)
     root_arg: str | None = None
@@ -625,6 +651,13 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     mode = sync_parser.add_mutually_exclusive_group()
     mode.add_argument("--dry-run", action="store_true", help="Preview changes.")
     mode.add_argument("--apply", action="store_true", help="Apply changes.")
+    project_parser = subparsers.add_parser(
+        "project-auto-skills",
+        help="Repair auto-skill projections from existing dependency checkouts without pulling or building.",
+    )
+    project_mode = project_parser.add_mutually_exclusive_group()
+    project_mode.add_argument("--dry-run", action="store_true", help="Preview changes.")
+    project_mode.add_argument("--apply", action="store_true", help="Apply changes.")
     args = parser.parse_args(cleaned)
     args.root = root_arg
     return args
@@ -641,7 +674,9 @@ def main(argv: list[str] | None = None) -> int:
         return print_status(root, repos)
     if args.command == "sync":
         return sync(root, repos, apply=bool(args.apply))
-    print("Use `vault deps status`, `vault deps sync --dry-run`, or `vault deps sync --apply`.")
+    if args.command == "project-auto-skills":
+        return project_auto_skills(root, repos, apply=bool(args.apply))
+    print("Use `vault deps status`, `vault deps sync`, or `vault deps project-auto-skills`.")
     return 2
 
 

@@ -31,6 +31,8 @@ Open only the script doc needed for the current task. Create a separate `README-
 - [[_system/docs/commands/Dependency Repos|Dependency Repos]]
 - [[_system/docs/commands/Agent Skills Sync|Agent Skills Sync]]
 - [[_system/docs/commands/Refresh|Refresh]]
+- [[_system/docs/commands/README-git|Git Repository]]
+- [[_system/docs/commands/Vault Git Sync|Vault Git Sync]]
 - [[_system/docs/commands/Inventory|Inventory]]
 - [[_system/docs/commands/Machines|Machines]]
 - [[_system/docs/commands/Tasks And Projects|Tasks And Projects]]

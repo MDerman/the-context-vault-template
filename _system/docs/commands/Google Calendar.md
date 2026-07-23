@@ -70,7 +70,7 @@ Agents should use `vault gcal create-event` for concrete appointments, travel, m
 
 When Obsidian is open, Context Nine runs `vault gcal sync-tasks --apply` every 5 minutes. `vault refresh` runs `vault gcal sync-tasks --apply --prune-orphaned-task-events` once before regenerating context.
 
-Implementation script: `_system/commands/gcal.py`. GWS credentials live outside the vault. Tracked vault calendar behavior config lives in `_system/config/calendar.json`; `_system/env/.env` is no longer part of calendar config.
+Implementation script: `_system/commands/gcal.py`. GWS credentials live outside vault. Tracked vault calendar behavior config lives in `_system/config/calendar.json`; shared vault env is not calendar config.
 
 ### Gotchas
 

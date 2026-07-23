@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import json
+import os
 import subprocess
 import sys
 import shutil
@@ -13,7 +15,16 @@ from vault_layout import AGENTS_DIR, VAULT_ROOT
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT = VAULT_ROOT
-CONTEXT_NINE_PLUGIN_ROOT = Path.home() / "Code/ctx9/context_nine_obsidian_plugin"
+def configured_repository(repository_id: str) -> Path | None:
+    registry = ROOT / "_system/config/code-folder-and-computer-topology/private/repositories.json"
+    if not registry.is_file():
+        return None
+    data = json.loads(registry.read_text(encoding="utf-8"))
+    value = data.get("repositories", {}).get(repository_id, {}).get("path")
+    return Path(os.path.expanduser(str(value))) if value else None
+
+
+CONTEXT_NINE_PLUGIN_ROOT = configured_repository("context-nine-obsidian-plugin") or Path("/__missing_context_nine_plugin__")
 CONTEXT_NINE_TUI_ROOT = CONTEXT_NINE_PLUGIN_ROOT / "python"
 
 COMMANDS = {
@@ -34,9 +45,12 @@ COMMANDS = {
     "task": SCRIPT_DIR / "task.py",
     "folder": SCRIPT_DIR / "folder.py",
     "gcal": SCRIPT_DIR / "gcal.py",
+    "git-media": SCRIPT_DIR / "git_media.py",
     "git-maintenance": SCRIPT_DIR / "git_maintenance.py",
+    "git-preflight": SCRIPT_DIR / "git_preflight.py",
     "mobile-profile": SCRIPT_DIR / "mobile_profile.py",
     "machine": SCRIPT_DIR / "machine.py",
+    "worker-sync": SCRIPT_DIR / "post_commit_worker_sync.py",
     "profile": SCRIPT_DIR / "profile.py",
     "path-audit": SCRIPT_DIR / "path_audit.py",
     "release": SCRIPT_DIR / "release.py",
@@ -68,9 +82,12 @@ Common commands:
   task         Create TaskNotes tasks with validated project/epic links.
   folder       Create, register, or rename a context folder.
   gcal         Read/write Google Calendar events, time blocks, and task date mirrors.
+  git-media    Manage pointer-only media manifests and no-upload Git hooks.
   git-maintenance  Keep local Git history shallow and prune local objects.
+  git-preflight  Fetch and fast-forward a clean master checkout.
   mobile-profile  Create/update .obsidian-mobile with safe mobile plugins and theme settings.
   machine      List, probe, SSH to, or open VNC for reviewed development machines.
+  worker-sync  Queue pushes, update workers, install hooks, and install poll services.
   profile      Preview/apply Obsidian profile, theme, hotkey, and plugin upgrades.
   path-audit   Find persisted vault-root paths that make the vault non-portable.
   release      Publish SemVer public vault releases.
@@ -103,6 +120,7 @@ Examples:
   vault folder rename business studio --dry-run
   vault epic create business "New Epic"
   vault gcal list --days 7 --calendar all --json
+  vault git-media status
   vault git-maintenance
   vault mobile-profile
   vault machine list
