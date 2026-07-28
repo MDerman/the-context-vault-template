@@ -1,0 +1,160 @@
+from __future__ import annotations
+
+import importlib.util
+import json
+from pathlib import Path
+import tempfile
+import unittest
+from unittest import mock
+
+
+SCRIPT = Path(__file__).parents[1] / "machine.py"
+SPEC = importlib.util.spec_from_file_location("machine", SCRIPT)
+assert SPEC and SPEC.loader
+machine = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(machine)
+
+
+class MachineTests(unittest.TestCase):
+    def registry(self):
+        return {
+            "schema_version": 3,
+            "primary_machine_id": "local-box",
+            "machines": [
+                {
+                    "id": "local-box",
+                    "display_name": "Local Box",
+                    "enabled": True,
+                    "role": "primary",
+                    "platform": "macos",
+                    "transport": "local",
+                    "home": "/Users/matt",
+                    "global_agents_eligible": True,
+                },
+                {
+                    "id": "linux-box",
+                    "display_name": "Linux Box",
+                    "enabled": True,
+                    "role": "worker",
+                    "platform": "linux",
+                    "transport": "ssh",
+                    "ssh_alias": "linux-box",
+                    "home": "/home/matt",
+                    "global_agents_eligible": True,
+                    "vault_sync": {
+                        "enabled": True,
+                        "checkout": "sparse",
+                        "repo_path": "/home/matt/Code/vault",
+                        "sparse_paths": ["_system"],
+                    },
+                    "vnc": {
+                        "kind": "ssh-novnc",
+                        "remote_host": "127.0.0.1",
+                        "remote_port": 6080,
+                        "default_local_port": 6080,
+                        "health_path": "/vnc.html",
+                        "open_path": "/vnc.html?autoconnect=1",
+                    },
+                },
+                {
+                    "id": "old-box",
+                    "display_name": "Old Box",
+                    "enabled": False,
+                    "role": "worker",
+                    "platform": "linux",
+                    "transport": "ssh",
+                    "ssh_alias": "old-box",
+                    "home": "/home/old",
+                    "global_agents_eligible": False,
+                },
+            ],
+        }
+
+    def write_registry(self, directory: str) -> Path:
+        path = Path(directory) / "machines.json"
+        path.write_text(json.dumps(self.registry()), encoding="utf-8")
+        return path
+
+    def test_load_and_resolve_by_id_or_display_name(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            registry = machine.load_registry(self.write_registry(temporary))
+        self.assertEqual(machine.resolve_machine(registry, "linux-box")["ssh_alias"], "linux-box")
+        self.assertEqual(machine.resolve_machine(registry, "Linux Box")["id"], "linux-box")
+
+    def test_unknown_and_disabled_fail(self):
+        registry = self.registry()
+        with self.assertRaisesRegex(machine.MachineError, "unknown machine"):
+            machine.resolve_machine(registry, "missing")
+        with self.assertRaisesRegex(machine.MachineError, "disabled"):
+            machine.resolve_machine(registry, "old-box")
+
+    def test_default_port_falls_back_but_explicit_occupied_fails(self):
+        with mock.patch.object(machine, "port_available", return_value=False):
+            with mock.patch.object(machine.socket, "socket") as socket_class:
+                candidate = socket_class.return_value.__enter__.return_value
+                candidate.getsockname.return_value = ("127.0.0.1", 49152)
+                self.assertEqual(machine.choose_port(6080), 49152)
+
+    def test_vnc_parser_supports_control_modes(self):
+        args = machine.build_parser().parse_args(["vnc", "linux-box", "--status"])
+        self.assertTrue(args.status)
+        args = machine.build_parser().parse_args(["vnc", "linux-box", "--stop"])
+        self.assertTrue(args.stop)
+
+    def test_schema_requires_primary_and_worker_sync_path(self):
+        registry = self.registry()
+        registry["primary_machine_id"] = "linux-box"
+        with self.assertRaisesRegex(machine.MachineError, "must reference a primary"):
+            machine.validate_registry(registry)
+        registry = self.registry()
+        del registry["machines"][1]["vault_sync"]["repo_path"]
+        with self.assertRaisesRegex(machine.MachineError, "requires absolute repo_path"):
+            machine.validate_registry(registry)
+
+    def test_identify_writes_clone_local_machine_id(self):
+        args = machine.build_parser().parse_args(["identify", "linux-box", "--root", "/tmp/vault", "--apply"])
+        with mock.patch.object(machine.subprocess, "run") as run:
+            self.assertEqual(machine.command_identify(args, self.registry()), 0)
+        self.assertEqual(run.call_args.args[0], ["git", "config", "--local", "vault.machine-id", "linux-box"])
+        self.assertEqual(run.call_args.kwargs["cwd"], Path("/tmp/vault").resolve())
+
+    def test_new_registry_and_worker_include_agents_sparse_path(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            registry_path = Path(temporary) / "machines.json"
+            init_args = machine.build_parser().parse_args([
+                "--registry", str(registry_path), "init",
+                "--id", "primary", "--display-name", "Primary",
+                "--platform", "macos", "--apply",
+            ])
+            self.assertEqual(machine.command_init(init_args), 0)
+            registry = json.loads(registry_path.read_text(encoding="utf-8"))
+            self.assertEqual(
+                registry["vault_sync"]["default_sparse_paths"],
+                [".agents", "_system", ".githooks"],
+            )
+
+            worker_args = machine.build_parser().parse_args([
+                "--registry", str(registry_path), "register-worker",
+                "--id", "worker", "--display-name", "Worker",
+                "--platform", "linux", "--ssh-alias", "worker",
+                "--home", "/home/worker", "--repo-path", "/home/worker/Code/vault",
+                "--apply",
+            ])
+            self.assertEqual(machine.command_register_worker(worker_args, registry), 0)
+            written = json.loads(registry_path.read_text(encoding="utf-8"))
+            self.assertEqual(
+                written["machines"][-1]["vault_sync"]["sparse_paths"],
+                [".agents", "_system", ".githooks"],
+            )
+
+    def test_ssh_command_forwarding(self):
+        registry = self.registry()
+        args = machine.build_parser().parse_args(["ssh", "linux-box", "--", "uname", "-a"])
+        with mock.patch.object(machine.subprocess, "run") as run:
+            run.return_value.returncode = 0
+            self.assertEqual(machine.command_ssh(args, registry), 0)
+        self.assertEqual(run.call_args.args[0], ["ssh", "-o", "ConnectTimeout=10", "linux-box", "--", "uname", "-a"])
+
+
+if __name__ == "__main__":
+    unittest.main()

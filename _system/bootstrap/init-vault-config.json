@@ -1,0 +1,25 @@
+{
+  "context_folders": [
+    {
+      "name": "personal",
+      "status": "active",
+      "context_type": "personal",
+      "content_enabled": false,
+      "default_capture": true
+    },
+    {
+      "name": "personal-brand",
+      "status": "active",
+      "context_type": "personal-brand",
+      "content_enabled": true,
+      "default_capture": false
+    },
+    {
+      "name": "business",
+      "status": "active",
+      "context_type": "business",
+      "content_enabled": true,
+      "default_capture": false
+    }
+  ]
+}

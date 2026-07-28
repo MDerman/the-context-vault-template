@@ -1,0 +1,16 @@
+{
+  "appPath": "/Applications/myapp.app",
+  "target": {
+    "scheme": "https",
+    "host": "api.lemonsqueezy.com"
+  },
+  "local": {
+    "scheme": "http",
+    "host": "127.0.0.1",
+    "port": 8081
+  },
+  "proxy": {
+    "host": "127.0.0.1",
+    "port": 8080
+  }
+}

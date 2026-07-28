@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "snippets": {
+    "git-task-workflow": {
+      "source": "sources/git-task-workflow.md",
+      "targets": [
+        {
+          "repository": "vault",
+          "path": "AGENTS.md"
+        }
+      ]
+    }
+  }
+}

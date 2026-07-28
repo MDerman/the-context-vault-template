@@ -1,0 +1,27 @@
+# personal-brand Content Queue
+generated: true
+generated_at: 2026-07-28T10:09:07
+managed_by: "vault.bootstrap"
+
+filters:
+  and:
+    - 'type == "content"'
+    - file.inFolder("personal-brand/_obsidian/content/items")
+
+views:
+  - type: table
+    name: "By Status"
+    order:
+      - file.name
+      - status
+      - content_kind
+      - platform
+      - publication
+      - publish_date
+      - cta
+      - conversion_goal
+    sort:
+      - column: status
+        direction: ASC
+      - column: publish_date
+        direction: ASC

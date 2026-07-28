@@ -1,0 +1,7 @@
+interface:
+  display_name: "Code and Computer Topology"
+  short_description: "Manage machines, access, code, and terminals"
+  default_prompt: "Use $code-folder-and-computer-topology to audit or configure my fleet and terminal workspaces."
+
+policy:
+  allow_implicit_invocation: true

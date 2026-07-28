@@ -1,0 +1,9 @@
+{
+  "id": "simple-folder-note",
+  "name": "Simple Folder Note",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "Treats a .md file with the same name as its folder as a folder note. Hides it from the file explorer and opens it when the folder is clicked.",
+  "author": "HEONO3H",
+  "isDesktopOnly": false
+}

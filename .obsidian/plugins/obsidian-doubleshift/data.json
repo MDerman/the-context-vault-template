@@ -1,0 +1,11 @@
+{
+  "delay": 500,
+  "key": "ShiftLeft",
+  "shortcuts": [
+    {
+      "command": "omnisearch:show-modal",
+      "key": "ShiftLeft",
+      "lastKeyUpTime": 0
+    }
+  ]
+}

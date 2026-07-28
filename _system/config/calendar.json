@@ -1,0 +1,14 @@
+{
+  "timeZone": "Africa/Johannesburg",
+  "calendarNames": {
+    "timeBlocks": "Time Blocks",
+    "scheduledTasks": "Scheduled Tasks",
+    "dueTasks": "Due Tasks"
+  },
+  "defaultDurations": {
+    "taskMinutes": 60,
+    "blockMinutes": 240,
+    "eventMinutes": 60
+  },
+  "defaultEventCalendar": "primary"
+}

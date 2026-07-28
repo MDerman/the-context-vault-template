@@ -1,0 +1,26 @@
+{
+  "title": "Optional next steps",
+  "steps": [
+    {
+      "title": "Start using Relay",
+      "description": "Watch the tutorial video, then open Obsidian and configure Relay for shared folders/workspaces.",
+      "url": "https://drive.google.com/file/d/1Rnlbrc10ckh9bnxiz_CkdLYXE0jTdyUI/view?usp=sharing"
+    },
+    {
+      "title": "Authenticate Google Workspace for calendar tasks",
+      "description": "Use GWS for Google Calendar credentials, then create the vault-owned calendars used for TaskNotes mirrors.",
+      "commands": [
+        "gws auth setup",
+        "gws auth login --services calendar,drive",
+        "vault gcal calendars ensure --apply"
+      ]
+    },
+    {
+      "title": "Set up optional Google Drive backup and sync",
+      "description": "Edit _system/sync/config/backup-sync.json for this computer and Google account. Then run the interactive setup wizard.",
+      "commands": [
+        "vault backup-sync setup"
+      ]
+    }
+  ]
+}

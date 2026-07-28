@@ -1,0 +1,7 @@
+/* Preserve former Primary background color; leave component styling to theme. */
+.theme-dark {
+    --background-primary: #141414;
+    --background-primary-alt: #141414;
+    --background-secondary: #141414;
+    --background-secondary-alt: #141414;
+}

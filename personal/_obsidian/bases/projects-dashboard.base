@@ -1,0 +1,19 @@
+# personal Projects
+generated: true
+generated_at: 2026-07-28T10:09:07
+managed_by: "vault.bootstrap"
+
+filters:
+  and:
+    - file.inFolder("personal/_obsidian/projects")
+    - 'type == "project"'
+
+views:
+  - type: table
+    name: "Projects"
+    order:
+      - file.name
+      - status
+      - contexts
+      - epic
+      - file.folder

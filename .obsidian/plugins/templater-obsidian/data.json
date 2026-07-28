@@ -1,0 +1,227 @@
+{
+  "command_timeout": 5,
+  "templates_folder": "_system/_obsidian/templates/shared",
+  "templates_pairs": [
+    [
+      "",
+      ""
+    ]
+  ],
+  "trigger_on_file_creation": true,
+  "auto_jump_to_cursor": true,
+  "enable_system_commands": false,
+  "shell_path": "",
+  "user_scripts_folder": "_system/commands",
+  "enable_folder_templates": true,
+  "folder_templates": [
+    {
+      "folder": "personal/_obsidian/periodic/daily",
+      "template": "personal/_obsidian/templates/periodic/daily-template.md"
+    },
+    {
+      "folder": "personal/_obsidian/periodic/weekly",
+      "template": "personal/_obsidian/templates/periodic/weekly-template.md"
+    },
+    {
+      "folder": "personal/_obsidian/periodic/monthly",
+      "template": "personal/_obsidian/templates/periodic/monthly-template.md"
+    },
+    {
+      "folder": "personal/_obsidian/periodic/quarterly",
+      "template": "personal/_obsidian/templates/periodic/quarterly-template.md"
+    },
+    {
+      "folder": "personal/_obsidian/periodic/yearly",
+      "template": "personal/_obsidian/templates/periodic/yearly-template.md"
+    },
+    {
+      "folder": "personal/_obsidian/tasks",
+      "template": "_system/_obsidian/templates/shared/default-tasks-template.md"
+    },
+    {
+      "folder": "personal-brand/_obsidian/periodic/daily",
+      "template": "personal-brand/_obsidian/templates/periodic/daily-template.md"
+    },
+    {
+      "folder": "personal-brand/_obsidian/periodic/weekly",
+      "template": "personal-brand/_obsidian/templates/periodic/weekly-template.md"
+    },
+    {
+      "folder": "personal-brand/_obsidian/periodic/monthly",
+      "template": "personal-brand/_obsidian/templates/periodic/monthly-template.md"
+    },
+    {
+      "folder": "personal-brand/_obsidian/periodic/quarterly",
+      "template": "personal-brand/_obsidian/templates/periodic/quarterly-template.md"
+    },
+    {
+      "folder": "personal-brand/_obsidian/periodic/yearly",
+      "template": "personal-brand/_obsidian/templates/periodic/yearly-template.md"
+    },
+    {
+      "folder": "personal-brand/_obsidian/tasks",
+      "template": "_system/_obsidian/templates/shared/default-tasks-template.md"
+    },
+    {
+      "folder": "business/_obsidian/periodic/daily",
+      "template": "business/_obsidian/templates/periodic/daily-template.md"
+    },
+    {
+      "folder": "business/_obsidian/periodic/weekly",
+      "template": "business/_obsidian/templates/periodic/weekly-template.md"
+    },
+    {
+      "folder": "business/_obsidian/periodic/monthly",
+      "template": "business/_obsidian/templates/periodic/monthly-template.md"
+    },
+    {
+      "folder": "business/_obsidian/periodic/quarterly",
+      "template": "business/_obsidian/templates/periodic/quarterly-template.md"
+    },
+    {
+      "folder": "business/_obsidian/periodic/yearly",
+      "template": "business/_obsidian/templates/periodic/yearly-template.md"
+    },
+    {
+      "folder": "business/_obsidian/tasks",
+      "template": "_system/_obsidian/templates/shared/default-tasks-template.md"
+    },
+    {
+      "folder": "business/meetings/1-on-1s",
+      "template": "business/_obsidian/templates/one-on-ones/one-on-one-template.md"
+    },
+    {
+      "folder": "business/meetings/general-meetings",
+      "template": "business/_obsidian/templates/general-meeting-template.md"
+    },
+    {
+      "folder": "business/meetings/customer-calls",
+      "template": "business/_obsidian/templates/customer-call-template.md"
+    },
+    {
+      "folder": "business/meetings/founder-notes",
+      "template": "business/_obsidian/templates/founder-note-template.md"
+    },
+    {
+      "folder": "business/product/specs",
+      "template": "business/_obsidian/templates/feature-spec-template.md"
+    },
+    {
+      "folder": "business/product/decisions",
+      "template": "business/_obsidian/templates/product-decision-template.md"
+    },
+    {
+      "folder": "business/product/experiments",
+      "template": "business/_obsidian/templates/experiment-template.md"
+    },
+    {
+      "folder": "business/product/user-signals",
+      "template": "business/_obsidian/templates/user-signal-template.md"
+    },
+    {
+      "folder": "business/gtm/campaigns",
+      "template": "business/_obsidian/templates/campaign-template.md"
+    },
+    {
+      "folder": "business/gtm/offers",
+      "template": "business/_obsidian/templates/offer-template.md"
+    },
+    {
+      "folder": "business/gtm/icp",
+      "template": "business/_obsidian/templates/icp-template.md"
+    },
+    {
+      "folder": "business/gtm/competitors",
+      "template": "business/_obsidian/templates/competitor-template.md"
+    },
+    {
+      "folder": "business/ops/metrics-snapshots",
+      "template": "business/_obsidian/templates/metrics-snapshot-template.md"
+    },
+    {
+      "folder": "business/ops/sops",
+      "template": "business/_obsidian/templates/sop-template.md"
+    },
+    {
+      "folder": "business/skills",
+      "template": "business/_obsidian/templates/local-skill-template.md"
+    },
+    {
+      "folder": "dev/_obsidian/periodic/daily",
+      "template": "dev/_obsidian/templates/periodic/daily-template.md"
+    },
+    {
+      "folder": "dev/_obsidian/periodic/weekly",
+      "template": "dev/_obsidian/templates/periodic/weekly-template.md"
+    },
+    {
+      "folder": "dev/_obsidian/periodic/quarterly",
+      "template": "dev/_obsidian/templates/periodic/quarterly-template.md"
+    },
+    {
+      "folder": "dev/_obsidian/periodic/yearly",
+      "template": "dev/_obsidian/templates/periodic/yearly-template.md"
+    },
+    {
+      "folder": "dev/_obsidian/tasks",
+      "template": "_system/_obsidian/templates/shared/default-tasks-template.md"
+    },
+    {
+      "folder": "claudeche/_obsidian/periodic/daily",
+      "template": "claudeche/_obsidian/templates/periodic/daily-template.md"
+    },
+    {
+      "folder": "claudeche/_obsidian/periodic/weekly",
+      "template": "claudeche/_obsidian/templates/periodic/weekly-template.md"
+    },
+    {
+      "folder": "claudeche/_obsidian/periodic/quarterly",
+      "template": "claudeche/_obsidian/templates/periodic/quarterly-template.md"
+    },
+    {
+      "folder": "claudeche/_obsidian/periodic/yearly",
+      "template": "claudeche/_obsidian/templates/periodic/yearly-template.md"
+    },
+    {
+      "folder": "claudeche/_obsidian/tasks",
+      "template": "_system/_obsidian/templates/shared/default-tasks-template.md"
+    },
+    {
+      "folder": "ctx9/_obsidian/periodic/daily",
+      "template": "ctx9/_obsidian/templates/periodic/daily-template.md"
+    },
+    {
+      "folder": "ctx9/_obsidian/periodic/weekly",
+      "template": "ctx9/_obsidian/templates/periodic/weekly-template.md"
+    },
+    {
+      "folder": "ctx9/_obsidian/periodic/quarterly",
+      "template": "ctx9/_obsidian/templates/periodic/quarterly-template.md"
+    },
+    {
+      "folder": "ctx9/_obsidian/periodic/yearly",
+      "template": "ctx9/_obsidian/templates/periodic/yearly-template.md"
+    },
+    {
+      "folder": "ctx9/_obsidian/tasks",
+      "template": "_system/_obsidian/templates/shared/default-tasks-template.md"
+    }
+  ],
+  "enable_file_templates": false,
+  "file_templates": [
+    {
+      "regex": ".*",
+      "template": ""
+    }
+  ],
+  "syntax_highlighting": true,
+  "syntax_highlighting_mobile": false,
+  "enabled_templates_hotkeys": [
+    ""
+  ],
+  "startup_templates": [
+    ""
+  ],
+  "intellisense_render": 1,
+  "ignore_folders_on_creation": []
+}
