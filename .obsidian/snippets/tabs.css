@@ -1,0 +1,145 @@
+/* Multi-row, content-sized tabs for desktop main-workspace tab groups. */
+body:not(.is-mobile) {
+  --vault-tab-min-width: 112px;
+  --vault-tab-max-width: 240px;
+  --vault-tab-row-height: 36px;
+  --vault-tab-column-gap: 4px;
+  --vault-tab-row-gap: 0px;
+  --vault-tab-top-padding: 4px;
+}
+
+/* Let the main tab bar grow with each wrapped row. Sidebars and stacked tabs
+   deliberately retain Obsidian's native layout. */
+body:not(.is-mobile)
+  .workspace
+  .mod-root
+  .workspace-tabs:not(.mod-stacked)
+  > .workspace-tab-header-container {
+  align-items: flex-start;
+  height: auto;
+  min-height: var(--vault-tab-row-height);
+  overflow: visible;
+}
+
+body:not(.is-mobile)
+  .workspace
+  .mod-root
+  .workspace-tabs:not(.mod-stacked)
+  > .workspace-tab-header-container
+  > .workspace-tab-header-container-inner {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: flex-start;
+  column-gap: var(--vault-tab-column-gap);
+  row-gap: var(--vault-tab-row-gap);
+  min-width: 0;
+  height: auto;
+  margin: 0;
+  padding-block-start: var(--vault-tab-top-padding);
+  padding-block-end: 0;
+  padding-inline: var(--vault-tab-column-gap);
+  overflow: visible;
+}
+
+/* Tabs follow their title width until the cap, then ellipsize. */
+body:not(.is-mobile)
+  .workspace
+  .mod-root
+  .workspace-tabs:not(.mod-stacked)
+  .workspace-tab-header {
+  container-type: normal;
+  flex: 0 1 auto !important;
+  width: max-content !important;
+  min-width: min(var(--vault-tab-min-width), 100%);
+  max-width: min(var(--vault-tab-max-width), 100%) !important;
+  height: var(--vault-tab-row-height);
+}
+
+body:not(.is-mobile)
+  .workspace
+  .mod-root
+  .workspace-tabs:not(.mod-stacked)
+  .workspace-tab-header-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: max-content;
+  max-width: var(--vault-tab-max-width);
+  min-width: 0;
+  height: 100%;
+  margin-block: 0;
+  padding-inline-end: calc(var(--size-4-2) + var(--icon-size));
+}
+
+body:not(.is-mobile)
+  .workspace
+  .mod-root
+  .workspace-tabs:not(.mod-stacked)
+  .workspace-tab-header-inner-title {
+  display: block;
+  flex: 1 1 auto;
+  width: max-content;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Overlay the native close control in a permanently reserved slot so its
+   hover/active appearance never changes the title width. */
+body:not(.is-mobile)
+  .workspace
+  .mod-root
+  .workspace-tabs:not(.mod-stacked)
+  .workspace-tab-header-inner-close-button {
+  position: absolute;
+  inset-inline-end: var(--size-4-1);
+  top: 50%;
+  flex: 0 0 auto;
+  transform: translateY(-50%);
+}
+
+/* Keep native actions fixed at the top-right while the tab list wraps beside
+   them. They remain visible and clickable at every row count. */
+body:not(.is-mobile)
+  .workspace
+  .mod-root
+  .workspace-tabs:not(.mod-stacked)
+  > .workspace-tab-header-container
+  > :is(.workspace-tab-header-new-tab, .workspace-tab-header-tab-list) {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  align-self: flex-start;
+  height: var(--vault-tab-row-height);
+  margin-top: var(--vault-tab-top-padding);
+}
+
+/* Selected tabs above the final wrapped row are standalone pills. The bottom
+   row keeps Baseline's native outward corners that connect it to the editor. */
+body:not(.is-mobile)
+  .workspace
+  .mod-root
+  .workspace-tabs:not(.mod-stacked)
+  .workspace-tab-header-container-inner.omp-tabs-multi-row
+  > .workspace-tab-header.omp-tab-upper-row.is-active {
+  border-radius: var(--tab-radius, 8px);
+}
+
+body:not(.is-mobile)
+  .workspace
+  .mod-root
+  .workspace-tabs:not(.mod-stacked)
+  .workspace-tab-header-container-inner.omp-tabs-multi-row
+  > .workspace-tab-header.omp-tab-upper-row.is-active::before,
+body:not(.is-mobile)
+  .workspace
+  .mod-root
+  .workspace-tabs:not(.mod-stacked)
+  .workspace-tab-header-container-inner.omp-tabs-multi-row
+  > .workspace-tab-header.omp-tab-upper-row.is-active::after {
+  display: none;
+}

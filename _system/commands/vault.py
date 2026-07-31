@@ -16,7 +16,7 @@ from vault_layout import AGENTS_DIR, VAULT_ROOT
 SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT = VAULT_ROOT
 def configured_repository(repository_id: str) -> Path | None:
-    registry = ROOT / "_system/config/code-folder-and-computer-topology/private/repositories.json"
+    registry = ROOT / "_system/config/infra-code-folder-and-computer-topology/private/repositories.json"
     if not registry.is_file():
         return None
     data = json.loads(registry.read_text(encoding="utf-8"))
@@ -30,6 +30,7 @@ CONTEXT_NINE_TUI_ROOT = CONTEXT_NINE_PLUGIN_ROOT / "python"
 COMMANDS = {
     "refresh": SCRIPT_DIR / "refresh.py",
     "refresh-schedule": SCRIPT_DIR / "refresh_schedule.py",
+    "mac-startup": SCRIPT_DIR / "mac_startup.py",
     "sync": SCRIPT_DIR / "brain_dump.py",
     "inventory": SCRIPT_DIR / "inventory.py",
     "content": SCRIPT_DIR / "content.py",
@@ -45,6 +46,7 @@ COMMANDS = {
     "project": SCRIPT_DIR / "project.py",
     "task": SCRIPT_DIR / "task.py",
     "folder": SCRIPT_DIR / "folder.py",
+    "business-toolkit": SCRIPT_DIR / "business_toolkit.py",
     "gcal": SCRIPT_DIR / "gcal.py",
     "git-media": SCRIPT_DIR / "git_media.py",
     "git-maintenance": SCRIPT_DIR / "git_maintenance.py",
@@ -68,6 +70,7 @@ Common commands:
   root         Print the current vault root path.
   refresh      Refresh integrations, schedules, periodic rollups, and Dashboard.
   refresh-schedule  Register, unregister, or inspect the daily refresh LaunchAgent.
+  mac-startup  Manage opt-in, per-machine macOS login automation.
   sync         Import the configured Brain Dump Apple Note.
   inventory    Print live periods, contexts, tasks, epics, and projects for routing.
   content      Generate current content schedule notes.
@@ -83,6 +86,7 @@ Common commands:
   project      Create and list project notes.
   task         Create TaskNotes tasks with validated project/epic links.
   folder       Create, register, or rename a context folder.
+  business-toolkit  Install and synchronize standard business-context folders and templates.
   gcal         Read/write Google Calendar events, time blocks, and task date mirrors.
   git-media    Manage pointer-only media manifests and no-upload Git hooks.
   git-maintenance  Keep local Git history shallow and prune local objects.
@@ -102,6 +106,8 @@ Examples:
   vault refresh
   vault refresh-schedule register
   vault refresh-schedule unregister
+  vault mac-startup status
+  vault mac-startup install --dry-run
   vault refresh --all
   vault refresh --sync-brain-dump
   vault inventory
@@ -118,9 +124,11 @@ Examples:
   vault skills sync --apply
   vault snippets check
   vault snippets sync --dry-run
-  vault folder register business
-  vault folder unregister business --dry-run
-  vault folder remove business --dry-run
+  vault folder register studio
+  vault business-toolkit sync --context-folders business,studio --apply
+  vault business-toolkit status --all-business
+  vault folder unregister studio --dry-run
+  vault folder remove studio --dry-run
   vault folder rename business studio --dry-run
   vault epic create business "New Epic"
   vault gcal list --days 7 --calendar all --json

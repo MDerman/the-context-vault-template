@@ -12,7 +12,7 @@ _system/config/snippets/
 ```
 
 External repository IDs resolve through
-`_system/config/code-folder-and-computer-topology/private/repositories.json`.
+`_system/config/infra-code-folder-and-computer-topology/private/repositories.json`.
 Repository ID `vault` always means the current vault root. Public bootstrap export
 keeps defaults and sources but excludes `private/` targets.
 

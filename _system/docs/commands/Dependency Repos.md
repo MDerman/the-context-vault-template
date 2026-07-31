@@ -45,6 +45,7 @@ Skill projection rules:
 - Target lives under grouped `_system/agents/manual-skills` or `_system/agents/auto-skills` source.
 - The vault creates a managed projection dir at the target.
 - Skill files and supporting assets are materialized from upstream for cross-machine portability and refresh on dependency sync.
+- A skill projection target basename is its local frontmatter name. Its projected H1 is prefixed from the vault's nested organizer hierarchy; optional `title_override` replaces that generated title. Upstream source stays unchanged.
 - `agents/openai.yaml` preserves upstream metadata while vault owns invocation policy: false for `manual-skill`, true for `auto-skill`.
 - Existing unmanaged targets are backed up before replacement.
 - `vault skills sync --apply` owns flat catalog symlink and updates dependency config/marker when wrapper moves.
@@ -54,6 +55,8 @@ Current tracked repos:
 - `frontend-slides` -> `~/Code/open_source/frontend-slides`
 - `agent-canvas` -> `~/Code/open_source/agent-canvas`
 - `googleworkspace-cli` -> `~/Code/open_source/googleworkspace-cli`
+- `marketingskills` -> `~/Code/open_source/marketingskills`
+- `claude-seo` -> `~/Code/open_source/claude-seo`
 
 Current projected auto skills:
 
@@ -67,6 +70,8 @@ Current projected manual skills:
 - `gws-gmail`
 - `gws-calendar`
 - `gws-sheets`
+- all skills from the Marketing Skills dependency under `_corey-marketing-skills/`, using the `corey-` discovery prefix
+- all skills from the Claude SEO dependency under `_claude-seo/`, using the `claude-seo-` discovery prefix
 
 When adding a new external repo with skills:
 

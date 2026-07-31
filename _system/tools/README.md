@@ -15,3 +15,5 @@ Reusable tools outside the `vault` dispatcher.
 Read this doorway, then tool folder's `README.md`. Use dry-run or help commands first when available.
 
 Invoice flow lives in [[_system/tools/invoice-generation/README|Invoice Generation]].
+
+macOS login actions and the `vault mac-startup` workflow live in [[_system/tools/mac-automation/README|macOS Automation]].

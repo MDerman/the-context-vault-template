@@ -22,7 +22,7 @@ from vault_layout import CONFIG_DIR, VAULT_ROOT
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT = VAULT_ROOT
-DEFAULT_REGISTRY = ROOT / CONFIG_DIR / "code-folder-and-computer-topology/private/machines.json"
+DEFAULT_REGISTRY = ROOT / CONFIG_DIR / "infra-code-folder-and-computer-topology/private/machines.json"
 DEFAULT_RUNTIME_DIR = Path.home() / ".cache/vault-machine"
 MACHINE_ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 

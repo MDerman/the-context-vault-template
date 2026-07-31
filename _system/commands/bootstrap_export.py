@@ -11,6 +11,7 @@ import json
 import os
 import re
 import shutil
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -129,6 +130,7 @@ class BootstrapExporter:
             for item in self.context_configs
         ]
         self.public_context_scaffold_dirs = config.get("public_context_scaffold_dirs", {})
+        self.library_include_paths = list(config.get("library_include_paths", []))
         self.rewrite_pairs = sorted(self.context_pairs, key=lambda pair: len(pair[0]), reverse=True)
         self.generated_exclude_paths = set(config.get("generated_exclude_paths", []))
         self.generated_exclude_globs = list(config.get("generated_exclude_globs", []))
@@ -194,6 +196,9 @@ class BootstrapExporter:
         self.regenerate_public_bases()
         self.validate_public_base_contexts()
         self.create_library_and_wiki()
+        self.install_public_business_toolkits()
+        self.sanitize_public_templater_rules()
+        self.sanitize_public_iconize_paths()
         self.write_manifest()
         self.log(f"export ready: {self.export_root}")
 
@@ -516,7 +521,7 @@ class BootstrapExporter:
             keep_file = (
                 rel_text.startswith("bases/") and item.suffix == ".base"
             ) or (
-                rel_text.startswith("templates/") and item.suffix == ".md"
+                rel_text.startswith("templates/periodic/") and item.suffix == ".md"
             )
             if keep_file and item.is_file():
                 self.copy_file(item, target)
@@ -649,12 +654,118 @@ class BootstrapExporter:
             raise SystemExit(f"Refusing to export .base files with source context-folder references:\n{rendered}")
 
     def create_library_and_wiki(self) -> None:
-        self.ensure_dir(self.export_root / "_library")
+        library = self.export_root / "_library"
+        self.ensure_dir(library)
+        for raw_path in self.library_include_paths:
+            relative = Path(str(raw_path))
+            if relative.is_absolute() or not relative.parts or ".." in relative.parts:
+                raise SystemExit(f"Unsafe public library include path: {raw_path!r}")
+            source = self.root / "_library" / relative
+            if not source.is_dir():
+                raise SystemExit(f"Missing public library include path: {source}")
+            self.copy_tree_all(source, library / relative)
         wiki = self.export_root / "_wiki"
         self.ensure_dir(wiki)
         source = self.root / "_wiki/AGENTS.md"
         if source.exists():
             self.copy_file(source, wiki / "AGENTS.md")
+
+    def install_public_business_toolkits(self) -> None:
+        business_targets = [
+            item["target"]
+            for item in self.context_configs
+            if self.context_metadata(item).get("context_type", "business") == "business"
+        ]
+        if not business_targets:
+            return
+        if self.dry_run:
+            for target in business_targets:
+                self.log(f"install business toolkit in {target}")
+            return
+        commands_dir = self.export_root / "_system/commands"
+        sys.path.insert(0, str(commands_dir))
+        try:
+            from business_toolkit import install_scaffold, sync_context
+
+            for target in business_targets:
+                install_scaffold(self.export_root, target, apply=True)
+                sync_context(
+                    self.export_root,
+                    target,
+                    apply=True,
+                    force=True,
+                    use_saved=False,
+                )
+        finally:
+            if sys.path and sys.path[0] == str(commands_dir):
+                sys.path.pop(0)
+
+    def sanitize_public_templater_rules(self) -> None:
+        if self.dry_run:
+            self.log("sanitize public Templater folder rules")
+            return
+        path = self.export_root / ".obsidian/plugins/templater-obsidian/data.json"
+        if not path.is_file():
+            return
+        data = json.loads(path.read_text(encoding="utf-8"))
+        allowed = set(self.target_context_names())
+        changed = False
+        for key in ("folder_templates", "ignore_folders_on_creation"):
+            rules = data.get(key, [])
+            if not isinstance(rules, list):
+                raise SystemExit(f"Invalid public Templater {key}: {path}")
+            kept: list[Any] = []
+            for rule in rules:
+                if not isinstance(rule, dict):
+                    kept.append(rule)
+                    continue
+                folder = str(rule.get("folder", ""))
+                first = folder.split("/", 1)[0]
+                if not first or first.startswith("_") or first.startswith(".") or first in allowed:
+                    kept.append(rule)
+            if kept != rules:
+                data[key] = kept
+                changed = True
+        if changed:
+            path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+
+    def sanitize_public_iconize_paths(self) -> None:
+        """Keep only public/system Iconize paths in desktop and mobile profiles."""
+        if self.dry_run:
+            self.log("sanitize public Iconize paths")
+            return
+        allowed = set(self.target_context_names())
+        blocked = self.discovered_source_context_names() - allowed
+        relative_paths = (
+            Path(".obsidian/plugins/obsidian-icon-folder/data.json"),
+            Path(".obsidian-mobile/plugins/obsidian-icon-folder/data.json"),
+        )
+        for relative in relative_paths:
+            path = self.export_root / relative
+            if not path.is_file():
+                continue
+            data = json.loads(path.read_text(encoding="utf-8"))
+            if not isinstance(data, dict):
+                raise SystemExit(f"Invalid public Iconize configuration: {path}")
+            desired: dict[str, Any] = {}
+            for key, value in data.items():
+                if key == "settings":
+                    settings = dict(value) if isinstance(value, dict) else value
+                    if isinstance(settings, dict) and isinstance(settings.get("rules"), list):
+                        settings["rules"] = [
+                            rule for rule in settings["rules"]
+                            if not (
+                                isinstance(rule, dict)
+                                and any(name in str(rule.get("rule", "")) for name in blocked)
+                            )
+                        ]
+                    desired[key] = settings
+                    continue
+                first = key.split("/", 1)[0]
+                if not first or first.startswith("_") or first.startswith(".") or first in allowed:
+                    desired[key] = value
+            if desired != data:
+                path.write_text(json.dumps(desired, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     def copy_file(self, source: Path, target: Path) -> None:
         if not source.exists():

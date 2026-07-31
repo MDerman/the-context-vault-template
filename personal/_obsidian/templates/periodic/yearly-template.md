@@ -6,6 +6,49 @@ period_id: <% tp.file.title %>
 generated: false
 ---
 
+# <% tp.file.title %> - The Year of {theme}
+
+## Yearly Focus
+
+-
+
+## Goals
+
+| Area          | Goal | Why It Matters | First Step |
+| ------------- | ---- | -------------- | ---------- |
+| Health        |      |                |            |
+| Relationships |      |                |            |
+| Work          |      |                |            |
+| Money         |      |                |            |
+| Creativity    |      |                |            |
+| Home          |      |                |            |
+
+## Systems
+
+> [!note]+ Systems to Create or Improve
+> -
+> -
+> -
+
+> [!note]+ Things to Automate
+> -
+> -
+> -
+
+> [!note]+ Things to Eliminate
+> -
+> -
+
+## Linear Calendar
+
+- [ ] Create new linear calendar in excalidraw and create a rough timeline for next year
+
+## Next Actions
+
+- [ ]
+- [ ]
+- [ ]
+
 # Annual Review
 
 > [!note]+ Annual Review Prompts
@@ -359,42 +402,4 @@ generated: false
 
 # Step 3 - Execute
 
-## Yearly Focus
-
-- 
-
-## Goals
-
-| Area          | Goal | Why It Matters | First Step |
-| ------------- | ---- | -------------- | ---------- |
-| Health        |      |                |            |
-| Relationships |      |                |            |
-| Work          |      |                |            |
-| Money         |      |                |            |
-| Creativity    |      |                |            |
-| Home          |      |                |            |
-
-## Systems
-
-> [!note]+ Systems to Create or Improve
-> - 
-> - 
-> - 
-
-> [!note]+ Things to Automate
-> - 
-> - 
-> - 
-
-> [!note]+ Things to Eliminate
-> - 
-> - 
-
-# Linear Calendar
-- [ ] Create new linear calendar in excalidraw and create a rough timeline for next year
-
-## Next Actions
-
-- [ ] 
-- [ ] 
-- [ ] 
+Execution lives at the top of each year's note. Continue in [[personal/_obsidian/periodic/yearly/<% tp.date.now("YYYY", "P1Y", tp.file.title, "YYYY") %>|next year's personal yearly note]].

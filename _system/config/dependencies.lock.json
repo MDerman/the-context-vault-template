@@ -8,6 +8,13 @@
       "url": "https://github.com/whq25/agent-canvas.git"
     },
     {
+      "id": "claude-seo",
+      "path": "~/Code/open_source/claude-seo",
+      "ref": "main",
+      "resolved_commit": "09d37c7b66ed3ca9c6efbdb765a805a6c76a8f01",
+      "url": "https://github.com/AgriciDaniel/claude-seo.git"
+    },
+    {
       "id": "frontend-slides",
       "path": "~/Code/open_source/frontend-slides",
       "ref": "main",
@@ -22,6 +29,13 @@
       "url": "https://github.com/googleworkspace/cli.git"
     },
     {
+      "id": "marketingskills",
+      "path": "~/Code/open_source/marketingskills",
+      "ref": "main",
+      "resolved_commit": "7868cb9251fad80a73d26e488a5ad5f6c4a9f335",
+      "url": "https://github.com/coreyhaines31/marketingskills.git"
+    },
+    {
       "id": "witan-cli",
       "path": "~/Code/open_source/witan-cli",
       "ref": "main",
@@ -29,7 +43,7 @@
       "url": "https://github.com/witanlabs/witan-cli.git"
     }
   ],
-  "generated_at": "2026-07-28T08:08:54Z",
+  "generated_at": "2026-07-31T09:45:59Z",
   "github_cli": {
     "available": true,
     "skill_available": true,
@@ -161,7 +175,7 @@
       "name": "Context Nine",
       "plugin": "context-nine",
       "profile": ".obsidian",
-      "version": "1.1.0"
+      "version": "1.1.1"
     },
     {
       "id": "dataview",
@@ -420,6 +434,14 @@
       "version": "2.6.0"
     },
     {
+      "id": "xlsx-viewer",
+      "manifest_path": ".obsidian/plugins/xlsx-viewer/manifest.json",
+      "name": "XLSX Viewer",
+      "plugin": "xlsx-viewer",
+      "profile": ".obsidian",
+      "version": "0.1.0"
+    },
+    {
       "id": "calendar",
       "manifest_path": ".obsidian-mobile/plugins/calendar/manifest.json",
       "name": "Calendar",
@@ -484,7 +506,7 @@
       "version": "4.5.3"
     }
   ],
-  "release_tag": "v0.2.2",
-  "release_version": "0.2.2",
+  "release_tag": "v0.2.3",
+  "release_version": "0.2.3",
   "schema_version": 1
 }

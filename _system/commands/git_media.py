@@ -345,7 +345,7 @@ def hook_is_installed(root: Path) -> bool:
 
 def pointer_only_role(root: Path) -> str:
     identity = run_git(root, "config", "--get", "vault.machine-id", check=False).stdout.decode().strip()
-    registry_path = root / "_system/config/code-folder-and-computer-topology/private/machines.json"
+    registry_path = root / "_system/config/infra-code-folder-and-computer-topology/private/machines.json"
     if not identity or not registry_path.is_file():
         return "primary"
     try:

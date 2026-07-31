@@ -407,8 +407,27 @@ var FileActionService = class {
     this.app = app;
     this.hoveredTarget = null;
     this.lastMousePosition = null;
+    this.pendingTaskMenus = /* @__PURE__ */ new WeakMap();
+    this.restoreTaskMenuPatch = null;
   }
   register(plugin) {
+    this.patchTaskCardMenus(plugin);
+    plugin.registerDomEvent(
+      document,
+      "contextmenu",
+      (event) => {
+        this.rememberTaskCardMenu(event, false);
+      },
+      true
+    );
+    plugin.registerDomEvent(
+      document,
+      "click",
+      (event) => {
+        this.rememberTaskCardMenu(event, true);
+      },
+      true
+    );
     plugin.registerDomEvent(document, "mousemove", (event) => {
       this.lastMousePosition = { x: event.clientX, y: event.clientY };
       this.hoveredTarget = this.targetFromEvent(event);
@@ -456,6 +475,9 @@ var FileActionService = class {
     await this.app.workspace.getLeaf(false).openFile(file);
   }
   showContextMenu(event) {
+    if (event.target instanceof Element && event.target.closest(".tasknotes-plugin [data-task-path]")) {
+      return;
+    }
     const target = this.targetFromEvent(event);
     if (!target) {
       return;
@@ -478,6 +500,54 @@ var FileActionService = class {
       });
     });
     menu.showAtMouseEvent(event);
+  }
+  patchTaskCardMenus(plugin) {
+    if (this.restoreTaskMenuPatch) {
+      return;
+    }
+    const originalShow = import_obsidian2.Menu.prototype.showAtMouseEvent;
+    const service = this;
+    const patchedShow = function(event) {
+      const file = service.pendingTaskMenus.get(event);
+      if (file) {
+        service.pendingTaskMenus.delete(event);
+        this.addSeparator();
+        this.addItem((item) => {
+          item.setTitle("Delete note").setIcon("trash").onClick(() => {
+            void service.deleteFile(file);
+          });
+        });
+      }
+      return originalShow.call(this, event);
+    };
+    import_obsidian2.Menu.prototype.showAtMouseEvent = patchedShow;
+    const restore = () => {
+      if (import_obsidian2.Menu.prototype.showAtMouseEvent === patchedShow) {
+        import_obsidian2.Menu.prototype.showAtMouseEvent = originalShow;
+      }
+      if (this.restoreTaskMenuPatch === restore) {
+        this.restoreTaskMenuPatch = null;
+      }
+    };
+    this.restoreTaskMenuPatch = restore;
+    plugin.register(restore);
+  }
+  rememberTaskCardMenu(event, optionsButtonOnly) {
+    if (!(event.target instanceof Element)) {
+      return;
+    }
+    if (optionsButtonOnly && !event.target.closest(".task-card__context-menu, [aria-label='Task options']")) {
+      return;
+    }
+    const card = event.target.closest(".tasknotes-plugin [data-task-path]");
+    if (!(card instanceof HTMLElement)) {
+      return;
+    }
+    const path = card.dataset.taskPath;
+    const file = path ? this.app.vault.getAbstractFileByPath(path) : null;
+    if (file instanceof import_obsidian2.TFile) {
+      this.pendingTaskMenus.set(event, file);
+    }
   }
   async createNoteInFolder(folder) {
     const path = await this.uniquePath(folder.path, "Untitled.md");
@@ -2033,35 +2103,47 @@ function normalizeSwimlaneProjectValue(value) {
   return project;
 }
 function parseEpicPathFromBaseText(text) {
-  var _a;
-  const match = text.match(/\bepic\s*==\s*link\("([^"]+)"\)/);
-  return ((_a = match == null ? void 0 : match[1]) == null ? void 0 : _a.trim()) || null;
+  const matches = [...text.matchAll(/\bepic\s*==\s*link\("([^"]+)"\)/g)].map((match) => {
+    var _a;
+    return (_a = match[1]) == null ? void 0 : _a.trim();
+  }).filter((value) => Boolean(value));
+  return uniqueValue(matches);
 }
-function parseContextFromBaseText(text) {
+function parseContextFromBaseText(text, knownRoots) {
   const folderMatches = [
-    ...text.matchAll(/\bfile\.inFolder\("(\d\d-[^"/]+)\/_obsidian\/(?:tasks|projects|epics)(?:\/[^"]*)?"\)/g)
-  ];
-  if (folderMatches.length === 1) {
-    return folderMatches[0][1];
-  }
+    ...text.matchAll(/\bfile\.inFolder\("([^"/]+)\/_obsidian\/(?:tasks|projects|epics)(?:\/[^"]*)?"\)/g)
+  ].map((match) => {
+    var _a;
+    return (_a = match[1]) == null ? void 0 : _a.trim();
+  }).filter((value) => Boolean(value) && isKnownRoot(value, knownRoots));
   const contextMatches = [
-    ...text.matchAll(/\bcontexts?\s*(?:==|\.contains\()\s*"?(\d\d-[^")\]]+)"?/g)
-  ];
-  if (contextMatches.length === 1) {
-    return contextMatches[0][1].trim();
-  }
-  return null;
+    ...text.matchAll(/\bcontexts?\s*(?:==|\.contains\()\s*"?([^")\],]+)"?/g)
+  ].map((match) => {
+    var _a;
+    return (_a = match[1]) == null ? void 0 : _a.trim();
+  }).filter((value) => Boolean(value) && isKnownRoot(value, knownRoots));
+  return uniqueValue([...folderMatches, ...contextMatches]);
 }
-function contextFromPathRoot(path) {
+function resolveKanbanViewScope(definition, activeViewName, knownRoots) {
+  const base = recordFromUnknown2(definition);
+  const views = Array.isArray(base.views) ? base.views : [];
+  const activeView = views.map(recordFromUnknown2).find((view) => typeof view.name === "string" && view.name === activeViewName);
+  const filterText = stringsFromUnknown([base.filters, activeView == null ? void 0 : activeView.filters]).join("\n");
+  return {
+    context: parseContextFromBaseText(filterText, knownRoots),
+    epicPath: parseEpicPathFromBaseText(filterText)
+  };
+}
+function contextFromPathRoot(path, knownRoots) {
   var _a;
   const root = (_a = path == null ? void 0 : path.split("/")[0]) == null ? void 0 : _a.trim();
-  return root && /^\d\d-/.test(root) ? root : null;
+  return root && isKnownRoot(root, knownRoots) ? root : null;
 }
-function contextFromWikiLinkValue(value) {
+function contextFromWikiLinkValue(value, knownRoots) {
   var _a;
   const match = value.match(/^\[\[([^|\]#]+)/);
   const path = (_a = match == null ? void 0 : match[1]) != null ? _a : value;
-  return contextFromPathRoot(path);
+  return contextFromPathRoot(path, knownRoots);
 }
 function buildKanbanTaskDefaults(input) {
   const defaults = {
@@ -2117,14 +2199,35 @@ function recordFromUnknown2(value) {
   }
   return value;
 }
+function stringsFromUnknown(value) {
+  if (typeof value === "string") {
+    return [value];
+  }
+  if (Array.isArray(value)) {
+    return value.flatMap(stringsFromUnknown);
+  }
+  const record = recordFromUnknown2(value);
+  return Object.values(record).flatMap(stringsFromUnknown);
+}
+function isKnownRoot(value, knownRoots) {
+  if (!value || value.startsWith("_")) {
+    return false;
+  }
+  return knownRoots ? knownRoots.includes(value) : true;
+}
+function uniqueValue(values) {
+  const unique = [...new Set(values)];
+  return unique.length === 1 ? unique[0] : null;
+}
 
 // src/tasknotes-ux.ts
 var STATUS_TRIGGER = "$";
 var PRIORITY_TRIGGER = "!";
 var EPIC_TRIGGER = "^";
 var TaskNotesUxService = class {
-  constructor(app) {
+  constructor(app, getSettings) {
     this.app = app;
+    this.getSettings = getSettings;
     this.modalObserver = null;
     this.restoreCreateTask = null;
     this.restoreKanbanCreateTask = null;
@@ -2260,12 +2363,12 @@ var TaskNotesUxService = class {
       return;
     }
     const baseFile = this.baseFileForElement(column);
-    this.openTaskModalWithKanbanDefaults(taskNotes, status, project, baseFile).catch(async (error) => {
+    const activeViewName = this.activeViewNameForElement(column);
+    this.openTaskModalWithKanbanDefaults(taskNotes, status, project, baseFile, activeViewName).catch(async (error) => {
       var _a, _b, _c;
       console.error("Failed to open kanban task modal with defaults:", error);
       new import_obsidian7.Notice("Failed to read kanban defaults.");
-      const baseContext = baseFile ? await this.contextFromBaseFile(baseFile) : null;
-      const fallbackContext = project ? this.contextFromWikiLink(project) : baseContext != null ? baseContext : contextFromPathRoot(baseFile == null ? void 0 : baseFile.path);
+      const fallbackContext = project ? this.contextFromWikiLink(project) : contextFromPathRoot(baseFile == null ? void 0 : baseFile.path, this.getSettings().knownRoots);
       const defaults = buildKanbanTaskDefaults({
         status,
         priority: (_b = (_a = taskNotes.settings) == null ? void 0 : _a.defaultTaskPriority) != null ? _b : "normal",
@@ -2278,11 +2381,12 @@ var TaskNotesUxService = class {
       (_c = taskNotes.openTaskCreationModal) == null ? void 0 : _c.call(taskNotes, defaults);
     });
   }
-  async openTaskModalWithKanbanDefaults(taskNotes, status, project, baseFile) {
+  async openTaskModalWithKanbanDefaults(taskNotes, status, project, baseFile, activeViewName) {
     var _a, _b, _c, _d, _e, _f, _g;
-    const epic = await this.epicChoiceFromBaseFile(baseFile);
-    const baseContext = baseFile ? await this.contextFromBaseFile(baseFile) : null;
-    const context = (_c = (_b = (_a = project ? this.contextFromWikiLink(project) : null) != null ? _a : contextFromPathRoot(epic == null ? void 0 : epic.path)) != null ? _b : baseContext) != null ? _c : contextFromPathRoot(baseFile == null ? void 0 : baseFile.path);
+    const scope = await this.kanbanScopeFromBaseFile(baseFile, activeViewName);
+    const epic = scope.epicPath ? this.epicChoiceFromPath(scope.epicPath) : null;
+    const knownRoots = this.getSettings().knownRoots;
+    const context = (_c = (_b = (_a = project ? this.contextFromWikiLink(project) : null) != null ? _a : contextFromPathRoot(epic == null ? void 0 : epic.path, knownRoots)) != null ? _b : scope.context) != null ? _c : contextFromPathRoot(baseFile == null ? void 0 : baseFile.path, knownRoots);
     const defaults = buildKanbanTaskDefaults({
       status,
       priority: (_e = (_d = taskNotes.settings) == null ? void 0 : _d.defaultTaskPriority) != null ? _e : "normal",
@@ -2298,7 +2402,7 @@ var TaskNotesUxService = class {
     return normalizeSwimlaneProjectValue(value);
   }
   contextFromWikiLink(value) {
-    return contextFromWikiLinkValue(value);
+    return contextFromWikiLinkValue(value, this.getSettings().knownRoots);
   }
   addTaskButtonLabel(status, project) {
     const target = project ? ` in ${this.displayNameForWikiLink(project)}` : "";
@@ -2369,17 +2473,21 @@ var TaskNotesUxService = class {
     }
     return null;
   }
-  async contextFromBaseFile(file) {
-    const text = await this.app.vault.cachedRead(file);
-    return parseContextFromBaseText(text);
+  activeViewNameForElement(element) {
+    var _a;
+    const view = element.closest(".bases-view[data-view-name]");
+    return view instanceof HTMLElement ? (_a = view.dataset.viewName) != null ? _a : null : null;
   }
-  async epicChoiceFromBaseFile(file) {
+  async kanbanScopeFromBaseFile(file, activeViewName) {
     if (!file) {
-      return null;
+      return { context: null, epicPath: null };
     }
     const text = await this.app.vault.cachedRead(file);
-    const epicPath = parseEpicPathFromBaseText(text);
-    return epicPath ? this.epicChoiceFromPath(epicPath) : null;
+    return resolveKanbanViewScope(
+      (0, import_obsidian7.parseYaml)(text),
+      activeViewName,
+      this.getSettings().knownRoots
+    );
   }
   epicChoiceFromPath(path) {
     var _a;
@@ -2490,6 +2598,16 @@ var import_obsidian8 = require("obsidian");
 var import_child_process2 = require("child_process");
 
 // src/task-modal-fields.ts
+function taskFieldsForContextSelection(currentContext, selectedContext) {
+  if (currentContext === selectedContext) {
+    return { contexts: [selectedContext] };
+  }
+  return {
+    contexts: [selectedContext],
+    projects: null,
+    epic: null
+  };
+}
 function stripMarkdownExtension(path) {
   return path.endsWith(".md") ? path.slice(0, -3) : path;
 }
@@ -2533,9 +2651,10 @@ function vaultCreateArgs(kind, context, title, epicTitle) {
 
 // src/tasknotes-modal-ui.ts
 var TaskNotesModalUiService = class {
-  constructor(app, getSettings) {
+  constructor(app, getSettings, deleteFile) {
     this.app = app;
     this.getSettings = getSettings;
+    this.deleteFile = deleteFile;
     this.patchRestore = null;
     this.observer = null;
     this.closers = /* @__PURE__ */ new WeakMap();
@@ -2616,7 +2735,13 @@ var TaskNotesModalUiService = class {
     }
   }
   enhanceTaskModal(task, modal, closeModal) {
-    if (!(modal instanceof HTMLElement) || modal.hasClass("omp-task-modal-enhanced")) {
+    if (!(modal instanceof HTMLElement)) {
+      return;
+    }
+    if (closeModal) {
+      this.closers.set(modal, closeModal);
+    }
+    if (modal.hasClass("omp-task-modal-enhanced")) {
       return;
     }
     const file = this.fileForTask(task.path);
@@ -2631,9 +2756,6 @@ var TaskNotesModalUiService = class {
       return;
     }
     modal.addClass("omp-task-modal-enhanced");
-    if (closeModal) {
-      this.closers.set(modal, closeModal);
-    }
     this.normalizeTitleLabel(left);
     this.hideNativePrimaryRows(left);
     const primary = left.createDiv({ cls: "omp-task-primary-fields" });
@@ -2649,7 +2771,16 @@ var TaskNotesModalUiService = class {
     const epicButton = this.addDropdownRow(primary, "Epic");
     const projectButton = this.addDropdownRow(primary, "Project");
     const refresh = () => void this.refreshButtons(file, contextButton, epicButton, projectButton);
-    contextButton.addEventListener("click", () => void this.openContextMenu(file, contextButton, refresh));
+    contextButton.addEventListener(
+      "click",
+      () => void this.openContextMenu(
+        file,
+        contextButton,
+        epicButton,
+        projectButton,
+        refresh
+      )
+    );
     epicButton.addEventListener("click", () => void this.openEntityMenu("epic", file, epicButton, refresh));
     projectButton.addEventListener("click", () => void this.openEntityMenu("project", file, projectButton, refresh));
     refresh();
@@ -2676,16 +2807,27 @@ var TaskNotesModalUiService = class {
     projectButton.setText((_g = linkLabel((_f = metadata == null ? void 0 : metadata[getTaskNotesField(taskNotes, "projects")]) != null ? _f : metadata == null ? void 0 : metadata.projects)) != null ? _g : "No project");
     this.syncNativeInputs(file, context, metadata == null ? void 0 : metadata.epic, metadata == null ? void 0 : metadata.projects);
   }
-  async openContextMenu(file, button, refresh) {
+  async openContextMenu(file, contextButton, epicButton, projectButton, refresh) {
+    var _a;
+    const currentContext = ((_a = contextButton.textContent) == null ? void 0 : _a.trim()) || this.currentContext(file);
     const menu = new import_obsidian8.Menu();
     for (const context of await this.activeContexts()) {
       menu.addItem((item) => {
         item.setTitle(context).onClick(() => {
-          void this.writeTaskFields(file, { contexts: [context] }).then(refresh);
+          const fields = taskFieldsForContextSelection(currentContext, context);
+          void this.writeTaskFields(file, fields).then(() => {
+            if (currentContext === context) {
+              refresh();
+              return;
+            }
+            contextButton.setText(context);
+            epicButton.setText("No epic");
+            projectButton.setText("No project");
+          });
         });
       });
     }
-    menu.showAtPosition(this.menuPosition(button));
+    menu.showAtPosition(this.menuPosition(contextButton));
   }
   async openEntityMenu(kind, file, button, refresh) {
     const context = this.currentContext(file);
@@ -2721,36 +2863,52 @@ var TaskNotesModalUiService = class {
     new import_obsidian8.Notice(`Created ${kind}: ${title}`);
   }
   async writeTaskFields(file, fields) {
-    this.syncWrittenFields(file, fields);
+    const modal = this.enhancedModalForFile(file);
     const taskNotes = getTaskNotesPlugin(this.app);
     await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
-      if (fields.contexts) {
-        frontmatter[getTaskNotesField(taskNotes, "contexts")] = fields.contexts.slice(0, 1);
+      var _a, _b;
+      if (hasOwn(fields, "contexts")) {
+        const field = getTaskNotesField(taskNotes, "contexts");
+        if ((_a = fields.contexts) == null ? void 0 : _a[0]) {
+          frontmatter[field] = fields.contexts.slice(0, 1);
+        } else {
+          delete frontmatter[field];
+        }
       }
-      if (fields.projects) {
-        frontmatter[getTaskNotesField(taskNotes, "projects")] = fields.projects.slice(0, 1);
+      if (hasOwn(fields, "projects")) {
+        const field = getTaskNotesField(taskNotes, "projects");
+        if ((_b = fields.projects) == null ? void 0 : _b[0]) {
+          frontmatter[field] = fields.projects.slice(0, 1);
+        } else {
+          delete frontmatter[field];
+        }
       }
-      if (fields.epic) {
-        frontmatter.epic = fields.epic;
+      if (hasOwn(fields, "epic")) {
+        if (fields.epic) {
+          frontmatter.epic = fields.epic;
+        } else {
+          delete frontmatter.epic;
+        }
       }
       frontmatter[getTaskNotesField(taskNotes, "dateModified")] = (/* @__PURE__ */ new Date()).toISOString();
     });
+    this.syncWrittenFields(file, fields, modal);
     notifyTaskNotesChanged(taskNotes, file);
   }
-  syncWrittenFields(file, fields) {
-    var _a, _b;
-    const modal = this.enhancedModalForFile(file);
+  syncWrittenFields(file, fields, knownModal) {
+    var _a, _b, _c, _d, _e;
+    const modal = knownModal != null ? knownModal : this.enhancedModalForFile(file);
     if (!modal) {
       return;
     }
-    if ((_a = fields.contexts) == null ? void 0 : _a[0]) {
-      this.setInputNearLabel(modal, /^contexts?$/i, fields.contexts[0]);
+    if (hasOwn(fields, "contexts")) {
+      this.setInputNearLabel(modal, /^contexts?$/i, (_b = (_a = fields.contexts) == null ? void 0 : _a[0]) != null ? _b : "");
     }
-    if (fields.epic) {
-      this.setInputNearText(modal, /choose epic/i, fields.epic);
+    if (hasOwn(fields, "epic")) {
+      this.setInputNearText(modal, /choose epic/i, (_c = fields.epic) != null ? _c : "");
     }
-    if ((_b = fields.projects) == null ? void 0 : _b[0]) {
-      this.setInputNearLabel(modal, /^projects?$/i, fields.projects[0]);
+    if (hasOwn(fields, "projects")) {
+      this.setInputNearLabel(modal, /^projects?$/i, (_e = (_d = fields.projects) == null ? void 0 : _d[0]) != null ? _e : "");
     }
   }
   runVault(args) {
@@ -2977,13 +3135,22 @@ var TaskNotesModalUiService = class {
     button.textContent = "Delete note";
     button.addClass("mod-warning", "omp-delete-task-button");
     button.addEventListener("click", async () => {
-      const confirmed = await this.app.fileManager.promptForDeletion(file);
-      if (!confirmed) {
+      if (button.disabled) {
         return;
       }
-      await this.app.fileManager.trashFile(file);
-      new import_obsidian8.Notice(`File deleted: ${file.path}`);
-      this.closeTaskModal(modal);
+      button.disabled = true;
+      button.addClass("is-deleting");
+      try {
+        const deleted = await this.deleteFile(file);
+        if (deleted) {
+          this.closeTaskModal(modal);
+        }
+      } finally {
+        if (modal.isConnected) {
+          button.disabled = false;
+          button.removeClass("is-deleting");
+        }
+      }
     });
     if ((archiveButton == null ? void 0 : archiveButton.parentElement) === buttonRow) {
       archiveButton.insertAdjacentElement("afterend", button);
@@ -3006,6 +3173,9 @@ var TaskNotesModalUiService = class {
     (_c = modal.closest(".modal-container")) == null ? void 0 : _c.remove();
   }
 };
+function hasOwn(value, key) {
+  return Object.prototype.hasOwnProperty.call(value, key);
+}
 var EntityNameModal = class extends import_obsidian8.Modal {
   constructor(app, titleText, onSubmit) {
     super(app);
@@ -3323,6 +3493,102 @@ function delay(milliseconds) {
   return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
 }
 
+// src/workspace-tab-rows.ts
+function classifyTabRows(tops, tolerance = 1) {
+  if (tops.length === 0) {
+    return { multiRow: false, bottomRow: [] };
+  }
+  const topRow = Math.min(...tops);
+  const bottomRow = Math.max(...tops);
+  const multiRow = bottomRow - topRow > tolerance;
+  return {
+    multiRow,
+    bottomRow: tops.map((top) => multiRow && Math.abs(top - bottomRow) <= tolerance)
+  };
+}
+
+// src/workspace-tab-row-service.ts
+var TAB_LIST_SELECTOR = ".workspace .mod-root .workspace-tabs:not(.mod-stacked) > .workspace-tab-header-container > .workspace-tab-header-container-inner";
+var TAB_SELECTOR = ":scope > .workspace-tab-header";
+var MULTI_ROW_CLASS = "omp-tabs-multi-row";
+var UPPER_ROW_CLASS = "omp-tab-upper-row";
+var BOTTOM_ROW_CLASS = "omp-tab-bottom-row";
+var WorkspaceTabRowService = class {
+  constructor(app) {
+    this.app = app;
+    this.mutationObserver = null;
+    this.resizeObserver = null;
+    this.animationFrame = null;
+  }
+  register(plugin) {
+    const start = () => {
+      if (this.mutationObserver) {
+        return;
+      }
+      this.mutationObserver = new MutationObserver(() => this.scheduleRefresh());
+      this.mutationObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+        characterData: true
+      });
+      this.resizeObserver = new ResizeObserver(() => this.scheduleRefresh());
+      this.scheduleRefresh();
+    };
+    this.app.workspace.onLayoutReady(start);
+    plugin.registerEvent(this.app.workspace.on("layout-change", () => this.scheduleRefresh()));
+    plugin.registerDomEvent(window, "resize", () => this.scheduleRefresh());
+    plugin.register(() => this.destroy());
+  }
+  scheduleRefresh() {
+    if (this.animationFrame !== null) {
+      return;
+    }
+    this.animationFrame = window.requestAnimationFrame(() => {
+      this.animationFrame = null;
+      this.refresh();
+    });
+  }
+  refresh() {
+    var _a, _b, _c;
+    const lists = Array.from(document.querySelectorAll(TAB_LIST_SELECTOR));
+    (_a = this.resizeObserver) == null ? void 0 : _a.disconnect();
+    for (const list of lists) {
+      (_b = this.resizeObserver) == null ? void 0 : _b.observe(list);
+      const tabs = Array.from(list.querySelectorAll(TAB_SELECTOR));
+      for (const tab of tabs) {
+        (_c = this.resizeObserver) == null ? void 0 : _c.observe(tab);
+      }
+      const classification = classifyTabRows(
+        tabs.map((tab) => tab.getBoundingClientRect().top)
+      );
+      list.classList.toggle(MULTI_ROW_CLASS, classification.multiRow);
+      tabs.forEach((tab, index) => {
+        var _a2;
+        const isBottomRow = (_a2 = classification.bottomRow[index]) != null ? _a2 : false;
+        tab.classList.toggle(BOTTOM_ROW_CLASS, isBottomRow);
+        tab.classList.toggle(UPPER_ROW_CLASS, classification.multiRow && !isBottomRow);
+      });
+    }
+  }
+  destroy() {
+    var _a, _b;
+    (_a = this.mutationObserver) == null ? void 0 : _a.disconnect();
+    this.mutationObserver = null;
+    (_b = this.resizeObserver) == null ? void 0 : _b.disconnect();
+    this.resizeObserver = null;
+    if (this.animationFrame !== null) {
+      window.cancelAnimationFrame(this.animationFrame);
+      this.animationFrame = null;
+    }
+    for (const list of Array.from(document.querySelectorAll(TAB_LIST_SELECTOR))) {
+      list.classList.remove(MULTI_ROW_CLASS);
+      for (const tab of Array.from(list.querySelectorAll(TAB_SELECTOR))) {
+        tab.classList.remove(UPPER_ROW_CLASS, BOTTOM_ROW_CLASS);
+      }
+    }
+  }
+};
+
 // src/main.ts
 var ContextNinePlugin = class extends import_obsidian10.Plugin {
   constructor() {
@@ -3335,9 +3601,14 @@ var ContextNinePlugin = class extends import_obsidian10.Plugin {
     this.router = new AttachmentRouter(this.app, () => this.settings);
     this.fileActions = new FileActionService(this.app);
     this.taskContextRouter = new TaskContextRouterService(this.app, () => this.settings);
-    this.taskNotesUx = new TaskNotesUxService(this.app);
-    this.taskNotesModalUi = new TaskNotesModalUiService(this.app, () => this.settings);
+    this.taskNotesUx = new TaskNotesUxService(this.app, () => this.settings);
+    this.taskNotesModalUi = new TaskNotesModalUiService(
+      this.app,
+      () => this.settings,
+      (file) => this.fileActions.deleteFile(file)
+    );
     this.periodicTabRollover = new PeriodicTabRolloverService(this.app);
+    this.workspaceTabRows = new WorkspaceTabRowService(this.app);
     this.taskCapture = new TaskCaptureService(
       this.app,
       this.router,
@@ -3505,6 +3776,7 @@ var ContextNinePlugin = class extends import_obsidian10.Plugin {
     }
     this.taskNotesUx.register(this);
     this.periodicTabRollover.register(this);
+    this.workspaceTabRows.register(this);
     this.addSettingTab(new ContextNineSettingTab(this));
   }
   onunload() {

@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "pack_version": 2,
+  "components": [
+    {"id":"meetings.one-on-ones","group":"meetings","label":"One-on-one meetings","folder":"meetings/1-on-1s","source":"_obsidian/templates/business-toolkit/meetings/one-on-one-template.md","destination":"_obsidian/templates/business-toolkit/meetings/one-on-one-template.md"},
+    {"id":"meetings.general","group":"meetings","label":"General meetings","folder":"meetings/general-meetings","source":"_obsidian/templates/business-toolkit/meetings/general-meeting-template.md","destination":"_obsidian/templates/business-toolkit/meetings/general-meeting-template.md"},
+    {"id":"meetings.customer-calls","group":"meetings","label":"Customer calls","folder":"meetings/customer-calls","source":"_obsidian/templates/business-toolkit/meetings/customer-call-template.md","destination":"_obsidian/templates/business-toolkit/meetings/customer-call-template.md"},
+    {"id":"meetings.founder-notes","group":"meetings","label":"Founder notes","folder":"meetings/founder-notes","source":"_obsidian/templates/business-toolkit/meetings/founder-note-template.md","destination":"_obsidian/templates/business-toolkit/meetings/founder-note-template.md"},
+    {"id":"product.specs","group":"product","label":"Product specifications","folder":"product/specs","source":"_obsidian/templates/business-toolkit/product/feature-spec-template.md","destination":"_obsidian/templates/business-toolkit/product/feature-spec-template.md"},
+    {"id":"product.decisions","group":"product","label":"Product decisions","folder":"product/decisions","source":"_obsidian/templates/business-toolkit/product/product-decision-template.md","destination":"_obsidian/templates/business-toolkit/product/product-decision-template.md"},
+    {"id":"product.experiments","group":"product","label":"Product experiments","folder":"product/experiments","source":"_obsidian/templates/business-toolkit/product/experiment-template.md","destination":"_obsidian/templates/business-toolkit/product/experiment-template.md"},
+    {"id":"product.user-signals","group":"product","label":"User signals","folder":"product/user-signals","source":"_obsidian/templates/business-toolkit/product/user-signal-template.md","destination":"_obsidian/templates/business-toolkit/product/user-signal-template.md"},
+    {"id":"gtm.campaigns","group":"gtm","label":"GTM campaigns","folder":"gtm/campaigns","source":"_obsidian/templates/business-toolkit/gtm/campaign-template.md","destination":"_obsidian/templates/business-toolkit/gtm/campaign-template.md"},
+    {"id":"gtm.offers","group":"gtm","label":"Offers","folder":"gtm/offers","source":"_obsidian/templates/business-toolkit/gtm/offer-template.md","destination":"_obsidian/templates/business-toolkit/gtm/offer-template.md"},
+    {"id":"gtm.icp","group":"gtm","label":"Ideal customer profiles","folder":"gtm/icp","source":"_obsidian/templates/business-toolkit/gtm/icp-template.md","destination":"_obsidian/templates/business-toolkit/gtm/icp-template.md"},
+    {"id":"gtm.competitors","group":"gtm","label":"Competitor research","folder":"gtm/competitors","source":"_obsidian/templates/business-toolkit/gtm/competitor-template.md","destination":"_obsidian/templates/business-toolkit/gtm/competitor-template.md"},
+    {"id":"operations.metrics","group":"operations","label":"Metrics snapshots","folder":"ops/metrics-snapshots","source":"_obsidian/templates/business-toolkit/operations/metrics-snapshot-template.md","destination":"_obsidian/templates/business-toolkit/operations/metrics-snapshot-template.md"},
+    {"id":"operations.sops","group":"operations","label":"Standard operating procedures","folder":"ops/sops","source":"_obsidian/templates/business-toolkit/operations/sop-template.md","destination":"_obsidian/templates/business-toolkit/operations/sop-template.md"},
+    {"id":"operations.status-reports","group":"operations","label":"Status reports","folder":"ops/status-reports","source":"_obsidian/templates/business-toolkit/operations/status-report-template.md","destination":"_obsidian/templates/business-toolkit/operations/status-report-template.md"},
+    {"id":"skills.local","group":"skills","label":"Local business skills","folder":"skills","source":"_obsidian/templates/business-toolkit/skills/local-skill-template.md","destination":"_obsidian/templates/business-toolkit/skills/local-skill-template.md"}
+  ]
+}

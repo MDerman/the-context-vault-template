@@ -1,6 +1,6 @@
 ---
 type: content
-entity: _system
+entity: <% tp.file.folder(true).split('/')[0] %>
 content_kind: social-post
 platform:
 publication:
@@ -13,11 +13,11 @@ conversion_goal:
 tags:
   - content
 generated: true
-generated_at: 2026-06-06T14:27:02
+generated_at: 2026-07-28T19:33:07
 managed_by: "vault.bootstrap"
 ---
 
-# dashboard-action-links
+# <% tp.file.title %>
 
 ## AI Summary
 

@@ -80,6 +80,20 @@ On this day last year <% tp.date.now("YYYY-MM-DD", "P-1Y") %>
         self.assertIn("On this day last year 2025-06-01", rendered)
         self.assertNotIn("<%", rendered)
 
+    def test_renders_following_year_from_yearly_period_id(self) -> None:
+        template = "[[personal/_obsidian/periodic/yearly/<% tp.date.now(\"YYYY\", \"P1Y\", tp.file.title, \"YYYY\") %>|Next year]]"
+
+        with tempfile.TemporaryDirectory() as tmp:
+            rendered = periodic.render_template(
+                Path(tmp),
+                template,
+                "personal",
+                "2026",
+                dt.date(2026, 7, 31),
+            )
+
+        self.assertEqual(rendered, "[[personal/_obsidian/periodic/yearly/2027|Next year]]")
+
     def test_generates_source_and_system_monthly_notes_without_agent_copy(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

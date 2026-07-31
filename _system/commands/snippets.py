@@ -489,7 +489,7 @@ def main(argv: list[str] | None = None) -> int:
     args.repository_registry = (
         args.repository_registry.expanduser().resolve()
         if args.repository_registry
-        else args.root / CONFIG_DIR / "code-folder-and-computer-topology/private/repositories.json"
+        else args.root / CONFIG_DIR / "infra-code-folder-and-computer-topology/private/repositories.json"
     )
     try:
         targets = load_targets(args.config_dir)

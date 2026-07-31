@@ -6,52 +6,25 @@ type: "learning-note"
 
 # remap tilde ` key
 
-currently mac has login script at this location…
+The current managed workflow is documented in [[_system/tools/mac-automation/README|macOS Automation]] and configured by [[_system/config/mac-startup/README|macOS Startup Configuration]]. Use:
 
-[https://apple.stackexchange.com/questions/281405/easy-way-to-remap-non-modifier-keys-on-mac](https://apple.stackexchange.com/questions/281405/easy-way-to-remap-non-modifier-keys-on-mac)
-
-emapping `§ to `` and `± to ~` worked on my Mac (running OS X 10.15.6) without additional software with the following code snippet.
-
-```
-hidutil property --set '{"UserKeyMapping":
-    [
-     {"HIDKeyboardModifierMappingSrc":0x700000064,
-      "HIDKeyboardModifierMappingDst":0x700000035}]
-}'
-
+```bash
+vault mac-startup status
+vault mac-startup install
 ```
 
-To do this automatically at startup - Create a new file named `~/Library/LaunchAgents/com.user.loginscript.plist`
+The enabled `mattbook` action maps HID usage `0x35` to `0x64`:
 
-with the following content:
-
-```
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.user.loginscript</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>/usr/bin/hidutil</string>
-        <string>property</string>
-        <string>--set</string>
-        <string>{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000064, "HIDKeyboardModifierMappingDst":0x700000035}]}</string>
-    </array>
-    <key>RunAtLoad</key>
-    <true/>
-</dict>
-</plist>
-
+```bash
+hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000035,"HIDKeyboardModifierMappingDst":0x700000064}]}'
 ```
 
-The file needs to be registered with a one-off execution of the following command:
+`hidutil` mappings are lost on restart, so the vault-managed per-user LaunchAgent reapplies this mapping after login. The copied runtime remains available even if the iCloud vault is not ready yet.
 
-first: unload if already registered 
+The former `com.user.loginscript` mapping used the inverse direction. `vault mac-startup install` replaces configured legacy jobs recoverably by unloading their jobs and moving their plist files into:
 
-launchctl bootout gui/501 ~/Library/LaunchAgents/com.user.loginscript.plist
-
+```text
+~/Library/Application Support/obsidian-context-vault/mac-startup/legacy-launchagents/
 ```
-launchctl load ~/Library/LaunchAgents/com.user.loginscript.plist
-```
+
+Reference: [Apple Technical Note TN2450](https://developer.apple.com/library/archive/technotes/tn2450/_index.html).

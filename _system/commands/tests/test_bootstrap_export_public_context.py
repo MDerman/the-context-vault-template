@@ -73,7 +73,7 @@ class PublicContextExportTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "source"
             export_root = Path(tmp) / "public"
-            skill = root / "_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology"
+            skill = root / "_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology"
             skill.mkdir(parents=True)
             (skill / "SKILL.md").write_text(
                 "generic primary and worker topology skill\n",
@@ -85,13 +85,13 @@ class PublicContextExportTests(unittest.TestCase):
             (references / "private-fleet.md").write_text("private address and alias\n")
             catalog = root / "_system/agents/skills"
             catalog.mkdir(parents=True)
-            (catalog / "code-folder-and-computer-topology").symlink_to(
-                "../auto-skills/_infrastructure/code-folder-and-computer-topology"
+            (catalog / "infra-code-folder-and-computer-topology").symlink_to(
+                "../auto-skills/_infrastructure/infra-code-folder-and-computer-topology"
             )
             (root / "AGENTS.md").write_text(
                 "# Agent Instructions\n\n"
                 "- Public rule.\n"
-                "- [[_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/SKILL|Code Folder and Computer Topology skill]].\n",
+                "- [[_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/SKILL|Code Folder and Computer Topology skill]].\n",
                 encoding="utf-8",
             )
             config = {
@@ -99,7 +99,7 @@ class PublicContextExportTests(unittest.TestCase):
                 "copy_obsidian": "exact",
                 "root_files": ["AGENTS.md"],
                 "generated_exclude_globs": [
-                    "_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/references/**",
+                    "_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/references/**",
                 ],
                 "text_rewrite_suffixes": [".md"],
             }
@@ -113,11 +113,11 @@ class PublicContextExportTests(unittest.TestCase):
             exporter.copy_root_files()
             exporter.copy_system_or_shared("_system")
 
-            exported_skill = export_root / "_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology"
+            exported_skill = export_root / "_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology"
             self.assertTrue((exported_skill / "SKILL.md").exists())
             self.assertTrue((exported_skill / "README-primary-worker-vault-sync.md").exists())
             self.assertFalse((exported_skill / "references/private-fleet.md").exists())
-            self.assertTrue((export_root / "_system/agents/skills/code-folder-and-computer-topology").is_symlink())
+            self.assertTrue((export_root / "_system/agents/skills/infra-code-folder-and-computer-topology").is_symlink())
             exported_agents = (export_root / "AGENTS.md").read_text(encoding="utf-8")
             self.assertIn("Public rule", exported_agents)
             self.assertIn("Code Folder and Computer Topology", exported_agents)
@@ -153,7 +153,7 @@ class PublicContextExportTests(unittest.TestCase):
             root = Path(tmp) / "source"
             export_root = Path(tmp) / "public"
             config_dir = root / "_system/config"
-            projection = root / "_system/agents/skills/agent-canvas"
+            projection = root / "_system/agents/skills/creative-agent-canvas"
             checkout = Path(tmp) / "checkout/skills/agent-canvas"
             config_dir.mkdir(parents=True)
             checkout.mkdir(parents=True)
@@ -161,39 +161,39 @@ class PublicContextExportTests(unittest.TestCase):
             projection.parent.mkdir(parents=True)
             projection.symlink_to(checkout)
             (config_dir / "deps.json").write_text(
-                '{"repos":[{"projections":[{"target":"_system/agents/skills/agent-canvas","managed":true}]}]}\n'
+                '{"repos":[{"projections":[{"target":"_system/agents/skills/creative-agent-canvas","managed":true}]}]}\n'
             )
             config = {"export_root": str(export_root), "copy_obsidian": "exact"}
             exporter = BootstrapExporter(root=root, config=config, export_root=export_root, force=True, dry_run=False)
             exporter.copy_system_or_shared("_system")
-            self.assertFalse((export_root / "_system/agents/skills/agent-canvas").exists())
+            self.assertFalse((export_root / "_system/agents/skills/creative-agent-canvas").exists())
 
     def test_auto_source_and_catalog_link_export_but_dependency_auto_link_does_not(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "source"
             export_root = Path(tmp) / "public"
-            local = root / "_system/agents/auto-skills/_code/local-skill"
-            external = root / "_system/agents/auto-skills/_creative/external-skill"
+            local = root / "_system/agents/auto-skills/_code/code-local-skill"
+            external = root / "_system/agents/auto-skills/_creative/creative-external-skill"
             catalog = root / "_system/agents/skills"
             local.mkdir(parents=True)
             external.mkdir(parents=True)
             catalog.mkdir(parents=True)
             (local / "SKILL.md").write_text("local\n")
             (external / "SKILL.md").write_text("external\n")
-            (catalog / "local-skill").symlink_to("../auto-skills/_code/local-skill")
-            (catalog / "external-skill").symlink_to("../auto-skills/_creative/external-skill")
+            (catalog / "code-local-skill").symlink_to("../auto-skills/_code/code-local-skill")
+            (catalog / "creative-external-skill").symlink_to("../auto-skills/_creative/creative-external-skill")
             deps_config = root / "_system/config/deps.json"
             deps_config.parent.mkdir(parents=True)
             deps_config.write_text(
-                '{"repos":[{"projections":[{"target":"_system/agents/auto-skills/_creative/external-skill","managed":true}]}]}\n'
+                '{"repos":[{"projections":[{"target":"_system/agents/auto-skills/_creative/creative-external-skill","managed":true}]}]}\n'
             )
             config = {"export_root": str(export_root), "copy_obsidian": "exact"}
             exporter = BootstrapExporter(root=root, config=config, export_root=export_root, force=True, dry_run=False)
             exporter.copy_system_or_shared("_system")
-            self.assertTrue((export_root / "_system/agents/auto-skills/_code/local-skill/SKILL.md").exists())
-            self.assertTrue((export_root / "_system/agents/skills/local-skill").is_symlink())
-            self.assertFalse((export_root / "_system/agents/auto-skills/_creative/external-skill").exists())
-            self.assertFalse((export_root / "_system/agents/skills/external-skill").exists())
+            self.assertTrue((export_root / "_system/agents/auto-skills/_code/code-local-skill/SKILL.md").exists())
+            self.assertTrue((export_root / "_system/agents/skills/code-local-skill").is_symlink())
+            self.assertFalse((export_root / "_system/agents/auto-skills/_creative/creative-external-skill").exists())
+            self.assertFalse((export_root / "_system/agents/skills/creative-external-skill").exists())
 
     def test_patched_simple_folder_note_bundle_is_exported(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

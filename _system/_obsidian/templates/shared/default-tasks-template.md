@@ -1,18 +1,18 @@
 ---
-title: dashboard-action-links
+title: <% tp.file.title %>
 status: backlog
 priority: normal
-scheduled: 2026-07-20
+scheduled: <% tp.date.now("YYYY-MM-DD") %>
 contexts:
-  - _system
+  - <% tp.file.folder(true).split('/')[0] %>
 tags:
   - task
 generated: true
-generated_at: 2026-06-06T14:27:02
+generated_at: 2026-07-28T19:33:07
 managed_by: "vault.bootstrap"
 ---
 
-# dashboard-action-links
+# <% tp.file.title %>
 
 ## Outcome
 

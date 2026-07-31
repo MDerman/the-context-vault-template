@@ -35,6 +35,7 @@ class Projection:
     target: str
     type: str
     managed: bool
+    title_override: str | None = None
 
 
 @dataclass(frozen=True)
@@ -113,6 +114,11 @@ def load_config(root: Path) -> list[Repo]:
                 target=str(projection["target"]),
                 type=str(projection.get("type") or "symlink"),
                 managed=bool(projection.get("managed", True)),
+                title_override=(
+                    str(projection["title_override"])
+                    if projection.get("title_override") is not None
+                    else None
+                ),
             )
             for projection in item.get("projections", [])
         ]
@@ -398,13 +404,96 @@ def backup_path(root: Path, path: Path, label: str, apply: bool) -> Path:
 
 
 def marker_payload(projection: Projection) -> dict[str, Any]:
-    return {
+    payload: dict[str, Any] = {
         "managed_by": "vault deps",
         "repo_id": projection.repo_id,
         "source": projection.source,
         "target": projection.target,
         "type": projection.type,
     }
+    if projection.title_override is not None:
+        payload["title_override"] = projection.title_override
+    return payload
+
+
+SKILL_NAME_RE = re.compile(r"(?m)^name:\s*['\"]?([^'\"\n]+)['\"]?\s*$")
+TITLE_ACRONYMS = {
+    "ai",
+    "api",
+    "cro",
+    "gsc",
+    "gtm",
+    "gws",
+    "seo",
+    "sms",
+    "sxo",
+    "ui",
+    "ux",
+}
+
+
+def display_title_segment(value: str) -> str:
+    return " ".join(
+        word.upper() if word in TITLE_ACRONYMS else word.capitalize()
+        for word in value.removeprefix("_").split("-")
+    )
+
+
+def projection_title_prefix(target: str) -> str | None:
+    parts = Path(target).parts
+    source_index = next(
+        (index for index, part in enumerate(parts) if part in {"auto-skills", "manual-skills"}),
+        None,
+    )
+    if source_index is None:
+        return None
+    groups = [part for part in parts[source_index + 1 : -1] if part.startswith("_")]
+    root_pack_groups = {"_claude-seo", "_corey-marketing-skills"}
+    if len(groups) < 2 and (len(groups) != 1 or groups[0] not in root_pack_groups):
+        return None
+    return " · ".join(display_title_segment(group) for group in groups)
+
+
+def projected_skill_text(source: Path, projection: Projection) -> str:
+    text = source.read_text(encoding="utf-8")
+    if not text.startswith("---\n"):
+        raise SystemExit(f"Skill frontmatter missing: {source}")
+    frontmatter_end = text.find("\n---", 4)
+    if frontmatter_end == -1:
+        raise SystemExit(f"Skill frontmatter malformed: {source}")
+    frontmatter = text[4:frontmatter_end]
+    if not SKILL_NAME_RE.search(frontmatter):
+        raise SystemExit(f"Skill frontmatter name missing: {source}")
+    local_name = Path(projection.target).name
+    frontmatter = SKILL_NAME_RE.sub(f"name: {local_name}", frontmatter, count=1)
+    body = text[frontmatter_end + len("\n---") :]
+    title_prefix = projection_title_prefix(projection.target)
+    if projection.title_override is not None or title_prefix is not None:
+        lines = body.splitlines(keepends=True)
+        fence: str | None = None
+        replaced = False
+        for index, line in enumerate(lines):
+            stripped = line.lstrip()
+            if stripped.startswith("```") or stripped.startswith("~~~"):
+                marker = stripped[:3]
+                fence = None if fence == marker else marker if fence is None else fence
+                continue
+            if fence is None and line.startswith("# "):
+                ending = "\n" if line.endswith("\n") else ""
+                title = projection.title_override
+                if title is None:
+                    title = f"{title_prefix} · {line[2:].strip()}"
+                lines[index] = f"# {title}{ending}"
+                replaced = True
+                break
+        if replaced:
+            body = "".join(lines)
+        else:
+            title = projection.title_override or (
+                f"{title_prefix} · {display_title_segment(local_name)}"
+            )
+            body = f"\n\n# {title}\n\n" + body.lstrip("\r\n")
+    return "---\n" + frontmatter + "\n---" + body
 
 
 def skill_metadata(source: Path, allowed: bool) -> str:
@@ -462,7 +551,12 @@ def skill_projection_current(
         if source_child.is_dir():
             if not target_child.is_dir() or not directories_equal(source_child, target_child):
                 return False
-        elif not target_child.is_file() or target_child.read_bytes() != source_child.read_bytes():
+        elif not target_child.is_file():
+            return False
+        elif name == "SKILL.md":
+            if target_child.read_text(encoding="utf-8") != projected_skill_text(source_child, projection):
+                return False
+        elif target_child.read_bytes() != source_child.read_bytes():
             return False
     return True
 
@@ -514,6 +608,8 @@ def create_skill_projection(
     for child in expected_projection_children(source, skip_agents=True):
         if child.is_dir():
             shutil.copytree(child, target / child.name)
+        elif child.name == "SKILL.md":
+            (target / child.name).write_text(projected_skill_text(child, projection), encoding="utf-8")
         else:
             shutil.copy2(child, target / child.name)
 

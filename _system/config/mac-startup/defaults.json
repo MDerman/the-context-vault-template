@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "enabled": false,
+  "label": "com.obsidian-context-vault.mac-startup",
+  "actions": {
+    "remap-tilde-key": false
+  },
+  "legacy_launch_agents": []
+}

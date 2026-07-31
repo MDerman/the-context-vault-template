@@ -11,6 +11,11 @@ from pathlib import Path
 
 from script_utils import context_folder_note_path, resolve_vault_root
 from context_folder_rename import rename_context_folder, validate_slug
+from business_toolkit import (
+    install_scaffold as install_business_scaffold,
+    parse_csv as parse_toolkit_csv,
+    sync_context as sync_business_toolkit,
+)
 
 
 VALID_STATUSES = {"active", "archived", "none"}
@@ -217,6 +222,8 @@ def parse_create_args(argv: list[str], *, register_mode: bool) -> argparse.Names
     parser.add_argument("--default-entity", dest="default_entity", help=argparse.SUPPRESS)
     parser.add_argument("--content-enabled", action="store_true", default=None if register_mode else False, help="Create/register this context folder with content_enabled: true.")
     parser.add_argument("--context-type", choices=sorted(VALID_CONTEXT_TYPES), default=None if register_mode else "business", help="Context folder type. Register mode defaults to folder-note context_type, then business.")
+    parser.add_argument("--no-business-toolkit", action="store_true", help="Do not install the standard toolkit when creating or registering a business context folder.")
+    parser.add_argument("--toolkit-exclude", default=None, help="Comma-separated business-toolkit groups or component ids to omit.")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
     if register_mode:
@@ -248,6 +255,11 @@ def create_main(argv: list[str], *, register_mode: bool = False) -> None:
         print(f"[dry-run] write {entity_note}")
     else:
         write_context_folder_note(entity_note, status, context_type, content_enabled)
+
+    # Creation receives the complete ordinary business tree. Registration and
+    # later toolkit syncs are deliberately conservative and never backfill it.
+    if context_type == "business" and not register_mode:
+        install_business_scaffold(root, name, apply=not args.dry_run)
 
     bootstrap_module = load_bootstrap(root)
     entities = discover_entities(root)
@@ -302,6 +314,15 @@ def create_main(argv: list[str], *, register_mode: bool = False) -> None:
         run_date=bootstrap_module.parse_date(None),
     )
     bootstrap.run()
+    if context_type == "business" and not args.no_business_toolkit:
+        sync_business_toolkit(
+            root,
+            name,
+            excludes=parse_toolkit_csv(args.toolkit_exclude),
+            apply=not args.dry_run,
+            use_saved=args.toolkit_exclude is None,
+            validate_business=not args.dry_run,
+        )
 
 
 def default_context_folder(root: Path, entities: list[str]) -> str:

@@ -68,7 +68,7 @@ After completing a user-requested unit of work:
 - `_system/bootstrap/README.md`: bootstrap/export/upgrade mechanics.
 - `_system/config/README.md`: config ownership and skill-config separation.
 - `_system/config/env/README.md`: env workflow; placeholders only in tracked files.
-- Machine registry, primary/worker coordination, connection routing, and code topology: [[_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/SKILL|Code Folder and Computer Topology skill]].
+- Machine registry, primary/worker coordination, connection routing, and code topology: [[_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/SKILL|Code Folder and Computer Topology skill]].
 
 ## Agent Routing Index
 

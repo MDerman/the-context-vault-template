@@ -3,7 +3,7 @@ name: video-qa-review
 description: Verifies rendered videos for publication readiness using frame extraction, visual checks, timing review, audio sanity checks, source/fact audit, and defect reporting. Use when reviewing, validating, QAing, or approving generated videos.
 ---
 
-# Video QA Review
+# Video · QA Review
 
 ## Workflow
 
@@ -16,9 +16,9 @@ description: Verifies rendered videos for publication readiness using frame extr
 ## Frame Extraction
 
 ```bash
-bash .agents/skills/ai-video-production/scripts/extract-qa-frames.sh renders/final.mp4 qa/frames
+bash .agents/skills/video-ai-production/scripts/extract-qa-frames.sh renders/final.mp4 qa/frames
 ```
 
 ## Checklist
 
-Use `../ai-video-production/references/qa-checklist.md` as default rubric. Add project-specific checks from brief before approval.
+Use `../video-ai-production/references/qa-checklist.md` as default rubric. Add project-specific checks from brief before approval.

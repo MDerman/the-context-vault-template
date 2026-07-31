@@ -20,6 +20,22 @@ NAME_RE = re.compile(r"(?m)^name:\s*['\"]?([^'\"\n]+)['\"]?\s*$")
 POLICY_RE = re.compile(r"(?m)^(\s*allow_implicit_invocation:\s*)(?:true|false)(\s*(?:#.*)?)$")
 MARKER = ".vault-deps-projection.json"
 IGNORED = {".DS_Store", ".gitkeep", "README.md"}
+CATEGORY_TOKENS = {
+    "_agents": ("agents", "Agents"),
+    "_claude-seo": ("claude-seo", "Claude SEO"),
+    "_code": ("code", "Code"),
+    "_corey-marketing-skills": ("corey", "Corey Marketing Skills"),
+    "_creative": ("creative", "Creative"),
+    "_documents": ("documents", "Documents"),
+    "_finance": ("finance", "Finance"),
+    "_gws": ("gws", "GWS"),
+    "_infrastructure": ("infra", "Infra"),
+    "_marketing": ("marketing", "Marketing"),
+    "_spreadsheets": ("spreadsheets", "Spreadsheets"),
+    "_vault": ("vault", "Vault"),
+    "_video": ("video", "Video"),
+}
+PACKS_WITH_ROOT_SKILL = {"_claude-seo"}
 
 
 class SyncError(RuntimeError):
@@ -62,12 +78,51 @@ def read_skill_name(skill_file: Path) -> str:
     return match.group(1).strip()
 
 
+def read_first_h1(skill_file: Path) -> str | None:
+    text = skill_file.read_text(encoding="utf-8")
+    in_fence = False
+    fence = ""
+    for line in text.splitlines():
+        stripped = line.lstrip()
+        if stripped.startswith(("```", "~~~")):
+            marker = stripped[:3]
+            if not in_fence:
+                in_fence = True
+                fence = marker
+            elif marker == fence:
+                in_fence = False
+            continue
+        if not in_fence and line.startswith("# "):
+            return line
+    return None
+
+
+def validate_big_endian_skill(skill_file: Path, name: str, category: str | None) -> None:
+    if category is None:
+        raise SyncError(f"Shared skill must live below a canonical category folder: {skill_file.parent}")
+    if category not in CATEGORY_TOKENS:
+        allowed = ", ".join(CATEGORY_TOKENS)
+        raise SyncError(f"Unknown skill category {category!r}: {skill_file.parent}; expected one of {allowed}")
+    token, title = CATEGORY_TOKENS[category]
+    has_valid_prefix = name.startswith(f"{token}-") or (
+        category in PACKS_WITH_ROOT_SKILL and name == token
+    )
+    if not has_valid_prefix:
+        raise SyncError(
+            f"Skill name must use category prefix {token!r} for {category}: {skill_file.parent} declares {name!r}"
+        )
+    h1 = read_first_h1(skill_file)
+    expected = f"# {title} · "
+    if h1 is None or not h1.startswith(expected) or not h1.removeprefix(expected).strip():
+        raise SyncError(f"Skill H1 must use big-endian hierarchy starting {expected!r}: {skill_file}")
+
+
 def scan_source(root: Path, source: str) -> list[Skill]:
     if not root.is_dir():
         raise SyncError(f"Skill source missing: {root}")
     found: list[Skill] = []
 
-    def walk(folder: Path) -> None:
+    def walk(folder: Path, category: str | None = None) -> None:
         for child in sorted(folder.iterdir(), key=lambda item: item.name):
             if child.name in IGNORED:
                 continue
@@ -82,13 +137,15 @@ def scan_source(root: Path, source: str) -> list[Skill]:
                     raise SyncError(
                         f"Skill folder/name mismatch: {child} declares {declared!r}; rename folder or frontmatter"
                     )
+                if source in {"auto", "manual"}:
+                    validate_big_endian_skill(skill_file, declared, category)
                 found.append(Skill(child.name, child, source))
                 continue
             if not GROUP_RE.fullmatch(child.name):
                 raise SyncError(
                     f"Organizer folder must use _lower-kebab and skill folders need SKILL.md: {child}"
                 )
-            walk(child)
+            walk(child, category or child.name)
 
     walk(root)
     return found
@@ -180,6 +237,8 @@ def dependency_changes(root: Path, skills: list[Skill]) -> list[Change]:
             "target": expected_target,
             "type": expected_type,
         }
+        if projection.get("title_override") is not None:
+            expected_marker["title_override"] = projection["title_override"]
         marker_rendered = json.dumps(expected_marker, indent=2) + "\n"
         if marker_path.read_text(encoding="utf-8") != marker_rendered:
             changes.append(Change(f"Update dependency marker: {marker_path}", "write", marker_path, marker_rendered))
@@ -197,8 +256,11 @@ def resolved_target(link: Path) -> Path:
 def owned_global_link(link: Path, catalog: Path) -> bool:
     if not link.is_symlink():
         return False
-    target = resolved_target(link)
-    return target == catalog or is_relative_to(target, catalog)
+    raw = Path(os.readlink(link))
+    target = raw if raw.is_absolute() else link.parent / raw
+    target = Path(os.path.abspath(target))
+    normalized_catalog = Path(os.path.abspath(catalog))
+    return target == normalized_catalog or is_relative_to(target, normalized_catalog)
 
 
 def plan_catalog(catalog: Path, skills: list[Skill]) -> list[Change]:

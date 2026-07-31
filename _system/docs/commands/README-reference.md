@@ -11,6 +11,7 @@ This is the fuller script reference. Use `_system/docs/commands/README.md` for n
 - `vault.py`: terminal dispatcher installed as `vault` in `~/.local/bin`; forwards subcommands to the scripts below.
 - `refresh.py`: sole full-refresh entrypoint; runs required Git preflight before generated changes, optional Brain Dump ingestion, best-effort Google Calendar mirror, content schedules, source/vault periodic notes, `Dashboard.md`, and best-effort Git maintenance.
 - `refresh_schedule.py`: registers, unregisters, reports, and runs the macOS LaunchAgent daily refresh wrapper.
+- `mac_startup.py`: validates private per-machine startup opt-ins, installs or removes the copied macOS `RunAtLoad` runtime, archives configured legacy LaunchAgents, reports state, and runs enabled actions. Use `vault mac-startup`.
 - `dashboard.py`: private renderer used by `refresh.py`; it is not a `vault` command.
 - `content.py`: generates fixed 4-week content schedule notes from enabled `_obsidian/content/content-cadence.json` files and maintains the `Current content schedule:` line in each enabled context folder note. Supports `schedule_format`, `publication_order`, and `--force` to regenerate existing managed schedule notes.
 - `periodic.py`: creates current context source periodic notes, carries daily checklists forward, and generates vault Sync Embed rollups under `_system/_obsidian/periodic/`.
@@ -19,6 +20,7 @@ This is the fuller script reference. Use `_system/docs/commands/README.md` for n
 - `epic.py`: creates, renames, deletes, lists, and syncs context folder epics; keeps task links, per-epic TaskNotes Kanban Bases, and managed vault task kanban epic views in sync.
 - `gcal.py`: uses GWS credentials for Google Calendar API calls, reads vault calendar behavior from `_system/config/calendar.json`, creates required vault calendars, lists calendar events for agents, creates specific default-calendar events, creates `Time Blocks`, and two-way mirrors TaskNotes `scheduled`/`due` dates to `Scheduled Tasks`/`Due Tasks`.
 - `folder.py`: creates/registers a context folder from the scaffold template.
+- `business_toolkit.py`: installs and synchronizes the canonical business-context folder and template pack, preserves per-context selections, and reconciles Templater folder rules.
 - `attachments.py`: dry-runs, applies, and verifies attachment cleanup so note attachments live under each owning top-level root folder's `_obsidian/attachments` directory. Reports and quarantined import leftovers are written outside the vault under `~/Downloads/vault-generated/`.
 - `backup.py`: backs up root `.obsidian` under `_system/state/backups/obsidian-profile/`.
 - `bootstrap_export.py`: exports the public bootstrap vault from current vault state using `_system/bootstrap/bootstrap-export.json`.

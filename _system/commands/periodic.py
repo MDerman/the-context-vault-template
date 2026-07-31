@@ -307,6 +307,8 @@ def parse_offset(value: str | None) -> tuple[int, int, int]:
 
 def parse_moment_date(value: str, fmt: str) -> dt.date:
     value = value.strip()
+    if fmt == "YYYY":
+        return dt.date(int(value), 1, 1)
     if fmt == "YYYY-MM-DD":
         return dt.date.fromisoformat(value)
     if fmt == "GGGG-[W]WW":

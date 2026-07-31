@@ -370,7 +370,7 @@ Source notes: [[_system/README|System Operating Layer]] and [[_system/docs/obsid
 
 ## cmux (Ghostty-Powered Terminal)
 
-Terminology, shortcuts, nested tmux, persistent sessions, btop, and Starship prompt setup: [[_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/references/cmux-tmux-terminal-workspaces|cmux and tmux Terminal Workspaces]].
+Terminology, shortcuts, nested tmux, persistent sessions, btop, and Starship prompt setup: [[_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/references/cmux-tmux-terminal-workspaces|cmux and tmux Terminal Workspaces]].
 
 cmux is native macOS app using Ghostty's terminal-rendering library and Ghostty configuration. It is not tab running inside standalone Ghostty app.
 
@@ -403,7 +403,7 @@ tmux uses prefix `Ctrl+b`: press `Ctrl+b`, release, then press command key.
 
 ## btop
 
-`btop` is managed on Mattbook, Wootbook, and Mac mini by [[_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/references/cmux-tmux-terminal-workspaces|cmux and tmux Terminal Workspaces]]. Press `F1`, `?`, or `h` for full help.
+`btop` is managed on Mattbook, Wootbook, and Mac mini by [[_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/references/cmux-tmux-terminal-workspaces|cmux and tmux Terminal Workspaces]]. Press `F1`, `?`, or `h` for full help.
 
 | Shortcut | Action | Notes |
 | --- | --- | --- |

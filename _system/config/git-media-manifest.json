@@ -2,10 +2,16 @@
   "schema_version": 1,
   "pointer_version": "https://git-lfs.github.com/spec/v1",
   "summary": {
-    "files": 5799,
-    "logical_bytes": 2381114039
+    "files": 5782,
+    "logical_bytes": 2262419535
   },
   "files": [
+    {
+      "path": "_library/_dev/AI/_resources/The New SDLC - Google.pdf",
+      "sha256": "b9a23474e6b1f0f8e5c14e6377d3578c281e727d904ae364e1e8c713518fa9de",
+      "size": 9813730,
+      "pointer_blob": "54a02368c6cde8bb5cc0718175733220616e6cca"
+    },
     {
       "path": "_library/_dev/personal_knowledge_management/_resources/context_vault_starter_material/Files/Drafts.gif",
       "sha256": "12710d6a36125071f73a447737509e6d7a2c90792e026fccc7cbf10f92a28548",
@@ -25111,6 +25117,48 @@
       "pointer_blob": "420bb9ba37f34af41596e2da293eeb5f9f0d204d"
     },
     {
+      "path": "_library/_obsidian/attachments/business_toolkit/affiliates/influencer_partnership_playbook/Influencer Partnership Playbook 1.png",
+      "sha256": "b2fe33c6fcbcae98d4e8077ee70326b9000baddaf386477d2bbc45419fc9a661",
+      "size": 362238,
+      "pointer_blob": "b1210f5f14c4864c12c0ad639509cacd088e8732"
+    },
+    {
+      "path": "_library/_obsidian/attachments/business_toolkit/affiliates/influencer_partnership_playbook/Influencer Partnership Playbook 2.png",
+      "sha256": "00c919f8f5ff408e9aa1c92520f5bcd864696ec59b422c246ebe144accda8702",
+      "size": 95383,
+      "pointer_blob": "b087d71797a39aac65bc51b3fab5eba0ca833efe"
+    },
+    {
+      "path": "_library/_obsidian/attachments/business_toolkit/agencies/founderos/FounderOS 1.png",
+      "sha256": "7d7e49343ac980f8b45c54dca2d384ce988a4729f3ce9f92b4de6a8bacc746ea",
+      "size": 69287,
+      "pointer_blob": "151b9b81c19c6dc375b6019d87ea6b375f44919c"
+    },
+    {
+      "path": "_library/_obsidian/attachments/business_toolkit/agencies/founderos/FounderOS 2.png",
+      "sha256": "3eaac90482b8622cdd8d1e1e664995edeb222c5ecba48338b05cdb7961a20d9f",
+      "size": 36515,
+      "pointer_blob": "fb0666b27b6b87667d30545566e6817ab19a4e4e"
+    },
+    {
+      "path": "_library/_obsidian/attachments/business_toolkit/agencies/founderos/FounderOS 3.png",
+      "sha256": "d97509f10a972dfdfa5d456ad14d8896c944fc1fb9802be88c95439330ef4f3e",
+      "size": 162390,
+      "pointer_blob": "388c091ab59d0a51e6bcb06bc02a559f36e22730"
+    },
+    {
+      "path": "_library/_obsidian/attachments/business_toolkit/agencies/founderos/FounderOS 4.png",
+      "sha256": "dd515805e54bfdd786e6696f32ac7ffe4286eec9bf10a48ebf4a85945150e37e",
+      "size": 273867,
+      "pointer_blob": "f81bb48fc46be73d5ed7d43c17e4a7710991a226"
+    },
+    {
+      "path": "_library/_obsidian/attachments/business_toolkit/agencies/founderos/FounderOS 5.png",
+      "sha256": "d073daf2dc2741d2b8185e281b05052be3d0bb8764c695854eb818e7edfa9ae2",
+      "size": 665292,
+      "pointer_blob": "0f35b06780d4de19449204c01e4667966a3a2082"
+    },
+    {
       "path": "_library/_obsidian/attachments/communities_pr_affiliates_etc/affiliate_programmes_and_notes/high_impact_writing_affiliate_team/Untitled.png",
       "sha256": "d3ad277e8bc86d4eaee2f908fb4e3db0e8e2effc135009d970e88667b919a579",
       "size": 807502,
@@ -27187,6 +27235,30 @@
       "pointer_blob": "cce369a7f22fd55d4c9538c34304168b82504db3"
     },
     {
+      "path": "_library/agencies/_resources/AI Automation Agency Roadmap - Liam Ottley.docx",
+      "sha256": "4ee753bd87b3d908b53d35f1c7645cbef95e7d83d2d2e961ab61662a2d543351",
+      "size": 9175529,
+      "pointer_blob": "86c3a7ff6fa22ca085651060e269d792041f8b1f"
+    },
+    {
+      "path": "_library/agencies/_resources/project_delivery/Pacer x Harpoon Dev Project Brief.pdf",
+      "sha256": "36467d01cadca7d3e597bbc9eca012df340f0f1ca866d965b349a4fda5401626",
+      "size": 4603973,
+      "pointer_blob": "90a0223768aa31fd0a8a3d0ab6abfd589ece8d55"
+    },
+    {
+      "path": "_library/agencies/_templates/proposals/Software Development Proposal Template.docx",
+      "sha256": "9ef577c9e671b7e4d12f016a492384bc480097e9f26429c19c0beeca4a1ee80b",
+      "size": 124565,
+      "pointer_blob": "70137b427e9ccd713e275e13b68a0d6ebb3e1a5a"
+    },
+    {
+      "path": "_library/agencies/_templates/proposals/Website Development Proposal Template.docx",
+      "sha256": "afd766cc3a86369b7b75f539dcb7b15bcd9e75df6ecae025e302fcaaf5b98bdc",
+      "size": 3379722,
+      "pointer_blob": "ba6bb946357f197effb22df2a5ed8563acb39167"
+    },
+    {
       "path": "_library/agents/n8n/_templates/Conducting AI Template 1.0 to Import.jam",
       "sha256": "7f4802ac978716c3bc720ed4bd1b90460622f1327f0ec84c24058653dbc20261",
       "size": 3196910,
@@ -27203,6 +27275,24 @@
       "sha256": "0d8798355676615f173dec89d7e0db15fe8bd77ab551aa8118f1c564972a53ad",
       "size": 6230,
       "pointer_blob": "f808bc252e1dca1d8c291e59a2a30980821f3116"
+    },
+    {
+      "path": "_library/business_finance/_resources/Open Letter International Structure Workshop 2024.pptx",
+      "sha256": "af4747db302732747abbf5d43825532d0ec5f7a532b893f5c87df492e94931ac",
+      "size": 2423550,
+      "pointer_blob": "6a2486073892886d726f4d58c9c726260cf146b5"
+    },
+    {
+      "path": "_library/business_finance/_templates/invoices/Invoice Design Sample - Duotone.pdf",
+      "sha256": "8b5e9924ecad1d32228e150e36e1ae1b7ec1be9970f08eeafb8460ecb7bd9ab5",
+      "size": 59569,
+      "pointer_blob": "65d761891cd983f5f3ec0fb7a696e90b90d34230"
+    },
+    {
+      "path": "_library/business_finance/_templates/invoices/Invoice Design Sample - Modern.pdf",
+      "sha256": "91d302fcb2798f4aba97591c212de0e69eb26628f066ecf8cd2372f3e14b6e57",
+      "size": 138777,
+      "pointer_blob": "eb82fd8c57c90f1ae318b03453f2acbf22fbdfc8"
     },
     {
       "path": "_library/business_strategy/_resources/Your_ACQ_100MScalingRoadmap-Stage01_.pdf",
@@ -27263,6 +27353,36 @@
       "sha256": "a1aaeff070b8fb862dce94b7acb7611176c2f5b683ab0ee659b9df8c6a66a41a",
       "size": 9090454,
       "pointer_blob": "ca4e1f1ce7631ee5bb510951e4697cf8f713d787"
+    },
+    {
+      "path": "_library/operations_and_systems/_templates/commercial_agreements/IT Consulting Agreement.docx",
+      "sha256": "a2035ea11b19326b98af258f479199c094bf2a80fb0edcfc6fa734167ff0dd02",
+      "size": 29572,
+      "pointer_blob": "c0c7a8fdf615dc5a581eac199d4dea7274d9bf6e"
+    },
+    {
+      "path": "_library/operations_and_systems/_templates/commercial_agreements/Software Development Agreement.docx",
+      "sha256": "15e8cd2f95bc3089d788e2e5875b24e5ace83584c208fecb2a7d96e0113b30ee",
+      "size": 32925,
+      "pointer_blob": "53674ec6782c3f2f1b18057b50db482eb16711b7"
+    },
+    {
+      "path": "_library/operations_and_systems/_templates/commercial_agreements/Software License Agreement Template.docx",
+      "sha256": "0ba7d6e3ebde7ffc40d99f3959b3eb3ca19561f339177170ea5a1b4a8d97b001",
+      "size": 33172,
+      "pointer_blob": "d87393eea7d216d9799e2d2688e90cc8acac0914"
+    },
+    {
+      "path": "_library/operations_and_systems/_templates/commercial_agreements/Software as a Service Agreement Template.docx",
+      "sha256": "38e533b6db303810b589b87e67f036922954f39b2eb1c0f43cfee9180bd5e8a9",
+      "size": 1130530,
+      "pointer_blob": "1300973ff09f70307744750af8916628b389a375"
+    },
+    {
+      "path": "_library/operations_and_systems/_templates/commercial_agreements/Terms of Service Agreement Template.docx",
+      "sha256": "269b0e2512a47c5ceccab5f4ac1a44abfb61aa45d1d41ca292734aa2ce5736e1",
+      "size": 353857,
+      "pointer_blob": "e4454cc0edc8a81925b13b2787455a4abfb8a391"
     },
     {
       "path": "_library/pricing_and_offers/_resources/$100M Pricing Playbook.pdf",
@@ -27389,6 +27509,12 @@
       "sha256": "ccef77ab78be1b4b3081a0360b781ee7c13e75eeff888dcb8aefc5fb44c80dae",
       "size": 164927,
       "pointer_blob": "a98f6d20b5b3d5b955ddd604e23b5af1a5b5f729"
+    },
+    {
+      "path": "_system/_obsidian/attachments/_inbox/Pasted image 20260728210443.png",
+      "sha256": "c5ac6ea8b877d83a644f52be4e8fdd5ccb250ca049b3212b953532b781b9a176",
+      "size": 474515,
+      "pointer_blob": "266e0feea11a67ed64f29329f5f2e39bc213b803"
     },
     {
       "path": "_system/_obsidian/attachments/featured-podcast.png",
@@ -27727,6 +27853,24 @@
       "pointer_blob": "2a75b824b7b02142a0353d46e7ce9d4bf6e6b472"
     },
     {
+      "path": "_system/config/marketing-google-marketing-measurement/private/evidence/2026-07-28/analytics-accounts.png",
+      "sha256": "828dc4844875eab0c5edfbbd6adb1ab06c0ab223651164c5d09ccb7065250c6b",
+      "size": 19638,
+      "pointer_blob": "afc41dce905efccb9676eae3834ca337854e422c"
+    },
+    {
+      "path": "_system/config/marketing-google-marketing-measurement/private/evidence/2026-07-28/gtm-accounts.png",
+      "sha256": "877bcf6a933dbc9d303a2f12a709c47c4c57ee1a6a7fc6b0c0c310ecc973a35d",
+      "size": 21344,
+      "pointer_blob": "3eec8a428af8070a0aa444871f4da7ccb6e928cd"
+    },
+    {
+      "path": "_system/config/marketing-google-marketing-measurement/private/evidence/2026-07-28/gtm-containers.png",
+      "sha256": "9378222eb9748ab1566208ad7daee9bd1b734fc6a279801dd1b2d7017e08dfee",
+      "size": 71447,
+      "pointer_blob": "c43fe8cf4e77f3ba1b3648936c4e8851306d348b"
+    },
+    {
       "path": "_system/docs/assets/how-to-install-context-vault.mp4",
       "sha256": "ff8b671e5a6d267984aca2aa01603a4187bea295bd9d2455c0ec64b9fc7f8c07",
       "size": 70934768,
@@ -27877,274 +28021,28 @@
       "pointer_blob": "db8deaf24a918e579541cbbbe7bb559ac4fec2e5"
     },
     {
-      "path": "claudeche/logo/icons8-heart-50.png",
-      "sha256": "2f1fe0c71e7a60729d0446d504e870092a2eabf6e7d4078b269fb7ee62064ccf",
-      "size": 618,
-      "pointer_blob": "77757d28063bce50db9c159d866d888b24b53a91"
+      "path": "ctx9/_obsidian/attachments/Pasted image 20260526205606.png",
+      "sha256": "df92d91faae002582512ee575452b1d757b3876438ee6909bc662eefba32b0d1",
+      "size": 501678,
+      "pointer_blob": "5625e4b2c7a311b6ff674c1f740b12d3575bf40d"
     },
     {
-      "path": "claudeche/logo/lllwsitelogo.png",
-      "sha256": "6f9fc9b81ae8269d484fdb50240b3bd99ff0cbe74542c02689986bdfa1fa0d91",
-      "size": 10606,
-      "pointer_blob": "25a3709d9711030b0828d5b2928d2d2bedf5f8f3"
+      "path": "ctx9/_obsidian/attachments/Pasted image 20260526205620.png",
+      "sha256": "41f656f446e5e8af0a202d42367d6577eb7255b16c8a3c47f6d8ab4064cb59b0",
+      "size": 600381,
+      "pointer_blob": "79f46b1cc7da4ef5af5461c924849eefb8742fad"
     },
     {
-      "path": "claudeche/logo/lllwsitelogo.psd",
-      "sha256": "f2ef6f65aeb2d92740464e9123cec69764c607f11fb9cabcca131451e28f92fd",
-      "size": 129502,
-      "pointer_blob": "3f93fa5ced2b3e3bbcc5b091b44c77cf4c9cc798"
+      "path": "ctx9/_obsidian/attachments/Pasted image 20260526205641.png",
+      "sha256": "430f8cde331e6749aae90e6c4cfc89e4eaccd56a408ba3ca5148d1584989f25c",
+      "size": 626146,
+      "pointer_blob": "b82ea654cf956f098a35b5f5921468a351c02651"
     },
     {
-      "path": "claudeche/logo/spades-xxl.png",
-      "sha256": "27c48b87c8635d4f36e761210d72b3b2b3f82ef1ca84143eb53da146d0decaf1",
-      "size": 3425,
-      "pointer_blob": "2132372a6905d5fc775512597e869a0fb63f57fe"
-    },
-    {
-      "path": "claudeche/media/6.jpeg",
-      "sha256": "7473872161172b4ef8e4131627bdc1ce7fac18f0995cfce9caa28c819c348e87",
-      "size": 2413298,
-      "pointer_blob": "e39a3cda86e295ff434df575c596e76c0bc4b000"
-    },
-    {
-      "path": "claudeche/media/6.jpg",
-      "sha256": "b161594ab330d80711663ce3dafa679a1915d7f2f891134d02b6877d0306d181",
-      "size": 464103,
-      "pointer_blob": "5dbc3902bc2134789e166f096e32e41ccd913829"
-    },
-    {
-      "path": "claudeche/media/[image] - 3002089.jpeg",
-      "sha256": "6f4e9e6b26a8e7cc1912d89b16d1708aa5e22cb944dbde5c6d1cba50e8d563a0",
-      "size": 74487,
-      "pointer_blob": "76283a3283ee81d219446173f5b346025696cd1c"
-    },
-    {
-      "path": "claudeche/media/[image] - 8143631.jpeg",
-      "sha256": "a843a8500d4b23da789542cde3953811923ef1919ae4cf7e8204b21edad00f22",
-      "size": 122799,
-      "pointer_blob": "a8c8198c188d575b0ebfd21194655ae7de08344f"
-    },
-    {
-      "path": "claudeche/media/[image] - 8762804.jpeg",
-      "sha256": "671a652dea67bfb10ced0181139c63da38adb5cbcfc05cd4ab9c10b552baa1d9",
-      "size": 84326,
-      "pointer_blob": "082742bfe975828f4a65a30713e0dd55933a223b"
-    },
-    {
-      "path": "claudeche/media/rcikybtennis.jpeg",
-      "sha256": "c2d12fe1416fa9d928e2b97b83b159ed41a1c3b617926b78deb86cf49aa4d492",
-      "size": 153687,
-      "pointer_blob": "210daffab31c640cb5e5a52a9c6eddb028535fda"
-    },
-    {
-      "path": "claudeche/media/rickyspace.jpeg",
-      "sha256": "9ae18d4263f916c3b60c3ffe507c2a7a548296ea80b59081409853c1b94738a5",
-      "size": 89187,
-      "pointer_blob": "f4da09bb4c8f1e88039df70cdf728e39927fb5db"
-    },
-    {
-      "path": "claudeche/media/ron.jpg",
-      "sha256": "ed5727969fa30a324e563eb7f82fe7b77b5ec5338e696c1d84b0bca5dd1e4d33",
-      "size": 206222,
-      "pointer_blob": "f92b7cd3184f8f0fe827a43fb21ad7a5fc4146e5"
-    },
-    {
-      "path": "claudeche/media/roncwithrickyb-topaz-new.png",
-      "sha256": "f2aa6a7fd372b5cdeab8d376ba1c598775bad7bdb68596bace56455794799e3f",
-      "size": 637691,
-      "pointer_blob": "831ddb4aa94458f16db89b0bace2e1923d388e54"
-    },
-    {
-      "path": "claudeche/media/roncwithrickyb-topaz.jpeg",
-      "sha256": "1bfaa8868c981e1e7a5d8fef31dd246460ac8d251c167a64f645b6e2c48b5d1d",
-      "size": 854938,
-      "pointer_blob": "1deba35a954c7b1d36de5cee0e373c699e07f03c"
-    },
-    {
-      "path": "claudeche/media/roncwithrickyb-topaz.png",
-      "sha256": "edbd1d4acecfd301f9fd03813407edec6da3a51d14c11606736c9d3425cdf3a0",
-      "size": 1400333,
-      "pointer_blob": "0edb50a914fe754787ef7b7dae469a021d08d002"
-    },
-    {
-      "path": "claudeche/media/roncwithrickyb-topaz.psd",
-      "sha256": "559405c41958d22a484d0f49f18aadb35532625ec52b17220bd099285abd16a5",
-      "size": 52151898,
-      "pointer_blob": "c7493b8bc05c9802f9c3ca47bdaeecdfc5071934"
-    },
-    {
-      "path": "claudeche/media/roncwithrickyb.jpeg",
-      "sha256": "51a13def64af1d60971fbe9f059a92153724d739eb13d59fd9208057170e2950",
-      "size": 32797,
-      "pointer_blob": "c22231de7247604ff63722055a99d2b6276dbabf"
-    },
-    {
-      "path": "claudeche/media/roncwithrickybedit.jpg",
-      "sha256": "be094e7fff4157375911bd1dedb84b8c0170d24a9e155f7fe4beb133b060d0da",
-      "size": 283459,
-      "pointer_blob": "40d9adf5d1430a92bade6e94300aa7c324c302ce"
-    },
-    {
-      "path": "claudeche/themeforest-8892H0N1-nikaia-minimal-creative-wordpress-theme/elementor-3.5.0-beta5.zip",
-      "sha256": "0033bf88c359ead80c746b2bd2f3f375fb748d82704a6a68a58b34e291a9072f",
-      "size": 7488044,
-      "pointer_blob": "deed96df3a36b003c92b5c9d79d1b6f60234933b"
-    },
-    {
-      "path": "claudeche/themeforest-8892H0N1-nikaia-minimal-creative-wordpress-theme/elementor.3.27.5.zip",
-      "sha256": "a5482a5a192901c35804728bd0f714ee4d209791730b7b3355cad38638a45171",
-      "size": 13084825,
-      "pointer_blob": "dc85246a2fc60ef5c89c3053ac971761b8b691ce"
-    },
-    {
-      "path": "claudeche/themeforest-8892H0N1-nikaia-minimal-creative-wordpress-theme/neuron-builder.zip",
-      "sha256": "ff5204cc66d660c541548e6ad02579dab3053fd0da080d97731cd1aae1a52852",
-      "size": 1236867,
-      "pointer_blob": "df3d008a7059b11947c70bb84b7a443733b64b5b"
-    },
-    {
-      "path": "claudeche/themeforest-8892H0N1-nikaia-minimal-creative-wordpress-theme/nikaia-child.zip",
-      "sha256": "4724377aab456709d485a0ebf6595703d206950a850e5bcc943a2c5b24e7546b",
-      "size": 144033,
-      "pointer_blob": "bf3a1bfefb3bc6e134356f4b9fcb74f43b5c444c"
-    },
-    {
-      "path": "claudeche/themeforest-8892H0N1-nikaia-minimal-creative-wordpress-theme/nikaia-child/screenshot.jpg",
-      "sha256": "a9582aa617ed20e993f967138aa7480d7e937b9ee5251e2a4cc883fdaa5bf53f",
-      "size": 167575,
-      "pointer_blob": "d96554e9810b31ee8cf22420484ddec23a5179b0"
-    },
-    {
-      "path": "claudeche/themeforest-8892H0N1-nikaia-minimal-creative-wordpress-theme/nikaia.zip",
-      "sha256": "515fe764c74481316038d92688c26fa11a7b1d356d49266cdf30e74cadd916ca",
-      "size": 434389,
-      "pointer_blob": "28d47b1db47aa7f0a1c3a279fc4efe3c72d78516"
-    },
-    {
-      "path": "claudeche/themeforest-8892H0N1-nikaia-minimal-creative-wordpress-theme/nikaia/assets/images/placeholder.png",
-      "sha256": "0edf09c8ec829429a9ee9072d0a639a7fa860da2b63e0f8e45791a0ddbda8868",
-      "size": 34220,
-      "pointer_blob": "a51ab3f8ff301f4d037ed2c7b4dcfcf81907d143"
-    },
-    {
-      "path": "claudeche/themeforest-8892H0N1-nikaia-minimal-creative-wordpress-theme/nikaia/screenshot.jpg",
-      "sha256": "e124233eb7b7cbf899a57fd8c0b4b6dec70891363e46ca777c24b63150bab6db",
-      "size": 138223,
-      "pointer_blob": "e2c71a103eea5c5519471c48f7624893f7bba6f6"
-    },
-    {
-      "path": "claudeche/themeforest-8892H0N1-nikaia-minimal-creative-wordpress-theme/plugins/neuron-builder.zip",
-      "sha256": "7c02e3f64d5084a3c90b4f7814c01626d5bca0ec3c7e08bec0b2b72f3d1d6cef",
-      "size": 964880,
-      "pointer_blob": "a3cd1224a7bfb457881ebde0feb684112c1ba239"
-    },
-    {
-      "path": "claudeche/themeforest-8892H0N1-nikaia-minimal-creative-wordpress-theme/plugins/neuron-builder/assets/fonts/n-icons/neuron-icons.eot",
-      "sha256": "89321f3b7d202a6b956891221735803b89c63b33b916c9c665c562efa576abf9",
-      "size": 23056,
-      "pointer_blob": "72abb65e46016ce69619319aa58b7daf279c79cf"
-    },
-    {
-      "path": "claudeche/themeforest-8892H0N1-nikaia-minimal-creative-wordpress-theme/plugins/neuron-builder/assets/fonts/star.eot",
-      "sha256": "3cf20b4f76287580fcab444ddf67b5ecb4cc4140c35706db15af34ba983bacff",
-      "size": 1676,
-      "pointer_blob": "e23859cbe1565efc08ddc75eca65cfb0e34e6caf"
-    },
-    {
-      "path": "claudeche/themeforest-8892H0N1-nikaia-minimal-creative-wordpress-theme/plugins/neuron-builder/assets/fonts/woo-stars.eot",
-      "sha256": "cf8fe2bec2763b4fbddda15c0579eb5b80a6c47100bc64ad94ad6fc11555611e",
-      "size": 5756,
-      "pointer_blob": "fec7901f4857598efc90f851daa029ffd1bc865e"
-    },
-    {
-      "path": "claudeche/themeforest-8892H0N1-nikaia-minimal-creative-wordpress-theme/plugins/neuron-builder/assets/images/placeholder.png",
-      "sha256": "0edf09c8ec829429a9ee9072d0a639a7fa860da2b63e0f8e45791a0ddbda8868",
-      "size": 34220,
-      "pointer_blob": "a51ab3f8ff301f4d037ed2c7b4dcfcf81907d143"
-    },
-    {
-      "path": "ctx9/DevLeads/Michael Oosthuizen - Aug 2025 - Rev A.pdf",
-      "sha256": "2c1bea0b5dba4c4bf5d56434bd048f0e807d3a81e8cb26854b46e276d2237925",
-      "size": 84161,
-      "pointer_blob": "67b1f3e9cbf311a4754d752cb55d4ad07e7a00ac"
-    },
-    {
-      "path": "ctx9/DevLeads/Pacer x Harpoon Dev Project Brief.pdf",
-      "sha256": "36467d01cadca7d3e597bbc9eca012df340f0f1ca866d965b349a4fda5401626",
-      "size": 4603973,
-      "pointer_blob": "90a0223768aa31fd0a8a3d0ab6abfd589ece8d55"
-    },
-    {
-      "path": "ctx9/DevLeads/Robbie Perrott CV 2025.pdf",
-      "sha256": "9373e27645bfa06228eb37094d558a00a06c2dc79d2d7dda8a1bd46c31555f46",
-      "size": 96296,
-      "pointer_blob": "9be463a2e683889923a3d8a5f03d8707a4117996"
-    },
-    {
-      "path": "ctx9/Invoice Samples/wepik-duotone-simple-graphic-design-invoice-20240929095328e1Tc.pdf",
-      "sha256": "8b5e9924ecad1d32228e150e36e1ae1b7ec1be9970f08eeafb8460ecb7bd9ab5",
-      "size": 59569,
-      "pointer_blob": "65d761891cd983f5f3ec0fb7a696e90b90d34230"
-    },
-    {
-      "path": "ctx9/Invoice Samples/wepik-modern-simple-small-business-invoice-copy-20240929095307dVF5.pdf",
-      "sha256": "91d302fcb2798f4aba97591c212de0e69eb26628f066ecf8cd2372f3e14b6e57",
-      "size": 138777,
-      "pointer_blob": "eb82fd8c57c90f1ae318b03453f2acbf22fbdfc8"
-    },
-    {
-      "path": "ctx9/Job Descriptions/Descent_AI_Consultant_Job_Spec_3.pdf",
-      "sha256": "b5a28e11e5e6c46fe86e1e38c1adb84fe80a92b2ce4da9a228b7a44bcedaa6a0",
-      "size": 46098,
-      "pointer_blob": "04450c04c3c022a003e89d88d0de032fd4bbb1bf"
-    },
-    {
-      "path": "ctx9/Job Descriptions/Descent_Forward_Deployed_AI_Engineer_Job_Spec_1.pdf",
-      "sha256": "4e8f178ed0c9010cdf05c04c4608197665de3ae9acd0cea4778ede81d3525713",
-      "size": 49533,
-      "pointer_blob": "22bb345ae428eda84f84c9a27f8902459f19090e"
-    },
-    {
-      "path": "ctx9/Job Descriptions/Verascient - Forward deployed AI engineer - Job description.pdf",
-      "sha256": "d94026726bea1ea8e717ecfb491f3e45e8a29e13ce297e68f2cdd5375036bd60",
-      "size": 100729,
-      "pointer_blob": "8401e8f43404e2d1feecb21d95bf4bdc0c240569"
-    },
-    {
-      "path": "ctx9/Software Related Documents and Agreements/IT Consulting Agreement.docx",
-      "sha256": "a2035ea11b19326b98af258f479199c094bf2a80fb0edcfc6fa734167ff0dd02",
-      "size": 29572,
-      "pointer_blob": "c0c7a8fdf615dc5a581eac199d4dea7274d9bf6e"
-    },
-    {
-      "path": "ctx9/Software Related Documents and Agreements/Software Development Agreement.docx",
-      "sha256": "15e8cd2f95bc3089d788e2e5875b24e5ace83584c208fecb2a7d96e0113b30ee",
-      "size": 32925,
-      "pointer_blob": "53674ec6782c3f2f1b18057b50db482eb16711b7"
-    },
-    {
-      "path": "ctx9/Software Related Documents and Agreements/Software Development Proposal Template.docx",
-      "sha256": "9ef577c9e671b7e4d12f016a492384bc480097e9f26429c19c0beeca4a1ee80b",
-      "size": 124565,
-      "pointer_blob": "70137b427e9ccd713e275e13b68a0d6ebb3e1a5a"
-    },
-    {
-      "path": "ctx9/Software Related Documents and Agreements/Software License Agreement Template.docx",
-      "sha256": "0ba7d6e3ebde7ffc40d99f3959b3eb3ca19561f339177170ea5a1b4a8d97b001",
-      "size": 33172,
-      "pointer_blob": "d87393eea7d216d9799e2d2688e90cc8acac0914"
-    },
-    {
-      "path": "ctx9/Software Related Documents and Agreements/Software as a Service Agreement Template.docx",
-      "sha256": "38e533b6db303810b589b87e67f036922954f39b2eb1c0f43cfee9180bd5e8a9",
-      "size": 1130530,
-      "pointer_blob": "1300973ff09f70307744750af8916628b389a375"
-    },
-    {
-      "path": "ctx9/Software Related Documents and Agreements/Website Development Proposal Template.docx",
-      "sha256": "afd766cc3a86369b7b75f539dcb7b15bcd9e75df6ecae025e302fcaaf5b98bdc",
-      "size": 3379722,
-      "pointer_blob": "ba6bb946357f197effb22df2a5ed8563acb39167"
+      "path": "ctx9/_obsidian/attachments/Pasted image 20260526205648.png",
+      "sha256": "406d446665abee2d5390903dcfdffe883b552601409a88fcc5ef8b2c3007b6c1",
+      "size": 333619,
+      "pointer_blob": "fd645528a1533b8fd0f01576c29d46a17c7e221a"
     },
     {
       "path": "ctx9/_obsidian/attachments/ctx9-pasted-image-20260624160553.png",
@@ -28153,178 +28051,34 @@
       "pointer_blob": "1ebada4622296a6b0bfa7c88eb2dc99c7185f682"
     },
     {
-      "path": "ctx9/agreement samples/Terms of Service Agreement Template.docx",
-      "sha256": "269b0e2512a47c5ceccab5f4ac1a44abfb61aa45d1d41ca292734aa2ce5736e1",
-      "size": 353857,
-      "pointer_blob": "e4454cc0edc8a81925b13b2787455a4abfb8a391"
+      "path": "ctx9/talent/candidates/Michael Oosthuizen - CV - 2025-08.pdf",
+      "sha256": "2c1bea0b5dba4c4bf5d56434bd048f0e807d3a81e8cb26854b46e276d2237925",
+      "size": 84161,
+      "pointer_blob": "67b1f3e9cbf311a4754d752cb55d4ad07e7a00ac"
     },
     {
-      "path": "ctx9/notes/Month AI Automation Agency Roadmap - By Liam Ottley.docx",
-      "sha256": "4ee753bd87b3d908b53d35f1c7645cbef95e7d83d2d2e961ab61662a2d543351",
-      "size": 9175529,
-      "pointer_blob": "86c3a7ff6fa22ca085651060e269d792041f8b1f"
+      "path": "ctx9/talent/candidates/Robbie Perrott - CV - 2025.pdf",
+      "sha256": "9373e27645bfa06228eb37094d558a00a06c2dc79d2d7dda8a1bd46c31555f46",
+      "size": 96296,
+      "pointer_blob": "9be463a2e683889923a3d8a5f03d8707a4117996"
     },
     {
-      "path": "ctx9/notes/the-new-sdlc-google.pdf",
-      "sha256": "b9a23474e6b1f0f8e5c14e6377d3578c281e727d904ae364e1e8c713518fa9de",
-      "size": 9813730,
-      "pointer_blob": "54a02368c6cde8bb5cc0718175733220616e6cca"
+      "path": "ctx9/talent/role-references/Descent - AI Consultant.pdf",
+      "sha256": "b5a28e11e5e6c46fe86e1e38c1adb84fe80a92b2ce4da9a228b7a44bcedaa6a0",
+      "size": 46098,
+      "pointer_blob": "04450c04c3c022a003e89d88d0de032fd4bbb1bf"
     },
     {
-      "path": "dev/Finance/Other Invoices/07-10-invoice-1-mj-derman.pdf",
-      "sha256": "2e2bc1de33803b2de9a80786854766d7a3a08da0f2ef96caf6e19184a3a92cc2",
-      "size": 24478,
-      "pointer_blob": "db573f16cc44f5503afacf31dbf40e84fbc93cac"
+      "path": "ctx9/talent/role-references/Descent - Forward Deployed AI Engineer.pdf",
+      "sha256": "4e8f178ed0c9010cdf05c04c4608197665de3ae9acd0cea4778ede81d3525713",
+      "size": 49533,
+      "pointer_blob": "22bb345ae428eda84f84c9a27f8902459f19090e"
     },
     {
-      "path": "dev/Finance/Other Invoices/Invoice_02.pdf",
-      "sha256": "3e7162a62122ff5995585c8599aa3e10a98709430ed57be6133fb88235b4520a",
-      "size": 94998,
-      "pointer_blob": "59b5d3d90189bbf8fdfb15f22747fa014a2ef9aa"
-    },
-    {
-      "path": "dev/Finance/Soulv Invoices/2025 tax year/Invoice - 0001.pdf",
-      "sha256": "d451d3fa2a51b0f49ffe6b908194020eb9d60f5e357372503bbd959401a666b7",
-      "size": 64285,
-      "pointer_blob": "5ca59007992b12c8f141acf6e8682e140acf2d36"
-    },
-    {
-      "path": "dev/Finance/Soulv Invoices/2025 tax year/Invoice - 0002.pdf",
-      "sha256": "9e825df7efb745dc08edb3a464d49c440378b41d2e5f37147e8766451209ebb0",
-      "size": 61255,
-      "pointer_blob": "393452a6591be82bd3df3fca3d0a60efa9c42065"
-    },
-    {
-      "path": "dev/Finance/Soulv Invoices/2025 tax year/Invoice - 0003.pdf",
-      "sha256": "a4280ef09debb347c61bcde28846974b1c84ba2cf15c15e4f14f1abff845f006",
-      "size": 46339,
-      "pointer_blob": "23ca95aded7d8636745883020dac204c553298e9"
-    },
-    {
-      "path": "dev/Finance/Soulv Invoices/2026 tax year/Invoice - 0004.pdf",
-      "sha256": "f7b965faa7782a5421074e4a1aaca4dfd793d2bd970ca8d39a187f01461ae47a",
-      "size": 48623,
-      "pointer_blob": "0234689bf324cd34db092308e0143b6bd53cc593"
-    },
-    {
-      "path": "dev/Finance/Soulv Invoices/2026 tax year/Invoice - 0005.pdf",
-      "sha256": "cc9e5a38f5e6ae28a3d2053ac5a5b44172dc0b00cee4e46b62dabc9211dcf553",
-      "size": 45883,
-      "pointer_blob": "d7ac457baf84ddfb5eb6f7f16ec55598443e8ab5"
-    },
-    {
-      "path": "dev/Finance/Soulv Invoices/2026 tax year/Invoice - 0006.pdf",
-      "sha256": "87db0c4a88b323fc1798704feae5633e39e48c749707d7e0b75d1180476e502c",
-      "size": 49593,
-      "pointer_blob": "b9c4ba66804ec308c85c7a9563409dead47738c3"
-    },
-    {
-      "path": "dev/Finance/Soulv Invoices/2026 tax year/Invoice - 0007.pdf",
-      "sha256": "c8bbcb7d351d98d58a0d30b005f7e1a76d8f8965c843285c2a1de8a084081025",
-      "size": 52271,
-      "pointer_blob": "2508cdebf496243c65ae668bef1dcdbe38df5fca"
-    },
-    {
-      "path": "dev/Finance/Soulv Invoices/2026 tax year/Invoice - 0008.pdf",
-      "sha256": "5e2468eb6cb8379be2bbaae57800d0b03cce912c122c6698f1fdb727efe24e6d",
-      "size": 50062,
-      "pointer_blob": "2e251c33fd46771a9a575aca6ce20ec8cb710f37"
-    },
-    {
-      "path": "dev/Finance/Soulv Invoices/2026 tax year/Invoice - 0009.pdf",
-      "sha256": "f2f781bc865d51457c7c46450d4b178f6de146cec71206dbe00ace6638458c92",
-      "size": 49550,
-      "pointer_blob": "9e792adab5858875fe464708ac87a7aebe3288bf"
-    },
-    {
-      "path": "dev/Finance/Soulv Invoices/2026 tax year/Invoice - 0010.pdf",
-      "sha256": "063a65b8fa41aafca5711be07dcca15d18923683b02d521a5d39d47524abe90b",
-      "size": 49811,
-      "pointer_blob": "8a1a2623043fa414e3fbdc06f3add3d4d749f8f6"
-    },
-    {
-      "path": "dev/Finance/Soulv Invoices/2026 tax year/Invoice - 0011.pdf",
-      "sha256": "2fe558aaf16f3b3b6c271de7c84d8f3263f4cb7ccba13a8ced33144ad8bb9feb",
-      "size": 49676,
-      "pointer_blob": "bc947be6316ad3f7981351c2ad40cf25f5a1bc8b"
-    },
-    {
-      "path": "dev/Finance/Soulv Invoices/2026 tax year/Invoice - 0012.pdf",
-      "sha256": "ea21eb586c3fee0b8577ff47a83b6c1f7359d5a29fe9b3529c427eac66a4cec4",
-      "size": 49673,
-      "pointer_blob": "4a56686e608c09ec292c1fe30cba0fe27d0f7f9e"
-    },
-    {
-      "path": "dev/Finance/Soulv Invoices/2026 tax year/invoice-13.pdf",
-      "sha256": "fb37ae0488739fef6c5d4b7b23a10951441ced1dac0b3483994b5ab652bd8bfd",
-      "size": 24320,
-      "pointer_blob": "ea1abf0240b752c66c74ed9f3f9026452c9cac01"
-    },
-    {
-      "path": "dev/Finance/Soulv Invoices/2027 tax year/invoice-2026_03_Soulv_Invoice_14.pdf",
-      "sha256": "e7ca7627acf5806c5095f48bfd3f6d35d8a91ed96a08156f23aad054cf36316a",
-      "size": 24334,
-      "pointer_blob": "374c55a94d60916b28ff26cb67e3bd07b11d4bea"
-    },
-    {
-      "path": "dev/Finance/Soulv Invoices/2027 tax year/invoice-2026_04_Soulv_Invoice_15.pdf",
-      "sha256": "b3675ef798fbbec9bda3120b3c908b295072a9a7644b7977df53ef2d9de36ef5",
-      "size": 24337,
-      "pointer_blob": "5a2b95cfacc94a5e7f070bb8e6465521d63b5fe9"
-    },
-    {
-      "path": "dev/Finance/Soulv Invoices/2027 tax year/invoice-2026_06_Soulv_Invoice_16.pdf",
-      "sha256": "6a5d4300830ac7103a08aead424b42d30860895a12e44f319f2581797dacd5fb",
-      "size": 24342,
-      "pointer_blob": "44435e6f47445792b80c45efcefe2f2b8ae2447d"
-    },
-    {
-      "path": "dev/_obsidian/attachments/Pasted image 20260526205606.png",
-      "sha256": "df92d91faae002582512ee575452b1d757b3876438ee6909bc662eefba32b0d1",
-      "size": 501678,
-      "pointer_blob": "5625e4b2c7a311b6ff674c1f740b12d3575bf40d"
-    },
-    {
-      "path": "dev/_obsidian/attachments/Pasted image 20260526205620.png",
-      "sha256": "41f656f446e5e8af0a202d42367d6577eb7255b16c8a3c47f6d8ab4064cb59b0",
-      "size": 600381,
-      "pointer_blob": "79f46b1cc7da4ef5af5461c924849eefb8742fad"
-    },
-    {
-      "path": "dev/_obsidian/attachments/Pasted image 20260526205641.png",
-      "sha256": "430f8cde331e6749aae90e6c4cfc89e4eaccd56a408ba3ca5148d1584989f25c",
-      "size": 626146,
-      "pointer_blob": "b82ea654cf956f098a35b5f5921468a351c02651"
-    },
-    {
-      "path": "dev/_obsidian/attachments/Pasted image 20260526205648.png",
-      "sha256": "406d446665abee2d5390903dcfdffe883b552601409a88fcc5ef8b2c3007b6c1",
-      "size": 333619,
-      "pointer_blob": "fd645528a1533b8fd0f01576c29d46a17c7e221a"
-    },
-    {
-      "path": "dev/job applications/cover-letter-subq.pdf",
-      "sha256": "aa819406ff0db99fddaaf6aa7fe434a240c7516f43f6337ab529659a30154324",
-      "size": 67456,
-      "pointer_blob": "62c724e8e39d6694a05907be737ab9f34de94f5c"
-    },
-    {
-      "path": "dev/resume/matt-main-resume-2026-v2.pdf",
-      "sha256": "2c2e899cbeb66cbfe9bf87f5be0fbd8433734d8f3dd94ac36a6abd5ebb6bd5e3",
-      "size": 129644,
-      "pointer_blob": "a7f77099e11dab4c73f34d3da51cee7642fd5489"
-    },
-    {
-      "path": "dev/resume/matt_derman_resume_2025.pdf",
-      "sha256": "5c5659d1575d648deaa0f74ebfc7aa5e2458322d27621a403caa52cbf2bd0086",
-      "size": 212375,
-      "pointer_blob": "69aac777d8565dcb17e3890f881a772f8a5ef022"
-    },
-    {
-      "path": "dev/resume/matthew-derman-resume_2026.pdf",
-      "sha256": "cb7a6bac2bee797ee543dd225187055f69d260d2ecfda2d74c55e8dbd5bcb2d6",
-      "size": 805157,
-      "pointer_blob": "51dee740ff73affddc32747227c71e3c7f2393a4"
+      "path": "ctx9/talent/role-references/Verascient - Forward Deployed AI Engineer.pdf",
+      "sha256": "d94026726bea1ea8e717ecfb491f3e45e8a29e13ce297e68f2cdd5375036bd60",
+      "size": 100729,
+      "pointer_blob": "8401e8f43404e2d1feecb21d95bf4bdc0c240569"
     },
     {
       "path": "business/_obsidian/attachments/20260513T212427-1-Pasted Graphic 24.jpg",
@@ -29965,36 +29719,6 @@
       "pointer_blob": "964d1252f5519547ad816cc634684d7f79c181d5"
     },
     {
-      "path": "business/_obsidian/attachments/Pasted image 20260524213642.png",
-      "sha256": "7d7e49343ac980f8b45c54dca2d384ce988a4729f3ce9f92b4de6a8bacc746ea",
-      "size": 69287,
-      "pointer_blob": "151b9b81c19c6dc375b6019d87ea6b375f44919c"
-    },
-    {
-      "path": "business/_obsidian/attachments/Pasted image 20260524213715.png",
-      "sha256": "dd515805e54bfdd786e6696f32ac7ffe4286eec9bf10a48ebf4a85945150e37e",
-      "size": 273867,
-      "pointer_blob": "f81bb48fc46be73d5ed7d43c17e4a7710991a226"
-    },
-    {
-      "path": "business/_obsidian/attachments/Pasted image 20260524213815.png",
-      "sha256": "d073daf2dc2741d2b8185e281b05052be3d0bb8764c695854eb818e7edfa9ae2",
-      "size": 665292,
-      "pointer_blob": "0f35b06780d4de19449204c01e4667966a3a2082"
-    },
-    {
-      "path": "business/_obsidian/attachments/Pasted image 20260524213830.png",
-      "sha256": "d97509f10a972dfdfa5d456ad14d8896c944fc1fb9802be88c95439330ef4f3e",
-      "size": 162390,
-      "pointer_blob": "388c091ab59d0a51e6bcb06bc02a559f36e22730"
-    },
-    {
-      "path": "business/_obsidian/attachments/Pasted image 20260524213852.png",
-      "sha256": "3eaac90482b8622cdd8d1e1e664995edeb222c5ecba48338b05cdb7961a20d9f",
-      "size": 36515,
-      "pointer_blob": "fb0666b27b6b87667d30545566e6817ab19a4e4e"
-    },
-    {
       "path": "business/_obsidian/attachments/Pasted_Graphic.jpg",
       "sha256": "a458b0d14b526fe619cca5ba68fd71894884505090a96ee531e564575104b548",
       "size": 125767,
@@ -30017,18 +29741,6 @@
       "sha256": "bd38b1224c6fcc2402fa94f5b83163a5297488befad5be2e4cba99963bfbfd0f",
       "size": 4374678,
       "pointer_blob": "2417ce4e5647e85a48f4e07445fe13ac057a9504"
-    },
-    {
-      "path": "business/_obsidian/attachments/Untitled 1.png",
-      "sha256": "00c919f8f5ff408e9aa1c92520f5bcd864696ec59b422c246ebe144accda8702",
-      "size": 95383,
-      "pointer_blob": "b087d71797a39aac65bc51b3fab5eba0ca833efe"
-    },
-    {
-      "path": "business/_obsidian/attachments/Untitled.png",
-      "sha256": "b2fe33c6fcbcae98d4e8077ee70326b9000baddaf386477d2bbc45419fc9a661",
-      "size": 362238,
-      "pointer_blob": "b1210f5f14c4864c12c0ad639509cacd088e8732"
     },
     {
       "path": "business/_obsidian/attachments/_Caston_Linkedin_MCP_Server_-_For_Claude_Code_and_Claude_Desktop.jpg",
@@ -30559,28 +30271,820 @@
       "pointer_blob": "5b7659d884840a195606bc872a401cdf4c18f32d"
     },
     {
-      "path": "business/crm/crm/DMs/2minPresentationDM.png",
+      "path": "business/archive/typeway/Domain/_attachments/image 1.png",
+      "sha256": "ecddbbbad6ca71e9a5f5e70c90f62d1d8de3d9f8e3c6c3067beca17be3a95cb9",
+      "size": 4129291,
+      "pointer_blob": "55221c2ccaf3f5dd4a5e955c0e7dcd271acb647a"
+    },
+    {
+      "path": "business/archive/typeway/Domain/_attachments/image.png",
+      "sha256": "c0b6965152cb4ac0c129a6c536eecbacc51a3d43cc9b3d1822de8182fdae5e3a",
+      "size": 1893333,
+      "pointer_blob": "a1b5cb79e5c7103c965aec697341bb2f9b80a24b"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 1.png",
+      "sha256": "8bb5f4c70364b1b52cc59c75fb37bcd26fcee905ebca52af82255eeae6501078",
+      "size": 124310,
+      "pointer_blob": "d0dd8d305ab42a89f968b8f59fb8091afe011202"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 10.png",
+      "sha256": "c193bfd36ffe92cb36b905f35c6a13228afebe9f7f07c667221a233af6ffdc22",
+      "size": 77701,
+      "pointer_blob": "729001d4a67a2388e660e13f297ee20dbdc61413"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 11.png",
+      "sha256": "3e496fe38ff1bc2a36b0bb6489bc7f7644cf27be4e4cb3bfd3e12a3cba3a178b",
+      "size": 500136,
+      "pointer_blob": "d91f30fef2b0d9ed3bf7fbeecfd274c042e8ee47"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 12.png",
+      "sha256": "05631f81d20b1a0665b7fe57ec1a89a9f17221ef830d1de5672fcd33201d2813",
+      "size": 83677,
+      "pointer_blob": "73e6259ff3b2309753c29c583dbd093eb2587a70"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 13.png",
+      "sha256": "94d8f5156fed55fcb89ade687848feec03733bd010ad0120f3573a3a7dbe94f0",
+      "size": 288906,
+      "pointer_blob": "a42eb061d1d9cbe2536b585e59572acac3dc7fa3"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 14.png",
+      "sha256": "53b1dd0070b0e7df4e7fe08f34a97953fb813d27fc33253cd5849aef1efda050",
+      "size": 303405,
+      "pointer_blob": "194076a770790f74dd62065fa433d16cd95514e1"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 15.png",
+      "sha256": "70e8dbe9173c087de07ff7f21b08fd9175d8a989bd4ffbc505c1118c47400914",
+      "size": 33887,
+      "pointer_blob": "ae27fa3068431874b967a74d0de0000129758170"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 16.png",
+      "sha256": "7acfbd154100a4bf5c0f1d44de8aa102ee98d6f88304178829b9b0b035d83ae6",
+      "size": 339734,
+      "pointer_blob": "f7beab98626c071dc900934cb1c5182eb56b6354"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 17.png",
+      "sha256": "f9b511f140e224005964d51174c10bb567f7cf87ad9af2852a4b4ea7c7812df0",
+      "size": 26767,
+      "pointer_blob": "4ddcf37c62db0d3e03608b43d29c3ba14d36f165"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 18.png",
+      "sha256": "15be5720bb0a15cba225a07bbe1e55aee575f079b1e194902e39ab05dd713e78",
+      "size": 582266,
+      "pointer_blob": "adb25377beef7a6b9716592d190461dedd5eed07"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 19.png",
+      "sha256": "6e32a46da3ab547aef28a438d156c841ef63c7a8b7c784c401b66a85ed045e42",
+      "size": 479021,
+      "pointer_blob": "81780c3f392a691d7b187af95b6b5e88a692ac36"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 2.png",
+      "sha256": "2c3eebe0be50cd48eeb86b0abbc91f7af83bdeee209b8bde8cfc81a258998bd1",
+      "size": 242267,
+      "pointer_blob": "df7f80b6c2bd218e55fe32c59f4b88eee3edf1c4"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 22.png",
+      "sha256": "69cc96aaa8fff29ffa882ccc6bda42eb00bdb3d7a3b2e28276bc92a0689549db",
+      "size": 312293,
+      "pointer_blob": "f501f893aa3047abcd9ffa4b8cc1c9fe41717661"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 3.png",
+      "sha256": "c4b1483dcc99b885c531981bd7ea861f544f69c17da85b3b64ccce5aa0c4abda",
+      "size": 399551,
+      "pointer_blob": "7b317db7cce4721b41d0231bf358bda9dc3056e3"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 4.png",
+      "sha256": "62ed1d4550f2ac695dae11eb8698e6fe51bce41825b1ea23240660469b40bd98",
+      "size": 254323,
+      "pointer_blob": "3c720bd5f85e117d21273d1f72637bca4c8fbfb3"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 5.png",
+      "sha256": "fd6b90dc88baf9bdd24f379394d80a5553edda6934250a8bf96d4cc2c6f9520e",
+      "size": 479263,
+      "pointer_blob": "f19e2785039058f84d4314f2d26eb00591fd53d7"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 6.png",
+      "sha256": "e498541a34c0ef5e73b28b88eb5c8d323334617775e4dd925346624a4217fdd9",
+      "size": 271436,
+      "pointer_blob": "51674e1f8389445cbe81125685c2849c3a307fb2"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 7.png",
+      "sha256": "3700c54fb33c329c414f124f8c1bd3b5e3d64fbb945666a9ee93b9391c5329e5",
+      "size": 141276,
+      "pointer_blob": "0c935b3b1f1b78b35b4ea05483c9179c63fd168f"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 8.png",
+      "sha256": "2468ae001cd70f7a7fcd1694e092285aaf4c103cfb1cba7e0b96661dd2602fa0",
+      "size": 348795,
+      "pointer_blob": "f80ae64ef90b4361ef6279ef382fc3fd81585856"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image 9.png",
+      "sha256": "ac6532aff391d9428afb9565bc2ba55f22ad15599a898c4f0da00228122c9327",
+      "size": 315059,
+      "pointer_blob": "9309dfdea8b588daded7e86b2287215974af1eab"
+    },
+    {
+      "path": "business/archive/typeway/Screens/_attachments/image.png",
+      "sha256": "a17b285add6b056067d325d8014556f1d5a273e97a9cf4f5dd23e14744b4a0db",
+      "size": 312223,
+      "pointer_blob": "443511d03de0b3994713ee8be5b2b30fba62cd35"
+    },
+    {
+      "path": "business/archive/typeway/_attachments/image.png",
+      "sha256": "82fe43f96d430f31077eb5dfe3d8e762816e885844eadd8065c880b06f08c456",
+      "size": 76444,
+      "pointer_blob": "5b7659d884840a195606bc872a401cdf4c18f32d"
+    },
+    {
+      "path": "business/crm/Impression Leads.xlsx",
+      "sha256": "605f5b1ffb31136a0a2c78abbd32107c7f936f6d396a868e0b2fe92ea673fa8a",
+      "size": 67526,
+      "pointer_blob": "c64c9b05348a58a1381e5053541a566d253c6bf7"
+    },
+    {
+      "path": "business/crm/outreach/DMs/2minPresentationDM.png",
       "sha256": "0a6df3967faf182fe3d5849796303e93d6be611e1faa2726572aabce0db245f3",
       "size": 553984,
       "pointer_blob": "35a0001586b4b0351c62fb6b2ae676d9a66bd93a"
     },
     {
-      "path": "business/crm/crm/DMs/2minPresentationDM.pptx",
+      "path": "business/crm/outreach/DMs/2minPresentationDM.pptx",
       "sha256": "4fd9745b3148201e37da5981f04241ff8376a82296444eeb67facc4bfa444d10",
       "size": 30588593,
       "pointer_blob": "689aa44fa8bc1db78c5e78224443433eb2af503a"
     },
     {
-      "path": "business/crm/crm/DMs/DMListAlphabetical.xlsx",
+      "path": "business/crm/outreach/DMs/DMListAlphabetical.xlsx",
       "sha256": "1fc1378ebdbbf755aa93d2e6e135e1418f7671c021f8db5af17593c01fe69609",
       "size": 26564,
       "pointer_blob": "708e0ffd236a8d01261d0981e2109e7e5f61f464"
     },
     {
-      "path": "business/crm/crm/DMs/Quick Chat about Typeway (2024-08-17 20:38 GMT+2).mp4",
+      "path": "business/crm/outreach/DMs/Quick Chat about Typeway (2024-08-17 20:38 GMT+2).mp4",
       "sha256": "2be115d3025c230081ab3e3d121ab6b15caff264e9b118905bc87f202ca93cf2",
       "size": 271014509,
       "pointer_blob": "d9a8c8999f441f7aa0dd0a728d7aaddc872b25d4"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/fallback.jpg",
+      "sha256": "ab2237e4e34d1105e51511fbe350c122a21d38301d9391f656e1a88e841397be",
+      "size": 34268,
+      "pointer_blob": "80ded75e4ef73c36bccfb8bbb529b93525c0adcb"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/fallback.psd",
+      "sha256": "ddc50fbe9334bb2363e1a0d092806339bab290c3f72aacec156034f75ebcc296",
+      "size": 62218,
+      "pointer_blob": "cb189bfef81ad14762d34edcae0f886bdaf03132"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/matt/u6128732751_An_AI_agent_with_a_sleek_humanoid_form_wearing_ge_bca6f5b2-a072-44bc-ba3d-708f275c562e_0.png",
+      "sha256": "6d4fab644dd9a926070ebee2f83d2adb60babb15ff87fe803a4d0c561fbe99b4",
+      "size": 1263878,
+      "pointer_blob": "99e649e2280a19816fa6d87c7f549cd2693ea6fc"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/matt/u6128732751_an_image_a_lock_that_is_shiny_and_metallic_in_mid_e479369b-b342-43a4-8998-c8d2ed96deca_0.png",
+      "sha256": "8752ea5b49059a0860c51a249ae3caf23194b418c6fe0ac16dbc59f4147473a5",
+      "size": 1965787,
+      "pointer_blob": "f23d67e3bc6e6548eb819f504c6eb44bfec7c5d1"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/matt/u6128732751_an_image_a_lock_that_is_shiny_and_metallic_in_mid_e479369b-b342-43a4-8998-c8d2ed96deca_3.png",
+      "sha256": "1448ab321e87b8b4158321fe9b2d4d521d046833b7731ae262f14330cf88bf8e",
+      "size": 2120318,
+      "pointer_blob": "cd44720899c79b3cf71b952e139ce276004882b3"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespaceStyle1/u6128732751_A_lone_kid_on_with_social_media_likes_standing_in_3d9bb78a-ad58-4a39-a453-b6dd0b9caa6e_2.png",
+      "sha256": "d5b677b0740fd8e45f01f622f29eb6d1a9f2ad48db4c479f1483dbf4841df197",
+      "size": 1257860,
+      "pointer_blob": "97b0e0393eef2afa502adefd26e671a4993f0601"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespaceStyle1/u6128732751_A_lone_kid_on_with_social_media_likes_standing_in_3d9bb78a-ad58-4a39-a453-b6dd0b9caa6e_3.png",
+      "sha256": "a6b4467d9a9cea4c834e6c02dea3f901fde07fb9330b86773d01ceae764a9e6f",
+      "size": 1230895,
+      "pointer_blob": "c895a3dafa2f27f75e8fcdc70855c0b51719e3b5"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespaceStyle1/u6128732751_A_person_looks_into_a_mirror_but_instead_of_their_3756a2dd-4122-495c-ac36-62b777e405f4_1.png",
+      "sha256": "5be9e5a0194fa81c0037847989bbe694e9f634020406cad415c4a84f72ccb580",
+      "size": 1735657,
+      "pointer_blob": "a67127c932e3638a8dea1766551e7738aa0b1bf7"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespaceStyle1/u6128732751_A_person_looks_into_a_mirror_but_instead_of_their_3756a2dd-4122-495c-ac36-62b777e405f4_2.png",
+      "sha256": "77f61beaa88b7131447ef4ab001e1887be479200aea7f3cebd23ec91449671c6",
+      "size": 1918248,
+      "pointer_blob": "7c16e3fa323bdb4858a9a0cbb372698df4ea6d5c"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespaceStyle1/u6128732751_A_person_looks_into_a_mirror_but_instead_of_their_3756a2dd-4122-495c-ac36-62b777e405f4_3.png",
+      "sha256": "9f8b6604ddfa04c442fb0b4ecfc6735d995b6afbcbf037f8d60efc9e0e9f3603",
+      "size": 1500551,
+      "pointer_blob": "b8f9a1fb9cdf239ed040880995b0c9488ec81a8b"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespaceStyle1/u6128732751_An_image_of_a_rectangular_white_slate_in_the_midd_6dd5f4e7-c9ff-4c86-ba24-3e7d338bb9cf_0.png",
+      "sha256": "52011c6d52a000f4461cfc1761413949229ca1dec68337f5296550e9e377ba66",
+      "size": 1411394,
+      "pointer_blob": "e903b52b52ca28b5773c8be8eb2115b6c8d31bb1"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespaceStyle1/u6128732751_An_image_of_a_rectangular_white_slate_in_the_midd_6dd5f4e7-c9ff-4c86-ba24-3e7d338bb9cf_3.png",
+      "sha256": "7dccc44896f5daa78d47787a6574ecb5a0e912e7de0d32e26d4dd930f1472b35",
+      "size": 2050592,
+      "pointer_blob": "f8e5b24d9e44647c720fbf9426610b9e4ced2cab"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespaceStyle1/u6128732751_An_rocket_launching_in_the_distance_in_the_style__23b83e62-a934-4e67-9b43-d899ec994e66_2.png",
+      "sha256": "797edb730671146e1ac959e437f25e4c16275adc5ebd805a720838ddd0271216",
+      "size": 1317956,
+      "pointer_blob": "d1155913facea32d3b272cceee9c6df9a57980eb"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_An_image_of_a_rectangular_white_slate_in_the_midd_b2866732-8cfe-41a9-a5cf-d09634a569a6_3.png",
+      "sha256": "f5c2194fd4eabf6fd34bf624210eede3ebf6a0ae3e7b0e7cde32311445442c5f",
+      "size": 1544346,
+      "pointer_blob": "b95eaa9536e524e404556b9eef355bca37ba1fe2"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_AI_agent_wi_da47df9d-d112-42e8-89ba-39c8e311e961_2.png",
+      "sha256": "94134bd07dbd83066a0e9b77cb5e1c6213980767d9bedf0d4891cc0caa883c62",
+      "size": 1783172,
+      "pointer_blob": "102cf6f1d7aed01e6e1bca24ee24e41d352c1124"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_AI_agent_wi_da47df9d-d112-42e8-89ba-39c8e311e961_3.png",
+      "sha256": "eec4e1b767dedc4ebca6c1de6a41ae51b9a39e8f7f7036a42d2a2a3d33d21c8c",
+      "size": 1755354,
+      "pointer_blob": "3b0c6b71903d8fedb60bdbef4b9ffba3ece2b5af"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_man_laying__1462b3e0-1fa2-48be-b406-82ab420f8924_0.png",
+      "sha256": "244fde3bb6a80406103b6268e23ac6c2d9c0f2a037bd8c45e0e7626b29c5c875",
+      "size": 1861649,
+      "pointer_blob": "42d8339756d197167c4c36e92891425144b8766d"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_man_laying__1462b3e0-1fa2-48be-b406-82ab420f8924_1.png",
+      "sha256": "3df4c96f317d40cb192a2a78b468c6ce90bd2ddfa046f78af558abc21633bdd3",
+      "size": 2598956,
+      "pointer_blob": "c4cc856d74642ddc0fa89c4b2d7f5ffd45177cac"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_man_looking_6368cec4-35b1-4e9a-af16-04c6ef7c6f67_0.png",
+      "sha256": "126cc3b25a7cf24f436ad661537524536a0f6652c17c4bd6c09d38b11077acc4",
+      "size": 2082458,
+      "pointer_blob": "ece242c778e527b963670dd2acbad515a8087c0c"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_man_looking_6368cec4-35b1-4e9a-af16-04c6ef7c6f67_1.png",
+      "sha256": "8c2a040c6c0b6b5daf65dd0c9e8a84d4a4524cb86a67b1ad9406c8d31ec07089",
+      "size": 2518552,
+      "pointer_blob": "0c531bddf522c045b53ef65b82c0fecf0f55ae0f"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_man_standin_2fef20cb-b2de-4a83-b39d-d4bcb92dfbf7_1.png",
+      "sha256": "85f784fad185961ab14bbf44f9db8f60f5b0a00bc4280bd5a68e3fa4f785e162",
+      "size": 2072119,
+      "pointer_blob": "9dcb5ccacae10335fda8255ce58f8e983e22c37e"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_man_throwin_97de8da9-bd0e-426c-8d33-33ead66b85c2_0.png",
+      "sha256": "633dc9d60cceecab0904f45e5f0c454643b61ff1133f206e64ca33bdfb05f303",
+      "size": 2101929,
+      "pointer_blob": "a238f5e99a5f62de65afecd02f5ced851aa45238"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_man_throwin_97de8da9-bd0e-426c-8d33-33ead66b85c2_2.png",
+      "sha256": "c5c339e180f7eb746668c944dfc8cebccbfca68a7343302809091df5ea65a27d",
+      "size": 2928850,
+      "pointer_blob": "5c6855421bb23aa41f3f17b12f53121b00e41c46"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_man_throwin_97de8da9-bd0e-426c-8d33-33ead66b85c2_3.png",
+      "sha256": "2d2c444153777db29b3f121aa10ef5292a28350419a5444e9c9016c03283a026",
+      "size": 2422586,
+      "pointer_blob": "9410800e75d2ae24f35366913dd2cf41a36149cd"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_rocket_laun_821b9d54-27a9-489d-93a7-35adade7d5c6_1.png",
+      "sha256": "8891156db3e53d2831e9d4f642dd3a95c7bdcf76fd9ed799ac5fd1edfcf6d3c1",
+      "size": 2255847,
+      "pointer_blob": "a8fd7a765307eaec17884d16a5cebe8015276091"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_an_overhead_v_27b85b03-dd02-4acc-8db6-10b0cfeb4f33_1.png",
+      "sha256": "353e977375b0d2b4857c5628371bf20e8e93c9c8c882b34065a7cd17ca83d915",
+      "size": 2500487,
+      "pointer_blob": "4420acbcd626bfa29bda5db0fb54c8c685d96a19"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_an_overhead_v_32a7c535-6764-47d8-a666-c97a4f180601_1.png",
+      "sha256": "b48f6ef5a66ce285337482a3e52b5acb0f3bf9dd959e95d4d6e2e651baa624cc",
+      "size": 2340741,
+      "pointer_blob": "49c90b9b0028591b72f7e09a6cb3e61d973230f6"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_an_overhead_v_ba01f1d5-2f68-411f-a433-3dee5d6af345_0.png",
+      "sha256": "4ff3a357c1f050875d365f148cd233ab03cd65c81a2739609642ad796f0fea19",
+      "size": 2635373,
+      "pointer_blob": "3d5eb045b46f7d849d199767c1cecffdf0642fac"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_an_overhead_v_c34abbc2-0b48-44ff-85a1-9deffd2ec11e_1.png",
+      "sha256": "0749f0eb4fad4795492c461121da309b2f2d75343db1da439643579400d1aa2d",
+      "size": 1593444,
+      "pointer_blob": "3e2c89268600406beb4c530542a6a4883ba8c357"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_an_overhead_v_ec8796c7-0152-412b-8fcd-2cccab537744_1.png",
+      "sha256": "a2728a3b9ef530a5ee97680a6b54cf5d3a153ec53d421e5fafd6c96dda978d14",
+      "size": 2372166,
+      "pointer_blob": "10c6e648694236cee7556b8c791fcc22195a6b3b"
+    },
+    {
+      "path": "business/marketing-assets/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_an_overhead_v_ee975517-f65e-468e-ac44-277051aae484_0.png",
+      "sha256": "1a67ce85a618683f09d98af2fa584b15e9802efec979d4517d8d867b14bd15a4",
+      "size": 2486070,
+      "pointer_blob": "3a7977b466e79130c826f4f637b4c27cd5092510"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/00354b2aa1562e463815b30543549408.jpg",
+      "sha256": "735a833c9192b89591dbda7dfdb366e7e232f218a30c9879c617d0ac4aa184db",
+      "size": 205642,
+      "pointer_blob": "73e8f9fea3b7c18aa64c8adaa4e0cec9beb54535"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/2c443d0b13e56e4883317dd282ce878f.jpg",
+      "sha256": "ce78a6b2d6394cdf9603b9b45d63a6634828f77b1b2628b4c1fa85604d3ed2c7",
+      "size": 107813,
+      "pointer_blob": "ab471885c77f12faf694efe9e2ac72791fb62fb8"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/4b3c3ae1401f1ae953e8664ecfc78a9f.jpg",
+      "sha256": "38cfa3e29fc7bc830bbc8a23612e8ed9c41f974c9ddf71a3b258f61059f0d00a",
+      "size": 164868,
+      "pointer_blob": "73b058e5a2dc4a0ccf899c746f476530d60ca0da"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/5ae17220243b87a1a0d0ff653b1cc5ca.jpg",
+      "sha256": "96b4b587ecc250bb39e935790c6281bfadc124d2bdb33ec887b9cf62858c960d",
+      "size": 89354,
+      "pointer_blob": "6128ae263365564abeaf6bcbdefd8e47241d4742"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/673abb15db48853b5ddd74fcae43343e.jpg",
+      "sha256": "579d03e38fe6e76b42bae25f7f242420468c3caaa3fa883064a4dd96ba8140f7",
+      "size": 197396,
+      "pointer_blob": "4b995ebabf77a0d002df0f19f52768fc7a436992"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/6b6d148fbdb7e68224dadb19d5158095.jpg",
+      "sha256": "239b434e4b37857426bf0a53381548d811f6d7db71c36d3d5e5efab3bbd0498e",
+      "size": 160161,
+      "pointer_blob": "8e5a651d402037883aee3c23794d5574dbb2635e"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/6e309d1542535ae1dfffd2b5949b27c1.jpg",
+      "sha256": "48c9d123a4f0903543b204944e3ffe2e32cc02205c6ff1344b22bba26e34af5c",
+      "size": 203401,
+      "pointer_blob": "5639d453fdaa33f0a9594af65aff9a081f4339e1"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/95553f17dc99978aaa9ab7ba34a9b760.jpg",
+      "sha256": "40fc74cf9e89444558f71af5af6b6b8cd9aaa15376bf09a32bf89b315c2f28f4",
+      "size": 146745,
+      "pointer_blob": "914f366028dd9d9151fae826ebbc99dfee0b23d3"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/95a28ae03ed5048a2ec7138708bb1b55.jpg",
+      "sha256": "1d152180b05afc27dffed1f4b64a53e41bad2f721ac1435dd33205565c101760",
+      "size": 165064,
+      "pointer_blob": "3a0ce0a153cd14aaf742f929e2434791c3aeb6ff"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/97851b732f8696d9482eec73c2432df7.jpg",
+      "sha256": "031469bee163c6fc6e70030e26b430348773d07c8ac18416e8dc53b3d830642d",
+      "size": 120162,
+      "pointer_blob": "6b6e31efdbcaacc36b7bd9cabd03f2bc2ae16fcb"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/99b5c0ccb652a2ed399da131fbe024c5.jpg",
+      "sha256": "ceb3b100bf6305ba9afbaa50be857ac6631a7638d36178b2b1a5d0c63abc3b21",
+      "size": 36396,
+      "pointer_blob": "a5948baf65fb99ea3b1d17523b06e5b3fcc4a256"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/a518462ced0bf626a9d8204a81631779.jpg",
+      "sha256": "4b53e1288183fef0ecc871f8f98282ac63a699ceb9c90db4a3778bd950ca235d",
+      "size": 164134,
+      "pointer_blob": "38975254ecae052465b88ddfb15f378324dee593"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/b02916e2584f660595ba14e72d66a242.jpg",
+      "sha256": "c60e9b53d89da77f711ab353dd75e814ce4165aaad42b81f820c458ab1dc0e0c",
+      "size": 192765,
+      "pointer_blob": "2ed3066849ca2b32ffd9efd066c795e0621029e5"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/d04b83cf337b257b8157b66d4493b31e.jpg",
+      "sha256": "59da7f36604182b4e4f4046506cdb36a2b8e93b7e2dfa08223997ac29ccb837b",
+      "size": 64810,
+      "pointer_blob": "8a0f86f73686162bd537e910acf31df98db9427e"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/d06ba8d879f015959f796159c53ee334.jpg",
+      "sha256": "1429a2b229ee8fd3caa71ba954b0c84c8ecaaae0a42ec79f0750577d12538031",
+      "size": 210540,
+      "pointer_blob": "c137b575c480bfea0be7801dce5346fc91f00733"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/e09810d13d313f89ad3de5f31e24cfa8.jpg",
+      "sha256": "f1085acb8698c863fba3bbb7e6bda5a1f491ea6c53d51707d6e1149803a72069",
+      "size": 156073,
+      "pointer_blob": "5487c5f245259afe7b49761e00360714a941fc65"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/mundo-simbiotico-by-jean-giraud-wallpaper.jpg",
+      "sha256": "943e13b0f05c1357c9a23aa1ba7251c73ebf045a216e8b6dec875b50e2f71334",
+      "size": 1154051,
+      "pointer_blob": "721f40a8f7285fbe01184c2a2e6768c0f978d6b1"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/nlyhkbk5vdu11.png",
+      "sha256": "b0be48adeb2eb0054033259b65e53bab90d1abcc59695719704b1d53b050830b",
+      "size": 2804010,
+      "pointer_blob": "b6e76fd15b11788c692998edf3b7d9ac89d5e737"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/wdasdwad.png",
+      "sha256": "a03186a1065d0eb7c12b3513bcc9dfdb0f0280e31d27e153d9b20f60c4d2011b",
+      "size": 21023761,
+      "pointer_blob": "5350d74e08a9f74ec8203e3b79b5f3587c809349"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/wp4199396-jean-giraud-moebius-wallpapers.jpg",
+      "sha256": "49c081a6b3cbf8a5bac0406978df1776b9a3bcf48a01fe14539ccab71a452afc",
+      "size": 306953,
+      "pointer_blob": "a554a4e0309e31ef3493fa89153e4f8a71617b69"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/wp4199408-jean-giraud-moebius-wallpapers.jpg",
+      "sha256": "5be167ac3b0f73ba726b0ef72f78bf389b75529bdc83451dcb01d3b9045953ad",
+      "size": 109029,
+      "pointer_blob": "e62d14df8129f42b3533eb2f8a95b751cda3d375"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/wp4199411-jean-giraud-moebius-wallpapers.jpg",
+      "sha256": "ee530e13fcaad3b93dd1cd7412c7b8f8feeda6c6cb027db5a6538e672f331afd",
+      "size": 108782,
+      "pointer_blob": "6b50bd10a3cbb36abc4248adf8d6e8d89a56839a"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/wp4199420-jean-giraud-moebius-wallpapers.jpg",
+      "sha256": "51ea9474c7052f426af9f94435216335d8b5ccb016b7df8631a925831bf61ea1",
+      "size": 506694,
+      "pointer_blob": "42a06a25c59f0f4d88b53d842690192b9e80cc23"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/wp4199426-jean-giraud-moebius-wallpapers.jpg",
+      "sha256": "c018a3176f0fb9eec5f7492c9ffee14aee9d00f9a800b22618430b8eb07e460b",
+      "size": 72280,
+      "pointer_blob": "37b88644ea03810e0bf35ba6276d80eb5d5129e7"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog1/wp4199433-jean-giraud-moebius-wallpapers.jpg",
+      "sha256": "1214b8e3d3afcde29389a74dda7279f8b7910232fe93dfdda83ffa31f3155abd",
+      "size": 120135,
+      "pointer_blob": "08ba8b3ff9d7761c60b09d640d2ca067bc6e29ff"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/036a38ff3b3c2c43bed369c4e7d99b93.jpg",
+      "sha256": "7d976ea2c640897db1f6318eec2bf39d27c09a5cb3040ff2c1233ad98af12e3e",
+      "size": 34983,
+      "pointer_blob": "4871a0fe10f6f6f8e87a95bb22053657df020cbb"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/0d404dbd3389c4581d8064cdb2f40590.jpg",
+      "sha256": "0c0982503c03a04f6d5424f0d8acf8f48077c6d0f775533338de0e4d948b9965",
+      "size": 382640,
+      "pointer_blob": "03441a87f79e7c546ef28d2a5da2ecea00342fd5"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/0f7c014c2cd32a33f74f69805b0dba46.jpg",
+      "sha256": "691e2c0e16e3e982341e7dd12eb6feaa3562f12a07f9b757ab5d685613d29a0b",
+      "size": 59293,
+      "pointer_blob": "55224933e71f1c751bdbda155fc6830f9c727307"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/143d00661f714ab6953390bebb8bf7b8.jpg",
+      "sha256": "e8fe3782af991e31842ce4b5b041d10fe9addec2df2126902bea1749ba1e0b44",
+      "size": 21927,
+      "pointer_blob": "386295cecbd003d4ab9979fa88e6fd6a57a2511f"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/27c3f1c5511c0ce861504c73f81d86d3.jpg",
+      "sha256": "6af1a18de2fb325f978f222ad9dbc3ec990554b2d0a13f3c770deeb21e79e318",
+      "size": 221746,
+      "pointer_blob": "e40eee10730afcdbc6e2e8436f9c09acfd81c12b"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/2cc117f519941d02cb20e0ac95b99089.jpg",
+      "sha256": "dc7c16127e80afb1f983a00f878d5347d6239e30c8b87f1f8b2677db39670ead",
+      "size": 19815,
+      "pointer_blob": "e49d69b489c898b881fc1870ec9aff1db480548d"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/2e647c97d3d3429d157c0f0d7dba7cd8.jpg",
+      "sha256": "ec52bcf53844da1b4552609934ac8d56cc7921430f7f0c56cd6a6a1ba6f89d9c",
+      "size": 30633,
+      "pointer_blob": "cdc861209e092fda757f909bfb4091592d8adacc"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/3186e0301914b423108282556d129767.jpg",
+      "sha256": "4284453f8382f8a51ec5acb3d9265a852cf15a5623e4f21c293c98f1cc1f940c",
+      "size": 72608,
+      "pointer_blob": "d2f6edd0b901975417841a011d2ba1e4f1379a41"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/5af0d25898b77f98ed8cc337b94abffe.jpg",
+      "sha256": "8fc32cb08a2204d889200baea28906db43a1db1de787b165b52526116f380451",
+      "size": 67779,
+      "pointer_blob": "988e5f9a8b4662719f457b9487da8e2dce83b3ff"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/61b5512323c78fed5ada88c7a99e8e90.jpg",
+      "sha256": "faf8eb20a02f815f6ea477b86bf7c344c1930743196b29a21712a64fedf83701",
+      "size": 40542,
+      "pointer_blob": "51268505a1b842156163b4442fed236f332818fd"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/69e4ec4bb3ea123df3e341e8ba3dc3fd.jpg",
+      "sha256": "122f6a26dd827e62cfb8ec9a3dec6f1e2997f44036128c27ea478cbd7ed8963c",
+      "size": 23244,
+      "pointer_blob": "2a2f4b2b28d0c4889cd538520cb33d5bdba4f21a"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/725a22bc05ffd5531d94478779983f00.jpg",
+      "sha256": "6f2640096e37e7d30dff6542ce0b52a8dee4e4aee2488a241656cae8744bf54f",
+      "size": 34557,
+      "pointer_blob": "e9795045f6eb80e53ab638d2fea901607876ea27"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/79ef7895f5ea161f6461e67ac45e0ae9.jpg",
+      "sha256": "4659f135e046faa13c6c2cb654fe32c1bdc669edc0eff15bc6e90cfcb1406f1c",
+      "size": 27337,
+      "pointer_blob": "5754a4f5ed815be1778b48d20940122a0a989a1e"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/7f27d7f03b039e21da1eba8fbb3077cd.jpg",
+      "sha256": "3ca1ec8da7e2d7526d0e0f13e23b787b918e65dd15176f81a1b598bd2224c3c6",
+      "size": 27494,
+      "pointer_blob": "e52d273390ce33dba0fc972cc64238f91f5f49da"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/9355cfa2fa4b82922bd9ec15472ca9bb.jpg",
+      "sha256": "b6d64c6eb1c45388b9b64e697fd8db9a36bc6c5b27dc892d9243b4479d7ac5bf",
+      "size": 19195,
+      "pointer_blob": "5afb36f555ac01f53b1462bfea80fa871a17555a"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/99ce6cebc18da0a189850b45ca1a7c60.jpg",
+      "sha256": "108afe9b2fe6a515a6caaea80b38b6364a4afcbd9afe8d04e9da1e6ff0fc1f0e",
+      "size": 64500,
+      "pointer_blob": "b74785c41bde373a74d75d958d1bf3c1dec3b4c4"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/9c86552ba49887474c22b9ddf9a4a0e8.jpg",
+      "sha256": "37cdbcfbfb69aa8fb12af05d35f1804c57d80589183eb0e3ac961a0a1d7755bb",
+      "size": 285828,
+      "pointer_blob": "9c7165c8bd2993a81c53865ce6736837ed8fdbd6"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/9dc105ef85003e9ab87ce63ed5fa93ac.jpg",
+      "sha256": "dcb8fcf261b7eacfa25bf7efd12069b2514b793b56835719c79890d0827ecde7",
+      "size": 102444,
+      "pointer_blob": "b61fea481e612b1263a1528b0442675095ce7d7a"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/a1783925353293b6eb881fabe8a303b3.jpg",
+      "sha256": "2930701d34a1201dce6bd5582084e3381d8b3bb60488615fc1b71128a5e50c12",
+      "size": 76838,
+      "pointer_blob": "afbb9ff83c2d7d526be839b5b61039f411966a85"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/c692de43ea580298fe5613b47db8cd1d.jpg",
+      "sha256": "77eb143f39aaac5a04c7d93895cdd67259bd5557d1e2739b64868edaaab97116",
+      "size": 58322,
+      "pointer_blob": "de7ca5963e7b00271d8f8baf9cb928fb07393963"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/ca4dcf39b20dbf15bcdb3668685dadc9.jpg",
+      "sha256": "608daa4d56296e5c2545c832c27c8211988e405359dcc2fa73baa9328be5e1d4",
+      "size": 326894,
+      "pointer_blob": "adb9d8d25e96944ff6991d1382c13e0296bcd36e"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/d03c66853224585f8ed98d9505f1d4d0.jpg",
+      "sha256": "bfc6d16086af1bff457290e0f615d74b1db7c6fbd1fd18b47caaa80763431ff8",
+      "size": 65903,
+      "pointer_blob": "1dd8bc6bd94c9a1219bc430cfc50064402f524f4"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/d1e6ad8d24ab69aa73e8008d802d783d.jpg",
+      "sha256": "55efcc0f178f5d469c05fa63c64d967e9f53c72c2a4b3ee3dee6c26cd9df55ef",
+      "size": 133363,
+      "pointer_blob": "538f60637551863b56566fe28226cad65588b9cd"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/e3a9e128c9bdff160c6ea35ab799c5f2.jpg",
+      "sha256": "b581aaf3cd1ccff2ee6004c1c580906e1fab063aa7f3d9baf5fe5dc7d27162c5",
+      "size": 57298,
+      "pointer_blob": "2c711b814659e8255ce8f3ef6ed95b42a2981473"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/e79969089408f882b49b6a017421bbd1.jpg",
+      "sha256": "54898f47c3cbaadd3f6ed46ae288c4f978d912fd00d9731acae646080ccc5099",
+      "size": 91947,
+      "pointer_blob": "0fef3868742952d400bd8286522427dee64b222e"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/ed966d0f0974a367c363e071676bb814.jpg",
+      "sha256": "0fba4e1b213367e52621523079dffe5f1ec37f7fa39aefe36769560010a431e4",
+      "size": 213399,
+      "pointer_blob": "53065899d21d9e7d66f99cbc47e574cc7107e156"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/f04199ab3ee3ac404b2114e4203b02d3.jpg",
+      "sha256": "d5e54aaeb0c41038f5ab93de832146f02451192b68291c723fe28b19a2bd822e",
+      "size": 484274,
+      "pointer_blob": "bfcfd7d15f350f4e2cae4eb9d97727c1248c7514"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog2/f62de46f0cc09f36512d7e1c653fdf62.jpg",
+      "sha256": "234f91e4bed99bfffc843c3b9cdbedace906326e09dcb42abeaa15c0221a7f7a",
+      "size": 209505,
+      "pointer_blob": "f21cc5dcd9c7a9153ae463fb4bc450eabb7082bb"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog3/111b6446ff66c5a0abd2782c27aeb084.jpg",
+      "sha256": "7067775d89d953cc7d327824e60a519130f4241bdab322da32f1b554196a854f",
+      "size": 93030,
+      "pointer_blob": "f1be0dc873653086a11eb25e6532cd4c5a1d8dfb"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog3/1955d812a78d972f77dddf62fce1cb57.jpg",
+      "sha256": "f4cb6ba5428fa021cc613e6b9a714796ed4c0da8e81b5f99bec1351056715411",
+      "size": 107036,
+      "pointer_blob": "e863a4def7bce23c23a363bdb5a23ac69e453e3c"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog3/3932dbc59179bddcd7c11e2e8bfd5173.jpg",
+      "sha256": "ad035a2a50139a0cfc0525cf4219796c5cc25efee268fb24e1a0f295c4177888",
+      "size": 106925,
+      "pointer_blob": "6638d601f4b1764bf30ceca59f34bb477c6a6f32"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog3/47d91ff258af08e56005ab91b72e156c.jpg",
+      "sha256": "ff414898f031876a17a93c6eaab19c9c3b06e484409a947c2afbb8dddf37a129",
+      "size": 38587,
+      "pointer_blob": "1f5efb009d16b1447c5837910d2124cd5e05cd60"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog3/70a640a3bbe55817bf65a76cb4e7af3a.jpg",
+      "sha256": "382852ec50f3595f4bd2d485c3b7cde68efdd2b24a78ce333f4f8e0ab3d75f56",
+      "size": 132698,
+      "pointer_blob": "75627761592170acce2e787f62072f8968792ee3"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog3/7622e60ed069b00ac6ece1657761b786.jpg",
+      "sha256": "0d69a15a00684777373a26d3c8b27244393d31a9d7cc36ab72b3f06169f5886c",
+      "size": 29755,
+      "pointer_blob": "bef300bd7505b960b61d3119bdef9a751a938b20"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog3/763584e051ef22042c9b1c40277d7e73.jpg",
+      "sha256": "0f1df8beb68cbbda89d1d525d1154caf7e007bd7fcae15959b59b9c68ab540ee",
+      "size": 233463,
+      "pointer_blob": "cd8f93fa179de97947f5e04bbabc47fbc47da42e"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog3/8ac4b77075f81359f1b650c211571b7f.jpg",
+      "sha256": "c8e8bb2344b5cf98e83197b0350d1cd2a2fd6664580c31cbe9089a85891d911e",
+      "size": 70631,
+      "pointer_blob": "00c14c8a31527de087b6aa9e6c67a401740ebc0e"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog3/90649b4f8207d91256bf2db231b85104.jpg",
+      "sha256": "15ed286f7c2619541ee5d49bd2e8b9f8b75f7242ca4752e2fbd97cedcc8c7616",
+      "size": 281219,
+      "pointer_blob": "8f018b7637cdbf0606bd8c16f152abf00eb59f47"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog3/a104dde62bb7f350e0a8f4ef3086072a.jpg",
+      "sha256": "49d29845d49bcc59a61f303f631296cb58374d481822e2c506a3bb2537b462ce",
+      "size": 26553,
+      "pointer_blob": "fa06a8245021db9ab358c9f718486070f44a1ef5"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog3/b0cbd2d1d28cea834ac4aa5973ade5f7.jpg",
+      "sha256": "c664fcb426b019b5981e60041fc9a6907032f3fcfe42c3cc3618fc796280b7c3",
+      "size": 61532,
+      "pointer_blob": "a43da0962e909f93bcfd8e591d57460e399f4645"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog3/bf083d752fdb387a7a78c51991cc27f7.jpg",
+      "sha256": "4118eb1a9584007d9103122ba33670c3b16364f83768c35fd7646827d0e4d4fa",
+      "size": 71044,
+      "pointer_blob": "3ef6f62fc091e90f5a3e03e6c811897dcabf27c6"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog3/c91b7ef406b677660eeb3f86980ba678.jpg",
+      "sha256": "5985e43e4005fc413a7467758a8ff7e2de66afd37a8396913d41595ed3a972de",
+      "size": 33398,
+      "pointer_blob": "d3ceb65e8403a77900d42fc814c164daf80ea6f3"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog3/e0eec055af6a142122009453313ba8f1.jpg",
+      "sha256": "8a4e0240b20138b501fc76bdc40ead40238ddbe7cabeba4b1faddf8ee9a99198",
+      "size": 110526,
+      "pointer_blob": "c4ea2c0495977123f1ce8dbc77c5fe644942e93d"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog3/e85ac4987ba818c3b6c3cbbad7907c76.jpg",
+      "sha256": "ecf86f28d4e77862492465303a7c69e78a7efbf7c898904becbc4f92a4cca700",
+      "size": 47302,
+      "pointer_blob": "45f0111d1b6c0b63dfd6574a4e4a5259ef2e3dc9"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog3/ebfdcfceff481a62c38126e65d803082.jpg",
+      "sha256": "a6c0c4a45d424f5fa9caacd4b091a751d4ed8466c8d44e6fb0f26762a6250a53",
+      "size": 84930,
+      "pointer_blob": "b4dc7ed4516c67f554532a3277795795545d7a49"
+    },
+    {
+      "path": "business/marketing-assets/Blog/MoodboardSamples/Blog3/f7f07091134942142ab888c766730505.jpg",
+      "sha256": "765cfdf000d41176d97f2339e3b6139da60deca658ddfe03fd09c4fb94efe640",
+      "size": 200067,
+      "pointer_blob": "c5563f52578b8cbee0d7d38892a4703b07e83bcd"
+    },
+    {
+      "path": "business/marketing-assets/copy_and_powerpoints/Employee_Advocacy_Pitch_Deck_LessThan15Slides.pptx",
+      "sha256": "666432e130282af3d3cbdda8d7bc23c8b98d941637494036fa3e9c97740826c4",
+      "size": 80572,
+      "pointer_blob": "48751fb77cfc64bf438ddd31e70c9b60745b955b"
+    },
+    {
+      "path": "business/marketing-assets/copy_and_powerpoints/Powerpoints-SalesLetters-etc/Social Ghostwriting Pitch Deck - Stefan.pdf",
+      "sha256": "65ff6b46704d33828c34a6663a78035183aefd48504a184e1dfaa356824866ce",
+      "size": 6382774,
+      "pointer_blob": "891e37a1da8c13b2e8eca554728f86a3aa9f2779"
+    },
+    {
+      "path": "business/marketing-assets/copy_and_powerpoints/Powerpoints-SalesLetters-etc/Typeway-new-presentation.pptx",
+      "sha256": "a3c12b981d5b25eb3b50b3dc6ef1cbf68b2375644ecc93caedcf97fb2ed34d7a",
+      "size": 27910452,
+      "pointer_blob": "df38a455ec9c323df7de38fefea81f874c080175"
+    },
+    {
+      "path": "business/marketing-assets/copy_and_powerpoints/TYPESPACE SALES LETTER.pdf",
+      "sha256": "5eeb93db09636c5c688e553f59389f38536f5ef9e72504596dfb1d0526f97be7",
+      "size": 90279,
+      "pointer_blob": "171da53bbd11d297c61e37a31a84957f88ff5aa2"
+    },
+    {
+      "path": "business/marketing-assets/email_templates/kindregards-dark.png",
+      "sha256": "275561bfa1544471b586f3854d7df771b1af0d143b74a554827f8816311f38a6",
+      "size": 20067,
+      "pointer_blob": "15d9d520e3a9099c08110c4556c5d9447af2cb49"
+    },
+    {
+      "path": "business/marketing-assets/email_templates/kindregards.png",
+      "sha256": "00cc2fc92085cf714121cc1f04de0669629464b120aa2eb4358ee9f7256bc378",
+      "size": 20938,
+      "pointer_blob": "a237a3742a5a5325cef63dff727d6c271dea9b09"
     },
     {
       "path": "business/meetings/customer-calls/MarketingNerd/Quick Chat about Typeway (2024-08-17 20:35 GMT+2)",
@@ -30593,660 +31097,6 @@
       "sha256": "7f7f4b3986a12979193eb9ad47d68e8cdfd95a4ef93c827b2e03493a2781c970",
       "size": 159329,
       "pointer_blob": "34d9e37bb360b8e324649b404530a763dd9b5232"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/fallback.jpg",
-      "sha256": "ab2237e4e34d1105e51511fbe350c122a21d38301d9391f656e1a88e841397be",
-      "size": 34268,
-      "pointer_blob": "80ded75e4ef73c36bccfb8bbb529b93525c0adcb"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/fallback.psd",
-      "sha256": "ddc50fbe9334bb2363e1a0d092806339bab290c3f72aacec156034f75ebcc296",
-      "size": 62218,
-      "pointer_blob": "cb189bfef81ad14762d34edcae0f886bdaf03132"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/matt/u6128732751_An_AI_agent_with_a_sleek_humanoid_form_wearing_ge_bca6f5b2-a072-44bc-ba3d-708f275c562e_0.png",
-      "sha256": "6d4fab644dd9a926070ebee2f83d2adb60babb15ff87fe803a4d0c561fbe99b4",
-      "size": 1263878,
-      "pointer_blob": "99e649e2280a19816fa6d87c7f549cd2693ea6fc"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/matt/u6128732751_an_image_a_lock_that_is_shiny_and_metallic_in_mid_e479369b-b342-43a4-8998-c8d2ed96deca_0.png",
-      "sha256": "8752ea5b49059a0860c51a249ae3caf23194b418c6fe0ac16dbc59f4147473a5",
-      "size": 1965787,
-      "pointer_blob": "f23d67e3bc6e6548eb819f504c6eb44bfec7c5d1"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/matt/u6128732751_an_image_a_lock_that_is_shiny_and_metallic_in_mid_e479369b-b342-43a4-8998-c8d2ed96deca_3.png",
-      "sha256": "1448ab321e87b8b4158321fe9b2d4d521d046833b7731ae262f14330cf88bf8e",
-      "size": 2120318,
-      "pointer_blob": "cd44720899c79b3cf71b952e139ce276004882b3"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespaceStyle1/u6128732751_A_lone_kid_on_with_social_media_likes_standing_in_3d9bb78a-ad58-4a39-a453-b6dd0b9caa6e_2.png",
-      "sha256": "d5b677b0740fd8e45f01f622f29eb6d1a9f2ad48db4c479f1483dbf4841df197",
-      "size": 1257860,
-      "pointer_blob": "97b0e0393eef2afa502adefd26e671a4993f0601"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespaceStyle1/u6128732751_A_lone_kid_on_with_social_media_likes_standing_in_3d9bb78a-ad58-4a39-a453-b6dd0b9caa6e_3.png",
-      "sha256": "a6b4467d9a9cea4c834e6c02dea3f901fde07fb9330b86773d01ceae764a9e6f",
-      "size": 1230895,
-      "pointer_blob": "c895a3dafa2f27f75e8fcdc70855c0b51719e3b5"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespaceStyle1/u6128732751_A_person_looks_into_a_mirror_but_instead_of_their_3756a2dd-4122-495c-ac36-62b777e405f4_1.png",
-      "sha256": "5be9e5a0194fa81c0037847989bbe694e9f634020406cad415c4a84f72ccb580",
-      "size": 1735657,
-      "pointer_blob": "a67127c932e3638a8dea1766551e7738aa0b1bf7"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespaceStyle1/u6128732751_A_person_looks_into_a_mirror_but_instead_of_their_3756a2dd-4122-495c-ac36-62b777e405f4_2.png",
-      "sha256": "77f61beaa88b7131447ef4ab001e1887be479200aea7f3cebd23ec91449671c6",
-      "size": 1918248,
-      "pointer_blob": "7c16e3fa323bdb4858a9a0cbb372698df4ea6d5c"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespaceStyle1/u6128732751_A_person_looks_into_a_mirror_but_instead_of_their_3756a2dd-4122-495c-ac36-62b777e405f4_3.png",
-      "sha256": "9f8b6604ddfa04c442fb0b4ecfc6735d995b6afbcbf037f8d60efc9e0e9f3603",
-      "size": 1500551,
-      "pointer_blob": "b8f9a1fb9cdf239ed040880995b0c9488ec81a8b"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespaceStyle1/u6128732751_An_image_of_a_rectangular_white_slate_in_the_midd_6dd5f4e7-c9ff-4c86-ba24-3e7d338bb9cf_0.png",
-      "sha256": "52011c6d52a000f4461cfc1761413949229ca1dec68337f5296550e9e377ba66",
-      "size": 1411394,
-      "pointer_blob": "e903b52b52ca28b5773c8be8eb2115b6c8d31bb1"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespaceStyle1/u6128732751_An_image_of_a_rectangular_white_slate_in_the_midd_6dd5f4e7-c9ff-4c86-ba24-3e7d338bb9cf_3.png",
-      "sha256": "7dccc44896f5daa78d47787a6574ecb5a0e912e7de0d32e26d4dd930f1472b35",
-      "size": 2050592,
-      "pointer_blob": "f8e5b24d9e44647c720fbf9426610b9e4ced2cab"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespaceStyle1/u6128732751_An_rocket_launching_in_the_distance_in_the_style__23b83e62-a934-4e67-9b43-d899ec994e66_2.png",
-      "sha256": "797edb730671146e1ac959e437f25e4c16275adc5ebd805a720838ddd0271216",
-      "size": 1317956,
-      "pointer_blob": "d1155913facea32d3b272cceee9c6df9a57980eb"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_An_image_of_a_rectangular_white_slate_in_the_midd_b2866732-8cfe-41a9-a5cf-d09634a569a6_3.png",
-      "sha256": "f5c2194fd4eabf6fd34bf624210eede3ebf6a0ae3e7b0e7cde32311445442c5f",
-      "size": 1544346,
-      "pointer_blob": "b95eaa9536e524e404556b9eef355bca37ba1fe2"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_AI_agent_wi_da47df9d-d112-42e8-89ba-39c8e311e961_2.png",
-      "sha256": "94134bd07dbd83066a0e9b77cb5e1c6213980767d9bedf0d4891cc0caa883c62",
-      "size": 1783172,
-      "pointer_blob": "102cf6f1d7aed01e6e1bca24ee24e41d352c1124"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_AI_agent_wi_da47df9d-d112-42e8-89ba-39c8e311e961_3.png",
-      "sha256": "eec4e1b767dedc4ebca6c1de6a41ae51b9a39e8f7f7036a42d2a2a3d33d21c8c",
-      "size": 1755354,
-      "pointer_blob": "3b0c6b71903d8fedb60bdbef4b9ffba3ece2b5af"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_man_laying__1462b3e0-1fa2-48be-b406-82ab420f8924_0.png",
-      "sha256": "244fde3bb6a80406103b6268e23ac6c2d9c0f2a037bd8c45e0e7626b29c5c875",
-      "size": 1861649,
-      "pointer_blob": "42d8339756d197167c4c36e92891425144b8766d"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_man_laying__1462b3e0-1fa2-48be-b406-82ab420f8924_1.png",
-      "sha256": "3df4c96f317d40cb192a2a78b468c6ce90bd2ddfa046f78af558abc21633bdd3",
-      "size": 2598956,
-      "pointer_blob": "c4cc856d74642ddc0fa89c4b2d7f5ffd45177cac"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_man_looking_6368cec4-35b1-4e9a-af16-04c6ef7c6f67_0.png",
-      "sha256": "126cc3b25a7cf24f436ad661537524536a0f6652c17c4bd6c09d38b11077acc4",
-      "size": 2082458,
-      "pointer_blob": "ece242c778e527b963670dd2acbad515a8087c0c"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_man_looking_6368cec4-35b1-4e9a-af16-04c6ef7c6f67_1.png",
-      "sha256": "8c2a040c6c0b6b5daf65dd0c9e8a84d4a4524cb86a67b1ad9406c8d31ec07089",
-      "size": 2518552,
-      "pointer_blob": "0c531bddf522c045b53ef65b82c0fecf0f55ae0f"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_man_standin_2fef20cb-b2de-4a83-b39d-d4bcb92dfbf7_1.png",
-      "sha256": "85f784fad185961ab14bbf44f9db8f60f5b0a00bc4280bd5a68e3fa4f785e162",
-      "size": 2072119,
-      "pointer_blob": "9dcb5ccacae10335fda8255ce58f8e983e22c37e"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_man_throwin_97de8da9-bd0e-426c-8d33-33ead66b85c2_0.png",
-      "sha256": "633dc9d60cceecab0904f45e5f0c454643b61ff1133f206e64ca33bdfb05f303",
-      "size": 2101929,
-      "pointer_blob": "a238f5e99a5f62de65afecd02f5ced851aa45238"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_man_throwin_97de8da9-bd0e-426c-8d33-33ead66b85c2_2.png",
-      "sha256": "c5c339e180f7eb746668c944dfc8cebccbfca68a7343302809091df5ea65a27d",
-      "size": 2928850,
-      "pointer_blob": "5c6855421bb23aa41f3f17b12f53121b00e41c46"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_man_throwin_97de8da9-bd0e-426c-8d33-33ead66b85c2_3.png",
-      "sha256": "2d2c444153777db29b3f121aa10ef5292a28350419a5444e9c9016c03283a026",
-      "size": 2422586,
-      "pointer_blob": "9410800e75d2ae24f35366913dd2cf41a36149cd"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_a_rocket_laun_821b9d54-27a9-489d-93a7-35adade7d5c6_1.png",
-      "sha256": "8891156db3e53d2831e9d4f642dd3a95c7bdcf76fd9ed799ac5fd1edfcf6d3c1",
-      "size": 2255847,
-      "pointer_blob": "a8fd7a765307eaec17884d16a5cebe8015276091"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_an_overhead_v_27b85b03-dd02-4acc-8db6-10b0cfeb4f33_1.png",
-      "sha256": "353e977375b0d2b4857c5628371bf20e8e93c9c8c882b34065a7cd17ca83d915",
-      "size": 2500487,
-      "pointer_blob": "4420acbcd626bfa29bda5db0fb54c8c685d96a19"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_an_overhead_v_32a7c535-6764-47d8-a666-c97a4f180601_1.png",
-      "sha256": "b48f6ef5a66ce285337482a3e52b5acb0f3bf9dd959e95d4d6e2e651baa624cc",
-      "size": 2340741,
-      "pointer_blob": "49c90b9b0028591b72f7e09a6cb3e61d973230f6"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_an_overhead_v_ba01f1d5-2f68-411f-a433-3dee5d6af345_0.png",
-      "sha256": "4ff3a357c1f050875d365f148cd233ab03cd65c81a2739609642ad796f0fea19",
-      "size": 2635373,
-      "pointer_blob": "3d5eb045b46f7d849d199767c1cecffdf0642fac"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_an_overhead_v_c34abbc2-0b48-44ff-85a1-9deffd2ec11e_1.png",
-      "sha256": "0749f0eb4fad4795492c461121da309b2f2d75343db1da439643579400d1aa2d",
-      "size": 1593444,
-      "pointer_blob": "3e2c89268600406beb4c530542a6a4883ba8c357"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_an_overhead_v_ec8796c7-0152-412b-8fcd-2cccab537744_1.png",
-      "sha256": "a2728a3b9ef530a5ee97680a6b54cf5d3a153ec53d421e5fafd6c96dda978d14",
-      "size": 2372166,
-      "pointer_blob": "10c6e648694236cee7556b8c791fcc22195a6b3b"
-    },
-    {
-      "path": "business/other_content/Blog/Blog Images/typespacestyle2/u6128732751_minimalist_screen_print_line_art_of_an_overhead_v_ee975517-f65e-468e-ac44-277051aae484_0.png",
-      "sha256": "1a67ce85a618683f09d98af2fa584b15e9802efec979d4517d8d867b14bd15a4",
-      "size": 2486070,
-      "pointer_blob": "3a7977b466e79130c826f4f637b4c27cd5092510"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/00354b2aa1562e463815b30543549408.jpg",
-      "sha256": "735a833c9192b89591dbda7dfdb366e7e232f218a30c9879c617d0ac4aa184db",
-      "size": 205642,
-      "pointer_blob": "73e8f9fea3b7c18aa64c8adaa4e0cec9beb54535"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/2c443d0b13e56e4883317dd282ce878f.jpg",
-      "sha256": "ce78a6b2d6394cdf9603b9b45d63a6634828f77b1b2628b4c1fa85604d3ed2c7",
-      "size": 107813,
-      "pointer_blob": "ab471885c77f12faf694efe9e2ac72791fb62fb8"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/4b3c3ae1401f1ae953e8664ecfc78a9f.jpg",
-      "sha256": "38cfa3e29fc7bc830bbc8a23612e8ed9c41f974c9ddf71a3b258f61059f0d00a",
-      "size": 164868,
-      "pointer_blob": "73b058e5a2dc4a0ccf899c746f476530d60ca0da"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/5ae17220243b87a1a0d0ff653b1cc5ca.jpg",
-      "sha256": "96b4b587ecc250bb39e935790c6281bfadc124d2bdb33ec887b9cf62858c960d",
-      "size": 89354,
-      "pointer_blob": "6128ae263365564abeaf6bcbdefd8e47241d4742"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/673abb15db48853b5ddd74fcae43343e.jpg",
-      "sha256": "579d03e38fe6e76b42bae25f7f242420468c3caaa3fa883064a4dd96ba8140f7",
-      "size": 197396,
-      "pointer_blob": "4b995ebabf77a0d002df0f19f52768fc7a436992"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/6b6d148fbdb7e68224dadb19d5158095.jpg",
-      "sha256": "239b434e4b37857426bf0a53381548d811f6d7db71c36d3d5e5efab3bbd0498e",
-      "size": 160161,
-      "pointer_blob": "8e5a651d402037883aee3c23794d5574dbb2635e"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/6e309d1542535ae1dfffd2b5949b27c1.jpg",
-      "sha256": "48c9d123a4f0903543b204944e3ffe2e32cc02205c6ff1344b22bba26e34af5c",
-      "size": 203401,
-      "pointer_blob": "5639d453fdaa33f0a9594af65aff9a081f4339e1"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/95553f17dc99978aaa9ab7ba34a9b760.jpg",
-      "sha256": "40fc74cf9e89444558f71af5af6b6b8cd9aaa15376bf09a32bf89b315c2f28f4",
-      "size": 146745,
-      "pointer_blob": "914f366028dd9d9151fae826ebbc99dfee0b23d3"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/95a28ae03ed5048a2ec7138708bb1b55.jpg",
-      "sha256": "1d152180b05afc27dffed1f4b64a53e41bad2f721ac1435dd33205565c101760",
-      "size": 165064,
-      "pointer_blob": "3a0ce0a153cd14aaf742f929e2434791c3aeb6ff"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/97851b732f8696d9482eec73c2432df7.jpg",
-      "sha256": "031469bee163c6fc6e70030e26b430348773d07c8ac18416e8dc53b3d830642d",
-      "size": 120162,
-      "pointer_blob": "6b6e31efdbcaacc36b7bd9cabd03f2bc2ae16fcb"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/99b5c0ccb652a2ed399da131fbe024c5.jpg",
-      "sha256": "ceb3b100bf6305ba9afbaa50be857ac6631a7638d36178b2b1a5d0c63abc3b21",
-      "size": 36396,
-      "pointer_blob": "a5948baf65fb99ea3b1d17523b06e5b3fcc4a256"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/a518462ced0bf626a9d8204a81631779.jpg",
-      "sha256": "4b53e1288183fef0ecc871f8f98282ac63a699ceb9c90db4a3778bd950ca235d",
-      "size": 164134,
-      "pointer_blob": "38975254ecae052465b88ddfb15f378324dee593"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/b02916e2584f660595ba14e72d66a242.jpg",
-      "sha256": "c60e9b53d89da77f711ab353dd75e814ce4165aaad42b81f820c458ab1dc0e0c",
-      "size": 192765,
-      "pointer_blob": "2ed3066849ca2b32ffd9efd066c795e0621029e5"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/d04b83cf337b257b8157b66d4493b31e.jpg",
-      "sha256": "59da7f36604182b4e4f4046506cdb36a2b8e93b7e2dfa08223997ac29ccb837b",
-      "size": 64810,
-      "pointer_blob": "8a0f86f73686162bd537e910acf31df98db9427e"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/d06ba8d879f015959f796159c53ee334.jpg",
-      "sha256": "1429a2b229ee8fd3caa71ba954b0c84c8ecaaae0a42ec79f0750577d12538031",
-      "size": 210540,
-      "pointer_blob": "c137b575c480bfea0be7801dce5346fc91f00733"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/e09810d13d313f89ad3de5f31e24cfa8.jpg",
-      "sha256": "f1085acb8698c863fba3bbb7e6bda5a1f491ea6c53d51707d6e1149803a72069",
-      "size": 156073,
-      "pointer_blob": "5487c5f245259afe7b49761e00360714a941fc65"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/mundo-simbiotico-by-jean-giraud-wallpaper.jpg",
-      "sha256": "943e13b0f05c1357c9a23aa1ba7251c73ebf045a216e8b6dec875b50e2f71334",
-      "size": 1154051,
-      "pointer_blob": "721f40a8f7285fbe01184c2a2e6768c0f978d6b1"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/nlyhkbk5vdu11.png",
-      "sha256": "b0be48adeb2eb0054033259b65e53bab90d1abcc59695719704b1d53b050830b",
-      "size": 2804010,
-      "pointer_blob": "b6e76fd15b11788c692998edf3b7d9ac89d5e737"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/wdasdwad.png",
-      "sha256": "a03186a1065d0eb7c12b3513bcc9dfdb0f0280e31d27e153d9b20f60c4d2011b",
-      "size": 21023761,
-      "pointer_blob": "5350d74e08a9f74ec8203e3b79b5f3587c809349"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/wp4199396-jean-giraud-moebius-wallpapers.jpg",
-      "sha256": "49c081a6b3cbf8a5bac0406978df1776b9a3bcf48a01fe14539ccab71a452afc",
-      "size": 306953,
-      "pointer_blob": "a554a4e0309e31ef3493fa89153e4f8a71617b69"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/wp4199408-jean-giraud-moebius-wallpapers.jpg",
-      "sha256": "5be167ac3b0f73ba726b0ef72f78bf389b75529bdc83451dcb01d3b9045953ad",
-      "size": 109029,
-      "pointer_blob": "e62d14df8129f42b3533eb2f8a95b751cda3d375"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/wp4199411-jean-giraud-moebius-wallpapers.jpg",
-      "sha256": "ee530e13fcaad3b93dd1cd7412c7b8f8feeda6c6cb027db5a6538e672f331afd",
-      "size": 108782,
-      "pointer_blob": "6b50bd10a3cbb36abc4248adf8d6e8d89a56839a"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/wp4199420-jean-giraud-moebius-wallpapers.jpg",
-      "sha256": "51ea9474c7052f426af9f94435216335d8b5ccb016b7df8631a925831bf61ea1",
-      "size": 506694,
-      "pointer_blob": "42a06a25c59f0f4d88b53d842690192b9e80cc23"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/wp4199426-jean-giraud-moebius-wallpapers.jpg",
-      "sha256": "c018a3176f0fb9eec5f7492c9ffee14aee9d00f9a800b22618430b8eb07e460b",
-      "size": 72280,
-      "pointer_blob": "37b88644ea03810e0bf35ba6276d80eb5d5129e7"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog1/wp4199433-jean-giraud-moebius-wallpapers.jpg",
-      "sha256": "1214b8e3d3afcde29389a74dda7279f8b7910232fe93dfdda83ffa31f3155abd",
-      "size": 120135,
-      "pointer_blob": "08ba8b3ff9d7761c60b09d640d2ca067bc6e29ff"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/036a38ff3b3c2c43bed369c4e7d99b93.jpg",
-      "sha256": "7d976ea2c640897db1f6318eec2bf39d27c09a5cb3040ff2c1233ad98af12e3e",
-      "size": 34983,
-      "pointer_blob": "4871a0fe10f6f6f8e87a95bb22053657df020cbb"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/0d404dbd3389c4581d8064cdb2f40590.jpg",
-      "sha256": "0c0982503c03a04f6d5424f0d8acf8f48077c6d0f775533338de0e4d948b9965",
-      "size": 382640,
-      "pointer_blob": "03441a87f79e7c546ef28d2a5da2ecea00342fd5"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/0f7c014c2cd32a33f74f69805b0dba46.jpg",
-      "sha256": "691e2c0e16e3e982341e7dd12eb6feaa3562f12a07f9b757ab5d685613d29a0b",
-      "size": 59293,
-      "pointer_blob": "55224933e71f1c751bdbda155fc6830f9c727307"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/143d00661f714ab6953390bebb8bf7b8.jpg",
-      "sha256": "e8fe3782af991e31842ce4b5b041d10fe9addec2df2126902bea1749ba1e0b44",
-      "size": 21927,
-      "pointer_blob": "386295cecbd003d4ab9979fa88e6fd6a57a2511f"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/27c3f1c5511c0ce861504c73f81d86d3.jpg",
-      "sha256": "6af1a18de2fb325f978f222ad9dbc3ec990554b2d0a13f3c770deeb21e79e318",
-      "size": 221746,
-      "pointer_blob": "e40eee10730afcdbc6e2e8436f9c09acfd81c12b"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/2cc117f519941d02cb20e0ac95b99089.jpg",
-      "sha256": "dc7c16127e80afb1f983a00f878d5347d6239e30c8b87f1f8b2677db39670ead",
-      "size": 19815,
-      "pointer_blob": "e49d69b489c898b881fc1870ec9aff1db480548d"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/2e647c97d3d3429d157c0f0d7dba7cd8.jpg",
-      "sha256": "ec52bcf53844da1b4552609934ac8d56cc7921430f7f0c56cd6a6a1ba6f89d9c",
-      "size": 30633,
-      "pointer_blob": "cdc861209e092fda757f909bfb4091592d8adacc"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/3186e0301914b423108282556d129767.jpg",
-      "sha256": "4284453f8382f8a51ec5acb3d9265a852cf15a5623e4f21c293c98f1cc1f940c",
-      "size": 72608,
-      "pointer_blob": "d2f6edd0b901975417841a011d2ba1e4f1379a41"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/5af0d25898b77f98ed8cc337b94abffe.jpg",
-      "sha256": "8fc32cb08a2204d889200baea28906db43a1db1de787b165b52526116f380451",
-      "size": 67779,
-      "pointer_blob": "988e5f9a8b4662719f457b9487da8e2dce83b3ff"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/61b5512323c78fed5ada88c7a99e8e90.jpg",
-      "sha256": "faf8eb20a02f815f6ea477b86bf7c344c1930743196b29a21712a64fedf83701",
-      "size": 40542,
-      "pointer_blob": "51268505a1b842156163b4442fed236f332818fd"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/69e4ec4bb3ea123df3e341e8ba3dc3fd.jpg",
-      "sha256": "122f6a26dd827e62cfb8ec9a3dec6f1e2997f44036128c27ea478cbd7ed8963c",
-      "size": 23244,
-      "pointer_blob": "2a2f4b2b28d0c4889cd538520cb33d5bdba4f21a"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/725a22bc05ffd5531d94478779983f00.jpg",
-      "sha256": "6f2640096e37e7d30dff6542ce0b52a8dee4e4aee2488a241656cae8744bf54f",
-      "size": 34557,
-      "pointer_blob": "e9795045f6eb80e53ab638d2fea901607876ea27"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/79ef7895f5ea161f6461e67ac45e0ae9.jpg",
-      "sha256": "4659f135e046faa13c6c2cb654fe32c1bdc669edc0eff15bc6e90cfcb1406f1c",
-      "size": 27337,
-      "pointer_blob": "5754a4f5ed815be1778b48d20940122a0a989a1e"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/7f27d7f03b039e21da1eba8fbb3077cd.jpg",
-      "sha256": "3ca1ec8da7e2d7526d0e0f13e23b787b918e65dd15176f81a1b598bd2224c3c6",
-      "size": 27494,
-      "pointer_blob": "e52d273390ce33dba0fc972cc64238f91f5f49da"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/9355cfa2fa4b82922bd9ec15472ca9bb.jpg",
-      "sha256": "b6d64c6eb1c45388b9b64e697fd8db9a36bc6c5b27dc892d9243b4479d7ac5bf",
-      "size": 19195,
-      "pointer_blob": "5afb36f555ac01f53b1462bfea80fa871a17555a"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/99ce6cebc18da0a189850b45ca1a7c60.jpg",
-      "sha256": "108afe9b2fe6a515a6caaea80b38b6364a4afcbd9afe8d04e9da1e6ff0fc1f0e",
-      "size": 64500,
-      "pointer_blob": "b74785c41bde373a74d75d958d1bf3c1dec3b4c4"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/9c86552ba49887474c22b9ddf9a4a0e8.jpg",
-      "sha256": "37cdbcfbfb69aa8fb12af05d35f1804c57d80589183eb0e3ac961a0a1d7755bb",
-      "size": 285828,
-      "pointer_blob": "9c7165c8bd2993a81c53865ce6736837ed8fdbd6"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/9dc105ef85003e9ab87ce63ed5fa93ac.jpg",
-      "sha256": "dcb8fcf261b7eacfa25bf7efd12069b2514b793b56835719c79890d0827ecde7",
-      "size": 102444,
-      "pointer_blob": "b61fea481e612b1263a1528b0442675095ce7d7a"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/a1783925353293b6eb881fabe8a303b3.jpg",
-      "sha256": "2930701d34a1201dce6bd5582084e3381d8b3bb60488615fc1b71128a5e50c12",
-      "size": 76838,
-      "pointer_blob": "afbb9ff83c2d7d526be839b5b61039f411966a85"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/c692de43ea580298fe5613b47db8cd1d.jpg",
-      "sha256": "77eb143f39aaac5a04c7d93895cdd67259bd5557d1e2739b64868edaaab97116",
-      "size": 58322,
-      "pointer_blob": "de7ca5963e7b00271d8f8baf9cb928fb07393963"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/ca4dcf39b20dbf15bcdb3668685dadc9.jpg",
-      "sha256": "608daa4d56296e5c2545c832c27c8211988e405359dcc2fa73baa9328be5e1d4",
-      "size": 326894,
-      "pointer_blob": "adb9d8d25e96944ff6991d1382c13e0296bcd36e"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/d03c66853224585f8ed98d9505f1d4d0.jpg",
-      "sha256": "bfc6d16086af1bff457290e0f615d74b1db7c6fbd1fd18b47caaa80763431ff8",
-      "size": 65903,
-      "pointer_blob": "1dd8bc6bd94c9a1219bc430cfc50064402f524f4"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/d1e6ad8d24ab69aa73e8008d802d783d.jpg",
-      "sha256": "55efcc0f178f5d469c05fa63c64d967e9f53c72c2a4b3ee3dee6c26cd9df55ef",
-      "size": 133363,
-      "pointer_blob": "538f60637551863b56566fe28226cad65588b9cd"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/e3a9e128c9bdff160c6ea35ab799c5f2.jpg",
-      "sha256": "b581aaf3cd1ccff2ee6004c1c580906e1fab063aa7f3d9baf5fe5dc7d27162c5",
-      "size": 57298,
-      "pointer_blob": "2c711b814659e8255ce8f3ef6ed95b42a2981473"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/e79969089408f882b49b6a017421bbd1.jpg",
-      "sha256": "54898f47c3cbaadd3f6ed46ae288c4f978d912fd00d9731acae646080ccc5099",
-      "size": 91947,
-      "pointer_blob": "0fef3868742952d400bd8286522427dee64b222e"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/ed966d0f0974a367c363e071676bb814.jpg",
-      "sha256": "0fba4e1b213367e52621523079dffe5f1ec37f7fa39aefe36769560010a431e4",
-      "size": 213399,
-      "pointer_blob": "53065899d21d9e7d66f99cbc47e574cc7107e156"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/f04199ab3ee3ac404b2114e4203b02d3.jpg",
-      "sha256": "d5e54aaeb0c41038f5ab93de832146f02451192b68291c723fe28b19a2bd822e",
-      "size": 484274,
-      "pointer_blob": "bfcfd7d15f350f4e2cae4eb9d97727c1248c7514"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog2/f62de46f0cc09f36512d7e1c653fdf62.jpg",
-      "sha256": "234f91e4bed99bfffc843c3b9cdbedace906326e09dcb42abeaa15c0221a7f7a",
-      "size": 209505,
-      "pointer_blob": "f21cc5dcd9c7a9153ae463fb4bc450eabb7082bb"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog3/111b6446ff66c5a0abd2782c27aeb084.jpg",
-      "sha256": "7067775d89d953cc7d327824e60a519130f4241bdab322da32f1b554196a854f",
-      "size": 93030,
-      "pointer_blob": "f1be0dc873653086a11eb25e6532cd4c5a1d8dfb"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog3/1955d812a78d972f77dddf62fce1cb57.jpg",
-      "sha256": "f4cb6ba5428fa021cc613e6b9a714796ed4c0da8e81b5f99bec1351056715411",
-      "size": 107036,
-      "pointer_blob": "e863a4def7bce23c23a363bdb5a23ac69e453e3c"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog3/3932dbc59179bddcd7c11e2e8bfd5173.jpg",
-      "sha256": "ad035a2a50139a0cfc0525cf4219796c5cc25efee268fb24e1a0f295c4177888",
-      "size": 106925,
-      "pointer_blob": "6638d601f4b1764bf30ceca59f34bb477c6a6f32"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog3/47d91ff258af08e56005ab91b72e156c.jpg",
-      "sha256": "ff414898f031876a17a93c6eaab19c9c3b06e484409a947c2afbb8dddf37a129",
-      "size": 38587,
-      "pointer_blob": "1f5efb009d16b1447c5837910d2124cd5e05cd60"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog3/70a640a3bbe55817bf65a76cb4e7af3a.jpg",
-      "sha256": "382852ec50f3595f4bd2d485c3b7cde68efdd2b24a78ce333f4f8e0ab3d75f56",
-      "size": 132698,
-      "pointer_blob": "75627761592170acce2e787f62072f8968792ee3"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog3/7622e60ed069b00ac6ece1657761b786.jpg",
-      "sha256": "0d69a15a00684777373a26d3c8b27244393d31a9d7cc36ab72b3f06169f5886c",
-      "size": 29755,
-      "pointer_blob": "bef300bd7505b960b61d3119bdef9a751a938b20"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog3/763584e051ef22042c9b1c40277d7e73.jpg",
-      "sha256": "0f1df8beb68cbbda89d1d525d1154caf7e007bd7fcae15959b59b9c68ab540ee",
-      "size": 233463,
-      "pointer_blob": "cd8f93fa179de97947f5e04bbabc47fbc47da42e"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog3/8ac4b77075f81359f1b650c211571b7f.jpg",
-      "sha256": "c8e8bb2344b5cf98e83197b0350d1cd2a2fd6664580c31cbe9089a85891d911e",
-      "size": 70631,
-      "pointer_blob": "00c14c8a31527de087b6aa9e6c67a401740ebc0e"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog3/90649b4f8207d91256bf2db231b85104.jpg",
-      "sha256": "15ed286f7c2619541ee5d49bd2e8b9f8b75f7242ca4752e2fbd97cedcc8c7616",
-      "size": 281219,
-      "pointer_blob": "8f018b7637cdbf0606bd8c16f152abf00eb59f47"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog3/a104dde62bb7f350e0a8f4ef3086072a.jpg",
-      "sha256": "49d29845d49bcc59a61f303f631296cb58374d481822e2c506a3bb2537b462ce",
-      "size": 26553,
-      "pointer_blob": "fa06a8245021db9ab358c9f718486070f44a1ef5"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog3/b0cbd2d1d28cea834ac4aa5973ade5f7.jpg",
-      "sha256": "c664fcb426b019b5981e60041fc9a6907032f3fcfe42c3cc3618fc796280b7c3",
-      "size": 61532,
-      "pointer_blob": "a43da0962e909f93bcfd8e591d57460e399f4645"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog3/bf083d752fdb387a7a78c51991cc27f7.jpg",
-      "sha256": "4118eb1a9584007d9103122ba33670c3b16364f83768c35fd7646827d0e4d4fa",
-      "size": 71044,
-      "pointer_blob": "3ef6f62fc091e90f5a3e03e6c811897dcabf27c6"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog3/c91b7ef406b677660eeb3f86980ba678.jpg",
-      "sha256": "5985e43e4005fc413a7467758a8ff7e2de66afd37a8396913d41595ed3a972de",
-      "size": 33398,
-      "pointer_blob": "d3ceb65e8403a77900d42fc814c164daf80ea6f3"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog3/e0eec055af6a142122009453313ba8f1.jpg",
-      "sha256": "8a4e0240b20138b501fc76bdc40ead40238ddbe7cabeba4b1faddf8ee9a99198",
-      "size": 110526,
-      "pointer_blob": "c4ea2c0495977123f1ce8dbc77c5fe644942e93d"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog3/e85ac4987ba818c3b6c3cbbad7907c76.jpg",
-      "sha256": "ecf86f28d4e77862492465303a7c69e78a7efbf7c898904becbc4f92a4cca700",
-      "size": 47302,
-      "pointer_blob": "45f0111d1b6c0b63dfd6574a4e4a5259ef2e3dc9"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog3/ebfdcfceff481a62c38126e65d803082.jpg",
-      "sha256": "a6c0c4a45d424f5fa9caacd4b091a751d4ed8466c8d44e6fb0f26762a6250a53",
-      "size": 84930,
-      "pointer_blob": "b4dc7ed4516c67f554532a3277795795545d7a49"
-    },
-    {
-      "path": "business/other_content/Blog/MoodboardSamples/Blog3/f7f07091134942142ab888c766730505.jpg",
-      "sha256": "765cfdf000d41176d97f2339e3b6139da60deca658ddfe03fd09c4fb94efe640",
-      "size": 200067,
-      "pointer_blob": "c5563f52578b8cbee0d7d38892a4703b07e83bcd"
-    },
-    {
-      "path": "business/other_content/copy_and_powerpoints/Employee_Advocacy_Pitch_Deck_LessThan15Slides.pptx",
-      "sha256": "666432e130282af3d3cbdda8d7bc23c8b98d941637494036fa3e9c97740826c4",
-      "size": 80572,
-      "pointer_blob": "48751fb77cfc64bf438ddd31e70c9b60745b955b"
-    },
-    {
-      "path": "business/other_content/copy_and_powerpoints/Powerpoints-SalesLetters-etc/Open Letter international structure workshop presentation 2024.pptx",
-      "sha256": "af4747db302732747abbf5d43825532d0ec5f7a532b893f5c87df492e94931ac",
-      "size": 2423550,
-      "pointer_blob": "6a2486073892886d726f4d58c9c726260cf146b5"
-    },
-    {
-      "path": "business/other_content/copy_and_powerpoints/Powerpoints-SalesLetters-etc/Social Ghostwriting Pitch Deck - Stefan.pdf",
-      "sha256": "65ff6b46704d33828c34a6663a78035183aefd48504a184e1dfaa356824866ce",
-      "size": 6382774,
-      "pointer_blob": "891e37a1da8c13b2e8eca554728f86a3aa9f2779"
-    },
-    {
-      "path": "business/other_content/copy_and_powerpoints/Powerpoints-SalesLetters-etc/Typeway-new-presentation.pptx",
-      "sha256": "a3c12b981d5b25eb3b50b3dc6ef1cbf68b2375644ecc93caedcf97fb2ed34d7a",
-      "size": 27910452,
-      "pointer_blob": "df38a455ec9c323df7de38fefea81f874c080175"
-    },
-    {
-      "path": "business/other_content/copy_and_powerpoints/TYPESPACE SALES LETTER.pdf",
-      "sha256": "5eeb93db09636c5c688e553f59389f38536f5ef9e72504596dfb1d0526f97be7",
-      "size": 90279,
-      "pointer_blob": "171da53bbd11d297c61e37a31a84957f88ff5aa2"
-    },
-    {
-      "path": "business/other_content/email_templates/kindregards-dark.png",
-      "sha256": "275561bfa1544471b586f3854d7df771b1af0d143b74a554827f8816311f38a6",
-      "size": 20067,
-      "pointer_blob": "15d9d520e3a9099c08110c4556c5d9447af2cb49"
-    },
-    {
-      "path": "business/other_content/email_templates/kindregards.png",
-      "sha256": "00cc2fc92085cf714121cc1f04de0669629464b120aa2eb4358ee9f7256bc378",
-      "size": 20938,
-      "pointer_blob": "a237a3742a5a5325cef63dff727d6c271dea9b09"
-    },
-    {
-      "path": "business/resources/driveauthscopes.mp4",
-      "sha256": "96db27a732f4f2787ab22097de0cdfcb7af70c8d76e4c530edae613e1b8f7e3d",
-      "size": 49388407,
-      "pointer_blob": "c1896c08094bd7e508906fce3461382d63fd8ced"
     },
     {
       "path": "business/service/Clients/Customm/1738695171487.jpeg",
@@ -33487,6 +33337,30 @@
       "pointer_blob": "ac315c71b995a2c6d50aec90f3fc145cc92a8e2f"
     },
     {
+      "path": "personal-brand/_obsidian/attachments/Pasted image 20260728210157.png",
+      "sha256": "20f02d8d03b3c724ecb2ae9eb320296c42b857e15a313885a81e45f935eafd94",
+      "size": 781019,
+      "pointer_blob": "310035a7275b5c0d51bf28d2d0c10ead72dc92dc"
+    },
+    {
+      "path": "personal-brand/_obsidian/attachments/Pasted image 20260728210317.png",
+      "sha256": "6230d67ee7cede28a47396aabd7736b9358702a6851b0aab263bb2189538bf76",
+      "size": 227698,
+      "pointer_blob": "f4b6acac63d5e594c7f9e8e40b093cffdc0bdeea"
+    },
+    {
+      "path": "personal-brand/_obsidian/attachments/Pasted image 20260728210625.png",
+      "sha256": "df99fbb482e3af63bd3ffdcbdbd5759a58f5f5727557dc009edd50a7f6fc7aa4",
+      "size": 349069,
+      "pointer_blob": "be621d3b15550272da54d2a4c46048f8ce9edf15"
+    },
+    {
+      "path": "personal-brand/_obsidian/attachments/Pasted image 20260728210653.png",
+      "sha256": "cafaeada950fc9630f371eb19410eff650ccedca6ca680165d992123a90a9019",
+      "size": 371253,
+      "pointer_blob": "c08c9c4380e7bb30cf775ef2aeb3fc45755b5f8b"
+    },
+    {
       "path": "personal-brand/_obsidian/attachments/previous-import/Content/Writing/draftdev1starticle/How to implement SAML and OIDC SSO in Remix/image 1.png",
       "sha256": "54097de5e26a2997b746f87082102878c662d9ac0c05802a2d17a36e26d89e4e",
       "size": 411974,
@@ -34799,6 +34673,30 @@
       "sha256": "daeebd8e7c48ad41bb7915c4c9d0735feb57da221b8a95e8e9042197c8833353",
       "size": 343972,
       "pointer_blob": "7b413e90892b961a676485d579b9ceb3c25a01d1"
+    },
+    {
+      "path": "personal/job applications/cover-letter-subq.pdf",
+      "sha256": "aa819406ff0db99fddaaf6aa7fe434a240c7516f43f6337ab529659a30154324",
+      "size": 67456,
+      "pointer_blob": "62c724e8e39d6694a05907be737ab9f34de94f5c"
+    },
+    {
+      "path": "personal/job applications/resume/matt-main-resume-2026-v2.pdf",
+      "sha256": "2c2e899cbeb66cbfe9bf87f5be0fbd8433734d8f3dd94ac36a6abd5ebb6bd5e3",
+      "size": 129644,
+      "pointer_blob": "a7f77099e11dab4c73f34d3da51cee7642fd5489"
+    },
+    {
+      "path": "personal/job applications/resume/matt_derman_resume_2025.pdf",
+      "sha256": "5c5659d1575d648deaa0f74ebfc7aa5e2458322d27621a403caa52cbf2bd0086",
+      "size": 212375,
+      "pointer_blob": "69aac777d8565dcb17e3890f881a772f8a5ef022"
+    },
+    {
+      "path": "personal/job applications/resume/matthew-derman-resume_2026.pdf",
+      "sha256": "cb7a6bac2bee797ee543dd225187055f69d260d2ecfda2d74c55e8dbd5bcb2d6",
+      "size": 805157,
+      "pointer_blob": "51dee740ff73affddc32747227c71e3c7f2393a4"
     }
   ]
 }

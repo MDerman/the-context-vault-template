@@ -21,6 +21,12 @@ SPEC.loader.exec_module(vault_dispatch)
 
 
 class VaultDispatchTests(unittest.TestCase):
+    def test_mac_startup_command_is_registered(self) -> None:
+        self.assertEqual(
+            vault_dispatch.COMMANDS["mac-startup"],
+            SCRIPT_DIR / "mac_startup.py",
+        )
+
     def test_snippets_command_is_registered(self) -> None:
         self.assertEqual(
             vault_dispatch.COMMANDS["snippets"],

@@ -1,19 +1,19 @@
 ---
 type: publication
-entity: _system
+entity: <% tp.file.folder(true).split('/')[0] %>
 publication_type:
 publication_id:
-name: dashboard-action-links
+name: <% tp.file.title %>
 status: active
 primary_cta:
 tags:
   - publication
 generated: true
-generated_at: 2026-06-06T14:27:02
+generated_at: 2026-07-28T19:33:07
 managed_by: "vault.bootstrap"
 ---
 
-# dashboard-action-links
+# <% tp.file.title %>
 
 ## Purpose
 

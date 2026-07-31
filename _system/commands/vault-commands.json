@@ -94,6 +94,55 @@
     "tui": true
   },
   {
+    "id": "mac-startup-status",
+    "label": "macOS Startup Status",
+    "description": "Show machine opt-in, LaunchAgent, runtime, key mapping, and legacy-job state.",
+    "group": "Automation",
+    "risk": "read",
+    "mode": "run",
+    "args": ["mac-startup", "status"],
+    "statusArgs": ["mac-startup", "status", "--json"],
+    "tui": true
+  },
+  {
+    "id": "mac-startup-run",
+    "label": "Run macOS Startup Actions",
+    "description": "Run this machine's enabled macOS startup actions immediately.",
+    "group": "Automation",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["mac-startup", "run"],
+    "statusArgs": ["mac-startup", "status", "--json"],
+    "tui": true
+  },
+  {
+    "id": "mac-startup-install",
+    "label": "Install macOS Startup",
+    "description": "Install or refresh this machine's opt-in macOS login LaunchAgent.",
+    "group": "Automation",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["mac-startup", "install"],
+    "statusArgs": ["mac-startup", "status", "--json"],
+    "palette": true,
+    "tui": true
+  },
+  {
+    "id": "mac-startup-uninstall",
+    "label": "Uninstall macOS Startup",
+    "description": "Unload and remove the managed macOS startup job while preserving archives and the current HID mapping.",
+    "group": "Automation",
+    "risk": "destructive",
+    "mode": "run",
+    "confirm": "strong",
+    "args": ["mac-startup", "uninstall"],
+    "statusArgs": ["mac-startup", "status", "--json"],
+    "palette": true,
+    "tui": true
+  },
+  {
     "id": "skills-sync-dry-run",
     "label": "Skills Sync Dry Run",
     "description": "Validate grouped skill sources and preview catalog/global link changes.",
@@ -565,6 +614,29 @@
         "type": "text"
       }
     ]
+  },
+  {
+    "id": "business-toolkit-status",
+    "label": "Business Toolkit Status",
+    "description": "Check installed business-context templates, folder rules, and local drift.",
+    "group": "Contexts",
+    "risk": "read",
+    "mode": "run",
+    "args": ["business-toolkit", "status", "--all-business"],
+    "palette": true,
+    "tui": true
+  },
+  {
+    "id": "business-toolkit-sync",
+    "label": "Business Toolkit Sync",
+    "description": "Update all configured business contexts from the shared canonical template pack.",
+    "group": "Contexts",
+    "risk": "apply",
+    "mode": "run",
+    "confirm": true,
+    "args": ["business-toolkit", "sync", "--configured", "--apply"],
+    "palette": true,
+    "tui": true
   },
   {
     "id": "triage-prepare",

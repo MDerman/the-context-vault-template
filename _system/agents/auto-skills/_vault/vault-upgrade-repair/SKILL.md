@@ -3,7 +3,7 @@ name: vault-upgrade-repair
 description: Repair public bootstrap vault upgrades after `vault upgrade` reports skipped files, failed migrations, or conflicts. Use when user mentions vault upgrade repair, `_system/state/upgrade-reports`, failed migrations, or asks an agent to fix upgrade fallout.
 ---
 
-# Vault Upgrade Repair
+# Vault · Upgrade Repair
 
 ## Quick Start
 

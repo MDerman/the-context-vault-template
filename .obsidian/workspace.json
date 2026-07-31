@@ -27,7 +27,7 @@
       {
         "id": "5b978711000ded9b",
         "type": "tabs",
-        "dimension": 71.60589604344453,
+        "dimension": 74.66288147622427,
         "children": [
           {
             "id": "12a3aa81c232d265",
@@ -36,7 +36,9 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": false
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -74,7 +76,7 @@
       {
         "id": "4365fdef29381df3",
         "type": "tabs",
-        "dimension": 28.394103956555472,
+        "dimension": 25.337118523775725,
         "children": [
           {
             "id": "1ffc5fcaa195eeb3",
@@ -92,8 +94,8 @@
             "state": {
               "type": "tasknotes-pomodoro-view",
               "state": {},
-              "icon": "clock",
-              "title": "Pomodoro"
+              "icon": "lucide-ghost",
+              "title": "tasknotes-pomodoro-view"
             }
           },
           {
@@ -106,12 +108,11 @@
               "title": "Vault Command Center"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "horizontal",
-    "width": 434.5
+    "width": 449.19140625
   },
   "right": {
     "id": "c5da0292b2670f3d",
@@ -198,7 +199,7 @@
             }
           },
           {
-            "id": "5441ebc260e0fb3c",
+            "id": "7cd47d3795fe72af",
             "type": "leaf",
             "state": {
               "type": "system3-sync-status",
@@ -248,7 +249,7 @@
       "periodic-notes:Open today": false
     }
   },
-  "active": "9c9bdf79ddab1c3b",
+  "active": "6cb9795a9b89b9a8",
   "lastOpenFiles": [
     "README.md"
   ]

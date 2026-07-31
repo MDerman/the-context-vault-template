@@ -106,7 +106,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "install-hooks":
             install_hooks(root, args.apply)
         elif args.command == "bootstrap":
-            registry_path = root / "_system/config/code-folder-and-computer-topology/private/machines.json"
+            registry_path = root / "_system/config/infra-code-folder-and-computer-topology/private/machines.json"
             bootstrap_worker(root, machine_registry.load_registry(registry_path), args.name, args.apply)
         return 0
     except (WorkerBootstrapError, machine_registry.MachineError, OSError, subprocess.SubprocessError) as exc:

@@ -28,25 +28,10 @@
       ]
     }
   ],
-  "public_context_scaffold_dirs": {
-    "business": [
-      "meetings/1-on-1s",
-      "meetings/general-meetings",
-      "meetings/customer-calls",
-      "meetings/founder-notes",
-      "product/specs",
-      "product/decisions",
-      "product/experiments",
-      "product/user-signals",
-      "gtm/campaigns",
-      "gtm/offers",
-      "gtm/icp",
-      "gtm/competitors",
-      "ops/metrics-snapshots",
-      "ops/sops",
-      "skills"
-    ]
-  },
+  "public_context_scaffold_dirs": {},
+  "library_include_paths": [
+    "business_toolkit"
+  ],
   "root_files": [
     "AGENTS.md",
     {
@@ -80,9 +65,9 @@
     "_system/config/dashboard-action-links.md"
   ],
   "generated_exclude_globs": [
-    "_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/assets/**",
-    "_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/references/**",
-    "_system/agents/auto-skills/_infrastructure/code-folder-and-computer-topology/scripts/**",
+    "_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/assets/**",
+    "_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/references/**",
+    "_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/scripts/**",
     "_system/config/*/private",
     "_system/config/*/private/**",
     "_system/_obsidian/periodic/**",

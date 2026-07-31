@@ -51,6 +51,118 @@ class DependencySetupTests(unittest.TestCase):
             self.assertFalse((target / "references").is_symlink())
             self.assertEqual((target / "references/example.md").read_text(), "portable\n")
 
+    def test_skill_projection_applies_local_name_and_title_without_changing_source(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "vault"
+            checkout = Path(tmp) / "checkout"
+            source = checkout / "skills/example"
+            source.mkdir(parents=True)
+            original = "---\nname: example\ndescription: Example.\n---\n\n# Upstream Title\n\nBody.\n"
+            (source / "SKILL.md").write_text(original)
+            projection = deps.Projection(
+                repo_id="example",
+                repo_path=checkout,
+                source="skills/example",
+                target="_system/agents/auto-skills/_creative/creative-example",
+                type="auto-skill",
+                managed=True,
+                title_override="Creative · Example",
+            )
+
+            self.assertTrue(deps.create_auto_skill_projection(root, projection, apply=True))
+            target = root / projection.target
+            rendered = (target / "SKILL.md").read_text()
+            self.assertIn("name: creative-example", rendered)
+            self.assertIn("# Creative · Example", rendered)
+            self.assertNotIn("# Upstream Title", rendered)
+            self.assertNotIn("display_name:", (target / "agents/openai.yaml").read_text())
+            self.assertEqual((source / "SKILL.md").read_text(), original)
+            self.assertFalse(deps.create_auto_skill_projection(root, projection, apply=True))
+
+    def test_skill_projection_inserts_title_when_upstream_has_no_h1(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "vault"
+            checkout = Path(tmp) / "checkout"
+            source = checkout / "skills/example"
+            source.mkdir(parents=True)
+            (source / "SKILL.md").write_text(
+                "---\nname: example\n---\n\n## Workflow\n\n```sh\n# not a title\n```\n"
+            )
+            projection = deps.Projection(
+                repo_id="example",
+                repo_path=checkout,
+                source="skills/example",
+                target="_system/agents/manual-skills/_code/code-example",
+                type="manual-skill",
+                managed=True,
+                title_override="Code · Example",
+            )
+
+            deps.create_manual_skill_projection(root, projection, apply=True)
+            rendered = (root / projection.target / "SKILL.md").read_text()
+            self.assertIn("---\n\n# Code · Example\n\n## Workflow", rendered)
+            self.assertIn("# not a title", rendered)
+
+    def test_skill_pack_projection_prefixes_title_and_preserves_upstream_frontmatter(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "vault"
+            checkout = Path(tmp) / "checkout"
+            source = checkout / "skills/example"
+            source.mkdir(parents=True)
+            (source / "SKILL.md").write_text(
+                "---\nname: example\ndescription: Example.\n"
+                "user-invocable: true\nargument-hint: \"[url]\"\n"
+                "---\n\n# SEO Audit\n\nBody.\n"
+            )
+            projection = deps.Projection(
+                repo_id="example",
+                repo_path=checkout,
+                source="skills/example",
+                target=(
+                    "_system/agents/manual-skills/_claude-seo/"
+                    "claude-seo-example"
+                ),
+                type="manual-skill",
+                managed=True,
+            )
+
+            self.assertTrue(deps.create_manual_skill_projection(root, projection, apply=True))
+            rendered = (root / projection.target / "SKILL.md").read_text()
+            self.assertIn("name: claude-seo-example", rendered)
+            self.assertIn("user-invocable: true", rendered)
+            self.assertIn('argument-hint: "[url]"', rendered)
+            self.assertIn("# Claude SEO · SEO Audit", rendered)
+
+    def test_load_config_accepts_optional_projection_title_override(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = root / deps.CONFIG_PATH
+            config.parent.mkdir(parents=True)
+            config.write_text(
+                json.dumps(
+                    {
+                        "repos": [
+                            {
+                                "id": "example",
+                                "url": "https://example.invalid/repo.git",
+                                "path": str(root / "checkout"),
+                                "projections": [
+                                    {
+                                        "source": "skills/example",
+                                        "target": "_system/agents/auto-skills/_code/code-example",
+                                        "type": "auto-skill",
+                                        "title_override": "Code · Example",
+                                    }
+                                ],
+                            }
+                        ]
+                    }
+                )
+                + "\n"
+            )
+            projection = deps.load_config(root)[0].projections[0]
+            self.assertEqual(projection.title_override, "Code · Example")
+
     def test_setup_script_must_stay_inside_vault(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "vault"
