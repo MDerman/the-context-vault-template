@@ -5,7 +5,7 @@ description: Publish, discover, list, read, create, update, or inspect Markdown 
 
 # Infra · MD HTML Publisher
 
-Read `_system/config/infra-md-html-publisher/README.md` and private config first. Publish Markdown and safe static HTML through the configured service. Treat service/host names as publishing mechanism names, not automatic instructions to turn content into a plan. Default visual language is dark neutral monochrome: `#181818` page, dark-gray surfaces, near-white text, gray links and borders. Reserve color for diagrams, data visualization, syntax highlighting, and semantic status/callout states.
+Read `_system/local/skills/infra-md-html-publisher/README.md` and private config first. Publish Markdown and safe static HTML through the configured service. Treat service/host names as publishing mechanism names, not automatic instructions to turn content into a plan. Default visual language is dark neutral monochrome: `#181818` page, dark-gray surfaces, near-white text, gray links and borders. Reserve color for diagrams, data visualization, syntax highlighting, and semantic status/callout states.
 
 ## Preserve artifact intent
 

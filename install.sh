@@ -4,7 +4,7 @@ set -euo pipefail
 REPO_URL="https://github.com/MDerman/the-context-vault-template.git"
 DEFAULT_TARGET_RELATIVE="Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault"
 RELEASE_METADATA_RELATIVE="_system/bootstrap/release.json"
-INSTALL_STATE_RELATIVE="_system/state/install.json"
+INSTALL_STATE_RELATIVE="_system/local/state/install.json"
 
 INSTALL_USER="$(id -un)"
 if [[ "${EUID}" -eq 0 && -n "${SUDO_USER:-}" && "${SUDO_USER}" != "root" ]]; then

@@ -19,7 +19,7 @@ Use this skill for open source contribution work, including one-off patches in r
 
 ## Usual Commands
 
-Read `_system/config/code-gh-open-source-pr/README.md`. Resolve optional helper repository through topology config, then use configured command when available:
+Read `_system/local/skills/code-gh-open-source-pr/README.md`. Resolve optional helper repository through topology config, then use configured command when available:
 
 ```bash
 <configured-helper-command> \

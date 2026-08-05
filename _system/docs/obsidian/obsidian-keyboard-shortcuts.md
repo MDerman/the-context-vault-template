@@ -13,8 +13,9 @@ These come from `.obsidian/hotkeys.json` and are the source-of-truth custom bind
 | `Alt+T` | TaskNotes: create new task | Plain task capture shortcut. Binding this prevents macOS from inserting `†`. |
 | `Alt+Cmd+T` | Context Nine: capture selection to new TaskNotes task | Opens the native TaskNotes create dialog. If Markdown is selected, the selection is added to task details on save; with no selection, it behaves like normal TaskNotes new task. |
 | `Alt+Cmd+Y` | Context Nine: append selection to existing TaskNotes task | Pick an existing task and append the selected block under `## Captures`. |
+| `Alt+Cmd+C` | Context Nine: copy current note directory | Copies the active note's vault-relative parent directory for use in terminal and agent prompts. |
 | `Alt+R` | Templater: replace templates in active file | Useful for previewing or applying template syntax. |
-| `Cmd+Backspace` | Context Nine: delete hovered or selected file | Uses Obsidian's normal delete confirmation and trash behavior. Does not fall back to deleting the active note. |
+| `Alt+Cmd+R` | File Explorer: reveal active file | Immediately reveals and selects the open note in the File Explorer pane. |
 | `Alt+Cmd+Backspace` | Obsidian: delete current file | Deliberate current-note delete shortcut, using Obsidian's native confirmation flow. |
 | `Cmd+N` | Context Nine: new note in hovered folder | When hovering a folder in the file explorer, creates the note there; otherwise falls back to Obsidian's normal new note command. |
 | `Cmd+1` | File Explorer: open | Focuses the left file tree. |
@@ -41,6 +42,8 @@ These come from `.obsidian/hotkeys.json` and are the source-of-truth custom bind
 | `Cmd+2` | Focus the first main editor pane. |
 | `Cmd+3` | Focus the second main editor pane, creating it if needed. |
 | `Cmd+4` | Focus the right sidebar. |
+| `Alt+Cmd+R` | Reveal the open note in the File Explorer pane. |
+| `Alt+Cmd+C` | Copy the current note's vault-relative directory. |
 | `Cmd+F` | Omnisearch In-file search inside the current Markdown note. |
 | `Shift then Shift` | Omnisearch Vault search across the vault. |
 | `Cmd+Shift+F` | Omnisearch Vault search fallback. |
@@ -76,7 +79,7 @@ Open Tab Settings changes default note-opening behavior without adding a new hot
 - `Shift+Click` Focus Mode's button to focus only the active tab, if Focus Mode is enabled.
 - Right-click a TaskNotes task to start time tracking.
 - Right-click a file explorer item or a Bases kanban card to get the Context Nine delete action.
-- Hover a Bases kanban card or file explorer item and press `Cmd+Backspace` to delete it with Obsidian's normal confirmation. Use `Alt+Cmd+Backspace` when you intentionally want to delete the current open note instead.
+- The Context Nine hovered/selected-file delete command has no keyboard shortcut. Use `Alt+Cmd+Backspace` only when you intentionally want to delete the current open note instead.
 
 ## TaskNotes Shortcuts And Input
 

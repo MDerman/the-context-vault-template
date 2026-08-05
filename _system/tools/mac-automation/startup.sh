@@ -8,10 +8,19 @@ remap_tilde_key() {
   echo "Applied remap-tilde-key at $(/bin/date '+%Y-%m-%d %H:%M:%S')"
 }
 
+open_application() {
+  local bundle_id="$1"
+  /usr/bin/open -gja -b "$bundle_id"
+  echo "Opened $bundle_id at $(/bin/date '+%Y-%m-%d %H:%M:%S')"
+}
+
 run_action() {
   case "$1" in
     remap-tilde-key)
       remap_tilde_key
+      ;;
+    open-application:*)
+      open_application "${1#open-application:}"
       ;;
     *)
       echo "Unknown mac-startup action: $1" >&2

@@ -1,0 +1,64 @@
+filters:
+  and:
+    - type == "content"
+    - file.inFolder("personal-brand/_obsidian/content/items")
+    - list(collections).contains("youtube-pipeline")
+formulas:
+  priorityBadge: if(content_priority=="next-up","⏭ Next Up",if(content_priority=="high","🔥 High",if(content_priority=="medium","◆ Medium",if(content_priority=="low","◇ Low",if(content_priority=="long-time-bru","◌ Long Term","")))))
+  filmingBadge: if(can_film_in_one_day,"🎬 One Day","")
+properties:
+  formula.priorityBadge:
+    displayName: Priority
+  formula.filmingBadge:
+    displayName: Filming
+views:
+  - type: kanban-view
+    name: Pipeline Board
+    order:
+      - formula.priorityBadge
+      - formula.filmingBadge
+      - publish_date
+    groupByProperty: status
+    swimlaneByProperty: category
+    columnOrders:
+      note.status:
+        - idea
+        - cogs-are-turning
+        - draft
+        - planning-scripting
+        - scheduled
+        - published
+        - cancelled
+    columnColors:
+      note.status:
+        idea: yellow
+        cogs-are-turning: orange
+        draft: blue
+        planning-scripting: purple
+        scheduled: cyan
+        published: green
+        cancelled: red
+    wrapPropertyValues: false
+    cardOrders:
+      "note.status\x1fnote.category": {}
+    swimlaneOrders:
+      "note.status\x1fnote.category":
+        - creating content
+        - Escape Your 9-5 (use social media-productively- self-actualization)
+        - Uncategorized
+    collapsedLanes:
+      "note.status\x1fnote.category": []
+  - type: table
+    name: Pipeline Table
+    order:
+      - file.name
+      - status
+      - category
+      - content_priority
+      - can_film_in_one_day
+      - publish_date
+    sort:
+      - property: status
+        direction: ASC
+      - property: publish_date
+        direction: ASC

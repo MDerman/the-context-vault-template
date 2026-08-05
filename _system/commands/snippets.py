@@ -17,7 +17,7 @@ import sys
 import tempfile
 from typing import Any
 
-from vault_layout import CONFIG_DIR, VAULT_ROOT
+from vault_layout import LOCAL_DIR, SKILL_CONFIG_DIR, VAULT_ROOT
 
 
 ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
@@ -484,12 +484,12 @@ def main(argv: list[str] | None = None) -> int:
     args.config_dir = (
         args.config_dir.expanduser().resolve()
         if args.config_dir
-        else args.root / CONFIG_DIR / "snippets"
+        else args.root / LOCAL_DIR / "snippets"
     )
     args.repository_registry = (
         args.repository_registry.expanduser().resolve()
         if args.repository_registry
-        else args.root / CONFIG_DIR / "infra-code-folder-and-computer-topology/private/repositories.json"
+        else args.root / SKILL_CONFIG_DIR / "infra-code-folder-and-computer-topology/private/repositories.json"
     )
     try:
         targets = load_targets(args.config_dir)

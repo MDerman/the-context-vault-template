@@ -17,7 +17,7 @@ from script_utils import configured_context_folders, context_folder_note_path, r
 
 
 DEFAULT_ENTITIES = ["personal", "personal-brand", "business"]
-REFRESH_COMPLETION_MARKER = Path("_system/state/refresh-complete.json")
+REFRESH_COMPLETION_MARKER = Path("_system/local/state/refresh-complete.json")
 CONTEXT_NINE_CLI_COMMAND = "context-nine:refresh-periodic-tabs"
 
 

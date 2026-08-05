@@ -21,7 +21,7 @@ Configured root-vault behavior:
 
 In practice:
 
-- A task with context `impression` is created in `business/_obsidian/tasks`.
+- A task with context `business` is created in `business/_obsidian/tasks`.
 - A task with no context defaults to `personal/_obsidian/tasks`.
 - Prefer contexts for context folder routing and tags for sub-project/grouping.
 - Use `due` and `scheduled` exactly in task frontmatter. Do not rename them to `due_date` or `scheduled_date`; Bases and live inventory expect TaskNotes native names.
@@ -207,7 +207,7 @@ Each context folder has a local dashboard at `<context-folder>/_obsidian/bases/c
 
 | Plugin | Use |
 | --- | --- |
-| Iconize | Adds icons to files/folders/links; icon metadata lives in `.obsidian/plugins/obsidian-icon-folder/data.json`. |
+| Emoji Title | Reads `emoji` from note frontmatter and shows it in the File Explorer and open-note title/tab. File-type fallbacks are disabled so emojis remain explicit Markdown metadata. |
 | Omnisearch | Preferred fast relevance-ranked search; `Shift then Shift` opens Vault search, `Cmd+Shift+F` is the fallback, and `Cmd+F` opens In-file search. |
 | Open Tab Settings | Makes normal note opens create or focus tabs instead of replacing the current tab; prevents duplicate tabs and keeps explicit `Cmd+Click`/middle-click opens in the opposite tab group when possible. |
 | Doubleshift | Maps double-tapping left Shift to `Omnisearch: Vault search`. |

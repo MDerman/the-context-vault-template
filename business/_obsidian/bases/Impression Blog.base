@@ -1,0 +1,44 @@
+filters:
+  and:
+    - type == "content"
+    - file.inFolder("business/_obsidian/content/items/blog-posts")
+    - list(collections).contains("blog-database")
+views:
+  - type: kanban-view
+    name: Impression Blog
+    order:
+      - category
+      - publish_date
+    groupByProperty: status
+    columnOrders:
+      note.status:
+        - idea
+        - cogs-are-turning
+        - draft
+        - planning-scripting
+        - scheduled
+        - published
+        - cancelled
+    columnColors:
+      note.status:
+        idea: yellow
+        cogs-are-turning: orange
+        draft: blue
+        planning-scripting: purple
+        scheduled: cyan
+        published: green
+        cancelled: red
+    wrapPropertyValues: false
+  - type: table
+    name: Impression Blog Table
+    order:
+      - file.name
+      - status
+      - category
+      - publish_date
+      - legacy_thumbnail
+    sort:
+      - property: status
+        direction: ASC
+      - property: publish_date
+        direction: ASC

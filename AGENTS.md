@@ -9,12 +9,14 @@ Root workspace is one Obsidian vault with context folders. `AGENTS.md` is direct
 - Follow README breadcrumbs before acting: nearest `README.md`, then relevant `README-<topic>.md`, then command/tool docs.
 - If a workflow needs SOP or quick start docs, put it in the relevant folder as `README-<topic>.md`.
 - Use skills for reusable agent capabilities with trigger rules; use folder READMEs for vault SOPs and tool usage.
-- Put future agent plans in `.agents/plans/`.
+- Put plans in `.agents/plans/`.
 - Put repo-scoped skills in `.agents/skills/`.
 - Put implicit shared skills in `_system/agents/auto-skills/`, explicit-only skills in `_system/agents/manual-skills/`, and `gh skill --dir` installs in `_system/agents/gh-skills/`; organize recursively with `_lower-kebab` group folders, then run `vault skills sync --dry-run` and `--apply`.
 - Ignore incidental `.obsidian/` git churn.
 - Do not bulk-move, restructure, delete, or overwrite user content unless explicitly asked.
 - Code Folder and Computer Topology auto skill is private source of truth for machine access and general `~/Code/` placement; use folder/repo docs before changing code.
+- Never make H1s (#) directly at top of md file. it is redundant. Use as little headings and text as possible when organizing or creating notes.
+- when writing links (internally, or url links) never format the link display text, and also make internal page links like "[[file name]]" not "[[path/to/file name]]" 
 
 <!-- snippet:git-task-workflow:start -->
 ## Git Coordination
@@ -46,14 +48,14 @@ After completing a user-requested unit of work:
 
 ## Folder Map
 
-- `_system/`: operating layer for shared Obsidian assets, agents, bootstrap, commands, config, docs, inboxes, migrations, state, sync, and tools. Read `_system/README.md`.
+- `_system/`: operating layer for shared Obsidian assets, agents, bootstrap, commands, docs, inboxes, local user data, migrations, sync, and tools. Read `_system/README.md`.
 - `_system/agents/`: shared skills and skill storage. Read `_system/agents/README.md`.
 - `_system/tools/`: reusable tools outside `vault`. Read `_system/tools/README.md`.
 - `_system/bootstrap/`: fresh install, public export, release, and upgrade framework.
 - `_system/commands/`: `vault` dispatcher, commands, internals, and tests.
 - `_system/docs/`: command, Obsidian, and workflow documentation.
-- `_system/config/`: vault, dependency, calendar, Dashboard, skill-instance, topology, and env configuration. Read `_system/config/README.md`.
-- `_system/state/`: ignored local reports, backups, and install/export state.
+- `_system/local/`: user-specific general configuration, per-skill configuration, env tooling, and runtime state. Read `_system/local/README.md`.
+- `_system/local/state/`: ignored local reports, backups, and install/export state.
 - `_library/`: learning, research dumps, swipe files, source material, thoughts. Read `_library/LIBRARY.md` before organizing it.
 - `_wiki/`: synthesized reusable knowledge.
 - `other/`: archive/holding area only when explicitly asked.
@@ -66,8 +68,8 @@ After completing a user-requested unit of work:
 - `_system/docs/commands/README-reference.md`: full command and bootstrap script inventory.
 - `_system/docs/obsidian/README.md`: Obsidian profile/plugins/templates/UI.
 - `_system/bootstrap/README.md`: bootstrap/export/upgrade mechanics.
-- `_system/config/README.md`: config ownership and skill-config separation.
-- `_system/config/env/README.md`: env workflow; placeholders only in tracked files.
+- `_system/local/README.md`: local-data ownership and skill-config separation.
+- `_system/local/env/README.md`: env workflow; placeholders only in tracked files.
 - Machine registry, primary/worker coordination, connection routing, and code topology: [[_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/SKILL|Code Folder and Computer Topology skill]].
 
 ## Agent Routing Index
@@ -84,7 +86,7 @@ After completing a user-requested unit of work:
 - Obsidian profile/UI/theme: `_system/docs/obsidian/README.md`, then `_system/docs/obsidian/editing_obsidian.md` if editing UI/CSS/plugin behavior.
 - Attachments: `_system/docs/commands/Attachments.md`.
 - Private Git and pointer-only media: `_system/docs/commands/README-git.md`.
-- Env/auth: `_system/config/env/README.md`.
+- Env/auth: `_system/local/env/README.md`.
 - Library changes: `_library/LIBRARY.md`.
 
 ## Core Paths
@@ -108,5 +110,5 @@ After completing a user-requested unit of work:
 - Use `vault gcal create-event` for concrete appointments/travel/meetings/reservations; use `create-block` only for explicit time blocking.
 - Use `_obsidian/content` for owned content items/ideas/publication definitions; use `_obsidian/tasks` for executable work about content.
 - Keep proof-source notes explicit: commitment, data source, manual/automated status, missing-proof task/warning.
-- External dependency repos live under `~/Code/open_source/<repo-name>` and are tracked in `_system/config/deps.json`.
+- External dependency repos live under `~/Code/open_source/<repo-name>` and are tracked in `_system/local/deps.json`.
 - `_system/agents/skills` is generated symlink-only catalog. Never install content there; `vault skills sync --apply` projects auto, manual, and GitHub-managed sources into it.

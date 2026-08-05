@@ -30,7 +30,7 @@ SPEC.loader.exec_module(refresh_schedule)
 
 
 def write_config(root: Path, **refresh_schedule_config: object) -> None:
-    config_path = root / "_system/config/vault.json"
+    config_path = root / "_system/local/vault.json"
     config_path.parent.mkdir(parents=True)
     config = {
         "refresh_schedule": {

@@ -5,7 +5,7 @@ description: Create or update agent skills with the vault's required structure, 
 
 # Agents · Write a Skill
 
-Before editing, read `_system/agents/README.md`, `_system/agents/README-skills.md`, and `_system/config/README.md`.
+Before editing, read `_system/agents/README.md`, `_system/agents/README-skills.md`, and `_system/local/README.md`.
 
 ## Naming Contract
 
@@ -32,7 +32,10 @@ Before editing, read `_system/agents/README.md`, `_system/agents/README-skills.m
 | `_gws` | `gws` |
 | `_infrastructure` | `infra` |
 | `_marketing` | `marketing` |
+| `_matt-p-skills` | `mp` |
 | `_spreadsheets` | `spreadsheets` |
+| `_swan-gtm-skills` | `swan-gtm` |
+| `_vibe-marketer-skills-pack` | `vibe-marketer` |
 | `_vault` | `vault` |
 | `_video` | `video` |
 
@@ -46,8 +49,8 @@ If the pack includes one orchestrating root skill, its name may exactly equal th
 
 1. Confirm the capability, trigger phrases, source location, category, and whether scripts or references are needed.
 2. Create `SKILL.md`; add deterministic utilities under `scripts/` and optional detailed guidance one reference level deep.
-3. Keep reusable behavior in the skill. Put personal paths, domains, IDs, machine facts, and changing instance values in `_system/config/<skill-name>/`, with a `README.md` and private values under `private/`.
-4. Before adding environment variables, follow `_system/config/env/README.md`.
+3. Keep reusable behavior in the skill. Put personal paths, domains, IDs, machine facts, and changing instance values in `_system/local/skills/<skill-name>/`, with a `README.md` and private values under `private/`.
+4. Before adding environment variables, follow `_system/local/env/README.md`.
 5. Review examples and edge cases, then run `vault skills sync --dry-run` and `vault skills sync --apply` for shared skills.
 
 ## Minimal Template

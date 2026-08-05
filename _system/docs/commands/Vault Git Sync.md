@@ -8,7 +8,10 @@ Repository `AGENTS.md` defines the required interactive workflow: fetch and comp
 vault git-preflight
 vault worker-sync install-hooks --apply
 vault worker-sync bootstrap WORKER_ID --apply
+vault worker-sync bootstrap WORKER_ID --provision-disabled --apply
 ```
+
+Normal worker bootstrap rejects disabled machines. The explicit `--provision-disabled` form exists only for new-machine onboarding, allowing the sparse clone and its local verification to be completed before fleet enablement. It refuses an already enabled target.
 
 Versioned hooks live in `.githooks`:
 

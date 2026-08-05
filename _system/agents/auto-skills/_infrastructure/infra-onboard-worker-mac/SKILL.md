@@ -1,0 +1,22 @@
+---
+name: infra-onboard-worker-mac
+description: Sets up, migrates, registers, provisions, or rebuilds a worker Mac from the registered primary through an already-established native Screen Sharing session, then SSH. Use when the user says worker Mac, spare MacBook, remote Mac work machine, or asks to install ChatGPT, Codex, Chrome, Bitwarden, T3 Code Nightly, Screen Sharing, startup behavior, and worker-specific dependencies on that Mac. Migration Assistant is optional.
+---
+
+# Infra · Onboard Worker Mac
+
+Use this as the worker-Mac overlay on `$infra-onboard-machine`; do not duplicate its generic registry, WireGuard, SSH, Warp, cmux, vault, or acceptance procedures.
+
+1. Use `$infra-code-folder-and-computer-topology` and verify the current clone's `vault.machine-id` equals registry `primary_machine_id`. Stop if the agent is not running from the registered primary clone.
+2. Read the private [[Worker Mac]] convention when it exists. Without it, fall back to generic onboarding and document the missing role convention before mutation.
+3. Require only an active native Screen Sharing connection from the primary. Migration Assistant is optional; continue as a clean setup when it is unavailable. Inspect the target through Screen Sharing and collect its real account, OS, architecture, names, and LAN address. Never ask the user to prepare SSH, developer tools, Homebrew, names, power settings, or application installs first.
+4. Through Screen Sharing, establish the unattended operating baseline before dependency installation: FileVault off, automatic login on, automatic logout off, system sleep disabled on battery and AC, display sleep still allowed, wake-on-network on, and automatic restart after power loss on. Install only the primary fleet public SSH key, enable restricted Remote Login, and verify LAN SSH from the primary. Use SSH for the remaining command-driven work. Hand control to the user only at the exact password, Touch ID, MFA, CAPTCHA, device-approval, or other non-delegable prompt, then resume the workflow yourself.
+5. Create and review the complete disabled macOS worker record through generic onboarding. Never invent a machine ID, hostname, address, alias, or home path.
+6. Run `scripts/bootstrap_worker_mac.py status MACHINE_ID`, then preview and apply `seed`. Seed installs or validates Chrome, ChatGPT desktop, Codex CLI, Bitwarden, and the pre-clone developer tools before authentication. Make Chrome the macOS default browser and verify its HTTP and HTTPS Launch Services handlers. Operate target-local GitHub, Codex, ChatGPT, Bitwarden, Chrome, and privacy setup through Screen Sharing; pause at account/provider selection as well as password, passkey, MFA, CAPTCHA, device-approval, or other non-delegable prompts.
+7. Run preview and apply `finish`; provision the sparse worker clone with `--provision-disabled`. If macOS Keychain credentials work in the logged-in GUI but are unavailable to the SSH-launched clone, perform only the authenticated `gh repo clone` command through the existing Screen Sharing Terminal and resume automation against that checkout. Never copy a token, weaken credential storage, or turn the remaining bootstrap into a user checklist.
+8. Enroll a new target-generated WireGuard identity through its owning infrastructure repository. Never reuse a tunnel or private key copied by Migration Assistant. Enable the native WireGuard login helper and On-Demand Activation for both Ethernet and Wi-Fi before unattended acceptance.
+9. Run `verify`, complete generic terminal and fleet gates, reboot, and prove automatic login, no automatic logout, no system sleep on either power source, WireGuard On-Demand reconnection, wake-on-network, and remote reachability before enabling the registry entry.
+
+The bootstrap is dry-run by default and mutates only with `--apply`. Never request, store, copy, or log passwords, tokens, Bitwarden secrets, private SSH keys, or other machine-local credentials.
+
+Account identity is always user-owned. Never infer an account or authentication provider from the macOS user, browser state, autofill, Bitwarden, or a saved-account suggestion. Unless an exact account/provider mapping is explicitly documented and still confirmed, stop before selecting, typing, or submitting an identity and ask the user to complete that login. The private worker convention currently requires the user to choose **Continue with Google** for OpenAI, Codex, and ChatGPT authentication.

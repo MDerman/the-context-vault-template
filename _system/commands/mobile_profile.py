@@ -18,7 +18,7 @@ MOBILE_PLUGINS = [
     "sync-embeds",
     "obsidian-style-settings",
     "obsidian-file-color",
-    "obsidian-icon-folder",
+    "emoji-title",
     "system3-relay",
 ]
 

@@ -18,11 +18,11 @@ from typing import Any
 from urllib.error import URLError
 from urllib.request import urlopen
 
-from vault_layout import CONFIG_DIR, VAULT_ROOT
+from vault_layout import SKILL_CONFIG_DIR, VAULT_ROOT
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT = VAULT_ROOT
-DEFAULT_REGISTRY = ROOT / CONFIG_DIR / "infra-code-folder-and-computer-topology/private/machines.json"
+DEFAULT_REGISTRY = ROOT / SKILL_CONFIG_DIR / "infra-code-folder-and-computer-topology/private/machines.json"
 DEFAULT_RUNTIME_DIR = Path.home() / ".cache/vault-machine"
 MACHINE_ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 
@@ -413,19 +413,23 @@ def command_register_worker(args: argparse.Namespace, registry: dict[str, Any]) 
         {
             "id": args.id,
             "display_name": args.display_name,
-            "enabled": True,
+            "enabled": False,
             "role": "worker",
             "platform": args.platform,
             "transport": "ssh",
             "ssh_alias": args.ssh_alias,
             "home": args.home,
             "global_agents_eligible": False,
+            "private_notes_path": (
+                "_system/local/skills/infra-code-folder-and-computer-topology/"
+                f"private/My Machines/{args.id}.md"
+            ),
             "vault_sync": {
                 "enabled": True,
                 "checkout": "sparse",
                 "repo_path": args.repo_path,
                 "sparse_paths": [".agents", "_system", ".githooks"],
-                "required": False,
+                "required": True,
             },
         }
     )

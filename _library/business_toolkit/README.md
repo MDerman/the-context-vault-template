@@ -4,25 +4,25 @@ status: active
 
 # Business Toolkit
 
-The canonical, directly browsable business scaffold is [[_system/bootstrap/templates/business-context/README|Business Context Scaffold]]. This library folder is only its navigation entry point; reusable business research belongs in the most specific topical library category.
+The canonical business scaffold lives under `_system/bootstrap/templates/business-context/`; operating instructions live in [[Business Toolkit]]. This library folder is only its navigation entry point; reusable business research belongs in the most specific topical library category.
 
 ## Knowledge routes
 
-- [[_library/business_strategy|Business Strategy]]
-- [[_library/business_models|Business Models]]
-- [[_library/pricing_and_offers|Pricing and Offers]]
-- [[_library/brand|Brand and Positioning]]
-- [[_library/agencies|Agencies and Service Delivery]]
-- [[_library/operations_and_systems|Operations and Systems]]
-- [[_library/business_analytics|Business Analytics]]
-- [[_library/business_finance|Business Finance]]
-- [[_library/team|Team, Hiring, and Talent]]
-- [[_library/sales|Sales and Commercial Relationships]]
-- [[_library/affiliates|Affiliates and Partnerships]]
-- [[_library/communities|Communities]]
-- [[_library/saas|SaaS]]
-- [[_library/agents|AI Agents]]
-- [[_library/_dev/ai|AI Development]]
+- [[business_strategy]]
+- [[business_models]]
+- [[pricing_and_offers]]
+- [[brand]]
+- [[agencies]]
+- [[operations_and_systems]]
+- [[business_analytics]]
+- [[business_finance]]
+- [[team]]
+- [[sales]]
+- [[affiliates]]
+- [[communities]]
+- [[saas]]
+- [[agents]]
+- [[ai]]
 
 ## Commands
 

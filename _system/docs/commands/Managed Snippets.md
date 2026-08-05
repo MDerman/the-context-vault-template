@@ -4,7 +4,7 @@
 minimal markers in files across registered Git repositories.
 
 Configuration, marker format, and target-adoption rules live in
-[[_system/config/snippets/README|Managed Snippets Config]].
+[[_system/local/snippets/README|Managed Snippets Config]].
 
 ```bash
 vault snippets list
@@ -13,7 +13,7 @@ vault snippets check
 vault snippets check git-task-workflow --repo vault
 vault snippets check --json
 vault snippets sync --dry-run
-vault snippets sync git-task-workflow --repo impression --apply
+vault snippets sync git-task-workflow --repo business --apply
 ```
 
 `check` exits successfully only when every selected target matches its canonical

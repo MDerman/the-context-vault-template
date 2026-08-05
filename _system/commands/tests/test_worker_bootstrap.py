@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import contextlib
 import importlib.util
+import io
 from pathlib import Path
 import subprocess
 import sys
@@ -11,6 +13,8 @@ import unittest
 
 SCRIPT_DIR = Path(__file__).resolve().parents[1]
 VAULT_ROOT = SCRIPT_DIR.parents[1]
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
 SPEC = importlib.util.spec_from_file_location("worker_bootstrap", SCRIPT_DIR / "worker_bootstrap.py")
 assert SPEC and SPEC.loader
 worker_bootstrap = importlib.util.module_from_spec(SPEC)
@@ -53,10 +57,104 @@ class WorkerBootstrapTests(unittest.TestCase):
             },
         }
         script = worker_bootstrap.bootstrap_script(worker, "https://example.com/vault.git")
+        self.assertIn('/opt/homebrew/bin:/usr/local/bin:$PATH', script)
         self.assertIn("git sparse-checkout set", script)
         self.assertIn("worker_bootstrap.py", script)
         for forbidden in ("systemctl", "launchctl", "git push", "vault-worker-sync"):
             self.assertNotIn(forbidden, script)
+
+    def test_disabled_worker_requires_explicit_provisioning_flag(self) -> None:
+        worker = {
+            "id": "worker",
+            "display_name": "Worker",
+            "enabled": False,
+            "role": "worker",
+            "platform": "macos",
+            "transport": "ssh",
+            "ssh_alias": "worker",
+            "home": "/Users/test",
+            "global_agents_eligible": True,
+            "vault_sync": {
+                "enabled": True,
+                "checkout": "sparse",
+                "repo_path": "/Users/test/Code/vault",
+                "sparse_paths": [".agents", "_system", ".githooks"],
+            },
+        }
+        registry = {
+            "schema_version": 3,
+            "primary_machine_id": "primary",
+            "machines": [
+                {
+                    "id": "primary",
+                    "display_name": "Primary",
+                    "enabled": True,
+                    "role": "primary",
+                    "platform": "macos",
+                    "transport": "local",
+                    "home": "/Users/primary",
+                    "global_agents_eligible": True,
+                },
+                worker,
+            ],
+        }
+
+        with self.assertRaisesRegex(worker_bootstrap.machine_registry.MachineError, "disabled"):
+            worker_bootstrap.bootstrap_worker(self.root, registry, "worker", apply=False)
+
+        with contextlib.redirect_stdout(io.StringIO()) as stdout:
+            worker_bootstrap.bootstrap_worker(
+                self.root,
+                registry,
+                "worker",
+                apply=False,
+                provision_disabled=True,
+            )
+        self.assertIn("DRY RUN: bootstrap worker", stdout.getvalue())
+
+    def test_provision_disabled_flag_refuses_enabled_worker(self) -> None:
+        registry = {
+            "schema_version": 3,
+            "primary_machine_id": "primary",
+            "machines": [
+                {
+                    "id": "primary",
+                    "display_name": "Primary",
+                    "enabled": True,
+                    "role": "primary",
+                    "platform": "macos",
+                    "transport": "local",
+                    "home": "/Users/primary",
+                    "global_agents_eligible": True,
+                },
+                {
+                    "id": "worker",
+                    "display_name": "Worker",
+                    "enabled": True,
+                    "role": "worker",
+                    "platform": "macos",
+                    "transport": "ssh",
+                    "ssh_alias": "worker",
+                    "home": "/Users/test",
+                    "global_agents_eligible": True,
+                    "vault_sync": {
+                        "enabled": True,
+                        "checkout": "sparse",
+                        "repo_path": "/Users/test/Code/vault",
+                        "sparse_paths": [".agents", "_system", ".githooks"],
+                    },
+                },
+            ],
+        }
+
+        with self.assertRaisesRegex(worker_bootstrap.WorkerBootstrapError, "already enabled"):
+            worker_bootstrap.bootstrap_worker(
+                self.root,
+                registry,
+                "worker",
+                apply=False,
+                provision_disabled=True,
+            )
 
     def test_versioned_hooks_do_not_push_or_start_remote_sync(self) -> None:
         post_commit = (VAULT_ROOT / ".githooks/post-commit").read_text()

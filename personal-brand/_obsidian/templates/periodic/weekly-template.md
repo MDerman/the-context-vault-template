@@ -7,9 +7,9 @@ generated: false
 ---
 # Matt Derman Weekly
 
-[[personal-brand#Identity|Identity]]
-[[personal-brand#Momentum|Momentum]]
-[[personal-brand#Social Selling|Social Selling]]
+[[personal-brand#Identity]]
+[[personal-brand#Momentum]]
+[[personal-brand#Social Selling]]
 
 ## Content Schedule
 

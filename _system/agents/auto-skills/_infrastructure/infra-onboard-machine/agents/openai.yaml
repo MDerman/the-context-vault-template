@@ -1,0 +1,6 @@
+interface:
+  short_description: "Onboard Mac and Linux fleet machines"
+  default_prompt: "Use $infra-onboard-machine to add or rebuild a machine as a complete fleet member."
+
+policy:
+  allow_implicit_invocation: true

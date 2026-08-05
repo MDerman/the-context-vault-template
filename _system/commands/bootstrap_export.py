@@ -401,10 +401,10 @@ class BootstrapExporter:
             return True
         if self.is_sensitive_path(relative):
             return True
-        if rel == "_system/config/env":
+        if rel == "_system/local/env":
             self.ensure_dir(self.export_root / relative)
             return False
-        if rel.startswith("_system/config/env/"):
+        if rel.startswith("_system/local/env/"):
             return True
         if (
             len(relative.parts) == 2

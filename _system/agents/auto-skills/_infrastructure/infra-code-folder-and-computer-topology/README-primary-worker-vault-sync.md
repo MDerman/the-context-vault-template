@@ -6,7 +6,7 @@
 - `worker`: partial sparse checkout for `.agents` work, `_system`, and versioned `.githooks`; it may push reviewed non-media commits.
 - `origin`: canonical durable state and the only repository coordination point.
 
-Registry lives at `_system/config/infra-code-folder-and-computer-topology/private/machines.json`, schema v3. Clone identity lives in local Git config as `vault.machine-id`; it is never committed.
+Registry lives at `_system/local/skills/infra-code-folder-and-computer-topology/private/machines.json`, schema v3. Clone identity lives in local Git config as `vault.machine-id`; it is never committed.
 
 Missing registry keeps fleet tooling inactive. Initialize manually:
 
@@ -31,6 +31,7 @@ vault machine identify primary-id --apply
 vault git-preflight
 vault worker-sync install-hooks --apply
 vault worker-sync bootstrap WORKER_ID --apply
+vault worker-sync bootstrap WORKER_ID --provision-disabled --apply
 ```
 
 `vault git-preflight` fetches and attempts a strict fast-forward, including with a dirty working tree; Git aborts safely when incoming changes overlap local work. Scheduled refresh treats that result as best-effort so Git coordination cannot block local generation. Normal agent work follows the root `AGENTS.md` fetch-and-compare policy.
@@ -42,6 +43,8 @@ Run worker bootstrap from the primary after the worker is registered and reachab
 ```sh
 vault worker-sync bootstrap WORKER_ID --apply
 ```
+
+Normal bootstrap requires an enabled worker. During reviewed new-machine onboarding, `--provision-disabled` may provision exactly one disabled worker without enrolling it in ordinary fleet automation. The explicit flag refuses an already enabled machine; keep the entry disabled until the documented reboot acceptance passes.
 
 The command creates or repairs the sparse clone, clone identity, pointer-only media mode, versioned hooks, `vault` command link, dependency-backed auto-skill projections, and global skill links. It does not fetch an existing checkout, push commits, contact other workers, or install a background service or timer. Bring an existing checkout to the desired committed `origin/master` first.
 

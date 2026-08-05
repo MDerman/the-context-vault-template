@@ -19,7 +19,7 @@
   "obsidian-full-calendar",
   "calendar-bases",
   "kanban-bases-view",
-  "obsidian-icon-folder",
+  "emoji-title",
   "terminal",
   "obsidian-file-color",
   "obsidian-style-settings",
@@ -27,5 +27,6 @@
   "open-tab-settings",
   "system3-relay",
   "folder-new-note-button",
-  "xlsx-viewer"
+  "xlsx-viewer",
+  "obsidian-copy-block-link"
 ]

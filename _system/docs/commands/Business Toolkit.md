@@ -5,7 +5,7 @@ status: enabled
 
 # Business Toolkit
 
-The navigation home is [[_library/business_toolkit/README|Business Toolkit]], and the canonical literal scaffold lives at [[_system/bootstrap/templates/business-context/README|Business Context Scaffold]]. Fresh business contexts receive its complete ordinary folder tree. Registration and later synchronization install only selected managed templates, Templater rules, state, and 📋 Iconize markers for operating folders that already exist.
+This note is the navigation home for the business toolkit. The canonical literal scaffold lives under `_system/bootstrap/templates/business-context/`. Fresh business contexts receive its complete ordinary folder tree without folder-level README files. Registration and later synchronization install only selected managed templates, Templater rules, state, and 📋 Iconize markers for operating folders that already exist.
 
 ## Interactive installer
 

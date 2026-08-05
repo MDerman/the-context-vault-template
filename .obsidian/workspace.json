@@ -4,7 +4,7 @@
     "type": "tabs",
     "children": [
       {
-        "id": "bb7530061b9870b4",
+        "id": "9c9bdf79ddab1c3b",
         "type": "leaf",
         "state": {
           "type": "markdown",
@@ -27,7 +27,7 @@
       {
         "id": "5b978711000ded9b",
         "type": "tabs",
-        "dimension": 74.66288147622427,
+        "dimension": 85.80553584102199,
         "children": [
           {
             "id": "12a3aa81c232d265",
@@ -76,7 +76,7 @@
       {
         "id": "4365fdef29381df3",
         "type": "tabs",
-        "dimension": 25.337118523775725,
+        "dimension": 14.194464158977999,
         "children": [
           {
             "id": "1ffc5fcaa195eeb3",
@@ -108,11 +108,12 @@
               "title": "Vault Command Center"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
-    "width": 449.19140625
+    "width": 467.0703125
   },
   "right": {
     "id": "c5da0292b2670f3d",
@@ -199,7 +200,7 @@
             }
           },
           {
-            "id": "7cd47d3795fe72af",
+            "id": "33dd164edd7e48b7",
             "type": "leaf",
             "state": {
               "type": "system3-sync-status",
@@ -249,7 +250,7 @@
       "periodic-notes:Open today": false
     }
   },
-  "active": "6cb9795a9b89b9a8",
+  "active": "3e4172670c9c9f12",
   "lastOpenFiles": [
     "README.md"
   ]

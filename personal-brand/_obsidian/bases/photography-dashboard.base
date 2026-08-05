@@ -1,0 +1,46 @@
+filters:
+  and:
+    - type == "content"
+    - file.inFolder("personal-brand/_obsidian/content/items/social-posts")
+    - list(collections).contains("photography-dashboard")
+formulas:
+  priorityBadge: if(content_priority=="next-up","⏭ Next Up",if(content_priority=="high","🔥 High",if(content_priority=="medium","◆ Medium",if(content_priority=="low","◇ Low",if(content_priority=="long-time-bru","◌ Long Term","")))))
+properties:
+  formula.priorityBadge:
+    displayName: Priority
+views:
+  - type: kanban-view
+    name: Photography Board
+    order:
+      - formula.priorityBadge
+      - publish_date
+    groupByProperty: status
+    columnOrders:
+      note.status:
+        - idea
+        - cogs-are-turning
+        - draft
+        - planning-scripting
+        - scheduled
+        - published
+        - cancelled
+    columnColors:
+      note.status:
+        idea: yellow
+        cogs-are-turning: orange
+        draft: blue
+        planning-scripting: purple
+        scheduled: cyan
+        published: green
+        cancelled: red
+    wrapPropertyValues: false
+  - type: table
+    name: Photography Table
+    order:
+      - file.name
+      - status
+      - content_priority
+      - publish_date
+    sort:
+      - property: status
+        direction: ASC

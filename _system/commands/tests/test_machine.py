@@ -146,6 +146,13 @@ class MachineTests(unittest.TestCase):
                 written["machines"][-1]["vault_sync"]["sparse_paths"],
                 [".agents", "_system", ".githooks"],
             )
+            self.assertFalse(written["machines"][-1]["enabled"])
+            self.assertTrue(written["machines"][-1]["vault_sync"]["required"])
+            self.assertEqual(
+                written["machines"][-1]["private_notes_path"],
+                "_system/local/skills/infra-code-folder-and-computer-topology/"
+                "private/My Machines/worker.md",
+            )
 
     def test_ssh_command_forwarding(self):
         registry = self.registry()

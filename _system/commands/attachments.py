@@ -434,8 +434,14 @@ def resolve_link_target(note: Path, target: str, basename_index: dict[str, list[
         if candidate in seen:
             continue
         seen.add(candidate)
-        if candidate.exists() and candidate.is_file():
-            return candidate.resolve()
+        try:
+            if candidate.exists() and candidate.is_file():
+                return candidate.resolve()
+        except OSError:
+            # Malformed or deeply nested Markdown links can exceed filesystem
+            # path limits. Treat those as unresolved instead of aborting the
+            # entire attachment verification pass.
+            continue
 
     if "/" not in target_path and not path_obj.is_absolute():
         matches = basename_index.get(Path(target_path).name, [])
@@ -1069,6 +1075,12 @@ def verify() -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
+    if argv is None:
+        argv = sys.argv[1:]
+    if "--reconcile-learning-export" in argv:
+        from attachment_reconcile import main as reconcile_main
+
+        return reconcile_main(argv)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--apply", action="store_true", help="Perform the migration. Default is dry-run.")
     parser.add_argument("--verify-only", action="store_true", help="Run verification only.")

@@ -5,8 +5,8 @@
     "preserve": [
       ".git",
       ".git/**",
-      "_system/state/install.json",
-      "_system/state/upgrade-reports/**",
+      "_system/local/state/install.json",
+      "_system/local/state/upgrade-reports/**",
       "*/*.md",
       "*/brand-strategy-and-vision/**",
       "*/_obsidian/content/content-cadence.json",

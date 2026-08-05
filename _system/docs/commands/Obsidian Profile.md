@@ -10,7 +10,7 @@ Back up the root `.obsidian` profile:
 vault backup
 ```
 
-This writes a timestamped local copy under `_system/state/backups/obsidian-profile/`. State is git-ignored because plugin bundles are large.
+This writes a timestamped local copy under `_system/local/state/backups/obsidian-profile/`. State is git-ignored because plugin bundles are large.
 
 Implementation script: `_system/commands/backup.py`.
 

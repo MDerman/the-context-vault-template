@@ -17,7 +17,7 @@ from typing import Any
 from script_utils import resolve_vault_root
 
 
-MANIFEST_REL = Path("_system/config/git-media-manifest.json")
+MANIFEST_REL = Path("_system/local/git-media-manifest.json")
 POINTER_VERSION = "https://git-lfs.github.com/spec/v1"
 EMPTY_SHA256 = hashlib.sha256(b"").hexdigest()
 HOOK_MARKER = "vault pointer-only LFS pre-push guard"
@@ -345,7 +345,7 @@ def hook_is_installed(root: Path) -> bool:
 
 def pointer_only_role(root: Path) -> str:
     identity = run_git(root, "config", "--get", "vault.machine-id", check=False).stdout.decode().strip()
-    registry_path = root / "_system/config/infra-code-folder-and-computer-topology/private/machines.json"
+    registry_path = root / "_system/local/skills/infra-code-folder-and-computer-topology/private/machines.json"
     if not identity or not registry_path.is_file():
         return "primary"
     try:

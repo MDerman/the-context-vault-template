@@ -17,7 +17,7 @@ Concise source of truth for vault architecture, ownership, and routing. Detailed
 ```text
 root workspace = only Obsidian vault and control panel
 context folders = source-of-truth operating workspaces
-_system = operating docs, scripts, generated state, skills, and shared Obsidian support
+_system = operating docs, scripts, local user data, skills, and shared Obsidian support
 _library = raw and semi-processed learning/source material
 _wiki = synthesized reusable knowledge
 other = archive or holding area used only intentionally
@@ -123,11 +123,10 @@ SOP: [[_system/docs/commands/Attachments|Attachments]].
 - `agents/`: auto/manual/GitHub-managed skill sources and generated catalog.
 - `bootstrap/`: public install, export, release, and upgrade framework.
 - `commands/`: `vault` dispatcher, commands, internals, and tests.
-- `config/`: vault, dependency, calendar, Dashboard, skill instance, topology, and env configuration. Read [[_system/config/README|System Configuration]].
+- `local/`: user-specific general configuration, per-skill configuration, env tooling, and runtime state. Read [[_system/local/README|Local Vault Data]].
 - `docs/`: command, Obsidian, and workflow documentation.
 - `inbox/`: Brain Dump and attachment ingestion files.
 - `migrations/`: empty registry for future public-upgrade migrations.
-- `state/`: ignored local backups, reports, install state, and export manifest.
 - `sync/`: rclone backup/sync tooling.
 - `tools/`: reusable tools outside `vault` dispatcher.
 

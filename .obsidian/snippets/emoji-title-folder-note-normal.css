@@ -1,0 +1,5 @@
+/* Keep Emoji Title folder notes visually consistent with ordinary notes. */
+.nav-folder-children .nav-file.emoji-title-folder-note .nav-file-title-content {
+  opacity: 1 !important;
+  font-style: normal !important;
+}

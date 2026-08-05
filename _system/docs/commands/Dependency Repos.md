@@ -9,7 +9,7 @@ External repos the vault depends on are tracked separately from skills.
 Config:
 
 ```text
-_system/config/deps.json
+_system/local/deps.json
 ```
 
 Commands:
@@ -18,6 +18,7 @@ Commands:
 vault deps status
 vault deps sync --dry-run
 vault deps sync --apply
+vault deps sync --repo <dependency-id> --apply
 vault deps project-auto-skills --apply
 ```
 
@@ -49,6 +50,7 @@ Skill projection rules:
 - `agents/openai.yaml` preserves upstream metadata while vault owns invocation policy: false for `manual-skill`, true for `auto-skill`.
 - Existing unmanaged targets are backed up before replacement.
 - `vault skills sync --apply` owns flat catalog symlink and updates dependency config/marker when wrapper moves.
+- Use `type: manual-skill-pack` with `skill_prefix` for a category directory whose direct child directories are skills. The pack projection copies root files such as `README.md`, projects every skill with the prefix, and rewrites README links and slash-invocations to the local names. Set `rewrite_skill_sources` to all jointly projected category roots when skills invoke siblings across categories.
 
 Current tracked repos:
 
@@ -57,6 +59,7 @@ Current tracked repos:
 - `googleworkspace-cli` -> `~/Code/open_source/googleworkspace-cli`
 - `marketingskills` -> `~/Code/open_source/marketingskills`
 - `claude-seo` -> `~/Code/open_source/claude-seo`
+- `swan-gtm-skills` -> `~/Code/open_source/gtm-skills`
 
 Current projected auto skills:
 
@@ -72,10 +75,12 @@ Current projected manual skills:
 - `gws-sheets`
 - all skills from the Marketing Skills dependency under `_corey-marketing-skills/`, using the `corey-` discovery prefix
 - all skills from the Claude SEO dependency under `_claude-seo/`, using the `claude-seo-` discovery prefix
+- all public skills from the Swan GTM Skills dependency under `_swan-gtm-skills/`, using the `swan-gtm-` discovery prefix
+- the engineering and productivity packs from Matt Pocock's Skills dependency under `_matt-p-skills/`, using the `mp-` discovery prefix
 
 When adding a new external repo with skills:
 
-1. Add the repo to `_system/config/deps.json`.
+1. Add the repo to `_system/local/deps.json`.
 2. Add projections for only the skill folders that should be exposed.
 3. Use `type: manual-skill` for explicit-only skills or `type: auto-skill` for implicit skills.
 4. Run `vault deps sync --dry-run`.
@@ -83,6 +88,8 @@ When adding a new external repo with skills:
 6. Start fresh Codex task and confirm discovery; current tasks cache catalog.
 
 `vault deps sync --apply` clones missing repos, checks out release-locked commits when present, rebuilds managed wrappers, runs skill sync when projections change, then runs setup hooks.
+
+Use repeatable `--repo <dependency-id>` selectors when only specific dependencies should be updated and projected.
 
 `vault deps project-auto-skills --apply` only repairs auto-skill projections from dependency checkouts already present. It never fetches, checks out, builds, or modifies dependency repos. Worker vault sync uses this before skill sync so dirty dependency development checkouts remain untouched.
 

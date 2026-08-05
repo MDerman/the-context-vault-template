@@ -1,6 +1,6 @@
 ---
 name: vault-upgrade-repair
-description: Repair public bootstrap vault upgrades after `vault upgrade` reports skipped files, failed migrations, or conflicts. Use when user mentions vault upgrade repair, `_system/state/upgrade-reports`, failed migrations, or asks an agent to fix upgrade fallout.
+description: Repair public bootstrap vault upgrades after `vault upgrade` reports skipped files, failed migrations, or conflicts. Use when user mentions vault upgrade repair, `_system/local/state/upgrade-reports`, failed migrations, or asks an agent to fix upgrade fallout.
 ---
 
 # Vault · Upgrade Repair
@@ -10,8 +10,8 @@ description: Repair public bootstrap vault upgrades after `vault upgrade` report
 1. Read latest report:
 
 ```bash
-ls -td _system/state/upgrade-reports/* | head -1
-sed -n '1,220p' _system/state/upgrade-reports/<timestamp>/report.json
+ls -td _system/local/state/upgrade-reports/* | head -1
+sed -n '1,220p' _system/local/state/upgrade-reports/<timestamp>/report.json
 ```
 
 2. Inspect only paths named in report, migration reports, and relevant policy:

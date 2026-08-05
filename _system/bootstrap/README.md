@@ -35,15 +35,15 @@ Keep public setup instructions in `README-public-vault-template.md`, but keep in
 
 ## Public Export Flow
 
-`vault bootstrap-export --force` exports to `~/Code/vault-public` by default.
+`vault bootstrap-export --force` exports to `~/Code/ctx9/vault-public` by default.
 
 The exporter:
 
 - copies root agent wiring, selected root files, root `.obsidian` and `.obsidian-mobile` profile files with configured exclusions, `_system` minus generated/private outputs, empty `_library`, `_wiki/AGENTS.md`, and configured context folder scaffolds;
-- derives managed dependency projection targets from `_system/config/deps.json` and omits them; fresh installs recreate local projections without exporting machine-specific absolute symlinks;
-- writes `_system/state/export-manifest.json` so future exports can remove stale export-owned files;
+- derives managed dependency projection targets from `_system/local/deps.json` and omits them; fresh installs recreate local projections without exporting machine-specific absolute symlinks;
+- writes `_system/local/state/export-manifest.json` so future exports can remove stale export-owned files;
 - preserves repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, and contribution docs;
-- exports config-folder README/defaults but excludes `_system/config/*/private/**` and all `_system/config/env/**` contents;
+- exports portable local README/defaults but excludes `_system/local/skills/**/private/**`, `_system/local/snippets/private/**`, all `_system/local/env/**` contents, and `_system/local/state/**`;
 - refuses to export inside the source vault.
 
 Use raw export for inspection and repair only. Normal public publishing goes through:
@@ -53,11 +53,11 @@ vault release publish --dry-run --bump patch
 vault release publish --bump patch
 ```
 
-`vault release publish` bumps the public SemVer release metadata, writes `_system/config/dependencies.lock.json`, exports the public vault, commits `~/Code/vault-public`, creates annotated tag `vX.Y.Z`, pushes the commit/tag, and creates the GitHub Release. Use `--bump minor`, `--bump major`, or `--version X.Y.Z` when the release should not be a patch bump.
+`vault release publish` bumps the public SemVer release metadata, writes `_system/local/dependencies.lock.json`, exports the public vault, commits `~/Code/ctx9/vault-public`, creates annotated tag `vX.Y.Z`, pushes the commit/tag, and creates the GitHub Release. Use `--bump minor`, `--bump major`, or `--version X.Y.Z` when the release should not be a patch bump.
 
 Release metadata lives in `_system/bootstrap/release.json`. It stores the SemVer, tag, release timestamp, dependency lock path, and dependency lock SHA-256. Any public release must update this file through `vault release publish`; do not commit a public export with stale release metadata.
 
-Dependency lock metadata lives in `_system/config/dependencies.lock.json`. It records tested Homebrew dependency versions, exact external repo commits from `deps.json`, Obsidian plugin manifest versions, and GitHub CLI/`gh skill` availability for the release.
+Dependency lock metadata lives in `_system/local/dependencies.lock.json`. It records tested Homebrew dependency versions, exact external repo commits from `deps.json`, Obsidian plugin manifest versions, and GitHub CLI/`gh skill` availability for the release.
 
 ## Plugin Code
 
@@ -101,12 +101,12 @@ Public install script:
 - creates the target directory if it is missing and refuses only when the target exists and is non-empty;
 - refuses when the target path exists as a file;
 - stores upstream bootstrap Git state outside iCloud under `~/Library/Application Support/context-nine-vault-bootstrap`;
-- stores vault-local bootstrap metadata under `_system/state/install.json`;
+- stores vault-local bootstrap metadata under `_system/local/state/install.json`;
 - runs from README via `sudo bash`, resolves the original sudo user, and writes the vault/state as that user;
 - removes the public-repo `.git` pointer from the vault;
 - runs `_system/bootstrap/init_vault.sh --enable-git`, which asks for three exact context-folder slugs and initializes personal Git/LFS directly under `~/.local/share/vault-git/<vault-name>.git`, outside iCloud.
 - downloads active third-party Obsidian plugin bundles, while Context Nine and Relay are already shipped in the vault export.
-- clones every repo from `_system/config/deps.json` at release-locked commits, creates projections, and runs vault-owned setup hooks. Agent Canvas setup builds editable checkout, links Bun package, and installs `~/.local/bin/agent-canvas`.
+- clones every repo from `_system/local/deps.json` at release-locked commits, creates projections, and runs vault-owned setup hooks. Agent Canvas setup builds editable checkout, links Bun package, and installs `~/.local/bin/agent-canvas`.
 
 Public README invokes root `install.sh` through the GitHub raw URL and shows only the default command plus a custom-target example.
 
@@ -126,7 +126,7 @@ Profile upgrade does not advance the installed public commit. A later full `vaul
 - Quoted custom target like `"~/Documents/Obsidian/vault"`: installer expands it to the invoking user's home, not a literal `~/` folder.
 - Transient GitHub registry or release-asset download failures are retried before install fails.
 - Export root already has a Git repo: exporter preserves repo metadata and mirrors only export-owned content.
-- Upgrade reports are written under `_system/state/upgrade-reports`; generated install/export state remains local and excluded from public export.
+- Upgrade reports are written under `_system/local/state/upgrade-reports`; generated install/export state remains local and excluded from public export.
 - Plugin config: excluded plugin config means users must sign in/configure local integrations after install.
 - Upgrade command: README currently documents planned `vault upgrade` commands; keep this only if the command exists or is intentionally being previewed before implementation.
 - Upgrade reports include from/to version and commit, target release tag, dependency lock hash, result, error, and timestamps. Install state advances only after file changes, migrations, and dependency sync succeed; failed upgrades leave the previous installed version/commit in place and expose the failed attempt through `vault upgrade status`.
@@ -136,10 +136,10 @@ Profile upgrade does not advance the installed public commit. A later full `vaul
 - `_system/bootstrap`: first install, public export config, release metadata, upgrade policy, agent symlink helpers, dependency install, and plugin install. Canonical skill sync lives under `_system/agents`.
 - `_system/docs`: durable command, Obsidian profile, and workflow docs.
 - `_system/commands`: implementations behind the `vault` dispatcher and supporting script utilities.
-- `_system/config`: vault, dependency, calendar, and Dashboard configuration.
+- `_system/local`: user-specific general configuration, per-skill configuration, env tooling, and runtime state.
 - `_system/migrations`: empty framework for future public bootstrap migrations.
 - `_system/inbox`: generated/import inbox files such as Brain Dump imports.
-- `_system/state`: ignored local backups, install/export state, and upgrade reports.
+- `_system/local/state`: ignored local backups, install/export state, and upgrade reports.
 - `_system/sync`: rclone backup/sync tooling.
 - `_system/tools`: reusable tools outside `vault` dispatcher.
 

@@ -19,10 +19,10 @@ from script_utils import resolve_vault_root
 
 
 DEFAULT_LABEL = "com.obsidian-context-vault.mac-startup"
-DEFAULT_CONFIG_RELATIVE = Path("_system/config/mac-startup/defaults.json")
-PRIVATE_CONFIG_RELATIVE = Path("_system/config/mac-startup/private/machines.json")
+DEFAULT_CONFIG_RELATIVE = Path("_system/local/skills/infra-code-folder-and-computer-topology/Mac Startup/defaults.json")
+PRIVATE_CONFIG_RELATIVE = Path("_system/local/skills/infra-code-folder-and-computer-topology/Mac Startup/private/machines.json")
 TOPOLOGY_REGISTRY_RELATIVE = Path(
-    "_system/config/infra-code-folder-and-computer-topology/private/machines.json"
+    "_system/local/skills/infra-code-folder-and-computer-topology/private/machines.json"
 )
 RUNNER_RELATIVE = Path("_system/tools/mac-automation/startup.sh")
 
@@ -33,7 +33,8 @@ LEGACY_ARCHIVE_DIR = RUNTIME_DIR / "legacy-launchagents"
 LAUNCH_AGENT_DIR = Path.home() / "Library/LaunchAgents"
 LOG_DIR = Path.home() / "Library/Logs"
 
-SUPPORTED_ACTIONS = {"remap-tilde-key"}
+SUPPORTED_ACTIONS = {"open-applications", "remap-tilde-key"}
+BUNDLE_ID_RE = re.compile(r"[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+")
 MAPPING_SOURCE = 0x700000035
 MAPPING_DESTINATION = 0x700000064
 
@@ -102,6 +103,22 @@ def validate_actions(actions: object) -> dict[str, bool]:
     return normalized
 
 
+def validate_applications(applications: object) -> list[str]:
+    if applications is None:
+        return []
+    if not isinstance(applications, list):
+        raise MacStartupError("mac-startup applications must be a JSON array")
+    normalized: list[str] = []
+    for application in applications:
+        if not isinstance(application, str) or not BUNDLE_ID_RE.fullmatch(application):
+            raise MacStartupError(
+                f"invalid mac-startup application bundle identifier: {application!r}"
+            )
+        if application not in normalized:
+            normalized.append(application)
+    return normalized
+
+
 def validate_legacy_labels(
     labels: object, *, managed_label: str = DEFAULT_LABEL
 ) -> list[str]:
@@ -141,6 +158,14 @@ def load_config(root: Path, machine_id: str | None = None) -> dict[str, object]:
         raise MacStartupError("machine mac-startup actions must be a JSON object")
     actions = validate_actions({**default_actions, **override_actions})
 
+    applications = validate_applications(
+        machine_override.get("applications", defaults.get("applications", []))
+    )
+    if actions["open-applications"] and not applications:
+        raise MacStartupError(
+            "mac-startup open-applications action requires at least one application"
+        )
+
     enabled = machine_override.get("enabled", defaults.get("enabled", False))
     if not isinstance(enabled, bool):
         raise MacStartupError("mac-startup enabled must be true or false")
@@ -154,6 +179,7 @@ def load_config(root: Path, machine_id: str | None = None) -> dict[str, object]:
         "enabled": enabled,
         "label": label,
         "actions": actions,
+        "applications": applications,
         "legacy_launch_agents": validate_legacy_labels(legacy, managed_label=label),
     }
 
@@ -164,7 +190,22 @@ def enabled_actions(config: dict[str, object]) -> list[str]:
     return sorted(name for name, enabled in actions.items() if enabled)
 
 
-def require_eligible_machine(root: Path, config: dict[str, object]) -> dict[str, object]:
+def runtime_actions(config: dict[str, object]) -> list[str]:
+    actions = enabled_actions(config)
+    runtime = [action for action in actions if action != "open-applications"]
+    if "open-applications" in actions:
+        applications = config.get("applications", [])
+        assert isinstance(applications, list)
+        runtime.extend(f"open-application:{bundle_id}" for bundle_id in applications)
+    return runtime
+
+
+def require_eligible_machine(
+    root: Path,
+    config: dict[str, object],
+    *,
+    provision_disabled: bool = False,
+) -> dict[str, object]:
     if sys.platform != "darwin":
         raise MacStartupError("mac-startup requires macOS launchd")
     machine_id = config.get("machine_id")
@@ -175,8 +216,12 @@ def require_eligible_machine(root: Path, config: dict[str, object]) -> dict[str,
     machine = registered_machine(root, machine_id)
     if machine is None:
         raise MacStartupError(f"machine {machine_id!r} is not in the private machine registry")
-    if machine.get("enabled") is not True:
+    if machine.get("enabled") is not True and not provision_disabled:
         raise MacStartupError(f"machine {machine_id!r} is disabled in the machine registry")
+    if provision_disabled and machine.get("enabled") is True:
+        raise MacStartupError(
+            f"machine {machine_id!r} is already enabled; omit --provision-disabled"
+        )
     if machine.get("platform") != "macos":
         raise MacStartupError(f"machine {machine_id!r} is not registered as macOS")
     if config.get("enabled") is not True:
@@ -291,10 +336,18 @@ def archive_legacy_agents(config: dict[str, object], *, dry_run: bool) -> list[P
     return archived
 
 
-def run_actions(root: Path, *, dry_run: bool, deployed: bool = False) -> int:
+def run_actions(
+    root: Path,
+    *,
+    dry_run: bool,
+    deployed: bool = False,
+    provision_disabled: bool = False,
+) -> int:
     config = load_config(root)
-    require_eligible_machine(root, config)
-    actions = enabled_actions(config)
+    require_eligible_machine(
+        root, config, provision_disabled=provision_disabled
+    )
+    actions = runtime_actions(config)
     runner = RUNTIME_RUNNER if deployed else root / RUNNER_RELATIVE
     if not runner.is_file():
         raise MacStartupError(f"mac-startup runner is missing: {runner}")
@@ -305,12 +358,16 @@ def run_actions(root: Path, *, dry_run: bool, deployed: bool = False) -> int:
     return subprocess.run(command, cwd=runner.parent).returncode
 
 
-def install(root: Path, *, dry_run: bool) -> int:
+def install(
+    root: Path, *, dry_run: bool, provision_disabled: bool = False
+) -> int:
     config = load_config(root)
-    require_eligible_machine(root, config)
+    require_eligible_machine(
+        root, config, provision_disabled=provision_disabled
+    )
     machine_id = str(config["machine_id"])
     label = str(config["label"])
-    actions = enabled_actions(config)
+    actions = runtime_actions(config)
     source_runner = root / RUNNER_RELATIVE
     if not source_runner.is_file():
         raise MacStartupError(f"mac-startup runner is missing: {source_runner}")
@@ -334,6 +391,7 @@ def install(root: Path, *, dry_run: bool) -> int:
         "schema_version": 1,
         "machine_id": machine_id,
         "actions": actions,
+        "applications": config["applications"],
     }
     atomic_write(
         RUNTIME_CONFIG,
@@ -347,7 +405,12 @@ def install(root: Path, *, dry_run: bool) -> int:
     run_launchctl(["bootstrap", launch_domain(), str(path)])
     run_launchctl(["enable", launch_service(label)], check=False, quiet=True)
     print(f"installed {label}: {path}")
-    return run_actions(root, dry_run=False, deployed=True)
+    return run_actions(
+        root,
+        dry_run=False,
+        deployed=True,
+        provision_disabled=provision_disabled,
+    )
 
 
 def uninstall(root: Path, *, dry_run: bool) -> int:
@@ -419,6 +482,7 @@ def status_payload(root: Path) -> dict[str, object]:
         "machinePlatform": machine.get("platform") if machine else None,
         "configuredEnabled": config.get("enabled") is True,
         "enabledActions": enabled_actions(config),
+        "applications": config["applications"],
         "label": label,
         "plist": str(plist_path(label)),
         "plistInstalled": plist_path(label).is_file(),
@@ -447,6 +511,9 @@ def print_status(root: Path, *, json_output: bool) -> int:
     actions = payload["enabledActions"]
     assert isinstance(actions, list)
     print(f"enabled_actions: {', '.join(actions) if actions else 'none'}")
+    applications = payload["applications"]
+    assert isinstance(applications, list)
+    print(f"applications: {', '.join(applications) if applications else 'none'}")
     print(f"label: {payload['label']}")
     print(f"plist_installed: {'yes' if payload['plistInstalled'] else 'no'}")
     print(f"loaded: {'yes' if payload['loaded'] else 'no'}")
@@ -477,6 +544,12 @@ def build_parser() -> argparse.ArgumentParser:
     for name in ("run", "install", "uninstall"):
         command = subparsers.add_parser(name)
         command.add_argument("--dry-run", action="store_true")
+        if name in {"run", "install"}:
+            command.add_argument(
+                "--provision-disabled",
+                action="store_true",
+                help="explicitly configure this disabled Mac before fleet enablement",
+            )
     return parser
 
 
@@ -487,9 +560,17 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "status":
             return print_status(root, json_output=args.json)
         if args.command == "run":
-            return run_actions(root, dry_run=args.dry_run)
+            return run_actions(
+                root,
+                dry_run=args.dry_run,
+                provision_disabled=args.provision_disabled,
+            )
         if args.command == "install":
-            return install(root, dry_run=args.dry_run)
+            return install(
+                root,
+                dry_run=args.dry_run,
+                provision_disabled=args.provision_disabled,
+            )
         if args.command == "uninstall":
             return uninstall(root, dry_run=args.dry_run)
     except MacStartupError as exc:

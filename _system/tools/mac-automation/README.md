@@ -16,6 +16,7 @@ Preview or install the configured actions for this machine:
 ```bash
 vault mac-startup install --dry-run
 vault mac-startup install
+vault mac-startup install --provision-disabled
 ```
 
 Run the enabled actions immediately without changing the LaunchAgent:
@@ -49,13 +50,15 @@ Configured legacy LaunchAgents are unloaded and moved into the runtime folder's 
 
 ## Actions And Bootstrap Safety
 
-Configuration ownership and the opt-in schema live in [[_system/config/mac-startup/README|macOS Startup Configuration]]. Public defaults keep the workflow disabled, private per-machine configuration is excluded from bootstrap export, and the bootstrap installer never invokes `vault mac-startup install`.
+Configuration ownership and the opt-in schema live in [[_system/local/skills/infra-code-folder-and-computer-topology/Mac Startup/README|macOS Startup Configuration]]. Public defaults keep the workflow disabled, private per-machine configuration is excluded from bootstrap export, and the bootstrap installer never invokes `vault mac-startup install`.
 
 To add another optional login action:
 
-1. Add its disabled flag to `_system/config/mac-startup/defaults.json`.
+1. Add its disabled flag to `_system/local/skills/infra-code-folder-and-computer-topology/Mac Startup/defaults.json`.
 2. Add its implementation and dispatch case to `startup.sh`.
 3. Add the action ID to the command's supported-action validation.
 4. Add focused configuration, runner, plist, and status tests.
 
-The initial `remap-tilde-key` action applies HID usage `0x35` to `0x64` for the logged-in user.
+The `remap-tilde-key` action applies HID usage `0x35` to `0x64` for the logged-in user. The `open-applications` action expands validated private-config bundle identifiers into `open -b` calls. Do not use it for an application such as WireGuard when that application has its own login helper and service lifecycle.
+
+Normal install and run operations require an enabled registered Mac. The explicit `--provision-disabled` option exists for the current clone during reviewed onboarding and refuses an already enabled machine.

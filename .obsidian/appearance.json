@@ -5,7 +5,8 @@
   "enabledCssSnippets": [
     "tasknotes-swimlanes",
     "custom-backgrounds",
-    "tabs"
+    "tabs",
+    "emoji-title-folder-note-normal"
   ],
   "showRibbon": false
 }

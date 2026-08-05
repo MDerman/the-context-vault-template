@@ -4,7 +4,8 @@
   "translucency": true,
   "enabledCssSnippets": [
     "tasknotes-swimlanes",
-    "custom-backgrounds"
+    "custom-backgrounds",
+    "tabs"
   ],
   "showRibbon": false
 }

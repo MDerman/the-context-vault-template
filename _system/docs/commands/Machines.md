@@ -4,7 +4,7 @@ status: enabled
 ---
 # Machines
 
-Private registry: `_system/config/infra-code-folder-and-computer-topology/private/machines.json`. It is tracked in private vault Git and excluded from public bootstrap export. Registry owns stable machine ID, display name, enabled state, shell transport, SSH alias, home, global-AGENTS eligibility, and optional VNC definition.
+Private registry: `_system/local/skills/infra-code-folder-and-computer-topology/private/machines.json`. It is tracked in private vault Git and excluded from public bootstrap export. Registry owns stable machine ID, display name, enabled state, shell transport, SSH alias, home, global-AGENTS eligibility, and optional VNC definition.
 
 ## Commands
 
@@ -24,13 +24,15 @@ Registry schema v3 defines one primary, worker roles/platforms, and worker vault
 
 Missing registry does not prompt during public bootstrap. Initialize it manually with `vault machine init`, then register workers.
 
+`register-worker` creates a disabled worker with required sparse vault provisioning and a conventional private machine-note path. Keep it disabled until onboarding and reboot acceptance pass.
+
 Wootbook VNC creates or reuses SSH control tunnel to loopback noVNC, checks HTTP health, then opens auto-connecting client. Runtime control socket and metadata live under `~/.cache/vault-machine/`, never vault. Occupied default port gets free local port; explicitly requested occupied port fails.
 
 Mac mini uses native `vnc://` URL through same interface.
 
 ## Register future machine
 
-1. Complete [[_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/references/new-mac-or-linux-machine-setup|New Mac or Linux Machine Setup]].
+1. Complete [[new-machine-onboarding|New Machine Onboarding]].
 2. Add unique lower-kebab `id` and confirmed values to private registry.
 3. Keep `enabled: false` until SSH identity, home, and route pass.
 4. Add `vnc` only after local-only endpoint or native Screen Sharing works.

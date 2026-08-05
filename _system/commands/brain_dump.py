@@ -386,7 +386,7 @@ def prepend_entry(path: Path, body: str) -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Ingest a single Apple Note into a vault file.")
     parser.add_argument("--root", default=None, help="Vault root. Defaults to auto-discovery.")
-    parser.add_argument("--config", default=None, help="Vault-relative config path. Defaults to _system/config/vault.json.")
+    parser.add_argument("--config", default=None, help="Vault-relative config path. Defaults to _system/local/vault.json.")
     parser.add_argument("--note", default=None, help="Apple Note title. Defaults to config brain_dump_ingest.note_name.")
     parser.add_argument("--out", default=None, help="Vault-relative output path.")
     parser.add_argument("--attachments-dir", default=None, help="Vault-relative folder for copied attachments.")

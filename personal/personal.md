@@ -1,4 +1,5 @@
 ---
+emoji: 🏠
 status: active
 context_type: personal
 content_enabled: false

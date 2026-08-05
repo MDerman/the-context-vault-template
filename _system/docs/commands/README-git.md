@@ -13,7 +13,7 @@ This private vault uses normal Git for notes, code, and configuration. Binary fi
 - Local media objects: `~/.local/share/vault-git/Vault.git/lfs/objects`.
 - Remote: private `https://github.com/MDerman/vault.git`.
 - Primary branch: `master`.
-- Media manifest: `_system/config/git-media-manifest.json`.
+- Media manifest: `_system/local/git-media-manifest.json`.
 
 Every LFS pointer committed to Git contains original media SHA-256 and byte size:
 
@@ -32,7 +32,7 @@ Stage changed files first. Git LFS clean filters convert configured binary files
 ```bash
 git add <paths>
 vault git-media write-manifest
-git add _system/config/git-media-manifest.json
+git add _system/local/git-media-manifest.json
 vault git-media verify --index
 git commit -m "Description"
 git push

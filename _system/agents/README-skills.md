@@ -36,7 +36,10 @@ Organizer folders must use `_lower-kebab`, may nest recursively, and never conta
 | `_gws` | `gws` |
 | `_infrastructure` | `infra` |
 | `_marketing` | `marketing` |
+| `_matt-p-skills` | `mp` |
 | `_spreadsheets` | `spreadsheets` |
+| `_swan-gtm-skills` | `swan-gtm` |
+| `_vibe-marketer-skills-pack` | `vibe-marketer` |
 | `_vault` | `vault` |
 | `_video` | `video` |
 
@@ -48,13 +51,13 @@ A pack may expose one orchestrating root skill whose name exactly equals its pac
 
 ## Skill And Config Separation
 
-- Read [[_system/agents/README|Agents]], this file, and [[_system/config/README|System Configuration]] before adding or restructuring skill.
+- Read [[_system/agents/README|Agents]], this file, and [[_system/local/README|Local Vault Data]] before adding or restructuring skill.
 - Generic instructions, validation, scripts, code snippets, and reusable assets stay in skill folder.
-- Changing domains, personal paths, machine facts, account/project IDs, repository locations, and deployment access details go in `_system/config/<skill-name>/`.
+- Changing domains, personal paths, machine facts, account/project IDs, repository locations, and deployment access details go in `_system/local/skills/<skill-name>/`.
 - Use same basename as skill. Add config-folder `README.md`; use `private/` for private instance data.
 - Config format may be Markdown, JSON, TOML, YAML, or another consumer-appropriate format.
 - Skill must name required config, validate it before mutation, and explain setup when missing. Public-exported skill must remain understandable without private config.
-- Before adding secrets or variables, read [[_system/config/env/README|Env Tooling]]. Add vault-owned keys to `_system/config/env/.env.base` first; values go in ignored `.env`. External-repository variables remain in owning repository env workflow.
+- Before adding secrets or variables, read [[_system/local/env/README|Env Tooling]]. Add vault-owned keys to `_system/local/env/.env.base` first; values go in ignored `.env`. External-repository variables remain in owning repository env workflow.
 
 ## Invocation Policy
 
@@ -96,7 +99,7 @@ Existing tasks cache skill catalog. Start new task or restart Codex after sync.
 
 ## Dependency Skills
 
-External repos stay under `~/Code/open_source/<repo-name>` and are configured in `_system/config/deps.json`.
+External repos stay under `~/Code/open_source/<repo-name>` and are configured in `_system/local/deps.json`.
 
 Use `manual-skill` for explicit-only wrapper or `auto-skill` for implicit wrapper. Wrapper materializes upstream `SKILL.md` for Codex loader compatibility, projects supporting assets, and keeps invocation policy metadata vault-owned. The projection target basename overrides upstream frontmatter `name`; optional `title_override` replaces or inserts its first H1. `vault deps sync` reapplies these deterministic local overrides without changing upstream repositories.
 

@@ -28,7 +28,7 @@ class ManagedSnippetTests(unittest.TestCase):
         self.base = Path(self.temp.name)
         self.vault = self.base / "vault"
         self.external = self.base / "external"
-        self.config = self.vault / "_system/config/snippets"
+        self.config = self.vault / "_system/local/snippets"
         self.registry = self.vault / "repositories.json"
         self.source = self.config / "sources/example.md"
         for root in (self.vault, self.external):

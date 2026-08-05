@@ -328,14 +328,15 @@ class Bootstrap:
             "_system/agents",
             "_system/bootstrap",
             "_system/commands",
-            "_system/config",
+            "_system/local",
+            "_system/local/skills",
             "_system/docs/commands",
             "_system/docs/obsidian",
             "_system/docs/workflows",
-            "_system/config/env",
+            "_system/local/env",
             "_system/inbox",
             "_system/migrations",
-            "_system/state",
+            "_system/local/state",
             "_system/sync",
             "_system/tools",
             "_system/_obsidian/attachments",
@@ -417,10 +418,11 @@ class Bootstrap:
     def setup_templates(self) -> None:
         self.safe_remove_generated_path(self.root / "README_PERSONALIZED_QUICKSTART.md", BOOTSTRAP_MARKERS)
         self.safe_remove_generated_path(self.root / "_system" / "README_PERSONALIZED_QUICKSTART.md", BOOTSTRAP_MARKERS)
+        self.safe_remove_generated_path(self.root / "_system/_obsidian/templates/shared/entity-notes/personal.md", BOOTSTRAP_MARKERS)
         self.write_managed(self.root / "_system/_obsidian/templates/shared/default-tasks-template.md", shared_task_template())
         self.write_managed(self.root / "_system/_obsidian/templates/shared/content/content-item-template.md", content_item_template())
         self.write_managed(self.root / "_system/_obsidian/templates/shared/content/publication-template.md", publication_template())
-        self.write_managed(self.root / "_system/_obsidian/templates/shared/entity-notes/personal.md", entity_note_template("personal", "personal"))
+        self.write_managed(self.root / "_system/_obsidian/templates/shared/entity-notes/personal-context-template.md", entity_note_template("personal", "personal"))
         self.write_managed(self.root / "_system/_obsidian/templates/shared/entity-notes/personal-brand.md", entity_note_template("personal-brand", "personal-brand"))
         self.write_managed(self.root / "_system/_obsidian/templates/shared/entity-notes/company.md", entity_note_template("business", "business"))
         personal_periodic = self.root / self.default_entity / "_obsidian/templates/periodic"

@@ -1,6 +1,6 @@
 {
-  "export_root": "~/Code/vault-public",
-  "manifest_name": "_system/state/export-manifest.json",
+  "export_root": "~/Code/ctx9/vault-public",
+  "manifest_name": "_system/local/state/export-manifest.json",
   "copy_obsidian": "exact",
   "context_folders": [
     {
@@ -62,20 +62,25 @@
   ],
   "generated_exclude_paths": [
     "Dashboard.md",
-    "_system/config/dashboard-action-links.md"
+    "_system/local/dashboard-action-links.md"
   ],
   "generated_exclude_globs": [
-    "_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/assets/**",
-    "_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/references/**",
-    "_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/scripts/**",
-    "_system/config/*/private",
-    "_system/config/*/private/**",
+    "_system/agents/auto-skills/_infrastructure/infra-onboard-machine/references/**",
+    "_system/agents/auto-skills/_infrastructure/infra-onboard-machine/scripts/**",
+    "_system/agents/auto-skills/_infrastructure/infra-onboard-worker-mac/scripts/**",
+    "_system/agents/auto-skills/_infrastructure/infra-manage-fleet-terminal-workspaces/assets/**",
+    "_system/agents/auto-skills/_infrastructure/infra-manage-fleet-terminal-workspaces/references/**",
+    "_system/agents/auto-skills/_infrastructure/infra-manage-fleet-terminal-workspaces/scripts/**",
+    "_system/local/skills/**/private",
+    "_system/local/skills/**/private/**",
+    "_system/local/snippets/private",
+    "_system/local/snippets/private/**",
     "_system/_obsidian/periodic/**",
     "_system/_obsidian/attachments/**",
     "_system/agents/manual-skills/**",
     "_system/agents/gh-skills/**",
     "_system/agents/skills-dump/**",
-    "_system/state/**",
+    "_system/local/state/**",
     "_system/inbox/**",
     "_system/sync/**",
     "_system/tools/gmail-invoice-collector/**",

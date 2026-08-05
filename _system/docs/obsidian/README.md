@@ -35,7 +35,7 @@ Refresh the mobile profile from the root desktop profile with:
 vault mobile-profile
 ```
 
-The mobile profile enables only TaskNotes, Calendar, Periodic Notes, Sync Embeds, Style Settings, File Color, and Iconize. It copies the current theme, enabled CSS snippets, those plugin folders/settings, and key core settings such as `daily-notes.json` from `.obsidian` into `.obsidian-mobile`.
+The mobile profile enables only TaskNotes, Calendar, Periodic Notes, Sync Embeds, Style Settings, File Color, Emoji Title, and System3 Relay. It copies the current theme, enabled CSS snippets, those plugin folders/settings, and key core settings such as `daily-notes.json` from `.obsidian` into `.obsidian-mobile`.
 
 ## Attachments
 
@@ -73,11 +73,13 @@ Remote Git history is not rewritten by normal local maintenance. Use `vault git-
 
 ## File Colors And Icons
 
-Iconize file/folder icons live in:
+Emoji Title reads note emojis from Markdown frontmatter:
 
-```text
-.obsidian/plugins/obsidian-icon-folder/data.json
+```yaml
+emoji: 📝
 ```
+
+Its plugin settings live in `.obsidian/plugins/emoji-title/data.json`. File-type fallback emojis are blank in this vault, so only explicit note frontmatter or folder-note inheritance adds an emoji.
 
 File Color folder colors live in:
 
@@ -189,7 +191,8 @@ Primary shortcuts:
 - `Alt+T`: TaskNotes new task.
 - `Alt+Cmd+T`: TaskNotes new task with selected Markdown in details.
 - `Alt+Cmd+Y`: append selection to existing TaskNotes task and route selected attachments.
-- `Cmd+Backspace`: delete hovered/selected file with normal confirmation.
+- `Alt+Cmd+R`: immediately reveal the open note in the File Explorer pane.
+- Context Nine's hovered/selected-file delete action is available from right-click menus and the command palette, without a keyboard shortcut.
 - `Alt+Cmd+Backspace`: deliberate current-file delete.
 - `Cmd+N`: create note in hovered File Explorer folder, else normal new-note behavior.
 

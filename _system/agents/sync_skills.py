@@ -19,7 +19,7 @@ SKILL_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 NAME_RE = re.compile(r"(?m)^name:\s*['\"]?([^'\"\n]+)['\"]?\s*$")
 POLICY_RE = re.compile(r"(?m)^(\s*allow_implicit_invocation:\s*)(?:true|false)(\s*(?:#.*)?)$")
 MARKER = ".vault-deps-projection.json"
-IGNORED = {".DS_Store", ".gitkeep", "README.md"}
+IGNORED = {".DS_Store", ".gitkeep", "README.md", ".vault-deps-projection.json"}
 CATEGORY_TOKENS = {
     "_agents": ("agents", "Agents"),
     "_claude-seo": ("claude-seo", "Claude SEO"),
@@ -31,7 +31,10 @@ CATEGORY_TOKENS = {
     "_gws": ("gws", "GWS"),
     "_infrastructure": ("infra", "Infra"),
     "_marketing": ("marketing", "Marketing"),
+    "_matt-p-skills": ("mp", "Matt P Skills"),
     "_spreadsheets": ("spreadsheets", "Spreadsheets"),
+    "_swan-gtm-skills": ("swan-gtm", "Swan GTM Skills"),
+    "_vibe-marketer-skills-pack": ("vibe-marketer", "Vibe Marketer"),
     "_vault": ("vault", "Vault"),
     "_video": ("video", "Video"),
 }
@@ -179,7 +182,7 @@ def load_json(path: Path) -> dict[str, Any]:
 
 
 def dependency_changes(root: Path, skills: list[Skill]) -> list[Change]:
-    config_path = root / "_system/config/deps.json"
+    config_path = root / "_system/local/deps.json"
     if not config_path.exists():
         return []
     config = load_json(config_path)

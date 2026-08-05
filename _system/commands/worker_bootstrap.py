@@ -48,6 +48,7 @@ def bootstrap_script(worker: dict[str, Any], remote: str) -> str:
     repo = str(config["repo_path"])
     sparse = " ".join(shlex.quote(str(path)) for path in config["sparse_paths"])
     return f"""set -eu
+export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
 repo={shlex.quote(repo)}
 if [ -e "$repo" ]; then
   git -C "$repo" rev-parse --git-dir >/dev/null 2>&1 || {{ echo "non-Git target exists: $repo" >&2; exit 2; }}
@@ -69,8 +70,21 @@ python3 "$repo/_system/agents/sync_skills.py" sync --root "$repo" --home "$HOME"
 """
 
 
-def bootstrap_worker(root: Path, registry: dict[str, Any], name: str, apply: bool) -> None:
-    worker = machine_registry.resolve_machine(registry, name)
+def bootstrap_worker(
+    root: Path,
+    registry: dict[str, Any],
+    name: str,
+    apply: bool,
+    *,
+    provision_disabled: bool = False,
+) -> None:
+    worker = machine_registry.resolve_machine(
+        registry, name, enabled=not provision_disabled
+    )
+    if provision_disabled and worker.get("enabled") is True:
+        raise WorkerBootstrapError(
+            f"machine is already enabled; omit --provision-disabled: {worker['id']}"
+        )
     config = worker.get("vault_sync", {})
     if worker.get("role") != "worker" or not config.get("enabled"):
         raise WorkerBootstrapError(f"vault worker bootstrap disabled: {worker['id']}")
@@ -96,6 +110,11 @@ def build_parser() -> argparse.ArgumentParser:
     bootstrap = sub.add_parser("bootstrap")
     bootstrap.add_argument("name")
     bootstrap.add_argument("--apply", action="store_true")
+    bootstrap.add_argument(
+        "--provision-disabled",
+        action="store_true",
+        help="explicitly provision one disabled worker without enabling fleet automation",
+    )
     return parser
 
 
@@ -106,8 +125,14 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "install-hooks":
             install_hooks(root, args.apply)
         elif args.command == "bootstrap":
-            registry_path = root / "_system/config/infra-code-folder-and-computer-topology/private/machines.json"
-            bootstrap_worker(root, machine_registry.load_registry(registry_path), args.name, args.apply)
+            registry_path = root / "_system/local/skills/infra-code-folder-and-computer-topology/private/machines.json"
+            bootstrap_worker(
+                root,
+                machine_registry.load_registry(registry_path),
+                args.name,
+                args.apply,
+                provision_disabled=args.provision_disabled,
+            )
         return 0
     except (WorkerBootstrapError, machine_registry.MachineError, OSError, subprocess.SubprocessError) as exc:
         detail = exc.stderr.strip() if isinstance(exc, subprocess.CalledProcessError) and exc.stderr else str(exc)

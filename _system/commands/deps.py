@@ -36,6 +36,8 @@ class Projection:
     type: str
     managed: bool
     title_override: str | None = None
+    skill_prefix: str | None = None
+    rewrite_skill_sources: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -118,6 +120,14 @@ def load_config(root: Path) -> list[Repo]:
                     str(projection["title_override"])
                     if projection.get("title_override") is not None
                     else None
+                ),
+                skill_prefix=(
+                    str(projection["skill_prefix"])
+                    if projection.get("skill_prefix") is not None
+                    else None
+                ),
+                rewrite_skill_sources=tuple(
+                    str(source) for source in projection.get("rewrite_skill_sources", [])
                 ),
             )
             for projection in item.get("projections", [])
@@ -413,6 +423,10 @@ def marker_payload(projection: Projection) -> dict[str, Any]:
     }
     if projection.title_override is not None:
         payload["title_override"] = projection.title_override
+    if projection.skill_prefix is not None:
+        payload["skill_prefix"] = projection.skill_prefix
+    if projection.rewrite_skill_sources:
+        payload["rewrite_skill_sources"] = list(projection.rewrite_skill_sources)
     return payload
 
 
@@ -448,7 +462,11 @@ def projection_title_prefix(target: str) -> str | None:
     if source_index is None:
         return None
     groups = [part for part in parts[source_index + 1 : -1] if part.startswith("_")]
-    root_pack_groups = {"_claude-seo", "_corey-marketing-skills"}
+    root_pack_groups = {
+        "_claude-seo",
+        "_corey-marketing-skills",
+        "_swan-gtm-skills",
+    }
     if len(groups) < 2 and (len(groups) != 1 or groups[0] not in root_pack_groups):
         return None
     return " · ".join(display_title_segment(group) for group in groups)
@@ -489,8 +507,11 @@ def projected_skill_text(source: Path, projection: Projection) -> str:
         if replaced:
             body = "".join(lines)
         else:
+            display_name = local_name
+            if projection.skill_prefix:
+                display_name = display_name.removeprefix(projection.skill_prefix)
             title = projection.title_override or (
-                f"{title_prefix} · {display_title_segment(local_name)}"
+                f"{title_prefix} · {display_title_segment(display_name)}"
             )
             body = f"\n\n# {title}\n\n" + body.lstrip("\r\n")
     return "---\n" + frontmatter + "\n---" + body
@@ -628,6 +649,194 @@ def create_auto_skill_projection(root: Path, projection: Projection, apply: bool
     return create_skill_projection(root, projection, apply, allowed=True)
 
 
+def pack_skill_sources(source: Path) -> list[Path]:
+    skills: list[Path] = []
+    for child in sorted(source.iterdir(), key=lambda path: path.name):
+        if child.name in {".DS_Store", MANAGED_MARKER} or child.is_file():
+            continue
+        if child.is_symlink() or not child.is_dir() or not (child / "SKILL.md").is_file():
+            raise SystemExit(f"Skill pack contains a non-skill directory: {child}")
+        skills.append(child)
+    if not skills:
+        raise SystemExit(f"Skill pack contains no skills: {source}")
+    return skills
+
+
+def validate_skill_prefix(prefix: str | None) -> str:
+    if not prefix or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*-", prefix):
+        raise SystemExit(f"Skill pack prefix must be lowercase kebab-case ending in '-': {prefix!r}")
+    return prefix
+
+
+def rewrite_pack_markdown(text: str, skill_names: list[str], prefix: str) -> str:
+    for name in sorted(skill_names, key=len, reverse=True):
+        text = text.replace(f"](./{name}/", f"](./{prefix}{name}/")
+        invocation = re.compile(
+            rf"(?<![A-Za-z0-9._/-])/{re.escape(name)}(?![A-Za-z0-9-])"
+        )
+        text = invocation.sub(f"/{prefix}{name}", text)
+    return text
+
+
+def pack_child_projection(projection: Projection, source: Path, target: Path) -> Projection:
+    return Projection(
+        repo_id=projection.repo_id,
+        repo_path=projection.repo_path,
+        source=source.relative_to(projection.repo_path).as_posix(),
+        target=target.as_posix(),
+        type="manual-skill",
+        managed=True,
+        title_override=None,
+        skill_prefix=projection.skill_prefix,
+        rewrite_skill_sources=projection.rewrite_skill_sources,
+    )
+
+
+def pack_rewrite_skill_names(projection: Projection, local_skills: list[Path]) -> list[str]:
+    if not projection.rewrite_skill_sources:
+        return [skill.name for skill in local_skills]
+    names: set[str] = set()
+    for relative in projection.rewrite_skill_sources:
+        source = projection.repo_path / relative
+        if not source.is_dir():
+            raise SystemExit(f"Skill pack rewrite source missing: {source}")
+        names.update(skill.name for skill in pack_skill_sources(source))
+    return sorted(names)
+
+
+def expected_pack_skill_files(
+    source: Path,
+    projection: Projection,
+    skill_names: list[str],
+    prefix: str,
+) -> dict[Path, bytes]:
+    expected: dict[Path, bytes] = {}
+    for item in sorted(source.rglob("*")):
+        relative = item.relative_to(source)
+        if not relative.parts or relative.parts[0] == "agents" or item.is_dir():
+            continue
+        if item.name in {".DS_Store", MANAGED_MARKER}:
+            continue
+        if relative == Path("SKILL.md"):
+            text = projected_skill_text(item, projection)
+            expected[relative] = rewrite_pack_markdown(text, skill_names, prefix).encode()
+        elif item.suffix.lower() == ".md":
+            text = item.read_text(encoding="utf-8")
+            expected[relative] = rewrite_pack_markdown(text, skill_names, prefix).encode()
+        else:
+            expected[relative] = item.read_bytes()
+    expected[Path("agents/openai.yaml")] = skill_metadata(source, allowed=False).encode()
+    return expected
+
+
+def pack_skill_contents_current(target: Path, expected: dict[Path, bytes]) -> bool:
+    if not target.is_dir() or target.is_symlink():
+        return False
+    actual = {
+        item.relative_to(target)
+        for item in target.rglob("*")
+        if item.is_file() or item.is_symlink()
+    }
+    if actual != set(expected):
+        return False
+    return all(
+        not (target / relative).is_symlink()
+        and (target / relative).read_bytes() == content
+        for relative, content in expected.items()
+    )
+
+
+def skill_pack_projection_current(
+    target: Path,
+    source: Path,
+    projection: Projection,
+    skills: list[Path],
+    prefix: str,
+) -> bool:
+    if read_marker(target) != marker_payload(projection):
+        return False
+    skill_names = pack_rewrite_skill_names(projection, skills)
+    expected_root_files = {
+        item.name: rewrite_pack_markdown(item.read_text(encoding="utf-8"), skill_names, prefix).encode()
+        if item.suffix.lower() == ".md"
+        else item.read_bytes()
+        for item in source.iterdir()
+        if item.is_file() and item.name not in {".DS_Store", MANAGED_MARKER}
+    }
+    expected_root_entries = set(expected_root_files) | {
+        f"{prefix}{skill.name}" for skill in skills
+    } | {MANAGED_MARKER}
+    if {item.name for item in target.iterdir()} != expected_root_entries:
+        return False
+    for name, content in expected_root_files.items():
+        item = target / name
+        if item.is_symlink() or not item.is_file() or item.read_bytes() != content:
+            return False
+    for skill in skills:
+        child_target = target / f"{prefix}{skill.name}"
+        child_projection = pack_child_projection(
+            projection, skill, Path(projection.target) / child_target.name
+        )
+        expected = expected_pack_skill_files(skill, child_projection, skill_names, prefix)
+        if not pack_skill_contents_current(child_target, expected):
+            return False
+    return True
+
+
+def create_manual_skill_pack_projection(root: Path, projection: Projection, apply: bool) -> bool:
+    source = projection.repo_path / projection.source
+    target = vault_path(root, projection.target)
+    if not source.is_dir():
+        raise SystemExit(f"Skill pack projection source missing: {source}")
+    prefix = validate_skill_prefix(projection.skill_prefix)
+    skills = pack_skill_sources(source)
+    if target.is_dir() and skill_pack_projection_current(
+        target, source, projection, skills, prefix
+    ):
+        log(f"Projection current: {target}")
+        return False
+
+    existing = target.exists() or target.is_symlink()
+    marker = read_marker(target)
+    if existing:
+        if marker.get("managed_by") == "vault deps":
+            log(f"Rebuild managed projection: {target}")
+            if apply:
+                remove_path(target)
+        else:
+            backup_path(root, target, target.name, apply)
+
+    log(f"Project manual skill pack {source} -> {target} ({prefix}*)")
+    if not apply:
+        return True
+
+    target.mkdir(parents=True, exist_ok=True)
+    skill_names = pack_rewrite_skill_names(projection, skills)
+    for item in sorted(source.iterdir(), key=lambda path: path.name):
+        if not item.is_file() or item.name in {".DS_Store", MANAGED_MARKER}:
+            continue
+        destination = target / item.name
+        if item.suffix.lower() == ".md":
+            destination.write_text(
+                rewrite_pack_markdown(item.read_text(encoding="utf-8"), skill_names, prefix),
+                encoding="utf-8",
+            )
+        else:
+            shutil.copy2(item, destination)
+    for skill in skills:
+        child_target = target / f"{prefix}{skill.name}"
+        child_projection = pack_child_projection(
+            projection, skill, Path(projection.target) / child_target.name
+        )
+        expected = expected_pack_skill_files(skill, child_projection, skill_names, prefix)
+        for relative, content in expected.items():
+            destination = child_target / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(content)
+    write_json(projection_marker(target), marker_payload(projection))
+    return True
+
+
 def apply_projection(root: Path, projection: Projection, apply: bool) -> bool:
     if not projection.managed:
         log(f"Skip unmanaged projection: {projection.target}")
@@ -636,6 +845,8 @@ def apply_projection(root: Path, projection: Projection, apply: bool) -> bool:
         return create_manual_skill_projection(root, projection, apply)
     if projection.type == "auto-skill":
         return create_auto_skill_projection(root, projection, apply)
+    if projection.type == "manual-skill-pack":
+        return create_manual_skill_pack_projection(root, projection, apply)
     raise SystemExit(f"Unknown projection type for {projection.target}: {projection.type}")
 
 
@@ -690,6 +901,7 @@ def sync(root: Path, repos: list[Repo], apply: bool) -> int:
                 if apply_projection(root, projection, apply) and projection.type in {
                     "manual-skill",
                     "auto-skill",
+                    "manual-skill-pack",
                 }:
                     skill_projection_touched = True
         setup_queue.append((repo, repo_changed))
@@ -744,6 +956,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     status_parser = subparsers.add_parser("status", help="Show dependency repo and projection state.")
     status_parser.add_argument("--json", action="store_true", help="Emit machine-readable status JSON.")
     sync_parser = subparsers.add_parser("sync", help="Clone/pull repos and rebuild managed projections.")
+    sync_parser.add_argument(
+        "--repo",
+        action="append",
+        dest="repo_ids",
+        help="Sync only this dependency id; repeat to select multiple dependencies.",
+    )
     mode = sync_parser.add_mutually_exclusive_group()
     mode.add_argument("--dry-run", action="store_true", help="Preview changes.")
     mode.add_argument("--apply", action="store_true", help="Apply changes.")
@@ -769,6 +987,13 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         return print_status(root, repos)
     if args.command == "sync":
+        if args.repo_ids:
+            requested = set(args.repo_ids)
+            known = {repo.id for repo in repos}
+            missing = sorted(requested - known)
+            if missing:
+                raise SystemExit(f"Unknown dependency repo id: {', '.join(missing)}")
+            repos = [repo for repo in repos if repo.id in requested]
         return sync(root, repos, apply=bool(args.apply))
     if args.command == "project-auto-skills":
         return project_auto_skills(root, repos, apply=bool(args.apply))

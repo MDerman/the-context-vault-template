@@ -32,11 +32,11 @@ This is made possible by a custom plugin called Context Nine and by the Relay pl
 
 - Vault lives at `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault` unless you pass a custom target path as the first script argument.
 - Public upstream Git state lives outside iCloud under `~/Library/Application Support/context-nine-vault-bootstrap/`.
-- Vault-local install, report, and export state lives under `_system/state/`.
+- Vault-local install, report, and export state lives under `_system/local/state/`.
 - The installer runs with `sudo`, but writes the vault and bootstrap state as the user who invoked sudo.
 - Vault folder has no public-repo `.git` pointer after install. Bootstrap then creates a personal Git pointer whose real repository lives under `~/.local/share/vault-git/<vault-name>.git`.
 - `init_vault.sh` installs/checks command dependencies, clones release-locked external repos, runs setup hooks, creates starter context folders, rebuilds per-skill agent discovery links, installs `vault` to `~/.local/bin/vault`, and adds that directory to zsh startup files.
-- The starter business context includes the complete [[_system/bootstrap/templates/business-context/README|Business Context Scaffold]] plus managed templates for meetings, product work, GTM, operating metrics, SOPs, status reports, and local skills. Run `vault business-toolkit` to install or customize the managed parts for another business context.
+- The starter business context includes the complete self-explanatory folder scaffold under `_system/bootstrap/templates/business-context/` plus managed templates for meetings, product work, GTM, operating metrics, SOPs, status reports, and local skills. Run `vault business-toolkit` to install or customize the managed parts for another business context.
 - Agent Canvas installs as editable source under `~/Code/open_source/agent-canvas`. Setup builds it, projects its skill globally, links Bun package, and installs `~/.local/bin/agent-canvas`. Run `vault deps sync --apply` to repair it after local edits or upgrades.
 - On macOS, the installer registers or updates the daily `vault refresh` LaunchAgent. If registration fails, run `vault refresh-schedule register` after setup.
 - Context folder names must start and end with a letter or number and may use letters, numbers, dots, and hyphens, for example `business` or `business.nosync`. If you rename a starter folder during setup, the installer moves the folder and rewrites structured references such as paths, Obsidian links, plugin settings, frontmatter identity values, and `@context` tokens. It does not blindly rewrite normal prose.
@@ -69,7 +69,7 @@ Default workspace map:
 
 - `personal`: personal life, health, relationships, finances, default capture, and personal accountability.
 - `personal-brand`: personal brand, writing, media, audience, authority, and social selling.
-- `impression`: product and business execution.
+- `business`: product and business execution.
 
 Daily flow:
 
@@ -114,4 +114,4 @@ vault upgrade doctor
 vault upgrade repair-prompt
 ```
 
-If an upgrade fails, `vault upgrade status` shows the installed version/commit plus the failed target version/commit. The full report is written under `_system/state/upgrade-reports/`. Failed upgrades keep the previous installed version in install state so repair work can see what was attempted.
+If an upgrade fails, `vault upgrade status` shows the installed version/commit plus the failed target version/commit. The full report is written under `_system/local/state/upgrade-reports/`. Failed upgrades keep the previous installed version in install state so repair work can see what was attempted.

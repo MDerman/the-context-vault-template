@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import datetime as dt
 import sys
 import tempfile
 import unittest
@@ -16,11 +17,38 @@ sys.path.insert(0, str(SCRIPT_DIR))
 sys.path.insert(0, str(BOOTSTRAP_DIR))
 
 from bootstrap_export import BootstrapExporter  # noqa: E402
-from bootstrap_vault import sync_task_context_views  # noqa: E402
+from bootstrap_vault import Bootstrap, entity_note_template, sync_task_context_views  # noqa: E402
 from folder import has_content_structure  # noqa: E402
 
 
 class PublicContextExportTests(unittest.TestCase):
+    def test_setup_templates_replaces_legacy_personal_template_name(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            legacy = root / "_system/_obsidian/templates/shared/entity-notes/personal.md"
+            legacy.parent.mkdir(parents=True)
+            legacy.write_text(entity_note_template("personal", "personal"), encoding="utf-8")
+            bootstrap = Bootstrap(
+                root=root,
+                entities=["personal"],
+                active_entities=["personal"],
+                default_entity="personal",
+                context_types={"personal": "personal"},
+                coding_agents=[],
+                content_entities=[],
+                install_vault_command_enabled=False,
+                agent_symlinks_enabled=False,
+                dry_run=False,
+                run_date=dt.date(2026, 8, 3),
+            )
+
+            bootstrap.setup_templates()
+
+            replacement = root / "_system/_obsidian/templates/shared/entity-notes/personal-context-template.md"
+            self.assertFalse(legacy.exists())
+            self.assertTrue(replacement.is_file())
+            self.assertIn("vault.bootstrap", replacement.read_text(encoding="utf-8"))
+
     def test_nested_export_manifest_parent_is_created(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "source"
@@ -31,7 +59,7 @@ class PublicContextExportTests(unittest.TestCase):
                 root=root,
                 config={
                     "export_root": str(export_root),
-                    "manifest_name": "_system/state/export-manifest.json",
+                    "manifest_name": "_system/local/state/export-manifest.json",
                 },
                 export_root=export_root,
                 force=True,
@@ -40,7 +68,7 @@ class PublicContextExportTests(unittest.TestCase):
 
             exporter.write_manifest()
 
-            self.assertTrue((export_root / "_system/state/export-manifest.json").is_file())
+            self.assertTrue((export_root / "_system/local/state/export-manifest.json").is_file())
 
     def test_system_root_markdown_is_private_by_default(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -126,33 +154,50 @@ class PublicContextExportTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "source"
             export_root = Path(tmp) / "public"
-            private = root / "_system/config/example-skill/private"
+            private = root / "_system/local/skills/example-skill/private"
             private.mkdir(parents=True)
             (private / "config.json").write_text('{"domain":"private.example"}\n')
             config_readme = private.parent / "README.md"
             config_readme.write_text("portable setup guidance\n")
-            env_dir = root / "_system/config/env"
+            nested_private = root / "_system/local/skills/example-skill/Mac Startup/private"
+            nested_private.mkdir(parents=True)
+            (nested_private / "machines.json").write_text('{"machines":[]}\n')
+            (nested_private.parent / "README.md").write_text("portable nested defaults\n")
+            snippets_private = root / "_system/local/snippets/private"
+            snippets_private.mkdir(parents=True)
+            (snippets_private / "targets.json").write_text('{"targets":[]}\n')
+            (snippets_private.parent / "README.md").write_text("portable snippet defaults\n")
+            env_dir = root / "_system/local/env"
             env_dir.mkdir(parents=True)
             (env_dir / ".env.base").write_text("API_TOKEN=\n")
             (env_dir / "README.md").write_text("env instructions\n")
             config = {
                 "export_root": str(export_root),
                 "copy_obsidian": "exact",
-                "generated_exclude_globs": ["_system/config/*/private/**"],
+                "generated_exclude_globs": [
+                    "_system/local/skills/**/private",
+                    "_system/local/skills/**/private/**",
+                    "_system/local/snippets/private",
+                    "_system/local/snippets/private/**",
+                ],
             }
             exporter = BootstrapExporter(root=root, config=config, export_root=export_root, force=True, dry_run=False)
             exporter.copy_system_or_shared("_system")
 
-            self.assertTrue((export_root / "_system/config/example-skill/README.md").exists())
-            self.assertFalse((export_root / "_system/config/example-skill/private").exists())
-            self.assertTrue((export_root / "_system/config/env").is_dir())
-            self.assertEqual(list((export_root / "_system/config/env").iterdir()), [])
+            self.assertTrue((export_root / "_system/local/skills/example-skill/README.md").exists())
+            self.assertFalse((export_root / "_system/local/skills/example-skill/private").exists())
+            self.assertTrue((export_root / "_system/local/skills/example-skill/Mac Startup/README.md").exists())
+            self.assertFalse((export_root / "_system/local/skills/example-skill/Mac Startup/private").exists())
+            self.assertTrue((export_root / "_system/local/snippets/README.md").exists())
+            self.assertFalse((export_root / "_system/local/snippets/private").exists())
+            self.assertTrue((export_root / "_system/local/env").is_dir())
+            self.assertEqual(list((export_root / "_system/local/env").iterdir()), [])
 
     def test_managed_dependency_projection_is_not_exported(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "source"
             export_root = Path(tmp) / "public"
-            config_dir = root / "_system/config"
+            config_dir = root / "_system/local"
             projection = root / "_system/agents/skills/creative-agent-canvas"
             checkout = Path(tmp) / "checkout/skills/agent-canvas"
             config_dir.mkdir(parents=True)
@@ -182,7 +227,7 @@ class PublicContextExportTests(unittest.TestCase):
             (external / "SKILL.md").write_text("external\n")
             (catalog / "code-local-skill").symlink_to("../auto-skills/_code/code-local-skill")
             (catalog / "creative-external-skill").symlink_to("../auto-skills/_creative/creative-external-skill")
-            deps_config = root / "_system/config/deps.json"
+            deps_config = root / "_system/local/deps.json"
             deps_config.parent.mkdir(parents=True)
             deps_config.write_text(
                 '{"repos":[{"projections":[{"target":"_system/agents/auto-skills/_creative/creative-external-skill","managed":true}]}]}\n'
@@ -232,19 +277,19 @@ class PublicContextExportTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "source"
             export_root = Path(tmp) / "public"
-            source_context = root / "impression"
+            source_context = root / "business"
             (source_context / "_obsidian/content").mkdir(parents=True)
             (source_context / "_obsidian/content" / "content-cadence.json").write_text(
                 "{}\n",
                 encoding="utf-8",
             )
-            (source_context / "impression.md").write_text(
+            (source_context / "business.md").write_text(
                 """---
 status: active
 context_type: business
 content_enabled: true
 ---
-# impression
+# business
 
 ## Start Here
 
@@ -266,7 +311,7 @@ Private purpose detail should not be exported.
                 "export_root": str(export_root),
                 "context_folders": [
                     {
-                        "source": "impression",
+                        "source": "business",
                         "target": "business",
                         "public_home_description": [
                             "This is your business home.",

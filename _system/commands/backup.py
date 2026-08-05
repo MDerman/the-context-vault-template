@@ -41,7 +41,7 @@ def write_manifest(path: Path, root: Path, source: Path, dry_run: bool) -> None:
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Back up root .obsidian under _system/state/backups."
+        description="Back up root .obsidian under _system/local/state/backups."
     )
     parser.add_argument("--root", default=None, help="Vault root. Defaults to auto-discovery.")
     parser.add_argument(

@@ -166,6 +166,7 @@ class BusinessToolkitTests(unittest.TestCase):
             install_scaffold(root, "studio", apply=True)
             self.assertTrue((root / "studio/company/.gitkeep").is_file())
             self.assertTrue((root / "studio/gtm/campaigns/.gitkeep").is_file())
+            self.assertFalse(list((root / "studio").rglob("README*.md")))
             self.assertFalse((root / "studio" / MANIFEST_NAME).exists())
             self.assertFalse((root / "studio/_obsidian/templates/business-toolkit").exists())
 

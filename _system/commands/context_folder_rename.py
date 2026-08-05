@@ -201,6 +201,7 @@ def rename_inside_folder_note(root: Path, old: str, new: str, dry_run: bool) -> 
 
 def replace_common_structured(text: str, old: str, new: str) -> str:
     escaped = re.escape(old)
+    text = text.replace(f"{old}/{old}", f"{new}/{new}")
     text = re.sub(rf"(!?\[\[){escaped}(?=([/#|\]]))", rf"\1{new}", text)
     text = re.sub(rf"(\]\(<?){escaped}(?=([/#)>]))", rf"\1{new}", text)
     text = re.sub(rf"(?<![A-Za-z0-9_@/.-]){escaped}/", f"{new}/", text)

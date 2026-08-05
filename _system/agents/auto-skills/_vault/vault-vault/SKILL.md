@@ -61,7 +61,7 @@ Create specific calendar events on the default Google Calendar:
 vault gcal create-event --title "Event title" --start "2026-06-02T19:30" --end "2026-06-02T20:30" --apply
 ```
 
-Use `vault gcal create-event` for appointments, travel, meetings, reservations, and other concrete dated events. It writes to `primary` unless `--calendar` or `_system/config/calendar.json` says otherwise.
+Use `vault gcal create-event` for appointments, travel, meetings, reservations, and other concrete dated events. It writes to `primary` unless `--calendar` or `_system/local/calendar.json` says otherwise.
 
 Use `vault gcal create-block` only when user explicitly asks for time blocking or broad planning blocks on `Time Blocks`.
 
@@ -91,6 +91,6 @@ If user says "publish the public vault", "release the public vault", or similar:
 3. Run `vault release publish --bump patch` unless the user requested `--bump minor`, `--bump major`, or `--version X.Y.Z`.
 4. Read `export_root` from `_system/bootstrap/bootstrap-export.json`; confirm resolved export repo is clean and GitHub release/tag exists.
 
-This updates `MDerman/the-context-vault-template` from the source vault export, bumps `_system/bootstrap/release.json`, snapshots `_system/config/dependencies.lock.json`, commits public export, tags `vX.Y.Z`, pushes, and creates a GitHub Release.
+This updates `MDerman/the-context-vault-template` from the source vault export, bumps `_system/bootstrap/release.json`, snapshots `_system/local/dependencies.lock.json`, commits public export, tags `vX.Y.Z`, pushes, and creates a GitHub Release.
 
 Use `vault bootstrap-export --force` only for local export inspection or exceptional manual repair. Public releases must use `vault release publish` so installed vaults can report installed and attempted upgrade versions.

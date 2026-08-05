@@ -19,7 +19,7 @@ from context_folder_rename import rename_context_folder, rewrite_text_for_contex
 class ContextFolderRenameTests(unittest.TestCase):
     def test_validate_slug_accepts_dot_suffix_and_camel_case(self) -> None:
         self.assertEqual(validate_slug("someString.nosync", "new context folder"), "someString.nosync")
-        self.assertEqual(validate_slug("business", "new context folder"), "business")
+        self.assertEqual(validate_slug("business.nosync", "new context folder"), "business.nosync")
 
     def test_markdown_rewrites_structured_references_only(self) -> None:
         text = """---
@@ -31,6 +31,7 @@ aliases:
 # Note
 
 See [[business/foo]] and ![[business/bar.png]].
+Control note: [[business/business|Business]].
 Task path: business/_obsidian/tasks/x.md
 Tag token: @business
 Do not rewrite grow your business here.
@@ -42,6 +43,7 @@ Do not rewrite grow your business here.
         self.assertIn("  - studio", rewritten)
         self.assertIn("[[studio/foo]]", rewritten)
         self.assertIn("![[studio/bar.png]]", rewritten)
+        self.assertIn("[[studio/studio|Business]]", rewritten)
         self.assertIn("studio/_obsidian/tasks/x.md", rewritten)
         self.assertIn("@studio", rewritten)
         self.assertIn("grow your business", rewritten)
@@ -52,6 +54,7 @@ Do not rewrite grow your business here.
                 "name": "business",
                 "context_type": "business",
                 "folder": "business/_obsidian/tasks",
+                "control_note": "business/business.md",
                 "nested": ["@business", "[[business/foo]]"],
             },
             indent=2,
@@ -62,6 +65,7 @@ Do not rewrite grow your business here.
         self.assertEqual(data["name"], "studio")
         self.assertEqual(data["context_type"], "business")
         self.assertEqual(data["folder"], "studio/_obsidian/tasks")
+        self.assertEqual(data["control_note"], "studio/studio.md")
         self.assertEqual(data["nested"], ["@studio", "[[studio/foo]]"])
 
     def test_rename_moves_folder_and_rewrites_vault_files(self) -> None:

@@ -82,6 +82,9 @@ function dirname(path) {
   parts.pop();
   return parts.join("/");
 }
+function noteDirectory(path) {
+  return dirname(path) || ".";
+}
 function extension(path) {
   const name = basename(path);
   const idx = name.lastIndexOf(".");
@@ -3662,6 +3665,19 @@ var ContextNinePlugin = class extends import_obsidian10.Plugin {
       }
     });
     this.addCommand({
+      id: "copy-current-note-directory",
+      name: "Copy current note directory",
+      hotkeys: [
+        {
+          modifiers: ["Mod", "Alt"],
+          key: "C"
+        }
+      ],
+      callback: () => {
+        void this.copyCurrentNoteDirectory();
+      }
+    });
+    this.addCommand({
       id: "capture-selection-to-task",
       name: "Capture selection to new TaskNotes task",
       hotkeys: [
@@ -3697,12 +3713,6 @@ var ContextNinePlugin = class extends import_obsidian10.Plugin {
     this.addCommand({
       id: "delete-hovered-or-active-file",
       name: "Delete hovered or selected file",
-      hotkeys: [
-        {
-          modifiers: ["Mod"],
-          key: "Backspace"
-        }
-      ],
       callback: () => {
         void this.fileActions.deleteHoveredOrActiveFile();
       }
@@ -3910,6 +3920,21 @@ var ContextNinePlugin = class extends import_obsidian10.Plugin {
     }
     await this.app.workspace.revealLeaf(leaf);
     this.app.workspace.setActiveLeaf(leaf, { focus: true });
+  }
+  async copyCurrentNoteDirectory() {
+    const file = this.app.workspace.getActiveFile();
+    if (!file) {
+      new import_obsidian10.Notice("Open a note before copying its directory.");
+      return;
+    }
+    const directory = noteDirectory(file.path);
+    try {
+      await navigator.clipboard.writeText(directory);
+      new import_obsidian10.Notice(`Copied note directory: ${directory}`);
+    } catch (error) {
+      console.error("Could not copy current note directory", error);
+      new import_obsidian10.Notice("Could not copy the current note directory.");
+    }
   }
   getMainPaneLeaves() {
     const leaves = [];

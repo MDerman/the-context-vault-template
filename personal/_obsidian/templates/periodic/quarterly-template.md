@@ -1,4 +1,5 @@
 ---
+emoji: 🎯
 type: periodic
 period: quarterly
 entity: <% tp.file.folder(true).split('/')[0] %>
@@ -7,8 +8,8 @@ generated: false
 ---
 # Plan
 
-[[personal#Identity|Personal Identity]]
-[[personal#Momentum|Personal Momentum]]
+[[personal#Identity]]
+[[personal#Momentum]]
 
 ## What are my top ~3 goals for this quarter/season?
 - 

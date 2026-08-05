@@ -16,7 +16,7 @@ from vault_layout import AGENTS_DIR, VAULT_ROOT
 SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT = VAULT_ROOT
 def configured_repository(repository_id: str) -> Path | None:
-    registry = ROOT / "_system/config/infra-code-folder-and-computer-topology/private/repositories.json"
+    registry = ROOT / "_system/local/skills/infra-code-folder-and-computer-topology/private/repositories.json"
     if not registry.is_file():
         return None
     data = json.loads(registry.read_text(encoding="utf-8"))

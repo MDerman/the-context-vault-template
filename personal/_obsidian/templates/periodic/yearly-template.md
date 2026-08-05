@@ -1,4 +1,5 @@
 ---
+emoji: 🧭
 type: periodic
 period: yearly
 entity: <% tp.file.folder(true).split('/')[0] %>
@@ -402,4 +403,4 @@ generated: false
 
 # Step 3 - Execute
 
-Execution lives at the top of each year's note. Continue in [[personal/_obsidian/periodic/yearly/<% tp.date.now("YYYY", "P1Y", tp.file.title, "YYYY") %>|next year's personal yearly note]].
+Execution lives at the top of each year's note. Continue in [[<% tp.date.now("YYYY", "P1Y", tp.file.title, "YYYY") %>]].

@@ -224,7 +224,7 @@ Source notes: [[_system/README|System Operating Layer]] and [[_system/docs/obsid
 | `Alt+Cmd+T` | Context Nine: capture selection to new TaskNotes task | Adds the selected Markdown to task details when text is selected. |
 | `Alt+Cmd+Y` | Context Nine: append selection to existing TaskNotes task | Appends the selected Markdown under `## Captures`. |
 | `Alt+R` | Templater: replace templates in active file | Apply or preview template syntax. |
-| `Cmd+Backspace` | Context Nine: delete hovered or selected file | Uses Obsidian's normal confirmation and trash behavior. |
+| `Alt+Cmd+R` | File Explorer: reveal active file | Immediately reveals and selects the open note in the File Explorer pane. |
 | `Alt+Cmd+Backspace` | Delete current file | Destructive; use intentionally. |
 | `Cmd+N` | Context Nine: new note in hovered folder | Creates inside the hovered file explorer folder when available. |
 | `Alt+Up`, `Alt+Down` | Move line up/down | Editor line movement. |
@@ -370,7 +370,7 @@ Source notes: [[_system/README|System Operating Layer]] and [[_system/docs/obsid
 
 ## cmux (Ghostty-Powered Terminal)
 
-Terminology, shortcuts, nested tmux, persistent sessions, btop, and Starship prompt setup: [[_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/references/cmux-tmux-terminal-workspaces|cmux and tmux Terminal Workspaces]].
+Terminology, shortcuts, nested tmux, persistent sessions, btop, and Starship prompt setup: [[cmux-tmux-terminal-workspaces|cmux and tmux Terminal Workspaces]].
 
 cmux is native macOS app using Ghostty's terminal-rendering library and Ghostty configuration. It is not tab running inside standalone Ghostty app.
 
@@ -403,7 +403,7 @@ tmux uses prefix `Ctrl+b`: press `Ctrl+b`, release, then press command key.
 
 ## btop
 
-`btop` is managed on Mattbook, Wootbook, and Mac mini by [[_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/references/cmux-tmux-terminal-workspaces|cmux and tmux Terminal Workspaces]]. Press `F1`, `?`, or `h` for full help.
+`btop` is managed on Mattbook, Wootbook, and Mac mini by [[cmux-tmux-terminal-workspaces|cmux and tmux Terminal Workspaces]]. Press `F1`, `?`, or `h` for full help.
 
 | Shortcut | Action | Notes |
 | --- | --- | --- |

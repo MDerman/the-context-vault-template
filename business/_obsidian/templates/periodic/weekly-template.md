@@ -1,14 +1,14 @@
 ---
 type: periodic
 period: weekly
-entity: <% tp.file.folder(true).split('/')[0] %>
-period_id: <% tp.file.title %>
+entity: business
+period_id: Old quick workout notes
 generated: false
 ---
-# <% tp.file.title %>
+# Old quick workout notes
 
-[[business#Identity|Identity]]
-[[business#Momentum|Momentum]]
+[[business#Identity]]
+[[business#Momentum]]
 
 ## Focus Goals
 

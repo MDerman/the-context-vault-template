@@ -163,7 +163,7 @@ class SkillSyncTests(unittest.TestCase):
                 "title_override": "Creative · Example",
             }
             (skill / sync_skills.MARKER).write_text(json.dumps(marker) + "\n")
-            config = root / "_system/config/deps.json"
+            config = root / "_system/local/deps.json"
             config.parent.mkdir(parents=True)
             config.write_text(json.dumps({"repos": [{"id": "example", "projections": [marker.copy()]}]}) + "\n")
             sync_skills.sync(root, home, apply=True)
@@ -177,7 +177,7 @@ class SkillSyncTests(unittest.TestCase):
     def test_duplicate_dependency_projection_names_fail_without_wrappers(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root, home = self.roots(tmp)
-            config = root / "_system/config/deps.json"
+            config = root / "_system/local/deps.json"
             config.parent.mkdir(parents=True)
             config.write_text(
                 json.dumps(
@@ -244,6 +244,24 @@ class SkillSyncTests(unittest.TestCase):
                 [skill.name for skill in skills],
                 ["claude-seo", "claude-seo-audit", "corey-analytics"],
             )
+
+    def test_nested_pack_projection_marker_is_ignored(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root, _home = self.roots(tmp)
+            skill = self.skill(
+                root,
+                "manual-skills",
+                "_matt-p-skills/_engineering/mp-review",
+                title="Matt P Skills · Engineering · Review",
+            )
+            marker = skill.parent / sync_skills.MARKER
+            marker.write_text("{}\n")
+
+            skills = sync_skills.scan_source(
+                root / "_system/agents/manual-skills", "manual"
+            )
+
+            self.assertEqual([item.name for item in skills], ["mp-review"])
 
     def test_big_endian_h1_is_required(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

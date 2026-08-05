@@ -1,4 +1,5 @@
 ---
+emoji: 🗓️
 type: periodic
 period: weekly
 entity: <% tp.file.folder(true).split('/')[0] %>
@@ -7,7 +8,7 @@ generated: false
 ---
 # Planning
 
-[[personal#Momentum|Personal Momentum]]
+[[personal#Momentum]]
 
 ## What do I want to achieve / do this week?
 

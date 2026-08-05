@@ -27,7 +27,12 @@ sys.modules[SPEC.name] = mac_startup
 SPEC.loader.exec_module(mac_startup)
 
 
-def write_fixture(root: Path, *, private_enabled: bool = True) -> None:
+def write_fixture(
+    root: Path,
+    *,
+    private_enabled: bool = True,
+    topology_enabled: bool = True,
+) -> None:
     defaults = root / mac_startup.DEFAULT_CONFIG_RELATIVE
     defaults.parent.mkdir(parents=True)
     defaults.write_text(
@@ -36,7 +41,11 @@ def write_fixture(root: Path, *, private_enabled: bool = True) -> None:
                 "schema_version": 1,
                 "enabled": False,
                 "label": mac_startup.DEFAULT_LABEL,
-                "actions": {"remap-tilde-key": False},
+                "actions": {
+                    "open-applications": False,
+                    "remap-tilde-key": False,
+                },
+                "applications": [],
                 "legacy_launch_agents": [],
             }
         ),
@@ -70,7 +79,7 @@ def write_fixture(root: Path, *, private_enabled: bool = True) -> None:
                 "machines": [
                     {
                         "id": "mattbook",
-                        "enabled": True,
+                        "enabled": topology_enabled,
                         "platform": "macos",
                     }
                 ]
@@ -146,6 +155,39 @@ class MacStartupTests(unittest.TestCase):
         )
         self.assertNotIn("iCloud", " ".join(plist["ProgramArguments"]))
 
+    def test_open_applications_expand_to_validated_runtime_arguments(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            write_fixture(root)
+            private_path = root / mac_startup.PRIVATE_CONFIG_RELATIVE
+            private = json.loads(private_path.read_text(encoding="utf-8"))
+            private["machines"]["mattbook"]["actions"]["open-applications"] = True
+            private["machines"]["mattbook"]["applications"] = [
+                "com.bitwarden.desktop"
+            ]
+            private_path.write_text(json.dumps(private), encoding="utf-8")
+
+            config = mac_startup.load_config(root, machine_id="mattbook")
+
+        self.assertEqual(
+            mac_startup.runtime_actions(config),
+            ["remap-tilde-key", "open-application:com.bitwarden.desktop"],
+        )
+
+    def test_open_applications_reject_invalid_or_empty_bundle_list(self) -> None:
+        with self.assertRaisesRegex(mac_startup.MacStartupError, "bundle identifier"):
+            mac_startup.validate_applications(["/Applications/Bitwarden.app"])
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            write_fixture(root)
+            private_path = root / mac_startup.PRIVATE_CONFIG_RELATIVE
+            private = json.loads(private_path.read_text(encoding="utf-8"))
+            private["machines"]["mattbook"]["actions"]["open-applications"] = True
+            private_path.write_text(json.dumps(private), encoding="utf-8")
+            with self.assertRaisesRegex(mac_startup.MacStartupError, "at least one"):
+                mac_startup.load_config(root, machine_id="mattbook")
+
     def test_install_dry_run_does_not_write_or_launch(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary) / "vault"
@@ -182,6 +224,39 @@ class MacStartupTests(unittest.TestCase):
 
             self.assertFalse(paths.runtime_dir.exists())
             self.assertFalse(paths.launch_dir.exists())
+
+    def test_install_can_explicitly_provision_disabled_topology_machine(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / "vault"
+            root.mkdir()
+            write_fixture(root, topology_enabled=False)
+            paths = RuntimePaths(Path(temporary))
+            with paths.patch():
+                with mock.patch.object(mac_startup.sys, "platform", "darwin"):
+                    with mock.patch.object(mac_startup, "current_machine_id", return_value="mattbook"):
+                        with mock.patch.object(mac_startup, "service_loaded", return_value=False):
+                            with mock.patch.object(mac_startup, "run_launchctl") as launchctl:
+                                launchctl.return_value = SimpleNamespace(returncode=0)
+                                with mock.patch.object(mac_startup, "run_actions", return_value=0):
+                                    result = mac_startup.install(
+                                        root,
+                                        dry_run=False,
+                                        provision_disabled=True,
+                                    )
+
+            self.assertEqual(result, 0)
+            self.assertTrue(paths.runtime_runner.is_file())
+
+    def test_provision_disabled_flag_refuses_enabled_topology_machine(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            write_fixture(root, topology_enabled=True)
+            config = mac_startup.load_config(root, machine_id="mattbook")
+            with mock.patch.object(mac_startup.sys, "platform", "darwin"):
+                with self.assertRaisesRegex(mac_startup.MacStartupError, "already enabled"):
+                    mac_startup.require_eligible_machine(
+                        root, config, provision_disabled=True
+                    )
 
     def test_install_archives_legacy_jobs_and_is_idempotent(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -250,6 +325,8 @@ class MacStartupTests(unittest.TestCase):
         text = runner.read_text(encoding="utf-8")
         self.assertIn('"HIDKeyboardModifierMappingSrc":0x700000035', text)
         self.assertIn('"HIDKeyboardModifierMappingDst":0x700000064', text)
+        self.assertIn('open-application:*', text)
+        self.assertIn('/usr/bin/open -gja -b "$bundle_id"', text)
 
     def test_status_reports_config_runtime_mapping_and_legacy_state(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -328,7 +405,8 @@ class MacStartupTests(unittest.TestCase):
 
         self.assertFalse(defaults["enabled"])
         self.assertTrue(all(enabled is False for enabled in defaults["actions"].values()))
-        self.assertIn("_system/config/*/private/**", export_config["generated_exclude_globs"])
+        self.assertEqual(defaults["applications"], [])
+        self.assertIn("_system/local/skills/**/private/**", export_config["generated_exclude_globs"])
         self.assertNotIn("mac-startup install", installer_text)
 
 

@@ -73,7 +73,7 @@ Use `--content-enabled` when the context folder should have `_obsidian/content` 
 
 Creation writes control note, creates operating structure and local templates/shared-template links, then refreshes discovered context wiring.
 
-New business contexts receive the complete ordinary [[_system/bootstrap/templates/business-context/README|Business Context Scaffold]]. Use `--toolkit-exclude gtm` (or component ids) to omit managed templates, rules, and icons, or `--no-business-toolkit` to opt out of those managed additions. Registering an existing context never backfills missing ordinary folders.
+New business contexts receive the complete ordinary scaffold under `_system/bootstrap/templates/business-context/`. The scaffold uses self-explanatory folder names and does not add folder-level README files. Use `--toolkit-exclude gtm` (or component ids) to omit managed templates, rules, and icons, or `--no-business-toolkit` to opt out of those managed additions. Registering an existing context never backfills missing ordinary folders.
 
 Use `status: archived` for inactive-but-kept folders. Rename through `vault folder` command so structured path/context references update together.
 

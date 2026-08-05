@@ -43,14 +43,14 @@ class PeriodicTemplateRenderingTests(unittest.TestCase):
     def test_system_periodic_notes_render_personal_first(self) -> None:
         rendered = periodic.vault_periodic_note(
             Path("/tmp/vault"),
-            ["business", "personal-brand", "personal"],
+            ["business.nosync", "personal-brand", "personal"],
             "weekly",
             "2026-W24",
             "2026-06-11T02:00:00",
         )
 
-        self.assertLess(rendered.index("## personal\n"), rendered.index("## business\n"))
-        self.assertLess(rendered.index("  - personal"), rendered.index("  - business"))
+        self.assertLess(rendered.index("## personal\n"), rendered.index("## business.nosync\n"))
+        self.assertLess(rendered.index("  - personal"), rendered.index("  - business.nosync"))
 
     def test_renders_templater_date_now_and_cursor_calls(self) -> None:
         template = """---

@@ -136,14 +136,6 @@
       "key": "Y"
     }
   ],
-  "obsidian-master-plugin:delete-hovered-or-active-file": [
-    {
-      "modifiers": [
-        "Mod"
-      ],
-      "key": "Backspace"
-    }
-  ],
   "obsidian-master-plugin:new-note-in-hovered-folder": [
     {
       "modifiers": [
@@ -184,6 +176,15 @@
       "key": "4"
     }
   ],
+  "context-nine:copy-current-note-directory": [
+    {
+      "modifiers": [
+        "Alt",
+        "Mod"
+      ],
+      "key": "C"
+    }
+  ],
   "workspace:goto-tab-1": [],
   "workspace:goto-tab-2": [],
   "workspace:goto-tab-3": [],
@@ -191,8 +192,8 @@
   "file-explorer:reveal-active-file": [
     {
       "modifiers": [
-        "Mod",
-        "Shift"
+        "Alt",
+        "Mod"
       ],
       "key": "R"
     }

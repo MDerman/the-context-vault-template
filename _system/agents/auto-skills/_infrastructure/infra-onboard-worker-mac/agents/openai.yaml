@@ -1,0 +1,6 @@
+interface:
+  short_description: "Bootstrap a worker Mac through Screen Sharing"
+  default_prompt: "Use $infra-onboard-worker-mac to set up a worker Mac from the registered primary through an existing Screen Sharing connection, then SSH."
+
+policy:
+  allow_implicit_invocation: true

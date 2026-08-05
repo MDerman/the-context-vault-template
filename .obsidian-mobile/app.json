@@ -5,5 +5,5 @@
   "alwaysUpdateLinks": true,
   "newFileLocation": "current",
   "focusNewTab": true,
-  "readableLineLength": true
+  "readableLineLength": false
 }

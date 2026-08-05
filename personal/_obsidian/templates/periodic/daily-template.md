@@ -1,4 +1,5 @@
 ---
+emoji: ☀️
 type: periodic
 period: daily
 entity: <% tp.file.folder(true).split('/')[0] %>
@@ -6,12 +7,10 @@ period_id: <% tp.file.title %>
 generated: false
 ---
 ## Links
-- [[<% tp.file.folder(true).split('/')[0] %>/_obsidian/periodic/weekly/<% tp.date.now("GGGG-[W]WW", 0, tp.file.title, "YYYY-MM-DD") %>|Weekly note]]
-- [[<% tp.file.folder(true).split('/')[0] %>/_obsidian/periodic/quarterly/<% tp.date.now("YYYY-[Q]Q", 0, tp.file.title, "YYYY-MM-DD") %>|Quarterly note]]
+- [[<% tp.file.folder(true).split('/')[0] %>/_obsidian/periodic/weekly/<% tp.date.now("GGGG-[W]WW", 0, tp.file.title, "YYYY-MM-DD") %>]]
+- [[<% tp.file.folder(true).split('/')[0] %>/_obsidian/periodic/quarterly/<% tp.date.now("YYYY-[Q]Q", 0, tp.file.title, "YYYY-MM-DD") %>]]
 - [[Dashboard]]
-- [[_system/_obsidian/bases/tasks-kanban.base|tasks-kanban]]
-- [[personal#Momentum|Personal Momentum]]
-- [[Keep in minds]]
+- [[tasks-kanban.base]]
 
 # Super-alignment
 ## 📒 ~5 Tasks I want to get done today

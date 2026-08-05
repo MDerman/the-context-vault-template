@@ -79,10 +79,11 @@ Repo wrappers should stay thin: resolve repo-local directory, locate `ENV_TOOLIN
 Wrappers such as `load-env.sh`, `sync-env-files.sh`, and `encrypt-env-files.sh` should resolve env-tooling in this order:
 
 1. `ENV_TOOLING_BIN` if set.
-2. Sibling checkout: `../env-tooling/bin/env-tooling`.
-3. Project-specific fallback only if the repo documents one.
+2. Logical repository ID `env-tooling` from the private topology registry when the vault is available.
+3. Sibling checkout: `../env-tooling/bin/env-tooling`.
+4. Documented project fallback such as `$HOME/Code/ctx9/env-tooling/bin/env-tooling` when the wrapper must also work without the vault.
 
-This keeps sibling repo checkouts portable without hardcoded edits.
+This keeps the skill generic, lets the fleet registry own the current checkout path, and preserves standalone repo wrappers without personal absolute paths.
 
 ## Command Behavior
 
