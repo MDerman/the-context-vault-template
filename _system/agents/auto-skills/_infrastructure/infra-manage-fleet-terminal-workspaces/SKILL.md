@@ -9,8 +9,9 @@ Read [[cmux-tmux-terminal-workspaces|Warp, cmux, and tmux Terminal Workspaces]] 
 
 - Use `$infra-code-folder-and-computer-topology` to load the canonical machine registry and private execution-chain observations. Do not duplicate machine facts in this skill.
 - Read [[README-warp-cmux-execution-chain|Warp and cmux Execution Chain]] when explaining machine boundaries or frontend routing.
-- Run `scripts/sync_terminal_profiles.py` for tmux, btop, Starship, workmux, and managed profile deployment.
-- Run `scripts/configure_warp_machine_workspaces.py` and `scripts/configure_cmux_machine_workspaces.py` for primary-host layouts.
+- Run `scripts/sync_terminal_profiles.py` for tmux, btop, Starship, workmux, and managed profile deployment. During new-machine onboarding, an explicitly named disabled target may be provisioned and verified with `--target MACHINE_ID --provision-disabled`; omitting the flag continues to reject disabled machines, and the flag never selects disabled machines implicitly.
+- Run `scripts/configure_warp_machine_workspaces.py` and `scripts/configure_cmux_machine_workspaces.py` for primary-host layouts. During onboarding, use cmux `--target MACHINE_ID` so an unrelated offline fleet member cannot block creation and verification of the reviewed target workspace; ordinary calls continue applying and verifying the complete enabled layout.
 - Keep every controller dry-run by default; use `--apply` only after reviewing exact targets and use `--verify` afterward.
 - Read [[README-workmux-notifications|Workmux Agent Notifications]] before touching notification hooks. Notifications remain retired and disabled unless the user explicitly asks to re-enable them.
+- This skill never owns general Codex or Claude user configuration. Its retired notification helper may merge or remove only its own hook keys; `$infra-sync-code-workspaces` remains authoritative for full user settings and instructions.
 - During new-machine work, return gate status to `$infra-onboard-machine`; this skill does not own machine registration, WireGuard, SSH enrollment, or registry enablement.

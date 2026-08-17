@@ -15,7 +15,8 @@ These come from `.obsidian/hotkeys.json` and are the source-of-truth custom bind
 | `Alt+Cmd+Y` | Context Nine: append selection to existing TaskNotes task | Pick an existing task and append the selected block under `## Captures`. |
 | `Alt+Cmd+C` | Context Nine: copy current note directory | Copies the active note's vault-relative parent directory for use in terminal and agent prompts. |
 | `Alt+R` | Templater: replace templates in active file | Useful for previewing or applying template syntax. |
-| `Alt+Cmd+R` | File Explorer: reveal active file | Immediately reveals and selects the open note in the File Explorer pane. |
+| `Cmd+Shift+F` | File Explorer: reveal active file | Immediately reveals and selects the open note in the File Explorer pane. |
+| `Alt+Cmd+Shift+F` | Reveal in Finder | Reveals the active note in its macOS Finder folder. |
 | `Alt+Cmd+Backspace` | Obsidian: delete current file | Deliberate current-note delete shortcut, using Obsidian's native confirmation flow. |
 | `Cmd+N` | Context Nine: new note in hovered folder | When hovering a folder in the file explorer, creates the note there; otherwise falls back to Obsidian's normal new note command. |
 | `Cmd+1` | File Explorer: open | Focuses the left file tree. |
@@ -25,9 +26,9 @@ These come from `.obsidian/hotkeys.json` and are the source-of-truth custom bind
 | `Alt+Up` | Move line up | Editor line movement. |
 | `Alt+Down` | Move line down | Editor line movement. |
 | `Ctrl+D` | Delete line | From Code Editor Shortcuts. |
-| `Cmd+F` | Omnisearch: In-file search | Search inside the active Markdown note and jump to a match. |
+| `Cmd+F` | Find in current file | Uses Obsidian's core find interface in the active file. |
+| `Alt+Cmd+F` | Omnisearch: In-file search | Search inside the active Markdown note and jump to a match. |
 | `Shift then Shift` | Omnisearch: Vault search | Doubleshift double-tap shortcut for fast vault search. |
-| `Cmd+Shift+F` | Omnisearch: Vault search | Fallback fast vault search hotkey. |
 | `Cmd+Shift+P` | Global search | Core Global Search remains available here. |
 | `Ctrl+Alt+Cmd+5` | Workspaces: open modal | Load or manage saved layouts. |
 
@@ -42,11 +43,12 @@ These come from `.obsidian/hotkeys.json` and are the source-of-truth custom bind
 | `Cmd+2` | Focus the first main editor pane. |
 | `Cmd+3` | Focus the second main editor pane, creating it if needed. |
 | `Cmd+4` | Focus the right sidebar. |
-| `Alt+Cmd+R` | Reveal the open note in the File Explorer pane. |
+| `Cmd+Shift+F` | Reveal the open note in the File Explorer pane. |
+| `Alt+Cmd+Shift+F` | Reveal the open note in Finder. |
 | `Alt+Cmd+C` | Copy the current note's vault-relative directory. |
-| `Cmd+F` | Omnisearch In-file search inside the current Markdown note. |
+| `Cmd+F` | Find text inside the current file using Obsidian's core search. |
+| `Alt+Cmd+F` | Omnisearch In-file search inside the current Markdown note. |
 | `Shift then Shift` | Omnisearch Vault search across the vault. |
-| `Cmd+Shift+F` | Omnisearch Vault search fallback. |
 | `Cmd+Shift+P` | Core Global Search across the vault. |
 | `Cmd+E` | Toggle edit/reading view. |
 | `Cmd+B` | Bold selected text. |
@@ -111,10 +113,15 @@ Tasks should usually use contexts first and tags as sub-project/grouping labels.
 ## Search Workflow
 
 - `Shift then Shift` opens `Omnisearch: Vault search`, the preferred fast search for finding notes by relevance.
-- `Cmd+Shift+F` also opens `Omnisearch: Vault search` as a normal fallback hotkey.
-- `Cmd+F` opens `Omnisearch: In-file search`, which searches the active Markdown note and jumps to a selected match with `Enter`.
+- `Cmd+F` opens Obsidian's core find interface for the active file.
+- `Alt+Cmd+F` opens `Omnisearch: In-file search`, which searches the active Markdown note and jumps to a selected match with `Enter`.
 - `Cmd+Shift+P` keeps core Global Search available for built-in search syntax.
 - Doubleshift provides the double-tap behavior. Its settings map left Shift double-tap to `omnisearch:show-modal`.
+
+## File Reveal Workflow
+
+- `Cmd+Shift+F` reveals and selects the active file in the File Explorer.
+- `Alt+Cmd+Shift+F` reveals the active file in Finder.
 
 ## Hotkey Discovery
 

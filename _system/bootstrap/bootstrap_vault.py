@@ -29,19 +29,28 @@ DEFAULT_ACTIVE_ENTITIES = [
     "business",
 ]
 
-DEFAULT_CONTENT_ENTITIES = [
-    "personal-brand",
-    "business",
-]
-
-DEFAULT_CONTEXT_TYPES = {
-    "personal": "personal",
-    "personal-brand": "personal-brand",
-    "business": "business",
+CONTENT_FEATURES = {"blog", "social-content", "newsletters"}
+CONTENT_FEATURE_DIRECTORIES = {
+    "blog": [
+        "_obsidian/content/items/blog-posts",
+        "_obsidian/content/publications/blogs",
+    ],
+    "social-content": [
+        "_obsidian/content/items/social-posts",
+        "_obsidian/content/items/youtube-videos",
+        "_obsidian/content/publications/youtube",
+        "_obsidian/content/ideas",
+        "_obsidian/content/archive",
+    ],
+    "newsletters": [
+        "_obsidian/content/items/newsletter-issues",
+        "_obsidian/content/publications/newsletters",
+    ],
 }
-
-VALID_CONTEXT_TYPES = {"personal", "personal-brand", "business"}
-
+CONTENT_SCHEDULE_DIRECTORIES = [
+    "_obsidian/content",
+    "_obsidian/content-schedules",
+]
 PERIODS = {
     "daily": "daily",
     "weekly": "weekly",
@@ -78,25 +87,32 @@ class Bootstrap:
         entities: list[str],
         active_entities: list[str],
         default_entity: str,
-        context_types: dict[str, str],
         coding_agents: list[str],
-        content_entities: list[str],
+        context_features: dict[str, set[str]],
+        content_schedule_entities: list[str],
         install_vault_command_enabled: bool,
         agent_symlinks_enabled: bool,
         dry_run: bool,
         run_date: dt.date,
+        folder_templates: dict[str, str] | None = None,
     ) -> None:
         self.root = root
         self.entities = entities
         self.active_entities = active_entities
         self.default_entity = default_entity
-        self.context_types = context_types
         self.coding_agents = coding_agents
-        self.content_entities = content_entities
+        self.context_features = {
+            entity: set(context_features.get(entity, set())) for entity in entities
+        }
+        self.content_schedule_entities = content_schedule_entities
+        self.content_entities = [
+            entity for entity in entities if self.context_features.get(entity)
+        ]
         self.install_vault_command_enabled = install_vault_command_enabled
         self.agent_symlinks_enabled = agent_symlinks_enabled
         self.dry_run = dry_run
         self.run_date = run_date
+        self.folder_templates = dict(folder_templates or {})
 
     def log(self, message: str) -> None:
         prefix = "[dry-run] " if self.dry_run else ""
@@ -267,9 +283,9 @@ class Bootstrap:
         if not self.dry_run:
             path.write_text(content, encoding="utf-8")
 
-    def write_context_folder_note(self, entity: str, status: str, context_type: str, content_enabled: bool, default_capture: bool) -> None:
+    def write_context_folder_note(self, entity: str, status: str, content_schedules_enabled: bool, default_capture: bool) -> None:
         path = context_folder_note_path(self.root, entity)
-        content = context_folder_note(status, context_type, content_enabled, default_capture)
+        content = context_folder_note(status, content_schedules_enabled, default_capture)
         if not path.exists():
             self.ensure_dir(path.parent)
             self.log(f"write {rel(path, self.root)}")
@@ -280,7 +296,7 @@ class Bootstrap:
         if not any(marker in existing for marker in BOOTSTRAP_MARKERS) and not has_frontmatter(existing):
             self.log(f"skip existing non-managed file {rel(path, self.root)}")
             return
-        content = update_context_folder_note(existing, status, context_type, content_enabled, default_capture)
+        content = update_context_folder_note(existing, status, content_schedules_enabled, default_capture)
         if existing == content:
             return
         self.log(f"write {rel(path, self.root)}")
@@ -366,17 +382,36 @@ class Bootstrap:
                 "_obsidian/templates/periodic",
             ]:
                 self.ensure_dir(self.root / entity / directory)
-            if entity in self.content_entities:
-                for directory in content_directories():
+            for feature in sorted(self.context_features.get(entity, set())):
+                for directory in CONTENT_FEATURE_DIRECTORIES[feature]:
                     self.ensure_dir(self.root / entity / directory)
+            if entity in self.content_schedule_entities:
+                for directory in CONTENT_SCHEDULE_DIRECTORIES:
+                    self.ensure_dir(self.root / entity / directory)
+        self.setup_folder_templates()
+
+    def setup_folder_templates(self) -> None:
+        template_root = self.root / "_system/bootstrap/templates/context-folders"
+        for entity, template in sorted(self.folder_templates.items()):
+            source_root = template_root / template
+            if not source_root.is_dir():
+                raise SystemExit(f"Missing folder template: {source_root}")
+            for source in sorted(source_root.rglob("*")):
+                relative = source.relative_to(source_root)
+                if relative == Path(".business-toolkit.json"):
+                    continue
+                target = self.root / entity / relative
+                if source.is_dir():
+                    self.ensure_dir(target)
+                elif not target.exists():
+                    self.copy_file_if_missing(source, target)
 
     def setup_context_folder_notes(self) -> None:
         active = set(self.active_entities)
-        content = set(self.content_entities)
+        schedules = set(self.content_schedule_entities)
         for entity in self.entities:
             status = "active" if entity in active else "archived"
-            context_type = self.context_types.get(entity, "business")
-            self.write_context_folder_note(entity, status, context_type, entity in content, entity == self.default_entity)
+            self.write_context_folder_note(entity, status, entity in schedules, entity == self.default_entity)
 
     def setup_agent_infrastructure(self) -> None:
         if self.coding_agents:
@@ -419,12 +454,13 @@ class Bootstrap:
         self.safe_remove_generated_path(self.root / "README_PERSONALIZED_QUICKSTART.md", BOOTSTRAP_MARKERS)
         self.safe_remove_generated_path(self.root / "_system" / "README_PERSONALIZED_QUICKSTART.md", BOOTSTRAP_MARKERS)
         self.safe_remove_generated_path(self.root / "_system/_obsidian/templates/shared/entity-notes/personal.md", BOOTSTRAP_MARKERS)
+        self.safe_remove_generated_path(self.root / "_system/_obsidian/templates/shared/entity-notes/personal-context-template.md", BOOTSTRAP_MARKERS)
+        self.safe_remove_generated_path(self.root / "_system/_obsidian/templates/shared/entity-notes/personal-brand.md", BOOTSTRAP_MARKERS)
+        self.safe_remove_generated_path(self.root / "_system/_obsidian/templates/shared/entity-notes/company.md", BOOTSTRAP_MARKERS)
         self.write_managed(self.root / "_system/_obsidian/templates/shared/default-tasks-template.md", shared_task_template())
         self.write_managed(self.root / "_system/_obsidian/templates/shared/content/content-item-template.md", content_item_template())
         self.write_managed(self.root / "_system/_obsidian/templates/shared/content/publication-template.md", publication_template())
-        self.write_managed(self.root / "_system/_obsidian/templates/shared/entity-notes/personal-context-template.md", entity_note_template("personal", "personal"))
-        self.write_managed(self.root / "_system/_obsidian/templates/shared/entity-notes/personal-brand.md", entity_note_template("personal-brand", "personal-brand"))
-        self.write_managed(self.root / "_system/_obsidian/templates/shared/entity-notes/company.md", entity_note_template("business", "business"))
+        self.write_managed(self.root / "_system/_obsidian/templates/shared/entity-notes/context-template.md", entity_note_template("context"))
         personal_periodic = self.root / self.default_entity / "_obsidian/templates/periodic"
         if personal_periodic.is_symlink():
             self.remove_path(personal_periodic)
@@ -523,7 +559,7 @@ class Bootstrap:
                 starter_task(entity, self.run_date.isoformat()),
             )
             self.ensure_entity_note(entity)
-            if entity in self.content_entities:
+            if entity in self.content_schedule_entities:
                 self.write_if_missing(
                     self.root / entity / "_obsidian/content/content-cadence.json",
                     content_cadence_config(self.run_date),
@@ -531,17 +567,14 @@ class Bootstrap:
 
     def ensure_entity_note(self, entity: str) -> None:
         path = self.root / entity / f"{entity}.md"
-        context_type = self.context_types.get(entity, "business")
-        content_enabled = entity in self.content_entities
         default_capture = entity == self.default_entity
         if not path.exists():
             self.write_managed_if_missing(
                 path,
                 entity_note_template(
                     entity,
-                    context_type,
                     status="active" if entity in self.active_entities else "archived",
-                    content_enabled=content_enabled,
+                    content_schedules_enabled=entity in self.content_schedule_entities,
                     default_capture=default_capture,
                 ),
             )
@@ -572,24 +605,20 @@ class Bootstrap:
             raise RuntimeError("Failed to install vault command")
 
     def ensure_agent_file_symlinks(self) -> None:
-        import importlib.util
         import sys
 
         if not self.agent_symlinks_enabled or not self.coding_agents:
             self.log("skip agent file symlink setup")
             return
-        helper_path = self.root / "_system/bootstrap/agents/ensure-agent-file-symlinks.py"
-        if not helper_path.exists():
-            raise FileNotFoundError(helper_path)
-        spec = importlib.util.spec_from_file_location("ensure_agent_file_symlinks", helper_path)
-        module = importlib.util.module_from_spec(spec)
-        assert spec.loader is not None
-        sys.modules[spec.name] = module
-        spec.loader.exec_module(module)
-        args = ["--root", str(self.root)]
-        if self.dry_run:
-            args.append("--dry-run")
-        module.main(args)
+        agents_dir = self.root / "_system/agents"
+        if str(agents_dir) not in sys.path:
+            sys.path.insert(0, str(agents_dir))
+        import global_agent_configuration
+
+        report = global_agent_configuration.ensure_agent_paths(self.root, dry_run=self.dry_run)
+        for item in report["results"]:
+            if item["status"] != "match":
+                self.log(f"{item['detail']}: {item['path']}")
 
     def run_generators(self) -> None:
         import importlib.util
@@ -945,22 +974,6 @@ def yaml_list(items: list[str]) -> str:
     return "\n".join(f"  - {item}" for item in items)
 
 
-def content_directories() -> list[str]:
-    return [
-        "_obsidian/content",
-        "_obsidian/content-schedules",
-        "_obsidian/content/publications/blogs",
-        "_obsidian/content/publications/newsletters",
-        "_obsidian/content/publications/youtube",
-        "_obsidian/content/items/blog-posts",
-        "_obsidian/content/items/newsletter-issues",
-        "_obsidian/content/items/youtube-videos",
-        "_obsidian/content/items/social-posts",
-        "_obsidian/content/ideas",
-        "_obsidian/content/archive",
-    ]
-
-
 def content_cadence_config(run_date: dt.date) -> str:
     anchor = run_date - dt.timedelta(days=run_date.weekday())
     return f"""{{
@@ -979,13 +992,12 @@ def inline_code_list(items: list[str]) -> str:
     return ", ".join(f"`{item}`" for item in items)
 
 
-def context_folder_note(status: str, context_type: str, content_enabled: bool = False, default_capture: bool = False) -> str:
-    content_value = "true" if content_enabled else "false"
+def context_folder_note(status: str, content_schedules_enabled: bool = False, default_capture: bool = False) -> str:
     default_value = "true" if default_capture else "false"
+    schedules = "content_schedules_enabled: true\n" if content_schedules_enabled else ""
     return f"""---
 status: {status}
-context_type: {context_type}
-content_enabled: {content_value}
+{schedules}context_registered: true
 default_capture: {default_value}
 ---
 """
@@ -993,33 +1005,19 @@ default_capture: {default_value}
 
 def entity_note_template(
     entity: str,
-    entity_type: str | None = None,
     *,
     status: str = "active",
-    content_enabled: bool = False,
+    content_schedules_enabled: bool = False,
     default_capture: bool = False,
 ) -> str:
-    source_type = entity_type or "entity"
-    social_section = ""
-    if source_type == "personal-brand":
-        social_section = """
-### Social Selling
-
-#### Method
-
-#### Proof Sources
-"""
-    content_value = "true" if content_enabled else "false"
     default_value = "true" if default_capture else "false"
+    schedules = "content_schedules_enabled: true\n" if content_schedules_enabled else ""
     return f"""---
 status: {status}
-context_type: {source_type}
-content_enabled: {content_value}
+{schedules}context_registered: true
 default_capture: {default_value}
 {managed_properties()}
 ---
-
-# {entity}
 
 ## Identity
 
@@ -1032,7 +1030,6 @@ default_capture: {default_value}
 ### Rhythm
 
 ### Proof Sources
-{social_section}
 """
 
 
@@ -1052,27 +1049,33 @@ def split_frontmatter(existing: str) -> tuple[list[str], str]:
     return existing[4:end].splitlines(), body
 
 
-def update_context_folder_note(existing: str, status: str, context_type: str, content_enabled: bool, default_capture: bool) -> str:
+def update_context_folder_note(existing: str, status: str, content_schedules_enabled: bool, default_capture: bool) -> str:
     lines, body = split_frontmatter(existing)
     desired = {
         "status": status,
-        "context_type": context_type,
-        "content_enabled": "true" if content_enabled else "false",
+        "context_registered": "true",
         "default_capture": "true" if default_capture else "false",
     }
+    if content_schedules_enabled:
+        desired["content_schedules_enabled"] = "true"
     seen: set[str] = set()
     output: list[str] = []
     for line in lines:
         if ":" in line and not line.startswith(" "):
             key = line.split(":", 1)[0].strip()
+            if key in {"context_type", "content_enabled"}:
+                continue
+            if key == "content_schedules_enabled" and not content_schedules_enabled:
+                continue
             if key in desired:
                 output.append(f"{key}: {desired[key]}")
                 seen.add(key)
                 continue
         output.append(line)
-    for key in ["status", "context_type", "content_enabled", "default_capture"]:
+    for key in ["status", "content_schedules_enabled", "context_registered", "default_capture"]:
         if key not in seen:
-            output.append(f"{key}: {desired[key]}")
+            if key in desired:
+                output.append(f"{key}: {desired[key]}")
     return "---\n" + "\n".join(output) + "\n---\n" + body
 
 
@@ -1787,23 +1790,26 @@ def parse_entities(value: str | None) -> list[str]:
     return [item.strip() for item in value.split(",") if item.strip()]
 
 
-def parse_context_types(value: str | None, entities: list[str]) -> dict[str, str]:
-    context_types = {entity: DEFAULT_CONTEXT_TYPES.get(entity, "business") for entity in entities}
-    if not value:
-        return context_types
-    for item in value.split(","):
-        item = item.strip()
-        if not item:
-            continue
+def parse_feature_entities(value: str | None, entities: list[str], label: str) -> list[str]:
+    selected = parse_entities(value) if value else []
+    missing = [entity for entity in selected if entity not in entities]
+    if missing:
+        raise SystemExit(f"{label} context folders are not configured: {missing}")
+    return selected
+
+
+def parse_folder_templates(value: str | None, entities: list[str]) -> dict[str, str]:
+    templates: dict[str, str] = {}
+    for item in [part.strip() for part in (value or "").split(",") if part.strip()]:
         if ":" not in item:
-            raise SystemExit(f"context type entry must be folder:type, got {item!r}")
-        entity, context_type = [part.strip() for part in item.split(":", 1)]
+            raise SystemExit(f"folder template mapping must use CONTEXT_FOLDER:TEMPLATE: {item!r}")
+        entity, template = (part.strip() for part in item.split(":", 1))
         if entity not in entities:
-            raise SystemExit(f"context type configured for unknown context folder {entity!r}")
-        if context_type not in VALID_CONTEXT_TYPES:
-            raise SystemExit(f"unsupported context type {context_type!r}; supported: {sorted(VALID_CONTEXT_TYPES)}")
-        context_types[entity] = context_type
-    return context_types
+            raise SystemExit(f"folder template context folder is not configured: {entity}")
+        if template not in {"personal-brand", "business"}:
+            raise SystemExit(f"unsupported folder template: {template}")
+        templates[entity] = template
+    return templates
 
 
 def parse_coding_agents(value: str | None) -> list[str]:
@@ -1830,10 +1836,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--active-context-folders", dest="active_entities", metavar="CONTEXT_FOLDERS", help="Comma-separated context folders to mark active in folder notes.")
     parser.add_argument("--active-sub-vaults", dest="active_entities", help=argparse.SUPPRESS)
     parser.add_argument("--active-entities", dest="active_entities", help=argparse.SUPPRESS)
-    parser.add_argument("--content-context-folders", dest="content_entities", metavar="CONTEXT_FOLDERS", help="Comma-separated context folders to mark content_enabled in folder notes.")
-    parser.add_argument("--content-sub-vaults", dest="content_entities", help=argparse.SUPPRESS)
-    parser.add_argument("--content-entities", dest="content_entities", help=argparse.SUPPRESS)
-    parser.add_argument("--context-types", dest="context_types", metavar="CONTEXT_TYPES", help="Comma-separated folder:type entries. Types: personal, personal-brand, business.")
+    parser.add_argument("--blog-context-folders", metavar="CONTEXT_FOLDERS")
+    parser.add_argument("--social-content-context-folders", metavar="CONTEXT_FOLDERS")
+    parser.add_argument("--newsletter-context-folders", metavar="CONTEXT_FOLDERS")
+    parser.add_argument("--content-schedule-context-folders", metavar="CONTEXT_FOLDERS")
+    parser.add_argument("--folder-templates", metavar="CONTEXT_FOLDER:TEMPLATE", help="Comma-separated creation-time physical folder templates.")
     parser.add_argument("--default-context-folder", dest="default_entity", metavar="CONTEXT_FOLDER", default="personal", help="Default capture context folder.")
     parser.add_argument("--default-sub-vault", dest="default_entity", help=argparse.SUPPRESS)
     parser.add_argument("--default-entity", dest="default_entity", help=argparse.SUPPRESS)
@@ -1852,17 +1859,35 @@ def main(argv: list[str] | None = None) -> None:
 
     entities = parse_entities(args.entities)
     active_entities = parse_entities(args.active_entities) if args.active_entities else DEFAULT_ACTIVE_ENTITIES[:]
-    content_entities = parse_entities(args.content_entities) if args.content_entities else DEFAULT_CONTENT_ENTITIES[:]
     default_entity = args.default_entity
-    context_types = parse_context_types(args.context_types, entities)
     coding_agents = parse_coding_agents(args.coding_agents)
+    context_features = {entity: set() for entity in entities}
+    feature_args = {
+        "blog": args.blog_context_folders,
+        "social-content": args.social_content_context_folders,
+        "newsletters": args.newsletter_context_folders,
+    }
+    for feature, value in feature_args.items():
+        for entity in parse_feature_entities(value, entities, feature):
+            context_features[entity].add(feature)
+    content_schedule_entities = (
+        parse_feature_entities(args.content_schedule_context_folders, entities, "content schedule")
+        if args.content_schedule_context_folders is not None
+        else []
+    )
+    folder_templates = parse_folder_templates(args.folder_templates, entities)
 
     if args.interactive:
         entities = parse_entities(prompt(",".join(entities), "Context folders"))
         active_entities = parse_entities(prompt(",".join(active_entities), "Active context folders"))
-        content_entities = parse_entities(prompt(",".join(content_entities), "Content-enabled context folders"))
-        context_types = {entity: DEFAULT_CONTEXT_TYPES.get(entity, "business") for entity in entities}
-        context_types = parse_context_types(prompt(",".join(f"{entity}:{context_types[entity]}" for entity in entities), "Context folder types"), entities)
+        for feature in sorted(CONTENT_FEATURES):
+            current = [entity for entity in entities if feature in context_features[entity]]
+            selected = parse_entities(prompt(",".join(current), f"{feature} context folders"))
+            context_features = {
+                entity: (features | {feature}) if entity in selected else (features - {feature})
+                for entity, features in context_features.items()
+            }
+        content_schedule_entities = parse_entities(prompt(",".join(content_schedule_entities), "Content schedule context folders"))
         default_entity = prompt(default_entity, "Default capture context folder")
         coding_agents = parse_coding_agents(prompt(",".join(coding_agents), "Coding agents: codex, claude, or codex,claude"))
 
@@ -1871,9 +1896,10 @@ def main(argv: list[str] | None = None) -> None:
     missing_active = [entity for entity in active_entities if entity not in entities]
     if missing_active:
         raise SystemExit(f"active context folders are not in configured context folders: {missing_active}")
-    missing_content = [entity for entity in content_entities if entity not in entities]
-    if missing_content:
-        raise SystemExit(f"content-enabled context folders are not in configured context folders: {missing_content}")
+    for entity, features in context_features.items():
+        unsupported = sorted(features - CONTENT_FEATURES)
+        if unsupported:
+            raise SystemExit(f"unsupported content features for {entity}: {unsupported}")
 
     root = Path(args.root).expanduser().resolve()
     bootstrap = Bootstrap(
@@ -1881,13 +1907,14 @@ def main(argv: list[str] | None = None) -> None:
         entities=entities,
         active_entities=active_entities,
         default_entity=default_entity,
-        context_types=context_types,
         coding_agents=coding_agents,
-        content_entities=content_entities,
+        context_features=context_features,
+        content_schedule_entities=content_schedule_entities,
         install_vault_command_enabled=not args.skip_install_vault_command,
         agent_symlinks_enabled=not args.skip_agent_symlinks,
         dry_run=args.dry_run,
         run_date=parse_date(args.date),
+        folder_templates=folder_templates,
     )
     bootstrap.run()
 

@@ -13,21 +13,21 @@ generated: false
 
 ## What are my top ~3 goals for this quarter/season?
 - 
----
+***
 ## WIG
 (Wildly important goal - Importance over urgency)
 - **Lead Measure:** 
 - **Lag Measure:** 
 **How does cadence of accountability and keeping score work for this WIG?:**
----
+***
 ## Other thoughts, themes for these next 3 months?
 
----
+***
 
 #  Next 15 Big Moves
 > 48 Laws Of Power: Law No. 29 - Plan All the Way to the End
 
----
+***
 
 # Retrospective
 

@@ -32,6 +32,7 @@ RUNTIME_CONFIG = RUNTIME_DIR / "runtime-config.json"
 LEGACY_ARCHIVE_DIR = RUNTIME_DIR / "legacy-launchagents"
 LAUNCH_AGENT_DIR = Path.home() / "Library/LaunchAgents"
 LOG_DIR = Path.home() / "Library/Logs"
+MACHINE_ID_PATH = Path.home() / ".config/vault/machine-id"
 
 SUPPORTED_ACTIONS = {"open-applications", "remap-tilde-key"}
 BUNDLE_ID_RE = re.compile(r"[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+")
@@ -65,6 +66,12 @@ def current_machine_id(root: Path) -> str | None:
         check=False,
     )
     value = result.stdout.strip()
+    if value:
+        return value
+    try:
+        value = MACHINE_ID_PATH.read_text(encoding="utf-8").strip()
+    except OSError:
+        value = ""
     return value or None
 
 
@@ -211,7 +218,7 @@ def require_eligible_machine(
     machine_id = config.get("machine_id")
     if not isinstance(machine_id, str) or not machine_id:
         raise MacStartupError(
-            "this clone has no vault.machine-id; identify it with `vault machine identify ID --apply`"
+            "this machine has no Vault identity; identify it with `vault machine identify ID --apply`"
         )
     machine = registered_machine(root, machine_id)
     if machine is None:

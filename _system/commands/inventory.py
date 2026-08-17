@@ -16,6 +16,11 @@ from vault_layout import VAULT_PERIODIC_DIR
 DEFAULT_TASK_STATUSES = ["backlog", "up-next", "to-be-resumed", "ongoing", "in-progress", "done", "archived"]
 ROUTING_TASK_STATUSES = ["in-progress", "ongoing", "to-be-resumed", "up-next"]
 PERIODS = ("daily", "weekly", "monthly", "quarterly", "yearly")
+CONTENT_FEATURE_DIRECTORIES = {
+    "blog": ("items/blog-posts", "publications/blogs"),
+    "social-content": ("items/social-posts", "items/youtube-videos", "publications/youtube", "ideas", "archive"),
+    "newsletters": ("items/newsletter-issues", "publications/newsletters"),
+}
 
 
 def clean_scalar(value: str) -> str:
@@ -115,12 +120,18 @@ def discover_contexts(root: Path, periods: dict[str, str]) -> list[dict[str, Any
         metadata = frontmatter(note.read_text(encoding="utf-8", errors="replace"))
         if str(metadata.get("context_registered", "true")).strip().lower() in {"false", "no", "0"}:
             continue
+        content_root = child / "_obsidian/content"
+        features = [
+            feature
+            for feature, directories in CONTENT_FEATURE_DIRECTORIES.items()
+            if any((content_root / directory).is_dir() for directory in directories)
+        ]
         contexts.append(
             {
                 "name": child.name,
                 "status": str(metadata.get("status") or "none"),
-                "context_type": str(metadata.get("context_type") or "business"),
-                "content_enabled": truthy(metadata.get("content_enabled")),
+                "features": features,
+                "content_schedules_enabled": truthy(metadata.get("content_schedules_enabled")),
                 "default_capture": truthy(metadata.get("default_capture")),
                 "note_path": note.relative_to(root).as_posix(),
                 "periodic_notes": context_periodic_paths(root, child.name, periods),
@@ -150,7 +161,7 @@ def vault_periodic_paths(root: Path, periods: dict[str, str]) -> dict[str, dict[
 def current_content_schedules(root: Path, contexts: list[dict[str, Any]], day: dt.date) -> list[dict[str, str]]:
     schedules: list[dict[str, str]] = []
     for context in contexts:
-        if not context["content_enabled"]:
+        if not context["content_schedules_enabled"]:
             continue
         folder = root / str(context["name"]) / "_obsidian/content-schedules"
         if not folder.exists():
@@ -292,9 +303,9 @@ def print_inventory(inventory: dict[str, Any]) -> None:
     print(f"Task statuses: {', '.join(inventory['task_statuses'])}")
     print("\nContexts:")
     for context in inventory["contexts"]:
-        flags = [context["status"], context["context_type"]]
-        if context["content_enabled"]:
-            flags.append("content")
+        flags = [context["status"], *context["features"]]
+        if context["content_schedules_enabled"]:
+            flags.append("content schedules")
         if context["default_capture"]:
             flags.append("default capture")
         print(f"  - {context['name']} [{', '.join(flags)}] -> {context['note_path']}")

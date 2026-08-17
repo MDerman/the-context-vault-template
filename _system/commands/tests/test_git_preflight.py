@@ -29,7 +29,7 @@ class GitPreflightTests(unittest.TestCase):
         self.remote = base / "remote.git"
         self.seed = base / "seed"
         self.clone = base / "clone"
-        self.shell(base, "git", "init", "--bare", str(self.remote))
+        self.shell(base, "git", "init", "--bare", "-b", "master", str(self.remote))
         self.shell(base, "git", "init", "-b", "master", str(self.seed))
         self.shell(self.seed, "git", "config", "user.name", "Test")
         self.shell(self.seed, "git", "config", "user.email", "test@example.com")

@@ -15,20 +15,20 @@ generated: false
 # Super-alignment
 ## 📒 ~5 Tasks I want to get done today
 - [ ] 
----
+***
 ## Statement:
 
----
+***
 ## Highlight
 *(criteria: Importance, Urgency, Satisfaction, Joy)*
 
----
+***
 ## What are the specific results I want to produce today?
 
----
+***
 ## What am I grateful for today?
 
----
+***
 ## Daily Number 1s:
 - **Health*:* 
 - **Work**: 
@@ -37,24 +37,24 @@ generated: false
 > Actively seek opportunities to do the things I love and will fulfil me today. 
 > Work expands to fill the time you assign to it.
 
----
+***
 
 # Daily Review
 ## 📒 Contract for what I'm doing tomorrow (sign it)
 
----
+***
 - [ ] Review calendar for tomorrow, calendar block, and review what I actually spent time on today (no hard feelings)
 - [ ] How did my highlight go / What could I have done better today?
 - [ ] Any big wins?
 
----
+***
 # Journal Entry
 
 <% tp.file.cursor() %>
 
----
+***
 On this day last year <% tp.date.now("YYYY-MM-DD", "P-1Y") %>
----
+***
 
 
 ## Reference

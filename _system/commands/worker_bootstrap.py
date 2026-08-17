@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Configure or repair an explicit sparse vault worker checkout."""
+"""Enforce a Gitless iCloud Mac worker."""
 
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import shlex
 import subprocess
 import sys
@@ -25,10 +25,6 @@ def git(root: Path, *args: str, check: bool = True) -> subprocess.CompletedProce
     )
 
 
-def git_output(root: Path, *args: str) -> str:
-    return git(root, *args).stdout.strip()
-
-
 def install_hooks(root: Path, apply: bool) -> None:
     command = ["git", "config", "--local", "core.hooksPath", ".githooks"]
     if not apply:
@@ -43,30 +39,66 @@ def install_hooks(root: Path, apply: bool) -> None:
     print("configured core.hooksPath=.githooks")
 
 
-def bootstrap_script(worker: dict[str, Any], remote: str) -> str:
+def bootstrap_script(worker: dict[str, Any]) -> str:
     config = worker["vault_sync"]
     repo = str(config["repo_path"])
-    sparse = " ".join(shlex.quote(str(path)) for path in config["sparse_paths"])
+    checkout = str(config.get("checkout", "icloud"))
+    if worker.get("platform") != "macos" or checkout != "icloud":
+        raise WorkerBootstrapError(
+            f"Vault worker bootstrap is Mac/iCloud-only: {worker['id']}"
+        )
     return f"""set -eu
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
 repo={shlex.quote(repo)}
-if [ -e "$repo" ]; then
-  git -C "$repo" rev-parse --git-dir >/dev/null 2>&1 || {{ echo "non-Git target exists: $repo" >&2; exit 2; }}
-  echo "resuming existing vault clone: $repo"
-else
-  mkdir -p "$(dirname "$repo")"
-  GIT_LFS_SKIP_SMUDGE=1 GIT_TERMINAL_PROMPT=0 git clone --depth=100 --filter=blob:none --sparse --branch master {shlex.quote(remote)} "$repo"
+if [ ! -d "$repo" ]; then
+  echo "iCloud vault is missing: $repo" >&2
+  echo "Sign in to iCloud Drive, mark the Vault Keep Downloaded, and choose Download Now before retrying." >&2
+  exit 2
 fi
-cd "$repo"
-git lfs install --local --skip-smudge --skip-repo
-GIT_LFS_SKIP_SMUDGE=1 git sparse-checkout set --cone {sparse}
-git config --local vault.machine-id {shlex.quote(str(worker['id']))}
-git config --local vault.media-mode pointer-only
-mkdir -p "$HOME/.local/bin"
-ln -sfn "$repo/_system/commands/vault.py" "$HOME/.local/bin/vault"
-python3 "$repo/_system/commands/worker_bootstrap.py" --root "$repo" install-hooks --apply
+if /usr/bin/find "$repo" -flags +dataless -print -quit 2>/dev/null | /usr/bin/grep -q .; then
+  echo "iCloud vault still contains dataless placeholders: $repo" >&2
+  echo "Choose Keep Downloaded and Download Now in Finder, then wait for every item to materialize before retrying." >&2
+  exit 2
+fi
+if [ ! -f "$repo/.git" ]; then
+  echo "shared iCloud vault Git pointer is missing: $repo/.git" >&2
+  exit 2
+fi
+pointer_target="$(/usr/bin/sed -n 's/^gitdir: //p' "$repo/.git")"
+case "$pointer_target" in
+  /*) ;;
+  *) echo "invalid shared iCloud vault Git pointer: $repo/.git" >&2; exit 2 ;;
+esac
+if [ -e "$pointer_target" ]; then
+  expected_legacy="$HOME/.local/share/vault-git/Vault.git"
+  if [ "$pointer_target" != "$expected_legacy" ]; then
+    echo "refusing to move unexpected Git target: $pointer_target" >&2
+    exit 2
+  fi
+  /bin/mkdir -p "$HOME/.Trash"
+  archive="$HOME/.Trash/Vault.git-disabled-$(/bin/date +%Y%m%dT%H%M%S)-$$"
+  /bin/mv "$pointer_target" "$archive"
+  echo "moved worker Vault Git metadata recoverably to $archive"
+fi
+if git -C "$repo" rev-parse --git-dir >/dev/null 2>&1; then
+  echo "worker iCloud vault still resolves as a Git worktree: $repo" >&2
+  exit 2
+fi
+if [ -e "$HOME/Code/vault" ]; then
+  echo "legacy Mac Vault repository must be moved out of ~/Code before acceptance: $HOME/Code/vault" >&2
+  exit 2
+fi
+/bin/mkdir -p "$HOME/.config/vault" "$HOME/.local/bin"
+/bin/chmod 700 "$HOME/.config/vault"
+identity_tmp="$HOME/.config/vault/.machine-id.$$"
+/usr/bin/printf '%s\\n' {shlex.quote(str(worker['id']))} > "$identity_tmp"
+/bin/chmod 600 "$identity_tmp"
+/bin/mv "$identity_tmp" "$HOME/.config/vault/machine-id"
+/bin/ln -sfn "$repo/_system/commands/vault.py" "$HOME/.local/bin/vault"
 python3 "$repo/_system/commands/deps.py" --root "$repo" project-auto-skills --apply
 python3 "$repo/_system/agents/sync_skills.py" sync --root "$repo" --home "$HOME" --apply
+python3 "$repo/_system/commands/refresh_schedule.py" --root "$repo" block-worker --machine-id {shlex.quote(str(worker['id']))}
+python3 "$repo/_system/commands/refresh_schedule.py" --root "$repo" unregister
 """
 
 
@@ -89,13 +121,22 @@ def bootstrap_worker(
     if worker.get("role") != "worker" or not config.get("enabled"):
         raise WorkerBootstrapError(f"vault worker bootstrap disabled: {worker['id']}")
     repo = str(config["repo_path"])
+    checkout = str(config.get("checkout", "icloud"))
+    if worker.get("platform") != "macos" or checkout != "icloud":
+        raise WorkerBootstrapError(
+            f"Vault worker bootstrap is Mac/iCloud-only: {worker['id']}"
+        )
+    mac_code_vault = PurePosixPath(str(worker["home"])) / "Code/vault"
+    if worker.get("platform") == "macos" and PurePosixPath(repo) == mac_code_vault:
+        raise WorkerBootstrapError(
+            f"macOS workers must not use ~/Code/vault: {worker['id']}"
+        )
     if not apply:
         print(f"DRY RUN: bootstrap {worker['id']} at {repo} through {worker['ssh_alias']}")
         return
-    remote = git_output(root, "remote", "get-url", "origin")
     result = subprocess.run(
         ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=10", str(worker["ssh_alias"]), "bash", "-s"],
-        input=bootstrap_script(worker, remote), text=True,
+        input=bootstrap_script(worker), text=True,
     )
     if result.returncode != 0:
         raise WorkerBootstrapError(f"bootstrap failed on {worker['id']}")

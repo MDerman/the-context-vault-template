@@ -13,13 +13,29 @@ from script_utils import context_folder_note_path, resolve_vault_root
 from context_folder_rename import rename_context_folder, validate_slug
 from business_toolkit import (
     install_scaffold as install_business_scaffold,
-    parse_csv as parse_toolkit_csv,
     sync_context as sync_business_toolkit,
 )
 
 
 VALID_STATUSES = {"active", "archived", "none"}
-VALID_CONTEXT_TYPES = {"personal", "personal-brand", "business"}
+VALID_FOLDER_TEMPLATES = {"business", "personal-brand"}
+FEATURE_DIRECTORIES = {
+    "blog": (
+        "_obsidian/content/items/blog-posts",
+        "_obsidian/content/publications/blogs",
+    ),
+    "social-content": (
+        "_obsidian/content/items/social-posts",
+        "_obsidian/content/items/youtube-videos",
+        "_obsidian/content/publications/youtube",
+        "_obsidian/content/ideas",
+        "_obsidian/content/archive",
+    ),
+    "newsletters": (
+        "_obsidian/content/items/newsletter-issues",
+        "_obsidian/content/publications/newsletters",
+    ),
+}
 
 
 def parse_frontmatter(text: str) -> dict[str, str]:
@@ -43,28 +59,24 @@ def read_status(path: Path) -> str:
     return parse_frontmatter(path.read_text(encoding="utf-8")).get("status", "").strip().lower()
 
 
-def read_content_enabled(path: Path) -> bool:
+def read_content_schedules_enabled(path: Path) -> bool:
     if not path.exists():
         return False
-    value = parse_frontmatter(path.read_text(encoding="utf-8")).get("content_enabled", "")
+    value = parse_frontmatter(path.read_text(encoding="utf-8")).get("content_schedules_enabled", "")
     return value.strip().lower() in {"true", "yes", "1"}
 
 
+def detect_context_features(context_root: Path) -> set[str]:
+    return {
+        feature
+        for feature, directories in FEATURE_DIRECTORIES.items()
+        if any((context_root / directory).is_dir() for directory in directories)
+    }
+
+
 def has_content_structure(context_root: Path) -> bool:
-    return any(
-        (context_root / rel).exists()
-        for rel in [
-            "_obsidian/content",
-            "_obsidian/content-schedules",
-        ]
-    )
-
-
-def read_context_type(path: Path) -> str:
-    if not path.exists():
-        return "business"
-    value = parse_frontmatter(path.read_text(encoding="utf-8")).get("context_type", "")
-    return value.strip().lower() or "business"
+    """Return whether filesystem-inferred content capabilities exist."""
+    return bool(detect_context_features(context_root))
 
 
 def read_context_registered(path: Path) -> bool:
@@ -107,9 +119,8 @@ def set_frontmatter_value(path: Path, key: str, value: str, dry_run: bool) -> No
         path.write_text(rendered, encoding="utf-8")
 
 
-def write_context_folder_note(path: Path, status: str, context_type: str, content_enabled: bool) -> None:
+def write_context_folder_note(path: Path, status: str, content_schedules_enabled: bool) -> None:
     value = "" if status == "none" else status
-    content_value = "true" if content_enabled else "false"
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         text = path.read_text(encoding="utf-8")
@@ -128,13 +139,10 @@ def write_context_folder_note(path: Path, status: str, context_type: str, conten
                             out.append(f"status: {value}")
                             seen.add(key)
                             continue
-                        if key == "content_enabled":
-                            out.append(f"content_enabled: {content_value}")
-                            seen.add(key)
-                            continue
-                        if key == "context_type":
-                            out.append(f"context_type: {context_type}")
-                            seen.add(key)
+                        if key in {"content_enabled", "context_type", "content_schedules_enabled"}:
+                            if key == "content_schedules_enabled" and content_schedules_enabled:
+                                out.append("content_schedules_enabled: true")
+                                seen.add(key)
                             continue
                         if key == "context_registered":
                             out.append("context_registered: true")
@@ -143,15 +151,38 @@ def write_context_folder_note(path: Path, status: str, context_type: str, conten
                     out.append(line)
                 if "status" not in seen:
                     out.append(f"status: {value}")
-                if "context_type" not in seen:
-                    out.append(f"context_type: {context_type}")
-                if "content_enabled" not in seen:
-                    out.append(f"content_enabled: {content_value}")
+                if content_schedules_enabled and "content_schedules_enabled" not in seen:
+                    out.append("content_schedules_enabled: true")
                 if "context_registered" not in seen:
                     out.append("context_registered: true")
                 path.write_text("---\n" + "\n".join(out) + "\n---\n" + body, encoding="utf-8")
                 return
-    path.write_text(f"---\nstatus: {value}\ncontext_type: {context_type}\ncontent_enabled: {content_value}\ncontext_registered: true\n---\n", encoding="utf-8")
+    schedules = "content_schedules_enabled: true\n" if content_schedules_enabled else ""
+    path.write_text(f"---\nstatus: {value}\n{schedules}context_registered: true\n---\n", encoding="utf-8")
+
+
+def install_personal_brand_template(root: Path, context: str, *, apply: bool) -> int:
+    source_root = root / "_system/bootstrap/templates/context-folders/personal-brand"
+    if not source_root.is_dir():
+        raise SystemExit(f"Missing personal-brand folder template: {source_root}")
+    target_root = root / context
+    changed = 0
+    for source in sorted(source_root.rglob("*")):
+        target = target_root / source.relative_to(source_root)
+        if source.is_dir():
+            if target.exists():
+                continue
+            print(f"{'mkdir' if apply else '[dry-run] mkdir'} {target.relative_to(root)}")
+            if apply:
+                target.mkdir(parents=True, exist_ok=True)
+            changed += 1
+        elif not target.exists():
+            print(f"{'copy' if apply else '[dry-run] copy'} {target.relative_to(root)}")
+            if apply:
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(source, target)
+            changed += 1
+    return changed
 
 
 def discover_entities(root: Path, excluded: set[str] | None = None) -> list[str]:
@@ -220,16 +251,19 @@ def parse_create_args(argv: list[str], *, register_mode: bool) -> argparse.Names
     parser.add_argument("--default-context-folder", dest="default_entity", metavar="CONTEXT_FOLDER", default=None, help="Default capture context folder. Defaults to current root TaskNotes setting or personal.")
     parser.add_argument("--default-sub-vault", dest="default_entity", help=argparse.SUPPRESS)
     parser.add_argument("--default-entity", dest="default_entity", help=argparse.SUPPRESS)
-    parser.add_argument("--content-enabled", action="store_true", default=None if register_mode else False, help="Create/register this context folder with content_enabled: true.")
-    parser.add_argument("--context-type", choices=sorted(VALID_CONTEXT_TYPES), default=None if register_mode else "business", help="Context folder type. Register mode defaults to folder-note context_type, then business.")
-    parser.add_argument("--no-business-toolkit", action="store_true", help="Do not install the standard toolkit when creating or registering a business context folder.")
-    parser.add_argument("--toolkit-exclude", default=None, help="Comma-separated business-toolkit groups or component ids to omit.")
+    parser.add_argument("--blog", action="store_true", help="Create blog item and publication folders.")
+    parser.add_argument("--social-content", action="store_true", help="Create social, YouTube, ideas, and archive folders.")
+    parser.add_argument("--newsletters", action="store_true", help="Create newsletter item and publication folders.")
+    parser.add_argument("--content-schedules", action="store_true", help="Enable cadence and schedule generation for this context folder.")
+    parser.add_argument("--folder-template", choices=sorted(VALID_FOLDER_TEMPLATES), help="Apply one physical folder pack when creating a new context folder.")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args(argv)
     if register_mode:
         args.name = args.name_flag or args.name
         if not args.name:
             parser.error("register requires a context folder name")
+        if args.folder_template:
+            parser.error("--folder-template is creation-only; register the folder first, then manage its physical folders directly")
     return args
 
 
@@ -244,22 +278,22 @@ def create_main(argv: list[str], *, register_mode: bool = False) -> None:
         raise SystemExit(f"Context folder path exists and is not a directory: {entity_root}")
 
     entity_note = context_folder_note_path(entity_root)
+    is_new_context = not entity_root.exists() and not entity_note.exists()
+    if args.folder_template and not is_new_context:
+        raise SystemExit("--folder-template is only supported when creating a new context folder")
     existing_status = read_status(entity_note)
-    existing_context_type = read_context_type(entity_note)
-    existing_content_enabled = read_content_enabled(entity_note) or has_content_structure(entity_root)
     status = args.status or existing_status or "active"
-    context_type = args.context_type or existing_context_type or "business"
-    content_enabled = args.content_enabled if args.content_enabled is not None else existing_content_enabled
+    content_schedules_enabled = read_content_schedules_enabled(entity_note) or args.content_schedules
 
     if args.dry_run:
         print(f"[dry-run] write {entity_note}")
     else:
-        write_context_folder_note(entity_note, status, context_type, content_enabled)
+        write_context_folder_note(entity_note, status, content_schedules_enabled)
 
-    # Creation receives the complete ordinary business tree. Registration and
-    # later toolkit syncs are deliberately conservative and never backfill it.
-    if context_type == "business" and not register_mode:
+    if args.folder_template == "business":
         install_business_scaffold(root, name, apply=not args.dry_run)
+    elif args.folder_template == "personal-brand":
+        install_personal_brand_template(root, name, apply=not args.dry_run)
 
     bootstrap_module = load_bootstrap(root)
     entities = discover_entities(root)
@@ -275,19 +309,24 @@ def create_main(argv: list[str], *, register_mode: bool = False) -> None:
     if status == "active" and name not in active_entities:
         active_entities.append(name)
         active_entities.sort()
-    content_entities = [
-        entity
-        for entity in entities
-        if read_content_enabled(context_folder_note_path(root / entity))
-    ]
-    if content_enabled and name not in content_entities:
-        content_entities.append(name)
-        content_entities.sort()
-    context_types = {
-        entity: read_context_type(context_folder_note_path(root / entity))
-        for entity in entities
+    context_features = {entity: detect_context_features(root / entity) for entity in entities}
+    selected_features = {
+        feature
+        for feature, enabled in {
+            "blog": args.blog,
+            "social-content": args.social_content,
+            "newsletters": args.newsletters,
+        }.items()
+        if enabled
     }
-    context_types[name] = context_type
+    context_features.setdefault(name, set()).update(selected_features)
+    content_schedule_entities = [
+        entity for entity in entities
+        if read_content_schedules_enabled(context_folder_note_path(root / entity))
+    ]
+    if content_schedules_enabled and name not in content_schedule_entities:
+        content_schedule_entities.append(name)
+        content_schedule_entities.sort()
 
     default_entity = args.default_entity or "personal"
     tasknotes = root / ".obsidian/plugins/tasknotes/data.json"
@@ -305,23 +344,21 @@ def create_main(argv: list[str], *, register_mode: bool = False) -> None:
         entities=entities,
         active_entities=active_entities,
         default_entity=default_entity,
-        context_types=context_types,
         coding_agents=discover_coding_agents(root),
-        content_entities=content_entities,
+        context_features=context_features,
+        content_schedule_entities=content_schedule_entities,
         install_vault_command_enabled=True,
         agent_symlinks_enabled=True,
         dry_run=args.dry_run,
         run_date=bootstrap_module.parse_date(None),
     )
     bootstrap.run()
-    if context_type == "business" and not args.no_business_toolkit:
+    if args.folder_template == "business":
         sync_business_toolkit(
             root,
             name,
-            excludes=parse_toolkit_csv(args.toolkit_exclude),
             apply=not args.dry_run,
-            use_saved=args.toolkit_exclude is None,
-            validate_business=not args.dry_run,
+            use_saved=False,
         )
 
 
@@ -350,23 +387,19 @@ def rerun_bootstrap(root: Path, dry_run: bool, excluded: set[str] | None = None)
         for entity in entities
         if read_status(context_folder_note_path(root / entity)) == "active"
     ]
-    content_entities = [
-        entity
-        for entity in entities
-        if read_content_enabled(context_folder_note_path(root / entity))
+    context_features = {entity: detect_context_features(root / entity) for entity in entities}
+    content_schedule_entities = [
+        entity for entity in entities
+        if read_content_schedules_enabled(context_folder_note_path(root / entity))
     ]
-    context_types = {
-        entity: read_context_type(context_folder_note_path(root / entity))
-        for entity in entities
-    }
     bootstrap = bootstrap_module.Bootstrap(
         root=root,
         entities=entities,
         active_entities=active_entities,
         default_entity=default_context_folder(root, entities),
-        context_types=context_types,
         coding_agents=discover_coding_agents(root),
-        content_entities=content_entities,
+        context_features=context_features,
+        content_schedule_entities=content_schedule_entities,
         install_vault_command_enabled=True,
         agent_symlinks_enabled=True,
         dry_run=dry_run,
@@ -419,6 +452,10 @@ def remove_main(argv: list[str]) -> None:
 
 def main(argv: list[str] | None = None) -> None:
     args = list(sys.argv[1:] if argv is None else argv)
+    removed = [flag for flag in ("--context-type", "--content-enabled") if flag in args]
+    if removed:
+        replacements = "--blog, --social-content, --newsletters, --content-schedules, and --folder-template"
+        raise SystemExit(f"{', '.join(removed)} has been removed; use the independent capability flags instead: {replacements}")
     if args and args[0] == "rename":
         rename_main(args[1:])
         return

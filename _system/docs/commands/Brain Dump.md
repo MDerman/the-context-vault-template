@@ -12,6 +12,8 @@ vault sync
 
 Brain Dump Apple Note deletion/clearing is only allowed through `refresh.py` or `brain_dump.py`, after the content and attachments have been written to the vault. Clearing must leave the Apple Note title in the body, so Notes/iCloud never collapses the source note title.
 
+Apple Notes exposes embedded tables as unnamed attachments even though their content is already present in the note HTML, and its scripting API cannot save those pseudo-attachments. Ingestion preserves the table text from the HTML and skips only unreferenced table objects. Any real attachment export failure stops before the vault import is written or the Apple Note is cleared.
+
 Implementation script: `_system/commands/brain_dump.py`.
 
 Use [[_system/agents/manual-skills/_vault/vault-triage-brain-dump-section/SKILL|Triage Brain Dump Section]] for reviewed, section-level routing.

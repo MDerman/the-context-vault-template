@@ -9,7 +9,11 @@ brew "tmux"
 brew "starship" unless legacy_intel_macos
 brew "terminal-notifier"
 brew "jq"
-brew "node"
+# CTX2 supports the Node 24 LTS line from 24.19.0 onward.
+brew "node@24"
+brew "pnpm"
+brew "age"
+brew "openssl@3"
 brew "python@3.12"
 brew "ripgrep"
 brew "rclone"

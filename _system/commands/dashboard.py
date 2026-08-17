@@ -322,15 +322,15 @@ managed_by: "{MANAGED_DASHBOARD}"
 
 {markdown_list(periodic_link_lines)}
 
----
+***
 
 {markdown_list(action_lines)}
 
----
+***
 
 {markdown_list(context_note_lines)}
 
----
+***
 
 #### Periodic Note Sources
 

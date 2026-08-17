@@ -59,7 +59,7 @@
       "key": "P"
     }
   ],
-  "omnisearch:show-modal-infile": [
+  "editor:open-search": [
     {
       "modifiers": [
         "Mod"
@@ -67,11 +67,11 @@
       "key": "F"
     }
   ],
-  "omnisearch:show-modal": [
+  "omnisearch:show-modal-infile": [
     {
       "modifiers": [
-        "Mod",
-        "Shift"
+        "Alt",
+        "Mod"
       ],
       "key": "F"
     }
@@ -192,10 +192,20 @@
   "file-explorer:reveal-active-file": [
     {
       "modifiers": [
-        "Alt",
-        "Mod"
+        "Mod",
+        "Shift"
       ],
-      "key": "R"
+      "key": "F"
+    }
+  ],
+  "open-with-default-app:show": [
+    {
+      "modifiers": [
+        "Alt",
+        "Mod",
+        "Shift"
+      ],
+      "key": "F"
     }
   ]
 }

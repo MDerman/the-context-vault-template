@@ -7,7 +7,7 @@ It is owned by [[_system/local/skills/infra-code-folder-and-computer-topology/RE
 ### Ownership
 
 - `defaults.json` is portable and public-exported. It must keep startup automation and every action disabled so a fresh bootstrap never installs or runs machine automation.
-- `private/machines.json` contains machine-specific opt-ins keyed by the clone-local `vault.machine-id`. Public bootstrap export excludes it.
+- `private/machines.json` contains machine-specific opt-ins keyed by the machine identity: clone-local `vault.machine-id` on the primary, or `~/.config/vault/machine-id` on a Gitless iCloud worker. Public bootstrap export excludes it.
 - The registered machine and platform remain authoritative in `_system/local/skills/infra-code-folder-and-computer-topology/private/machines.json`; this config only chooses startup actions.
 
 ### Schema

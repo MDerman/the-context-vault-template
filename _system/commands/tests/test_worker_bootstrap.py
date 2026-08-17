@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
-import contextlib
 import importlib.util
-import io
 from pathlib import Path
 import subprocess
 import sys
@@ -48,41 +46,61 @@ class WorkerBootstrapTests(unittest.TestCase):
         self.assertEqual(self.shell(self.root, "git", "config", "--get", "core.hooksPath"), ".githooks")
         self.assertTrue(all((hooks / name).stat().st_mode & 0o111 for name in ("post-commit", "pre-push")))
 
-    def test_bootstrap_script_has_no_background_git_automation(self) -> None:
+    def test_bootstrap_script_rejects_linux_worker(self) -> None:
         worker = {
             "id": "worker",
+            "platform": "linux",
             "vault_sync": {
+                "checkout": "sparse",
                 "repo_path": "/home/test/Code/vault",
                 "sparse_paths": [".agents", "_system", ".githooks"],
             },
         }
-        script = worker_bootstrap.bootstrap_script(worker, "https://example.com/vault.git")
-        self.assertIn('/opt/homebrew/bin:/usr/local/bin:$PATH', script)
-        self.assertIn("git sparse-checkout set", script)
-        self.assertIn("worker_bootstrap.py", script)
-        for forbidden in ("systemctl", "launchctl", "git push", "vault-worker-sync"):
+        with self.assertRaisesRegex(
+            worker_bootstrap.WorkerBootstrapError, "Mac/iCloud-only"
+        ):
+            worker_bootstrap.bootstrap_script(worker)
+
+    def test_icloud_bootstrap_removes_worker_git_and_keeps_pointer_dangling(self) -> None:
+        worker = {
+            "id": "worker-mac",
+            "platform": "macos",
+            "vault_sync": {
+                "checkout": "icloud",
+                "repo_path": "/Users/test/Library/Mobile Documents/iCloud~md~obsidian/Documents/Vault",
+            },
+        }
+        script = worker_bootstrap.bootstrap_script(worker)
+        self.assertIn("-flags +dataless", script)
+        self.assertIn("Vault.git-disabled-", script)
+        self.assertIn(".config/vault/machine-id", script)
+        self.assertIn("worker iCloud vault still resolves as a Git worktree", script)
+        self.assertIn("block-worker --machine-id worker-mac", script)
+        self.assertIn("refresh_schedule.py", script)
+        for forbidden in (
+            "git clone", "git checkout", "git reset", "git lfs pull",
+            "git init", "git fetch", "git config --local",
+        ):
             self.assertNotIn(forbidden, script)
 
-    def test_disabled_worker_requires_explicit_provisioning_flag(self) -> None:
+    def test_linux_worker_bootstrap_is_disabled(self) -> None:
         worker = {
             "id": "worker",
             "display_name": "Worker",
             "enabled": False,
             "role": "worker",
-            "platform": "macos",
+            "platform": "linux",
             "transport": "ssh",
             "ssh_alias": "worker",
-            "home": "/Users/test",
+            "home": "/home/test",
             "global_agents_eligible": True,
             "vault_sync": {
-                "enabled": True,
-                "checkout": "sparse",
-                "repo_path": "/Users/test/Code/vault",
-                "sparse_paths": [".agents", "_system", ".githooks"],
+                "enabled": False,
+                "required": False,
             },
         }
         registry = {
-            "schema_version": 3,
+            "schema_version": 4,
             "primary_machine_id": "primary",
             "machines": [
                 {
@@ -99,10 +117,7 @@ class WorkerBootstrapTests(unittest.TestCase):
             ],
         }
 
-        with self.assertRaisesRegex(worker_bootstrap.machine_registry.MachineError, "disabled"):
-            worker_bootstrap.bootstrap_worker(self.root, registry, "worker", apply=False)
-
-        with contextlib.redirect_stdout(io.StringIO()) as stdout:
+        with self.assertRaisesRegex(worker_bootstrap.WorkerBootstrapError, "bootstrap disabled"):
             worker_bootstrap.bootstrap_worker(
                 self.root,
                 registry,
@@ -110,11 +125,10 @@ class WorkerBootstrapTests(unittest.TestCase):
                 apply=False,
                 provision_disabled=True,
             )
-        self.assertIn("DRY RUN: bootstrap worker", stdout.getvalue())
 
     def test_provision_disabled_flag_refuses_enabled_worker(self) -> None:
         registry = {
-            "schema_version": 3,
+            "schema_version": 4,
             "primary_machine_id": "primary",
             "machines": [
                 {
@@ -122,7 +136,7 @@ class WorkerBootstrapTests(unittest.TestCase):
                     "display_name": "Primary",
                     "enabled": True,
                     "role": "primary",
-                    "platform": "macos",
+                    "platform": "linux",
                     "transport": "local",
                     "home": "/Users/primary",
                     "global_agents_eligible": True,
@@ -135,13 +149,12 @@ class WorkerBootstrapTests(unittest.TestCase):
                     "platform": "macos",
                     "transport": "ssh",
                     "ssh_alias": "worker",
-                    "home": "/Users/test",
+                    "home": "/home/test",
                     "global_agents_eligible": True,
                     "vault_sync": {
                         "enabled": True,
-                        "checkout": "sparse",
-                        "repo_path": "/Users/test/Code/vault",
-                        "sparse_paths": [".agents", "_system", ".githooks"],
+                        "checkout": "icloud",
+                        "repo_path": "/Users/test/Vault",
                     },
                 },
             ],
@@ -155,6 +168,45 @@ class WorkerBootstrapTests(unittest.TestCase):
                 apply=False,
                 provision_disabled=True,
             )
+
+    def test_macos_worker_refuses_sparse_code_vault(self) -> None:
+        worker = {
+            "id": "worker-mac",
+            "display_name": "Worker Mac",
+            "enabled": True,
+            "role": "worker",
+            "platform": "macos",
+            "transport": "ssh",
+            "ssh_alias": "worker-mac",
+            "home": "/Users/test",
+            "global_agents_eligible": False,
+            "vault_sync": {
+                "enabled": True,
+                "checkout": "sparse",
+                "repo_path": "/Users/test/Code/vault",
+                "sparse_paths": [".agents", "_system", ".githooks"],
+            },
+        }
+        registry = {
+            "schema_version": 4,
+            "primary_machine_id": "primary",
+            "machines": [
+                {
+                    "id": "primary",
+                    "display_name": "Primary",
+                    "enabled": True,
+                    "role": "primary",
+                    "platform": "macos",
+                    "transport": "local",
+                    "home": "/Users/primary",
+                    "global_agents_eligible": True,
+                },
+                worker,
+            ],
+        }
+
+        with self.assertRaisesRegex(worker_bootstrap.WorkerBootstrapError, "Mac/iCloud-only"):
+            worker_bootstrap.bootstrap_worker(self.root, registry, "worker-mac", apply=False)
 
     def test_versioned_hooks_do_not_push_or_start_remote_sync(self) -> None:
         post_commit = (VAULT_ROOT / ".githooks/post-commit").read_text()

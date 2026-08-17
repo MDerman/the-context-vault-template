@@ -27,15 +27,15 @@ class PublicContextExportTests(unittest.TestCase):
             root = Path(tmp)
             legacy = root / "_system/_obsidian/templates/shared/entity-notes/personal.md"
             legacy.parent.mkdir(parents=True)
-            legacy.write_text(entity_note_template("personal", "personal"), encoding="utf-8")
+            legacy.write_text(entity_note_template("personal"), encoding="utf-8")
             bootstrap = Bootstrap(
                 root=root,
                 entities=["personal"],
                 active_entities=["personal"],
                 default_entity="personal",
-                context_types={"personal": "personal"},
                 coding_agents=[],
-                content_entities=[],
+                context_features={"personal": set()},
+                content_schedule_entities=[],
                 install_vault_command_enabled=False,
                 agent_symlinks_enabled=False,
                 dry_run=False,
@@ -44,7 +44,7 @@ class PublicContextExportTests(unittest.TestCase):
 
             bootstrap.setup_templates()
 
-            replacement = root / "_system/_obsidian/templates/shared/entity-notes/personal-context-template.md"
+            replacement = root / "_system/_obsidian/templates/shared/entity-notes/context-template.md"
             self.assertFalse(legacy.exists())
             self.assertTrue(replacement.is_file())
             self.assertIn("vault.bootstrap", replacement.read_text(encoding="utf-8"))
@@ -198,7 +198,7 @@ class PublicContextExportTests(unittest.TestCase):
             root = Path(tmp) / "source"
             export_root = Path(tmp) / "public"
             config_dir = root / "_system/local"
-            projection = root / "_system/agents/skills/creative-agent-canvas"
+            projection = root / "_system/agents/skills/vault-excalidraw-canvas"
             checkout = Path(tmp) / "checkout/skills/agent-canvas"
             config_dir.mkdir(parents=True)
             checkout.mkdir(parents=True)
@@ -206,12 +206,48 @@ class PublicContextExportTests(unittest.TestCase):
             projection.parent.mkdir(parents=True)
             projection.symlink_to(checkout)
             (config_dir / "deps.json").write_text(
-                '{"repos":[{"projections":[{"target":"_system/agents/skills/creative-agent-canvas","managed":true}]}]}\n'
+                '{"repos":[{"projections":[{"target":"_system/agents/skills/vault-excalidraw-canvas","managed":true}]}]}\n'
             )
             config = {"export_root": str(export_root), "copy_obsidian": "exact"}
             exporter = BootstrapExporter(root=root, config=config, export_root=export_root, force=True, dry_run=False)
             exporter.copy_system_or_shared("_system")
-            self.assertFalse((export_root / "_system/agents/skills/creative-agent-canvas").exists())
+            self.assertFalse((export_root / "_system/agents/skills/vault-excalidraw-canvas").exists())
+
+    def test_working_repo_projection_and_catalog_link_are_not_exported(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "source"
+            export_root = Path(tmp) / "public"
+            projection = (
+                root
+                / "_system/agents/working-repos/business"
+                / "business-debugging-and-testing"
+            )
+            catalog = root / "_system/agents/skills"
+            projection.mkdir(parents=True)
+            catalog.mkdir(parents=True)
+            (projection / "SKILL.md").write_text("projected private repo skill\n")
+            (catalog / "business-debugging-and-testing").symlink_to(
+                "../working-repos/business/business-debugging-and-testing"
+            )
+            config = {
+                "export_root": str(export_root),
+                "copy_obsidian": "exact",
+                "generated_exclude_globs": ["_system/agents/working-repos/**"],
+            }
+            exporter = BootstrapExporter(
+                root=root,
+                config=config,
+                export_root=export_root,
+                force=True,
+                dry_run=False,
+            )
+
+            exporter.copy_system_or_shared("_system")
+
+            self.assertFalse((export_root / "_system/agents/working-repos").exists())
+            self.assertFalse(
+                (export_root / "_system/agents/skills/business-debugging-and-testing").exists()
+            )
 
     def test_auto_source_and_catalog_link_export_but_dependency_auto_link_does_not(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -586,21 +622,20 @@ views:
                 encoding="utf-8",
             )
 
-            for name, context_type, content_enabled in [
-                ("personal", "personal", False),
-                (source_brand, "personal-brand", True),
-                (source_business, "business", True),
-                ("dev", "business", False),
+            for name, content_capable in [
+                ("personal", False),
+                (source_brand, True),
+                (source_business, True),
+                ("dev", False),
             ]:
                 context_root = root / name
                 (context_root / "_obsidian/bases").mkdir(parents=True)
-                if content_enabled:
-                    (context_root / "_obsidian/content").mkdir(parents=True)
+                if content_capable:
+                    (context_root / "_obsidian/content/items/blog-posts").mkdir(parents=True)
                 (context_root / f"{name}.md").write_text(
                     f"""---
 status: active
-context_type: {context_type}
-content_enabled: {"true" if content_enabled else "false"}
+context_registered: true
 default_capture: {"true" if name == "personal" else "false"}
 ---
 """,
@@ -610,9 +645,9 @@ default_capture: {"true" if name == "personal" else "false"}
             config = {
                 "export_root": str(export_root),
                 "context_folders": [
-                    {"source": "personal", "target": "personal"},
-                    {"source": source_brand, "target": "personal-brand"},
-                    {"source": source_business, "target": "business"},
+                    {"source": "personal", "target": "personal", "capabilities": []},
+                    {"source": source_brand, "target": "personal-brand", "capabilities": ["blog"]},
+                    {"source": source_business, "target": "business", "capabilities": ["blog"]},
                 ],
                 "copy_obsidian": "exact",
                 "text_rewrite_suffixes": [".base", ".md", ".py"],
@@ -649,10 +684,10 @@ default_capture: {"true" if name == "personal" else "false"}
             self.assertNotIn(f"{source_brand}/_obsidian", content_calendar)
             self.assertNotIn(f"{source_business}/_obsidian", content_calendar)
 
-    def test_existing_content_folder_counts_as_content_enabled(self) -> None:
+    def test_existing_capability_folder_is_inferred(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             context_root = Path(tmp) / "shared-context"
-            (context_root / "_obsidian/content").mkdir(parents=True)
+            (context_root / "_obsidian/content/items/blog-posts").mkdir(parents=True)
 
             self.assertTrue(has_content_structure(context_root))
 

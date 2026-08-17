@@ -86,6 +86,40 @@ ensure_gh_skill() {
   fi
 }
 
+ensure_ctx2_toolchain() {
+  local node_prefix
+  local pnpm_prefix
+  node_prefix="$(brew --prefix node@24)"
+  pnpm_prefix="$(brew --prefix pnpm)"
+  run brew link --overwrite --force node@24
+
+  if [[ "$DRY_RUN" -eq 1 ]]; then
+    echo "DRY RUN: Node >=24.19.0 <25, pnpm >=11.21.0 <12, age-keygen, OpenSSL, curl, and cc will be verified."
+    return 0
+  fi
+
+  export PATH="${node_prefix}/bin:${pnpm_prefix}/bin:${PATH}"
+  if ! node -e 'const [major, minor] = process.versions.node.split(".").map(Number); process.exit(major === 24 && minor >= 19 ? 0 : 1)'; then
+    echo "CTX2 requires Node >=24.19.0 <25; found $(node --version 2>/dev/null || echo missing)." >&2
+    exit 1
+  fi
+
+  local pnpm_version
+  pnpm_version="$(pnpm --version 2>/dev/null || true)"
+  if [[ ! "$pnpm_version" =~ ^11\.([0-9]+)\. ]] || (( ${BASH_REMATCH[1]} < 21 )); then
+    echo "CTX2 requires pnpm >=11.21.0 <12; found ${pnpm_version:-missing}." >&2
+    exit 1
+  fi
+
+  local command_name
+  for command_name in age-keygen openssl curl cc; do
+    if ! command -v "$command_name" >/dev/null 2>&1; then
+      echo "CTX2 bootstrap dependency missing after install: $command_name" >&2
+      exit 1
+    fi
+  done
+}
+
 need_command_line_tools() {
   if ! xcode-select --print-path >/dev/null 2>&1; then
     cat >&2 <<'EOF'
@@ -123,6 +157,7 @@ fi
 
 run brew bundle install --file "${BREWFILE}"
 ensure_gh_skill
+ensure_ctx2_toolchain
 
 echo "Dependency check complete."
 python3 --version || true
@@ -135,6 +170,12 @@ if command -v gh >/dev/null 2>&1; then
   fi
 fi
 jq --version || true
+if [[ "$DRY_RUN" -eq 0 ]]; then
+  node --version || true
+  pnpm --version || true
+fi
+age-keygen --version || true
+openssl version || true
 rg --version | head -1 || true
 rclone version | head -1 || true
 if command -v gws >/dev/null 2>&1; then

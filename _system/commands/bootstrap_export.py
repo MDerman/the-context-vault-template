@@ -196,7 +196,7 @@ class BootstrapExporter:
         self.regenerate_public_bases()
         self.validate_public_base_contexts()
         self.create_library_and_wiki()
-        self.install_public_business_toolkits()
+        self.install_public_folder_templates()
         self.sanitize_public_templater_rules()
         self.sanitize_public_iconize_paths()
         self.write_manifest()
@@ -385,7 +385,11 @@ class BootstrapExporter:
 
     def should_skip_catalog_link(self, item: Path) -> bool:
         raw = os.readlink(item)
-        if raw.startswith("../manual-skills/") or raw.startswith("../gh-skills/"):
+        if (
+            raw.startswith("../manual-skills/")
+            or raw.startswith("../gh-skills/")
+            or raw.startswith("../working-repos/")
+        ):
             return True
         resolved = item.resolve(strict=False)
         return any(
@@ -581,28 +585,18 @@ class BootstrapExporter:
                 active.append(item["target"])
         return active
 
-    def public_content_contexts(self) -> list[str]:
-        content: list[str] = []
+    def public_context_features(self) -> dict[str, set[str]]:
+        features: dict[str, set[str]] = {}
         for item in self.context_configs:
-            target = item["target"]
-            source = item["source"]
-            metadata = self.context_metadata(item)
-            if (
-                bool_frontmatter(metadata.get("content_enabled"))
-                or (self.export_root / target / "_obsidian/content").exists()
-                or (self.root / source / "_obsidian/content").exists()
-            ):
-                content.append(target)
-        return content
+            selected = {str(value) for value in item.get("capabilities", [])}
+            unknown = selected - {"blog", "social-content", "newsletters"}
+            if unknown:
+                raise SystemExit(f"Unknown public context capability for {item['target']}: {', '.join(sorted(unknown))}")
+            features[item["target"]] = selected
+        return features
 
-    def public_context_types(self, bootstrap_module) -> dict[str, str]:
-        context_types: dict[str, str] = {}
-        defaults = getattr(bootstrap_module, "DEFAULT_CONTEXT_TYPES", {})
-        for item in self.context_configs:
-            target = item["target"]
-            metadata = self.context_metadata(item)
-            context_types[target] = metadata.get("context_type") or defaults.get(target, "business")
-        return context_types
+    def public_content_schedule_contexts(self) -> list[str]:
+        return [item["target"] for item in self.context_configs if item.get("content_schedules") is True]
 
     def regenerate_public_bases(self) -> None:
         if not self.context_configs:
@@ -614,9 +608,9 @@ class BootstrapExporter:
             entities=targets,
             active_entities=self.public_active_contexts(),
             default_entity=self.public_default_context(),
-            context_types=self.public_context_types(bootstrap_module),
             coding_agents=[],
-            content_entities=self.public_content_contexts(),
+            context_features=self.public_context_features(),
+            content_schedule_entities=self.public_content_schedule_contexts(),
             install_vault_command_enabled=False,
             agent_symlinks_enabled=False,
             dry_run=self.dry_run,
@@ -670,32 +664,39 @@ class BootstrapExporter:
         if source.exists():
             self.copy_file(source, wiki / "AGENTS.md")
 
-    def install_public_business_toolkits(self) -> None:
-        business_targets = [
-            item["target"]
+    def install_public_folder_templates(self) -> None:
+        template_targets = [
+            (item["target"], item.get("folder_template"))
             for item in self.context_configs
-            if self.context_metadata(item).get("context_type", "business") == "business"
+            if item.get("folder_template")
         ]
-        if not business_targets:
+        if not template_targets:
             return
+        unknown = sorted({template for _target, template in template_targets} - {"business", "personal-brand"})
+        if unknown:
+            raise SystemExit(f"Unknown public folder template: {', '.join(unknown)}")
         if self.dry_run:
-            for target in business_targets:
-                self.log(f"install business toolkit in {target}")
+            for target, template in template_targets:
+                self.log(f"install {template} folder template in {target}")
             return
         commands_dir = self.export_root / "_system/commands"
         sys.path.insert(0, str(commands_dir))
         try:
             from business_toolkit import install_scaffold, sync_context
+            from folder import install_personal_brand_template
 
-            for target in business_targets:
-                install_scaffold(self.export_root, target, apply=True)
-                sync_context(
-                    self.export_root,
-                    target,
-                    apply=True,
-                    force=True,
-                    use_saved=False,
-                )
+            for target, template in template_targets:
+                if template == "personal-brand":
+                    install_personal_brand_template(self.export_root, target, apply=True)
+                else:
+                    install_scaffold(self.export_root, target, apply=True)
+                    sync_context(
+                        self.export_root,
+                        target,
+                        apply=True,
+                        force=True,
+                        use_saved=False,
+                    )
         finally:
             if sys.path and sys.path[0] == str(commands_dir):
                 sys.path.pop(0)

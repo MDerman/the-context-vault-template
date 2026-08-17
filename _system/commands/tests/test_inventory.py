@@ -33,8 +33,9 @@ class InventoryTests(unittest.TestCase):
             tasks.mkdir(parents=True)
             schedules.mkdir(parents=True)
             daily.mkdir(parents=True)
+            (personal / "_obsidian/content/items/blog-posts").mkdir(parents=True)
             (personal / "personal.md").write_text(
-                "---\nstatus: active\ncontext_type: personal\ncontent_enabled: true\ndefault_capture: true\n---\n",
+                "---\nstatus: active\ncontent_schedules_enabled: true\ndefault_capture: true\n---\n",
                 encoding="utf-8",
             )
             (tasks / "Ship.md").write_text(
@@ -59,6 +60,8 @@ class InventoryTests(unittest.TestCase):
         self.assertEqual(result["default_capture_context"], "personal")
         self.assertEqual(result["active_periods"]["weekly"], "2026-W30")
         self.assertEqual(result["contexts"][0]["note_path"], "personal/personal.md")
+        self.assertEqual(result["contexts"][0]["features"], ["blog"])
+        self.assertTrue(result["contexts"][0]["content_schedules_enabled"])
         self.assertTrue(result["contexts"][0]["periodic_notes"]["daily"]["exists"])
         self.assertEqual(result["content_schedules"][0]["path"], "personal/_obsidian/content-schedules/Current.md")
         self.assertEqual(result["tasks"]["in-progress"][0]["path"], "personal/_obsidian/tasks/Ship.md")

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import ipaddress
 import json
 import os
 from pathlib import Path, PurePosixPath
@@ -24,6 +25,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT = VAULT_ROOT
 DEFAULT_REGISTRY = ROOT / SKILL_CONFIG_DIR / "infra-code-folder-and-computer-topology/private/machines.json"
 DEFAULT_RUNTIME_DIR = Path.home() / ".cache/vault-machine"
+DEFAULT_MACHINE_ID_PATH = Path.home() / ".config/vault/machine-id"
 MACHINE_ID_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 
@@ -50,8 +52,8 @@ def load_registry(path: Path = DEFAULT_REGISTRY) -> dict[str, Any]:
 
 
 def validate_registry(data: dict[str, Any]) -> None:
-    if data.get("schema_version") != 3:
-        raise MachineError("machine registry schema_version must be 3; run the documented registry migration")
+    if data.get("schema_version") != 4:
+        raise MachineError("machine registry schema_version must be 4; run the documented registry migration")
     machines = data.get("machines")
     if not isinstance(machines, list) or not machines:
         raise MachineError("machine registry has no machines")
@@ -81,6 +83,14 @@ def validate_registry(data: dict[str, Any]) -> None:
         home = str(machine["home"])
         if not PurePosixPath(home).is_absolute() or any(char.isspace() for char in home):
             raise MachineError(f"unsafe home path for {machine_id}")
+        wireguard_address = machine.get("wireguard_address")
+        if wireguard_address is not None:
+            try:
+                parsed_address = ipaddress.ip_address(wireguard_address)
+            except ValueError as exc:
+                raise MachineError(f"invalid WireGuard address for {machine_id}") from exc
+            if parsed_address.version != 4:
+                raise MachineError(f"WireGuard address must be IPv4 for {machine_id}")
         validate_vault_sync(machine)
         validate_vnc(machine)
     if primary_machine_id not in seen:
@@ -98,16 +108,37 @@ def validate_vault_sync(machine: dict[str, Any]) -> None:
         return
     if not isinstance(config, dict) or not isinstance(config.get("enabled"), bool):
         raise MachineError(f"invalid vault_sync for {machine['id']}")
-    checkout = config.get("checkout", "full" if machine["role"] == "primary" else "sparse")
-    if checkout not in {"full", "sparse"}:
+    if machine["platform"] == "linux":
+        if config.get("enabled"):
+            raise MachineError(
+                f"Linux machines must not enable Vault checkout or sync: {machine['id']}"
+            )
+        forbidden = sorted({"checkout", "repo_path", "git_dir", "sparse_paths"} & set(config))
+        if forbidden:
+            raise MachineError(
+                f"Linux machines must not define Vault checkout fields for {machine['id']}: "
+                + ", ".join(forbidden)
+            )
+        return
+    checkout = config.get("checkout", "full" if machine["role"] == "primary" else "icloud")
+    if checkout not in {"full", "icloud"}:
         raise MachineError(f"unsupported vault checkout for {machine['id']}")
-    paths = config.get("sparse_paths", [])
-    if checkout == "sparse" and (not isinstance(paths, list) or not paths):
-        raise MachineError(f"sparse vault_sync requires sparse_paths for {machine['id']}")
     repo_path = config.get("repo_path")
-    if machine["role"] == "worker" and config.get("enabled"):
-        if not isinstance(repo_path, str) or not PurePosixPath(repo_path).is_absolute():
-            raise MachineError(f"enabled worker vault_sync requires absolute repo_path for {machine['id']}")
+    if machine["role"] == "worker":
+        if machine["platform"] == "macos" and checkout != "icloud":
+            raise MachineError(
+                f"macOS worker vault_sync requires Gitless iCloud checkout for {machine['id']}"
+            )
+        if checkout == "icloud" and "git_dir" in config:
+            raise MachineError(
+                f"Gitless iCloud worker vault_sync must not define git_dir for {machine['id']}"
+            )
+        if config.get("enabled") and (
+            not isinstance(repo_path, str) or not PurePosixPath(repo_path).is_absolute()
+        ):
+            raise MachineError(
+                f"enabled worker vault_sync requires absolute repo_path for {machine['id']}"
+            )
 
 
 def validate_vnc(machine: dict[str, Any]) -> None:
@@ -381,13 +412,11 @@ def command_init(args: argparse.Namespace) -> int:
     if args.registry.exists():
         raise MachineError(f"machine registry already exists: {args.registry}")
     payload = {
-        "schema_version": 3,
+        "schema_version": 4,
         "primary_machine_id": args.id,
         "vault_sync": {
             "remote": "origin",
             "branch": "master",
-            "default_sparse_paths": [".agents", "_system", ".githooks"],
-            "worker_poll_seconds": 300,
         },
         "machines": [
             {
@@ -409,6 +438,20 @@ def command_init(args: argparse.Namespace) -> int:
 def command_register_worker(args: argparse.Namespace, registry: dict[str, Any]) -> int:
     if any(machine["id"] == args.id for machine in registry["machines"]):
         raise MachineError(f"machine already registered: {args.id}")
+    if args.platform == "macos":
+        if not args.repo_path:
+            raise MachineError("macOS worker registration requires --repo-path for the iCloud Vault")
+        vault_sync = {
+            "enabled": True,
+            "checkout": "icloud",
+            "repo_path": args.repo_path,
+            "required": True,
+        }
+    else:
+        vault_sync = {
+            "enabled": False,
+            "required": False,
+        }
     registry["machines"].append(
         {
             "id": args.id,
@@ -424,13 +467,7 @@ def command_register_worker(args: argparse.Namespace, registry: dict[str, Any]) 
                 "_system/local/skills/infra-code-folder-and-computer-topology/"
                 f"private/My Machines/{args.id}.md"
             ),
-            "vault_sync": {
-                "enabled": True,
-                "checkout": "sparse",
-                "repo_path": args.repo_path,
-                "sparse_paths": [".agents", "_system", ".githooks"],
-                "required": True,
-            },
+            "vault_sync": vault_sync,
         }
     )
     payload = json.loads(json.dumps(registry))
@@ -441,6 +478,23 @@ def command_register_worker(args: argparse.Namespace, registry: dict[str, Any]) 
 def command_identify(args: argparse.Namespace, registry: dict[str, Any]) -> int:
     machine = resolve_machine(registry, args.name, enabled=False)
     root = Path(args.root).expanduser().resolve()
+    sync = machine.get("vault_sync", {})
+    if machine.get("platform") == "macos" and sync.get("checkout") == "icloud":
+        path = DEFAULT_MACHINE_ID_PATH
+        if not args.apply:
+            print(f"DRY RUN: write machine identity {machine['id']} to {path}")
+            return 0
+        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+        try:
+            temporary.write_text(f"{machine['id']}\n", encoding="utf-8")
+            temporary.chmod(0o600)
+            os.replace(temporary, path)
+        finally:
+            if temporary.exists():
+                temporary.unlink()
+        print(f"identified this Gitless iCloud worker as {machine['id']}")
+        return 0
     command = ["git", "config", "--local", "vault.machine-id", str(machine["id"])]
     if not args.apply:
         print("DRY RUN: " + " ".join(command))
@@ -530,7 +584,7 @@ def build_parser() -> argparse.ArgumentParser:
     worker_parser.add_argument("--platform", choices=("macos", "linux"), required=True)
     worker_parser.add_argument("--ssh-alias", required=True)
     worker_parser.add_argument("--home", required=True)
-    worker_parser.add_argument("--repo-path", required=True)
+    worker_parser.add_argument("--repo-path")
     worker_parser.add_argument("--apply", action="store_true")
 
     identify_parser = subparsers.add_parser("identify", help="store clone-local machine identity")

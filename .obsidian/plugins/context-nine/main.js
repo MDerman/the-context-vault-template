@@ -1577,6 +1577,12 @@ var VaultCommandRunner = class {
 
 // src/vault-cockpit.ts
 var VAULT_COCKPIT_VIEW_TYPE = "vault-cockpit-view";
+var FALLBACK_GIT_PREFLIGHT_COMMAND = {
+  id: "git-preflight",
+  label: "Git Preflight",
+  description: "Fetch origin and safely fast-forward master.",
+  args: ["git-preflight"]
+};
 var VaultCockpitView = class extends import_obsidian5.ItemView {
   constructor(leaf, plugin) {
     super(leaf);
@@ -1613,7 +1619,7 @@ var VaultCockpitView = class extends import_obsidian5.ItemView {
     this.runner.kill();
   }
   render() {
-    var _a;
+    var _a, _b;
     const { containerEl } = this;
     containerEl.empty();
     containerEl.addClass("omp-vault-cockpit");
@@ -1632,10 +1638,29 @@ var VaultCockpitView = class extends import_obsidian5.ItemView {
           "omp-vault-cockpit-primary-command",
           command.id === "refresh" ? "omp-vault-cockpit-refresh" : "",
           command.id === "sync" ? "omp-vault-cockpit-sync-icon" : ""
-        ].filter(Boolean).join(" ")
+        ].filter(Boolean).join(" "),
+        command.id === "sync" ? "sticky-note" : void 0
       );
       this.buttons.set(command.id, commandButton);
     }
+    const preflightCommand = (_b = this.findCommand("git-preflight")) != null ? _b : FALLBACK_GIT_PREFLIGHT_COMMAND;
+    const preflightButton = this.createCommandButton(
+      primaryActions,
+      preflightCommand,
+      "omp-vault-cockpit-primary-command omp-vault-cockpit-icon-command",
+      "cloud-download"
+    );
+    this.buttons.set(preflightCommand.id, preflightButton);
+    const commitButton = primaryActions.createEl("button", {
+      cls: "omp-vault-cockpit-command omp-vault-cockpit-primary-command omp-vault-cockpit-icon-command",
+      attr: {
+        title: "Commit all current Vault changes.",
+        "aria-label": "Commit all current Vault changes."
+      }
+    });
+    (0, import_obsidian5.setIcon)(commitButton, "cloud-upload");
+    commitButton.addEventListener("click", () => this.runGitCommit());
+    this.buttons.set("git-commit", commitButton);
     this.statusEl = primaryRow.createDiv({ cls: "omp-vault-cockpit-status", text: labelForStatus(this.status) });
     this.statusEl.dataset.status = this.status;
     const actionsToggle = primaryRow.createEl("button", {
@@ -1662,18 +1687,17 @@ var VaultCockpitView = class extends import_obsidian5.ItemView {
     }
     this.renderStatus();
   }
-  createCommandButton(parent, command, extraClass = "") {
-    const iconOnly = command.id === "sync";
+  createCommandButton(parent, command, extraClass = "", icon) {
     const button = parent.createEl("button", {
       cls: `omp-vault-cockpit-command ${extraClass}`.trim(),
-      text: iconOnly ? "" : command.label,
+      text: icon ? "" : command.label,
       attr: {
         title: command.description,
         "aria-label": command.description
       }
     });
-    if (iconOnly) {
-      (0, import_obsidian5.setIcon)(button, "sticky-note");
+    if (icon) {
+      (0, import_obsidian5.setIcon)(button, icon);
     }
     button.addEventListener("click", () => {
       this.runCommand(command);
@@ -1820,10 +1844,6 @@ $ ${event.command} ${event.spec.args.join(" ")}
       this.outputExpanded = !this.outputExpanded;
       this.renderOutput();
     });
-    const commitButton = row.createEl("button", { cls: "omp-vault-cockpit-git-commit", text: "Git Commit" });
-    commitButton.disabled = this.status === "running";
-    commitButton.addEventListener("click", () => this.runGitCommit());
-    this.buttons.set("git-commit", commitButton);
     this.statusEl = row.createDiv({ cls: "omp-vault-cockpit-status", text: labelForStatus(this.status) });
     this.statusEl.dataset.status = this.status;
     if (!this.outputExpanded) {

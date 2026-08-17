@@ -20,6 +20,8 @@ Root Periodic Notes defaults to `personal`. Opening today's daily note creates o
 
 Missing source notes are created from each context folder's local `_obsidian/templates/periodic/<period>-template.md`. `personal` has filled starter templates; other folders may intentionally use blank templates.
 
+Existing daily notes are append-only during generation: they are never replaced from the template. Refresh carries the most recent earlier note's daily task section forward by appending unchecked checklist items, ordinary text, and nested headings while omitting checked checklist lines and preserving everything already present in the destination note.
+
 ## Generated Rollups
 
 Vault rollups use Sync Embeds and live under:

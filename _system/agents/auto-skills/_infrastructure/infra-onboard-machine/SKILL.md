@@ -1,19 +1,17 @@
 ---
 name: infra-onboard-machine
-description: Adds, registers, enrolls, rebuilds, replaces, or recovers a Mac or Linux machine as a complete fleet member. Use for new-machine setup, machine registration, SSH or WireGuard enrollment, worker vault bootstrap, shared dependency installation, SOPS enrollment, global agent deployment, and reboot acceptance; registration alone is not completion.
+description: Onboards, rebuilds, replaces, recovers, or accepts a Mac or Linux machine as a complete fleet member. Use when the user asks to set up a new primary Mac, add a worker Mac, add a Linux worker, rebuild or replace a machine, enroll it in fleet access, or finish machine acceptance.
 ---
 
 # Infra · Onboard Machine
 
-Read [[new-machine-onboarding|New Machine Onboarding]] first and keep every applicable gate visible until verified or explicitly excluded.
+Read `$infra-code-folder-and-computer-topology`, its role model, private config README, registries, and the selected machine convention before operating.
 
-1. Use `$infra-code-folder-and-computer-topology` to load the primary/worker model, private config README, machine and repository registries, current clone identity, and target convention.
-2. Confirm whether the machine is new or rebuilt, primary or worker, Mac or Linux, and whether any destructive installation is explicitly authorized.
-3. For a worker Mac, use `$infra-onboard-worker-mac` for its Screen-Sharing-first overlay before continuing the generic workflow. Migration Assistant is optional.
-4. Read [[new-mac-or-linux-machine-setup|New Mac or Linux Machine Setup]] for the platform procedure. Read [[linux-machine-dependencies|Linux Machine Dependencies]] only for Linux.
-5. Read [[mattbook-remote-access-prerequisites|Primary Machine Remote Access Prerequisites]] before changing primary-host access. Resolve WireGuard and image repositories through topology config and follow their owning docs.
+1. Read [[shared-onboarding-and-acceptance|Shared Onboarding and Acceptance]] and keep every applicable gate visible until verified or explicitly excluded.
+2. Route by role: [[primary-mac-onboarding-and-acceptance|Primary Mac]], [[worker-mac-onboarding-and-acceptance|Worker Mac]], or [[linux-worker-onboarding-and-acceptance|Linux Worker]].
+3. Keep the registry entry disabled until the selected role document's reboot acceptance passes.
+4. Use `$infra-sync-code-workspaces` during onboarding for Code repositories and primary-owned Codex and Claude configuration. Do not recreate that sync here.
+5. Use `$infra-manage-fleet-terminal-workspaces` for terminal packages, profiles, Warp, cmux, tmux, workmux, and terminal acceptance.
 6. Use [[sops-key-enrollment-and-rotation|SOPS Key Enrollment and Rotation]] only when an owning repository requires shared SOPS access.
-7. Use `$infra-manage-fleet-terminal-workspaces` for terminal packages, profiles, Warp/cmux layouts, workmux, and terminal acceptance gates.
-8. Keep a new registry record disabled until dependencies, target-local authentication, access routes, sparse vault identity, hooks, skills, terminal integration, and reboot acceptance pass.
 
-Use bundled scripts from this skill directory for SOPS enrollment, global `AGENTS.md` deployment, and Claude provider launchers. Preview every supported mutation first, never transmit machine-local credentials, and stop with an exact manual checkpoint for GUI approval, authentication, physical access, or destructive work.
+Preview every supported mutation first. Never transmit machine-local credentials. Stop at the exact manual checkpoint for identity choice, GUI approval, authentication, physical access, or separately authorized destructive work, then resume the same procedure after the user completes it.

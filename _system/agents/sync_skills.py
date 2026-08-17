@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 import json
 import os
 import re
@@ -12,6 +13,9 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+import working_repo_skills
+import global_agent_configuration
 
 
 GROUP_RE = re.compile(r"^_[a-z0-9]+(?:-[a-z0-9]+)*$")
@@ -22,6 +26,7 @@ MARKER = ".vault-deps-projection.json"
 IGNORED = {".DS_Store", ".gitkeep", "README.md", ".vault-deps-projection.json"}
 CATEGORY_TOKENS = {
     "_agents": ("agents", "Agents"),
+    "_blogs": ("blog", "Blogs"),
     "_claude-seo": ("claude-seo", "Claude SEO"),
     "_code": ("code", "Code"),
     "_corey-marketing-skills": ("corey", "Corey Marketing Skills"),
@@ -39,6 +44,7 @@ CATEGORY_TOKENS = {
     "_video": ("video", "Video"),
 }
 PACKS_WITH_ROOT_SKILL = {"_claude-seo"}
+ROOT_SKILL_H1 = {"_vault": "# Vault"}
 
 
 class SyncError(RuntimeError):
@@ -107,14 +113,20 @@ def validate_big_endian_skill(skill_file: Path, name: str, category: str | None)
         allowed = ", ".join(CATEGORY_TOKENS)
         raise SyncError(f"Unknown skill category {category!r}: {skill_file.parent}; expected one of {allowed}")
     token, title = CATEGORY_TOKENS[category]
-    has_valid_prefix = name.startswith(f"{token}-") or (
-        category in PACKS_WITH_ROOT_SKILL and name == token
+    is_root_skill = name == token and (
+        category in PACKS_WITH_ROOT_SKILL or category in ROOT_SKILL_H1
     )
+    has_valid_prefix = name.startswith(f"{token}-") or is_root_skill
     if not has_valid_prefix:
         raise SyncError(
             f"Skill name must use category prefix {token!r} for {category}: {skill_file.parent} declares {name!r}"
         )
     h1 = read_first_h1(skill_file)
+    if is_root_skill and category in ROOT_SKILL_H1:
+        expected_root_h1 = ROOT_SKILL_H1[category]
+        if h1 != expected_root_h1:
+            raise SyncError(f"Root skill H1 must be exactly {expected_root_h1!r}: {skill_file}")
+        return
     expected = f"# {title} · "
     if h1 is None or not h1.startswith(expected) or not h1.removeprefix(expected).strip():
         raise SyncError(f"Skill H1 must use big-endian hierarchy starting {expected!r}: {skill_file}")
@@ -372,13 +384,48 @@ def apply_changes(changes: list[Change]) -> None:
             raise AssertionError(change.action)
 
 
-def sync(root: Path, home: Path, apply: bool) -> int:
+def print_agent_configuration(report: dict[str, object], *, apply: bool) -> None:
+    warning = report.get("warning")
+    if warning:
+        print(f"WARN  {warning}")
+    prefix = "APPLY " if apply else "PLAN  "
+    root_report = report.get("root")
+    if isinstance(root_report, dict):
+        for item in root_report.get("results", []):
+            if item["status"] != "match":
+                print(f"{prefix}{item['detail']}: {item['path']}")
+    home_report = report.get("home")
+    if isinstance(home_report, dict):
+        for item in home_report.get("results", []):
+            if item["status"] != "match":
+                print(f"{prefix}{item['detail']}: {item['path']}")
+
+
+def agent_configuration_change_count(report: dict[str, object]) -> int:
+    count = 0
+    for key in ("root", "home"):
+        section = report.get(key)
+        if isinstance(section, dict):
+            count += sum(item["status"] != "match" for item in section.get("results", []))
+    return count
+
+
+def sync(root: Path, home: Path, apply: bool, *, require_repo_sources: bool = False) -> int:
     agents = root / "_system/agents"
     catalog = agents / "skills"
+    working_plan = working_repo_skills.plan(root, require_sources=require_repo_sources)
     skills = [
         *scan_source(agents / "auto-skills", "auto"),
         *scan_source(agents / "manual-skills", "manual"),
         *scan_source(agents / "gh-skills", "gh"),
+        *(
+            Skill(
+                projected.name,
+                projected.path,
+                "local-auto" if projected.mode == "auto" else "local-manual",
+            )
+            for projected in working_plan.skills
+        ),
     ]
     names: dict[str, Skill] = {}
     for skill in skills:
@@ -386,7 +433,10 @@ def sync(root: Path, home: Path, apply: bool) -> int:
             raise SyncError(f"Duplicate skill name {skill.name!r}: {names[skill.name].path} and {skill.path}")
         names[skill.name] = skill
 
-    changes = dependency_changes(root, skills)
+    changes = dependency_changes(
+        root,
+        [skill for skill in skills if skill.source in {"auto", "manual", "gh"}],
+    )
     for skill in skills:
         if skill.source not in {"auto", "manual"}:
             continue
@@ -397,14 +447,45 @@ def sync(root: Path, home: Path, apply: bool) -> int:
             changes.append(Change(f"Enforce {skill.source} policy: {metadata}", "write", metadata, rendered))
     changes.extend(plan_catalog(catalog, skills))
     changes.extend(plan_discovery(home, catalog, set(names)))
+    backup_suffix = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    agent_preview = global_agent_configuration.sync_local(
+        root,
+        home,
+        apply=False,
+        backup_suffix=backup_suffix,
+    )
 
+    for warning in working_plan.warnings:
+        print(f"WARN  {warning}")
+    for action in working_plan.actions:
+        verb = "Rebuild" if action.kind == "replace" else "Remove stale"
+        print(("APPLY " if apply else "PLAN  ") + f"{verb} working repo projection: {action.target}")
     for change in changes:
         print(("APPLY " if apply else "PLAN  ") + change.description)
+    print_agent_configuration(agent_preview, apply=False)
     if apply:
+        agent_report = global_agent_configuration.sync_local(
+            root,
+            home,
+            apply=True,
+            backup_suffix=backup_suffix,
+        )
+        print_agent_configuration(agent_report, apply=True)
+        working_repo_skills.apply(working_plan, root)
         apply_changes(changes)
-        print(f"Synced {len(skills)} skills; {len(changes)} changes applied.")
+        total_changes = (
+            len(working_plan.actions)
+            + len(changes)
+            + agent_configuration_change_count(agent_report)
+        )
+        print(f"Synced {len(skills)} skills; {total_changes} changes applied.")
     else:
-        print(f"Validated {len(skills)} skills; {len(changes)} changes planned.")
+        total_changes = (
+            len(working_plan.actions)
+            + len(changes)
+            + agent_configuration_change_count(agent_preview)
+        )
+        print(f"Validated {len(skills)} skills; {total_changes} changes planned.")
     return 0
 
 
@@ -414,6 +495,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--dry-run", action="store_true", help="Preview changes (default).")
     mode.add_argument("--apply", action="store_true", help="Apply changes.")
+    parser.add_argument(
+        "--require-repo-sources",
+        action="store_true",
+        help="fail unless every configured repository-owned skill source is present",
+    )
     parser.add_argument("--root", type=Path, help="Vault root override.")
     parser.add_argument("--home", type=Path, help="Home directory override for tests.")
     return parser.parse_args(argv)
@@ -424,8 +510,16 @@ def main(argv: list[str] | None = None) -> int:
     root = (args.root or Path(__file__).resolve().parents[2]).resolve()
     home = (args.home or Path.home()).resolve()
     try:
-        return sync(root, home, args.apply)
-    except (SyncError, json.JSONDecodeError, OSError) as exc:
+        return sync(root, home, args.apply, require_repo_sources=args.require_repo_sources)
+    except (
+        SyncError,
+        working_repo_skills.ProjectionError,
+        global_agent_configuration.AgentConfigurationError,
+        json.JSONDecodeError,
+        OSError,
+        TypeError,
+        ValueError,
+    ) as exc:
         print(f"Skill sync failed: {exc}", file=sys.stderr)
         return 1
 

@@ -9,7 +9,7 @@
 
 </div>
 
----
+***
 
 **Sync Embeds** transforms standard Obsidian embeds into live, two-way synced blocks. Edit any note or section directly from where you embed it, without ever needing to open the source file.
 
@@ -19,7 +19,7 @@ It's designed to feel seamless, stable, and completely native to the Obsidian ex
 
 > *Edit any embed, anywhere, and have it instantly save to the original note.*
 
----
+***
 
 ## Core Features
 
@@ -31,7 +31,7 @@ It's designed to feel seamless, stable, and completely native to the Obsidian ex
 - 🎭 **Custom Display Names** — Show friendly aliases instead of raw file paths for cleaner, more readable embeds.
 - ⚡ **Lightweight & Stable** — Built from the ground up to be robust, with lazy loading, smart caching, and a focus on performance.
 
----
+***
 
 ## How it Works
 
@@ -39,7 +39,7 @@ Instead of just rendering the content, Sync Embeds creates a hidden, fully funct
 
 For section embeds, an intelligent viewport system restricts editing to only the target section while maintaining full synchronization with the source file.
 
----
+***
 
 ## Installation
 
@@ -63,7 +63,7 @@ _Coming Soon! This plugin is currently awaiting review to be added to the offici
 5. Copy the downloaded files into this new folder.
 6. Restart Obsidian, then enable the plugin under `Settings` → `Community plugins`.
 
----
+***
 
 ## Usage
 
@@ -135,7 +135,7 @@ Override global settings for individual embeds:
 - `maxHeight` — Set maximum height before scrolling
 - `title` — Show/hide title (`true` or `false`)
 
----
+***
 
 ## Smart Features
 
@@ -172,7 +172,7 @@ Fine-tune appearance and behavior in **Settings → Sync Embeds**:
 - Focus highlighting
 - Lazy loading threshold
 
----
+***
 
 ## Use Cases
 
@@ -202,13 +202,13 @@ Fine-tune appearance and behavior in **Settings → Sync Embeds**:
 ```
 ````
 
----
+***
 
 ## Philosophy
 
 The goal of Sync Embeds is to make your notes more dynamic and interconnected. It removes the friction of editing transcluded content, allowing you to build powerful dashboards, manage recurring tasks, and maintain a single source of truth for blocks of information without ever leaving the note you're working on.
 
----
+***
 
 ## Contributing & Feedback
 
@@ -217,7 +217,7 @@ This plugin was built with and for the community. If you find a bug, have a feat
 - **Issues & Bug Reports:** [GitHub Issues](https://github.com/uthvah/sync-embeds/issues)
 - **Feature Requests:** [GitHub Discussions](https://github.com/uthvah/sync-embeds/discussions)
 
----
+***
 
 <div align="center">
 

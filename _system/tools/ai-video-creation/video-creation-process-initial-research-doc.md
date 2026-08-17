@@ -1,6 +1,6 @@
 Here is a detailed, professional analysis of the video transcript and the provided VSCode screenshot.
 
----
+***
 
 # AI-Driven Video Production System: Technical Analysis & Pipeline Documentation
 
@@ -17,7 +17,7 @@ From a single prompt (the `/goal` command), the agent executed the following seq
 
 The entire generation took 1 hour and 15 minutes, consuming 380k tokens of Claude Fable 5 max reasoning (costing approximately $80 based on $10/M input, $50/M output rates).
 
----
+***
 
 ## B) Directory Structure & Recommended Files
 
@@ -58,14 +58,14 @@ To ensure this pipeline functions seamlessly, the workspace should also include 
   ```
 * **`scripts/generate-composition.js`** — The file seen in the diff editor of the video, utilized to calculate correct timestamps and export the JSON sequence data mapping voice timings to HyperFrames overlays.
 
----
+***
 
 ## C) The Prompt Used
 The exact prompt utilized at the beginning of the workspace session is:
 
 > "Your goal is to create an entire YouTube video that was completely built by you. Somewhere between two to four minutes. The packaging of the video is going to be 'Claude Fable 5 made this entire video.' You are going to script it. Generate the video using your HeyGen avatar. And then you're going to fully edit it. You can follow the best practices within your HeyGen Studio project and your Hyperframes Editor project. The video should be about Claude Fable 5 release and what it's really, really good at, and explaining how you actually were able to automate this video by using Eleven Labs for the voice clone, breaking it up into 60-second chunks of voice so that the voice doesn't degrade, sending that over to HeyGen, and making sure that you're using the avatar 5 model because that's the best one. And if you run into that limitation where over API you can't use avatar 5, then you have to use playwright to be able to go in there yourself and upgrade it to avatar 5. And then once you have all of the videos done, all of the HeyGen Avatar videos done, you will combine that all together and then you will edit it using Hyperframes. You should always keep the Avatar visible, whether that is left card slide-ins or a rounded crop with a drop shadow. This should feel very professional and engaging. It should feel like it was done by a human editor, and there should be visuals, animations, motion graphics that explain the concepts that are being talked about. And so I'm looking for a fully polished YouTube video that I can upload. Now after that, you have to verify it. So use a dynamic workflow to visually verify and validate that the entire video is perfect. The motion graphics come in on time. There's nothing out of bounds. Everything is aesthetic, and everything fits within the goal of a completely finished and fully vetted and reviewed YouTube video with motion graphics that was completely built by you, Claude Code, using the new model called Fable 5 on max reasoning. You should only stop when you are 100% confident that this is a high-quality video. This will be going out on my YouTube channel with 800,000 subscribers. So if it doesn't look good or if there's anything in the script that is not based on fact, it will damage my reputation. So that's the context as to why this is important. I'm looking for the final deliverable only, that I don't even have to review. I can go ahead and post because I have so much trust that you have fully built this out, reviewed it, verified it, and it's ready to go."
 
----
+***
 
 ## D) Services Used: Registration & API Management
 
@@ -103,7 +103,7 @@ The exact prompt utilized at the beginning of the workspace session is:
   2. Locate the **Developer API** section.
   3. Generate and copy your API Token.
 
----
+***
 
 ## E) Custom CLI Skills/Scripts
 
@@ -249,7 +249,7 @@ To help you refine and scale this autonomous video generation process, the follo
     *Source: Open-Source CLI & Library*  
     An offline-first tool optimized for generating styled subtitles for vertical layouts (TikTok, Shorts) using standard web CSS animations.
 
----
+***
 
 ### 2. No-Code & Low-Code Workflow Implementations
 
@@ -263,7 +263,7 @@ To help you refine and scale this autonomous video generation process, the follo
     *Source: Make.com Documentation*  
     A tutorial detailing how to use Make’s conditional routers, iterators, and webhooks. It allows you to trigger automated video assembly when data updates in CRMs or spreadsheets, handling error paths dynamically.
 
----
+***
 
 ### 3. API & SDK Integration Guides
 
@@ -277,7 +277,7 @@ To help you refine and scale this autonomous video generation process, the follo
     *Source: GitHub Repository*  
     An official collection of modular, pre-configured command-line tools for AI assistants. These allow coding models (like Claude) to easily access text-to-speech, sound effects synthesis, and audio isolation tasks.
 
----
+***
 
 ### 4. Animation & Motion Design Resources (GSAP & FFmpeg)
 

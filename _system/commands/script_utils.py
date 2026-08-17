@@ -77,7 +77,7 @@ def is_context_folder(path: Path) -> bool:
     registered = str(metadata.get("context_registered", "true")).strip().lower()
     if registered in {"false", "no", "0"}:
         return False
-    return bool(metadata.get("status") or metadata.get("context_type"))
+    return bool(metadata.get("status") or "context_registered" in metadata)
 
 
 def discover_context_folders(root: Path) -> list[str]:

@@ -37,8 +37,8 @@ Each context folder owns current operating information for one entity or domain:
   _obsidian/
     attachments/
     bases/
-    content/            # content-enabled only
-    content-schedules/  # content-enabled only
+    content/            # only when a content capability is selected
+    content-schedules/  # only when schedules are enabled
     epics/
     excalidraw/
     periodic/<period>/
@@ -53,7 +53,7 @@ Context folder note is local routing/control note. Main controls:
 ```yaml
 ---
 status: active
-content_enabled: false
+content_schedules_enabled: true
 default_capture: true
 ---
 ```
@@ -61,7 +61,8 @@ default_capture: true
 - `status: active`: included by default in generated rollups.
 - `status: archived`: retained but excluded from default rollups.
 - blank/missing status: not active.
-- `content_enabled: true`: enables content storage, cadence, schedules, and views.
+- Content capabilities are inferred from their item/publication folders; they are not stored as context types or broad enablement flags.
+- `content_schedules_enabled: true`: enables cadence and schedule generation. Omit it when schedules are not wanted.
 - `default_capture: true`: preferred context for unspecific capture; fallback is first active context.
 - Entity operating sections such as `## Identity` and `## Momentum` are optional human organization, not generator inputs.
 
@@ -105,7 +106,7 @@ Templates live under each context folder's `_obsidian/templates/periodic/`. Comm
 
 ## Content
 
-`_obsidian/content` stores owned content items, ideas, publication definitions, and drafts. It is not task system; executable work about content belongs in `_obsidian/tasks`.
+`_obsidian/content` stores selected owned-content capabilities. Blogs, social content, and newsletters can be enabled independently. It is not the task system; executable work about content belongs in `_obsidian/tasks`.
 
 Content state lives in note frontmatter. `publish_date` drives calendar views; `status` drives kanban views. Cadence config generates fixed four-week schedule notes.
 
@@ -126,11 +127,13 @@ SOP: [[_system/docs/commands/Attachments|Attachments]].
 - `local/`: user-specific general configuration, per-skill configuration, env tooling, and runtime state. Read [[_system/local/README|Local Vault Data]].
 - `docs/`: command, Obsidian, and workflow documentation.
 - `inbox/`: Brain Dump and attachment ingestion files.
-- `migrations/`: empty registry for future public-upgrade migrations.
-- `sync/`: rclone backup/sync tooling.
+- `migrations/`: idempotent public-upgrade migrations and their registry.
+- `sync/`: disabled, unused, and unsupported historical rclone backup/sync tooling; keep its automation off.
 - `tools/`: reusable tools outside `vault` dispatcher.
 
 Generated files carry managed markers. Edit source notes/docs, not generated outputs.
+
+Machine-wide operational state for repository reconciliation under `~/Code` lives outside the vault at `~/Code/.workspace-sync/`; vault-owned configuration and vault-specific state remain under `_system/local`. Follow [[_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/README-machine-runtime-state|Machine Runtime State]].
 
 ## Refresh And Generated Views
 

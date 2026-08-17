@@ -27,12 +27,12 @@ def parse_entities(value: str | None) -> list[str]:
     return [item.strip() for item in value.split(",") if item.strip()]
 
 
-def entity_content_enabled(root: Path, entity: str) -> bool:
+def entity_content_schedules_enabled(root: Path, entity: str) -> bool:
     note = context_folder_note_path(root / entity)
     if not note.exists():
         return False
     for line in note.read_text(encoding="utf-8", errors="replace").splitlines():
-        if line.startswith("content_enabled:"):
+        if line.startswith("content_schedules_enabled:"):
             return line.split(":", 1)[1].strip().lower() in {"true", "yes", "1"}
     return False
 
@@ -55,7 +55,7 @@ def generate_derived_views(
     explicit = explicit_entities or []
     selected = periodic.resolve_entities(root, configured, explicit, include_all)
     generated_at = dt.datetime.now().isoformat(timespec="seconds")
-    content_entities = [entity for entity in selected if entity_content_enabled(root, entity)]
+    content_entities = [entity for entity in selected if entity_content_schedules_enabled(root, entity)]
     schedules = content.generate_content_schedules(
         root,
         content_entities,

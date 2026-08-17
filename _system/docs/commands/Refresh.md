@@ -16,7 +16,7 @@ Refresh runs, in order:
 2. Brain Dump ingestion only when `--sync-brain-dump` is passed.
 3. Best-effort Google Calendar TaskNotes mirror with orphan mirror-event pruning.
 4. Content schedule generation.
-5. Source periodic-note creation, daily checklist carry-forward, and vault Sync Embed rollups.
+5. Source periodic-note creation, non-destructive daily task-section carry-forward, and vault Sync Embed rollups.
 6. `Dashboard.md` generation.
 7. Best-effort local Git maintenance.
 8. Successful-refresh notification for Context Nine periodic-tab rollover.
@@ -31,9 +31,11 @@ vault refresh-schedule status
 vault refresh-schedule unregister
 ```
 
+Scheduled and manual refresh are primary-only on Macs. `vault refresh-schedule register` refuses a registered worker, a stale worker LaunchAgent exits without running refresh, and worker-Mac bootstrap writes a persistent machine-local worker block before unregistering any existing schedule. A Gitless iCloud worker must not run `vault refresh`; complete file work there, wait for iCloud upload, and let the primary run refresh and Git coordination after [[Vault Git Sync|Mac-to-Mac handoff]].
+
 The schedule is configured in `_system/local/vault.json` under `refresh_schedule`. Use `timezone: local` to resolve each laptop's current system timezone at runtime. The LaunchAgent runs at load, at the configured time, and every `catchup_interval_seconds` seconds as an idempotent due check. A successful refresh writes the local date to `~/Library/Application Support/obsidian-context-vault/last-refresh-date.txt`; until that stamp matches today, failed refreshes retry according to `retry_attempts` and `retry_delay_seconds`.
 
-Scheduled refreshes use best-effort Git preflight: fetch first, safely fast-forward `master` when incoming changes do not overlap local work, and preserve the working tree when Git blocks the update. Network, overlap, or divergence failures warn but cannot block local daily-note, periodic-rollup, or Dashboard generation. Manual `vault refresh` retains fatal preflight unless `--skip-git-preflight` or `--best-effort-git-preflight` is passed explicitly. Daily checklist carry-forward uses the most recent earlier daily note, even when one or more calendar days have no note.
+Scheduled refreshes use best-effort Git preflight: fetch first, safely fast-forward `master` when incoming changes do not overlap local work, and preserve the working tree when Git blocks the update. Network, overlap, or divergence failures warn but cannot block local daily-note, periodic-rollup, or Dashboard generation. Manual `vault refresh` retains fatal preflight unless `--skip-git-preflight` or `--best-effort-git-preflight` is passed explicitly. Daily carry-forward uses the most recent earlier daily note, even when one or more calendar days have no note. Under the daily task section, unchecked checklist items plus ordinary text and nested headings are appended without duplicating existing content; checked checklist lines are not carried. An existing daily note is never regenerated from its template, so refresh preserves content added ahead of time or by Obsidian's calendar UI.
 
 After a successful refresh for the machine's current local date, refresh atomically writes `_system/local/state/refresh-complete.json`. Context Nine watches that ignored marker and replaces actual open Markdown tabs for past periodic notes with the current note in the same context or `_system` rollup scope. Current and future-dated periodic notes remain open. Sidebar Outline state, recent-file history, and `.obsidian/workspace.json` are not edited.
 

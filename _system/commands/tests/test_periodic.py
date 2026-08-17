@@ -184,7 +184,7 @@ generated: false
 
             self.assertIn("- [ ] alpha\n- [ ] beta\n- [ ] gamma\n- [ ] delta", text)
             self.assertNotIn("- [x] done", text)
-            self.assertNotIn("- [ ] \n", text)
+            self.assertIn("- [ ] \n", text)
 
             periodic.generate_periodic_notes(
                 root,
@@ -302,6 +302,125 @@ generated: false
             self.assertIn("- [ ] Another prompt\n- [ ] Ship new thing", text)
             self.assertIn("## Missing Heading\n- [ ] Carry into appended heading", text)
             self.assertNotIn("- [ ] not a checklist", text)
+
+    def test_carries_text_and_nested_headings_but_not_checked_tasks(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            entity = make_periodic_entity(
+                root,
+                """---
+type: periodic
+period: daily
+entity: personal
+period_id: <% tp.file.title %>
+generated: false
+---
+## 📒 ~5 Tasks I want to get done today
+- [ ]
+***
+## Notes
+""",
+            )
+            previous = entity / "_obsidian/periodic/daily/2026-06-11.md"
+            previous.parent.mkdir(parents=True)
+            previous.write_text(
+                """---
+type: periodic
+period: daily
+entity: personal
+period_id: 2026-06-11
+generated: false
+---
+## 📒 ~5 Tasks I want to get done today
+Keep this ordinary text.
+- [ ] carry root task
+- [x] completed root task
+##### Later
+
+Keep this later note too.
+- [ ] carry later task
+- [X] completed later task
+***
+## Notes
+Earlier note only
+""",
+                encoding="utf-8",
+            )
+            current = entity / "_obsidian/periodic/daily/2026-06-12.md"
+            original_current = """---
+type: periodic
+period: daily
+entity: personal
+period_id: 2026-06-12
+generated: false
+---
+## 📒 ~5 Tasks I want to get done today
+- [ ] future note task
+Future note text must survive.
+***
+## Notes
+DO NOT DELETE THIS
+"""
+            current.write_text(original_current, encoding="utf-8")
+
+            periodic.generate_periodic_notes(
+                root,
+                ["personal"],
+                [],
+                False,
+                dt.date(2026, 6, 12),
+                generated_at="2026-06-12T02:00:00",
+            )
+            text = current.read_text(encoding="utf-8")
+
+            self.assertIn("- [ ] future note task", text)
+            self.assertIn("Future note text must survive.", text)
+            self.assertIn("DO NOT DELETE THIS", text)
+            self.assertIn("Keep this ordinary text.", text)
+            self.assertIn("- [ ] carry root task", text)
+            self.assertIn("##### Later\n\nKeep this later note too.\n- [ ] carry later task", text)
+            self.assertNotIn("completed root task", text)
+            self.assertNotIn("completed later task", text)
+            merged_lines = text.splitlines()
+            cursor = 0
+            for original_line in original_current.splitlines():
+                cursor = merged_lines.index(original_line, cursor) + 1
+
+            first_refresh = text
+            periodic.generate_periodic_notes(
+                root,
+                ["personal"],
+                [],
+                False,
+                dt.date(2026, 6, 12),
+                generated_at="2026-06-12T02:00:00",
+            )
+            self.assertEqual(first_refresh, current.read_text(encoding="utf-8"))
+
+    def test_existing_managed_daily_note_is_never_regenerated_from_template(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            entity = make_periodic_entity(root, "TEMPLATE CONTENT\n")
+            current = entity / "_obsidian/periodic/daily/2026-06-12.md"
+            current.parent.mkdir(parents=True)
+            current.write_text(
+                "---\nmanaged_by: vault.periodic\n---\nUSER CONTENT\n",
+                encoding="utf-8",
+            )
+
+            periodic.generate_periodic_notes(
+                root,
+                ["personal"],
+                [],
+                False,
+                dt.date(2026, 6, 12),
+                generated_at="2026-06-12T02:00:00",
+            )
+
+            self.assertEqual(
+                "---\nmanaged_by: vault.periodic\n---\nUSER CONTENT\n",
+                current.read_text(encoding="utf-8"),
+            )
 
 
 if __name__ == "__main__":

@@ -39,6 +39,16 @@ class ReleaseTests(unittest.TestCase):
         self.assertEqual(release.bump_semver(current, "minor"), release.SemVer(1, 3, 0))
         self.assertEqual(release.bump_semver(current, "major"), release.SemVer(2, 0, 0))
 
+    def test_repo_slug_normalizes_https_and_ssh_urls(self) -> None:
+        self.assertEqual(
+            release.repo_slug("https://github.com/MDerman/the-context-vault-template.git"),
+            "MDerman/the-context-vault-template",
+        )
+        self.assertEqual(
+            release.repo_slug("git@github.com:MDerman/the-context-vault-template.git"),
+            "MDerman/the-context-vault-template",
+        )
+
     def test_choose_version_rejects_duplicate_tag(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

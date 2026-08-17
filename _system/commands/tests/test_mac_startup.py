@@ -326,7 +326,8 @@ class MacStartupTests(unittest.TestCase):
         self.assertIn('"HIDKeyboardModifierMappingSrc":0x700000035', text)
         self.assertIn('"HIDKeyboardModifierMappingDst":0x700000064', text)
         self.assertIn('open-application:*', text)
-        self.assertIn('/usr/bin/open -gja -b "$bundle_id"', text)
+        self.assertIn('/usr/bin/open -gj -b "$bundle_id"', text)
+        self.assertNotIn('/usr/bin/open -gja -b "$bundle_id"', text)
 
     def test_status_reports_config_runtime_mapping_and_legacy_state(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

@@ -174,6 +174,31 @@ class DependencySetupTests(unittest.TestCase):
             projection = deps.load_config(root)[0].projections[0]
             self.assertEqual(projection.title_override, "Code · Example")
 
+    def test_load_config_accepts_disabled_repo_sync(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            config = root / deps.CONFIG_PATH
+            config.parent.mkdir(parents=True)
+            config.write_text(
+                json.dumps(
+                    {
+                        "repos": [
+                            {
+                                "id": "example",
+                                "url": "https://example.invalid/repo.git",
+                                "path": str(root / "checkout"),
+                                "sync_enabled": False,
+                                "projections": [],
+                            }
+                        ]
+                    }
+                )
+                + "\n"
+            )
+
+            item = deps.load_config(root)[0]
+            self.assertFalse(item.sync_enabled)
+
     def test_manual_skill_pack_projects_prefixed_skills_and_readme(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "vault"
@@ -323,6 +348,73 @@ class DependencySetupTests(unittest.TestCase):
                 deps.sync(root, [item], apply=True)
             setup.assert_called_once_with(root, item, True, force_build=True)
 
+    def test_sync_skips_disabled_repo_and_preserves_projection(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            checkout = root / "checkout"
+            target = root / "projected-skill"
+            target.mkdir()
+            (target / "SKILL.md").write_text("frozen snapshot\n")
+            projection = deps.Projection(
+                repo_id="example",
+                repo_path=checkout,
+                source="skills/example",
+                target="projected-skill",
+                type="manual-skill",
+                managed=True,
+            )
+            item = deps.Repo(
+                "example",
+                "https://example.invalid/repo.git",
+                checkout,
+                "main",
+                None,
+                None,
+                [projection],
+                sync_enabled=False,
+            )
+
+            with (
+                patch.object(deps, "sync_repo") as sync_repo,
+                patch.object(deps, "apply_projection") as apply_projection,
+                patch.object(deps, "run_repo_setup") as setup,
+                patch.object(deps, "run_skill_sync") as skill_sync,
+            ):
+                deps.sync(root, [item], apply=True)
+
+            sync_repo.assert_not_called()
+            apply_projection.assert_not_called()
+            setup.assert_not_called()
+            skill_sync.assert_not_called()
+            self.assertEqual((target / "SKILL.md").read_text(), "frozen snapshot\n")
+
+    def test_status_reports_disabled_repo_and_projection(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            projection = deps.Projection(
+                repo_id="example",
+                repo_path=root / "missing",
+                source="skills/example",
+                target="projected-skill",
+                type="manual-skill",
+                managed=True,
+            )
+            item = deps.Repo(
+                "example",
+                "https://example.invalid/repo.git",
+                root / "missing",
+                "main",
+                None,
+                None,
+                [projection],
+                sync_enabled=False,
+            )
+            with patch.object(deps, "remote_rev", return_value=None):
+                payload = deps.status_payload(root, [item])
+
+            self.assertFalse(payload["repos"][0]["sync_enabled"])
+            self.assertEqual(payload["repos"][0]["projections"][0]["state"], "disabled")
+
     def test_setup_failure_propagates(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -367,6 +459,40 @@ class DependencySetupTests(unittest.TestCase):
             sync_repo.assert_not_called()
             setup.assert_not_called()
             self.assertTrue((root / projection.target / "SKILL.md").exists())
+
+    def test_project_auto_skills_skips_disabled_repo(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "vault"
+            checkout = Path(tmp) / "checkout"
+            source = checkout / "skills/example"
+            source.mkdir(parents=True)
+            (source / "SKILL.md").write_text("---\nname: example\n---\n")
+            projection = deps.Projection(
+                repo_id="example",
+                repo_path=checkout,
+                source="skills/example",
+                target="_system/agents/auto-skills/_creative/example",
+                type="auto-skill",
+                managed=True,
+            )
+            item = deps.Repo(
+                "example",
+                "https://example.invalid/repo.git",
+                checkout,
+                "main",
+                None,
+                None,
+                [projection],
+                sync_enabled=False,
+            )
+            with (
+                patch.object(deps, "apply_projection") as apply_projection,
+                patch.object(deps, "run_skill_sync") as skill_sync,
+            ):
+                deps.project_auto_skills(root, [item], apply=True)
+
+            apply_projection.assert_not_called()
+            skill_sync.assert_not_called()
 
 
 if __name__ == "__main__":

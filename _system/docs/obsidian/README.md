@@ -136,6 +136,8 @@ Folder rules:
 
 Periodic templates may include `{{current_content_schedule_sync_embed}}`; periodic generator replaces it with active four-week schedule embed when content cadence is enabled.
 
+Use `***` for thematic breaks in template and note bodies. Standalone `---` lines are reserved for opening and closing YAML frontmatter; using them in a body can turn the preceding line into a Setext heading while editing.
+
 Shared entity-note templates live under `_system/_obsidian/templates/shared/entity-notes/` and are copied/adapted into context control notes. Vault rollups under `_system/_obsidian/periodic/` are script-owned and have no manual Templater rules.
 
 ## File Explorer Note Creation
@@ -184,14 +186,15 @@ Omnisearch (`omnisearch`) is preferred relevance-ranked search. Doubleshift (`ob
 Primary shortcuts:
 
 - `Shift` then `Shift`: Omnisearch vault search.
-- `Cmd+Shift+F`: vault-search fallback.
-- `Cmd+F`: Omnisearch in-file search for Markdown.
+- `Cmd+F`: core find in the current file.
+- `Alt+Cmd+F`: Omnisearch in-file search for Markdown.
 - `Cmd+Shift+P`: core Global Search.
 - `Tab` from vault result: inspect matches within selected note.
 - `Alt+T`: TaskNotes new task.
 - `Alt+Cmd+T`: TaskNotes new task with selected Markdown in details.
 - `Alt+Cmd+Y`: append selection to existing TaskNotes task and route selected attachments.
-- `Alt+Cmd+R`: immediately reveal the open note in the File Explorer pane.
+- `Cmd+Shift+F`: immediately reveal the open note in the File Explorer pane.
+- `Alt+Cmd+Shift+F`: reveal the open note in Finder.
 - Context Nine's hovered/selected-file delete action is available from right-click menus and the command palette, without a keyboard shortcut.
 - `Alt+Cmd+Backspace`: deliberate current-file delete.
 - `Cmd+N`: create note in hovered File Explorer folder, else normal new-note behavior.

@@ -1,7 +1,6 @@
 ---
 status: active
-context_type: business
-content_enabled: true
+content_schedules_enabled: true
 default_capture: false
 context_registered: true
 ---

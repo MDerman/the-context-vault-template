@@ -3,7 +3,7 @@
   "pointer_version": "https://git-lfs.github.com/spec/v1",
   "summary": {
     "files": 5947,
-    "logical_bytes": 2269407705
+    "logical_bytes": 2272125600
   },
   "files": [
     {
@@ -29089,270 +29089,6 @@
       "pointer_blob": "9e73f6aae9e1173029b8103fb4bb56075afebaec"
     },
     {
-      "path": "ctx9/_obsidian/attachments/Pasted image 20260526205606.png",
-      "sha256": "df92d91faae002582512ee575452b1d757b3876438ee6909bc662eefba32b0d1",
-      "size": 501678,
-      "pointer_blob": "5625e4b2c7a311b6ff674c1f740b12d3575bf40d"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/Pasted image 20260526205620.png",
-      "sha256": "41f656f446e5e8af0a202d42367d6577eb7255b16c8a3c47f6d8ab4064cb59b0",
-      "size": 600381,
-      "pointer_blob": "79f46b1cc7da4ef5af5461c924849eefb8742fad"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/Pasted image 20260526205641.png",
-      "sha256": "430f8cde331e6749aae90e6c4cfc89e4eaccd56a408ba3ca5148d1584989f25c",
-      "size": 626146,
-      "pointer_blob": "b82ea654cf956f098a35b5f5921468a351c02651"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/Pasted image 20260526205648.png",
-      "sha256": "406d446665abee2d5390903dcfdffe883b552601409a88fcc5ef8b2c3007b6c1",
-      "size": 333619,
-      "pointer_blob": "fd645528a1533b8fd0f01576c29d46a17c7e221a"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/bonus_balances/bonus-balances-image-001.png",
-      "sha256": "3eb13c412ab617e5904a97d261d6a84d9284df052bcdbcf4e07eb6f1f4669bc0",
-      "size": 300384,
-      "pointer_blob": "0f32dd5b7542629426246f676b28ec6ed64ee09b"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/corporate_accounts/corp_accounts_account_page/corp-accounts-account-page-image-001.png",
-      "sha256": "654679043d927fddbc51e17653d2ea2f1975cbc82a858ac22dca6a39149d4727",
-      "size": 195236,
-      "pointer_blob": "ac2e652f457cfe7c0d4c1a620f47720cf2412425"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/corporate_accounts/corp_accounts_account_page/corp-accounts-account-page-image-002.png",
-      "sha256": "4c4e4e7f7501a903273386dcaf46564a40632dcef5be0f1853a1562b198d723a",
-      "size": 347899,
-      "pointer_blob": "e0bddf7106e2a5bea6028cf7b3c288c3055a7f9d"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/corporate_accounts/corp_accounts_account_page/corp-accounts-account-page-image-003.png",
-      "sha256": "db11268df900f8bb515dd8ef7bae9a45b1cb3bde56ab52b7984196af929009d7",
-      "size": 218071,
-      "pointer_blob": "23f40f5d5e33118631e8e608b92cc7ace223ba76"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/corporate_accounts/corp_accounts_account_page/corp-accounts-account-page-image-004.png",
-      "sha256": "1b98d1df171954e6ffae3a754ee6a309bbdaff7534d7c62dea47355ad403d328",
-      "size": 217957,
-      "pointer_blob": "cbb61607606479f3cc736967d23ed244cd73f95f"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/dr_align/MicrosoftTeams-image.png",
-      "sha256": "0a0d52d29ec0e1a3c0e665a2ed13909bdaae2aa3c52d03afa3a19e46e56acb87",
-      "size": 104369,
-      "pointer_blob": "a79e6c32cf08823af1c75785982fc8e2e4a2759c"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/dr_align/dr-align-image-001.png",
-      "sha256": "c3a5bced64f42e6a9827d30d521d9ae03c2e13006857d260dc2e74590aede166",
-      "size": 650958,
-      "pointer_blob": "3a02588472f1e9565fffedbf15a7af895f838ea2"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/dr_align/dr-align-image-002.png",
-      "sha256": "267191fe96287a5595a4b74820be7f7c51baf0c7dba931aad69052b80bb42df3",
-      "size": 379668,
-      "pointer_blob": "ce09c54293bfb649a4e7f241144274fc9f62d1ce"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/dr_align/dr-align-image-003.png",
-      "sha256": "9bc6aea00b3ebdbceca742c31aa37630b484d4b4efc37ac48337e413c5b0c3aa",
-      "size": 90227,
-      "pointer_blob": "ee20ab0af9b70c7df4701bc83caf281ea74676f3"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/finance_recons/finance-recons-image-001.png",
-      "sha256": "6015a20dfd3d989ca8e6e18bfb66f945180a7caa44847c99f43c3b453c05ead3",
-      "size": 190837,
-      "pointer_blob": "2d17a8070cd9aacb33ff32b34e1897b7f3912fae"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/finance_recons/finance-recons-image-002.png",
-      "sha256": "b4c4d8500d03c105df00b3a75bbcd08078dc13452261e9318c083dfe9367f39a",
-      "size": 3082009,
-      "pointer_blob": "81481a3640ce1bbe64dc2d885b1bf58db7dfe893"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/flash-image-001.png",
-      "sha256": "c2deba5f2e60b4ca8b00fb55628653a9523d645ddbfd162f0b794bc37fb7502d",
-      "size": 261813,
-      "pointer_blob": "d03ea523eb0470c4ab12fb6d55997f0df09890a8"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/flash-image-002.png",
-      "sha256": "af9157198b1c77673e3057b22cad3b9c9ab9cb5f42135a16c7ab5ee3e4e0f388",
-      "size": 1163312,
-      "pointer_blob": "5fecfc3f7b05a338b8956ef0144d68237627e246"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/flash-image-003.png",
-      "sha256": "e74c610c353cc7f0b256574c90ca639510360d355ed00dd2cc2651e2e2b1c703",
-      "size": 1280108,
-      "pointer_blob": "382ba66bf8f7840023e79e022a9d56d4eea44d75"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/flash-image-004.png",
-      "sha256": "82d82fd11266bb613c42acad8614415e51c40960237b37bdd16a8a1c476613a9",
-      "size": 372609,
-      "pointer_blob": "7a8b671fa3463f0605449c9a2232b9bad18e7b78"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/flash-image-005.png",
-      "sha256": "86c820175ae323af655b559a1dc9b78a41eca1e0f33863e10c629b19ff3dc456",
-      "size": 465310,
-      "pointer_blob": "8eb443e37349c39305a36d8192f6735e8b287067"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/flash-image-006.png",
-      "sha256": "a9d8f3d639d337796782db898f0e2fc4f953069936a900c196c92a5fbdcf289f",
-      "size": 562067,
-      "pointer_blob": "c09bf9bd3bd2916d4a201dfa239a4295b4b2fb8a"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/temp_flash_notes/temp-flash-notes-image-001.png",
-      "sha256": "b09ab9f7d1222cde0c9a7ef4212260fb7c5773130ccd1071f2bbb1d5e0bc1b35",
-      "size": 1107434,
-      "pointer_blob": "ef0d60d2a8707a9a08be1777bf851acf82e1c3ae"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/clients/Flash/temp_flash_notes/temp-flash-notes-image-002.png",
-      "sha256": "79248e00c6b8eaeeae6179d890089c4e29be3d0852005e41b06d3c13c04c7c74",
-      "size": 912476,
-      "pointer_blob": "ff9d5856b8b21bffdc3de6c9c781da57bf2aa434"
-    },
-    {
-      "path": "ctx9/_obsidian/attachments/ctx9-pasted-image-20260624160553.png",
-      "sha256": "92cc70ded715d158575321ef89bb2e4373fd317f774392ef5450d5ae37256c85",
-      "size": 314936,
-      "pointer_blob": "1ebada4622296a6b0bfa7c88eb2dc99c7185f682"
-    },
-    {
-      "path": "ctx9/relationships/clients/Flash/Attachments/1BA15C00-54EA-42CF-B30A-81B6743807A5.jpg",
-      "sha256": "2dd070dcf7d4922d84ad293b3ef8158d9f6db9ae76dab3a5ca7d37b6447e05d8",
-      "size": 31388,
-      "pointer_blob": "c25c2a344a61213d46b0509b849e4ca6dff9c326"
-    },
-    {
-      "path": "ctx9/relationships/clients/Flash/Attachments/243002AC-887E-4775-BC13-9EE6E2774A81.jpg",
-      "sha256": "ff732fc4d688961d68ac4c1728a2079ff74f624cc52698cb55b97edf6797025e",
-      "size": 24040,
-      "pointer_blob": "513a4c5bad54dee092c0cd828c81ca42b14e6295"
-    },
-    {
-      "path": "ctx9/relationships/clients/Flash/Attachments/3F40E0A5-5D7C-401F-822F-3E1398B70E81.jpg",
-      "sha256": "a48400c89d4f644140208f5aac4f2eb218d6cfb51da9d0c141c48ef3b601db18",
-      "size": 37222,
-      "pointer_blob": "047d8fca94d100bd909e74650c0ebf4e85696f46"
-    },
-    {
-      "path": "ctx9/relationships/clients/Flash/Attachments/65A5CF98-650B-489B-A97B-B9F4107321C8.jpg",
-      "sha256": "de077f005d65d44afb6d0df839bede369f50d28e07c6ff225e6aea5f550b25f3",
-      "size": 33104,
-      "pointer_blob": "bf9a7203449db0aae944f5f7ecbb51cb515fee53"
-    },
-    {
-      "path": "ctx9/relationships/clients/Flash/Attachments/7D2EE74F-C6B8-467E-ABF2-45E86126269F.jpg",
-      "sha256": "7d553d430d369fb47161fdc37f064d604503a697a6cb21ecc792ed99fa19fa36",
-      "size": 28178,
-      "pointer_blob": "864f52ba6f4842597b2e1505af2162c785cab7f4"
-    },
-    {
-      "path": "ctx9/relationships/clients/Flash/Attachments/813E72E8-98E7-4E79-AA6A-89DF0A099962.jpg",
-      "sha256": "354a9cb2cd8ddc6ec407981d16cf5f317b30ab80869b24c4f8c412bd68825346",
-      "size": 46372,
-      "pointer_blob": "16dee6389731269312f1cfac451a0f1b81adfe47"
-    },
-    {
-      "path": "ctx9/relationships/clients/Flash/Attachments/8BDE3DA3-8AC6-40CC-93DA-C163B65AF440.jpg",
-      "sha256": "e406eec960ea2e24d6657265ee6d527309180f5358330b30f1ada3beca0f42c7",
-      "size": 32704,
-      "pointer_blob": "af0e350c8d2fdf5c37a96422e564f7ed01140e4d"
-    },
-    {
-      "path": "ctx9/relationships/clients/Flash/Attachments/8D20C0C2-0655-4F51-BD62-05E3232F112F.jpg",
-      "sha256": "bc4440ddea2a5061a30ff3c4dc1019d2de7b880a46ef09d31abf615ce8a2700e",
-      "size": 35512,
-      "pointer_blob": "13a7616942cca3737731f431a8342f4c6d939c50"
-    },
-    {
-      "path": "ctx9/relationships/clients/Flash/Attachments/954DD946-A602-4275-AE4D-EDE1908C38DC.jpg",
-      "sha256": "08f86937be87de9cfc83f1660f34abafd0012d4ce6f5d4a251ee306e3e48f9b0",
-      "size": 25988,
-      "pointer_blob": "5b7e5fcf3177e2b2286ae6e1473e7472ee9e9328"
-    },
-    {
-      "path": "ctx9/relationships/clients/Flash/Attachments/AF45B172-DAB7-47A8-80A7-A93B3FC0768C.jpg",
-      "sha256": "defac974765e3716255bb215676b38486b9a30fc32ba46d962b7893527d48793",
-      "size": 31394,
-      "pointer_blob": "6bf6108350224f1cad4e6291b9686ef0ec5b2079"
-    },
-    {
-      "path": "ctx9/relationships/clients/Flash/Attachments/D2C64091-8A44-4D02-A3BD-5446A60EC1E9.jpg",
-      "sha256": "a4b1848e53a34889da46920bba7331622e8c2ab31a64f5d47f219765c317f134",
-      "size": 30999,
-      "pointer_blob": "a6b625b79eec5ef3a4ba9e537f77155024e544f2"
-    },
-    {
-      "path": "ctx9/relationships/clients/Flash/Attachments/D5257E1D-886E-4C12-8426-A132FF20E512.jpg",
-      "sha256": "b1bb9dd857d43d47d6bfa5d1d2c637668a4e1f1ac84754bd5b47e90f6224b731",
-      "size": 37249,
-      "pointer_blob": "7d72665d442f9b44d1162f29655b5eabfac98d9e"
-    },
-    {
-      "path": "ctx9/relationships/clients/Flash/Attachments/E9419008-453D-497E-9275-36ED673B7990.jpg",
-      "sha256": "2bb5e38aa1e2f1f56f5a01b3fc819728a519a47cb327f14cd08694c562bc68dc",
-      "size": 28548,
-      "pointer_blob": "0a671a268304b45ca970960e74093f4ef0af7c6b"
-    },
-    {
-      "path": "ctx9/relationships/clients/Flash/Attachments/EA1DE07B-7D63-4C09-9EA9-1206EBD26E4A.jpg",
-      "sha256": "dfa47326e96c0a067699c19117230a8e91f4aa63e5ea7a47a1929e8d87ee4795",
-      "size": 22735,
-      "pointer_blob": "b929f3de647d45947b7e0be71b555491445ca20c"
-    },
-    {
-      "path": "ctx9/relationships/clients/Flash/Attachments/EAC883D8-C633-4B52-8656-FF4A3E27F12F.jpg",
-      "sha256": "becf143dbba94205ff8559c7e1fcae7dce974e4a54816fa8928177d6ee054291",
-      "size": 26227,
-      "pointer_blob": "79bcad7a91116b0db40abeeb7bf0b8ea154091cc"
-    },
-    {
-      "path": "ctx9/relationships/talent/candidate CVs/Michael Oosthuizen - CV - 2025-08.pdf",
-      "sha256": "2c1bea0b5dba4c4bf5d56434bd048f0e807d3a81e8cb26854b46e276d2237925",
-      "size": 84161,
-      "pointer_blob": "67b1f3e9cbf311a4754d752cb55d4ad07e7a00ac"
-    },
-    {
-      "path": "ctx9/relationships/talent/candidate CVs/Robbie Perrott - CV - 2025.pdf",
-      "sha256": "9373e27645bfa06228eb37094d558a00a06c2dc79d2d7dda8a1bd46c31555f46",
-      "size": 96296,
-      "pointer_blob": "9be463a2e683889923a3d8a5f03d8707a4117996"
-    },
-    {
-      "path": "ctx9/relationships/talent/role-references/Descent - AI Consultant.pdf",
-      "sha256": "b5a28e11e5e6c46fe86e1e38c1adb84fe80a92b2ce4da9a228b7a44bcedaa6a0",
-      "size": 46098,
-      "pointer_blob": "04450c04c3c022a003e89d88d0de032fd4bbb1bf"
-    },
-    {
-      "path": "ctx9/relationships/talent/role-references/Descent - Forward Deployed AI Engineer.pdf",
-      "sha256": "4e8f178ed0c9010cdf05c04c4608197665de3ae9acd0cea4778ede81d3525713",
-      "size": 49533,
-      "pointer_blob": "22bb345ae428eda84f84c9a27f8902459f19090e"
-    },
-    {
-      "path": "ctx9/relationships/talent/role-references/Verascient - Forward Deployed AI Engineer.pdf",
-      "sha256": "d94026726bea1ea8e717ecfb491f3e45e8a29e13ce297e68f2cdd5375036bd60",
-      "size": 100729,
-      "pointer_blob": "8401e8f43404e2d1feecb21d95bf4bdc0c240569"
-    },
-    {
       "path": "business/_obsidian/attachments/20260513T212427-1-Pasted Graphic 24.jpg",
       "sha256": "97c66399b817c878a5b43a81d750cff72a67b41e54dcb891f5d8ece4ececed02",
       "size": 98788,
@@ -34471,6 +34207,276 @@
       "pointer_blob": "ccd5b2aaed694f7563807651716e1daf40ea057a"
     },
     {
+      "path": "outsource-think/_obsidian/attachments/IMG_5404.jpg",
+      "sha256": "f44fab6694e432ebc0f852e5b98b57d6c852335ad330aa1290003c364a6e9649",
+      "size": 3523052,
+      "pointer_blob": "78c383f4726de14ad51c1ff4fa4c244af38b18b4"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/Pasted image 20260526205606.png",
+      "sha256": "df92d91faae002582512ee575452b1d757b3876438ee6909bc662eefba32b0d1",
+      "size": 501678,
+      "pointer_blob": "5625e4b2c7a311b6ff674c1f740b12d3575bf40d"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/Pasted image 20260526205620.png",
+      "sha256": "41f656f446e5e8af0a202d42367d6577eb7255b16c8a3c47f6d8ab4064cb59b0",
+      "size": 600381,
+      "pointer_blob": "79f46b1cc7da4ef5af5461c924849eefb8742fad"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/Pasted image 20260526205641.png",
+      "sha256": "430f8cde331e6749aae90e6c4cfc89e4eaccd56a408ba3ca5148d1584989f25c",
+      "size": 626146,
+      "pointer_blob": "b82ea654cf956f098a35b5f5921468a351c02651"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/Pasted image 20260526205648.png",
+      "sha256": "406d446665abee2d5390903dcfdffe883b552601409a88fcc5ef8b2c3007b6c1",
+      "size": 333619,
+      "pointer_blob": "fd645528a1533b8fd0f01576c29d46a17c7e221a"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/bonus_balances/bonus-balances-image-001.png",
+      "sha256": "3eb13c412ab617e5904a97d261d6a84d9284df052bcdbcf4e07eb6f1f4669bc0",
+      "size": 300384,
+      "pointer_blob": "0f32dd5b7542629426246f676b28ec6ed64ee09b"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/corporate_accounts/corp_accounts_account_page/corp-accounts-account-page-image-001.png",
+      "sha256": "654679043d927fddbc51e17653d2ea2f1975cbc82a858ac22dca6a39149d4727",
+      "size": 195236,
+      "pointer_blob": "ac2e652f457cfe7c0d4c1a620f47720cf2412425"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/corporate_accounts/corp_accounts_account_page/corp-accounts-account-page-image-002.png",
+      "sha256": "4c4e4e7f7501a903273386dcaf46564a40632dcef5be0f1853a1562b198d723a",
+      "size": 347899,
+      "pointer_blob": "e0bddf7106e2a5bea6028cf7b3c288c3055a7f9d"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/corporate_accounts/corp_accounts_account_page/corp-accounts-account-page-image-003.png",
+      "sha256": "db11268df900f8bb515dd8ef7bae9a45b1cb3bde56ab52b7984196af929009d7",
+      "size": 218071,
+      "pointer_blob": "23f40f5d5e33118631e8e608b92cc7ace223ba76"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/corporate_accounts/corp_accounts_account_page/corp-accounts-account-page-image-004.png",
+      "sha256": "1b98d1df171954e6ffae3a754ee6a309bbdaff7534d7c62dea47355ad403d328",
+      "size": 217957,
+      "pointer_blob": "cbb61607606479f3cc736967d23ed244cd73f95f"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/dr_align/MicrosoftTeams-image.png",
+      "sha256": "0a0d52d29ec0e1a3c0e665a2ed13909bdaae2aa3c52d03afa3a19e46e56acb87",
+      "size": 104369,
+      "pointer_blob": "a79e6c32cf08823af1c75785982fc8e2e4a2759c"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/dr_align/dr-align-image-001.png",
+      "sha256": "c3a5bced64f42e6a9827d30d521d9ae03c2e13006857d260dc2e74590aede166",
+      "size": 650958,
+      "pointer_blob": "3a02588472f1e9565fffedbf15a7af895f838ea2"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/dr_align/dr-align-image-002.png",
+      "sha256": "267191fe96287a5595a4b74820be7f7c51baf0c7dba931aad69052b80bb42df3",
+      "size": 379668,
+      "pointer_blob": "ce09c54293bfb649a4e7f241144274fc9f62d1ce"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/dr_align/dr-align-image-003.png",
+      "sha256": "9bc6aea00b3ebdbceca742c31aa37630b484d4b4efc37ac48337e413c5b0c3aa",
+      "size": 90227,
+      "pointer_blob": "ee20ab0af9b70c7df4701bc83caf281ea74676f3"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/finance_recons/finance-recons-image-001.png",
+      "sha256": "6015a20dfd3d989ca8e6e18bfb66f945180a7caa44847c99f43c3b453c05ead3",
+      "size": 190837,
+      "pointer_blob": "2d17a8070cd9aacb33ff32b34e1897b7f3912fae"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/finance_recons/finance-recons-image-002.png",
+      "sha256": "b4c4d8500d03c105df00b3a75bbcd08078dc13452261e9318c083dfe9367f39a",
+      "size": 3082009,
+      "pointer_blob": "81481a3640ce1bbe64dc2d885b1bf58db7dfe893"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/flash-image-001.png",
+      "sha256": "c2deba5f2e60b4ca8b00fb55628653a9523d645ddbfd162f0b794bc37fb7502d",
+      "size": 261813,
+      "pointer_blob": "d03ea523eb0470c4ab12fb6d55997f0df09890a8"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/flash-image-002.png",
+      "sha256": "af9157198b1c77673e3057b22cad3b9c9ab9cb5f42135a16c7ab5ee3e4e0f388",
+      "size": 1163312,
+      "pointer_blob": "5fecfc3f7b05a338b8956ef0144d68237627e246"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/flash-image-003.png",
+      "sha256": "e74c610c353cc7f0b256574c90ca639510360d355ed00dd2cc2651e2e2b1c703",
+      "size": 1280108,
+      "pointer_blob": "382ba66bf8f7840023e79e022a9d56d4eea44d75"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/flash-image-004.png",
+      "sha256": "82d82fd11266bb613c42acad8614415e51c40960237b37bdd16a8a1c476613a9",
+      "size": 372609,
+      "pointer_blob": "7a8b671fa3463f0605449c9a2232b9bad18e7b78"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/flash-image-005.png",
+      "sha256": "86c820175ae323af655b559a1dc9b78a41eca1e0f33863e10c629b19ff3dc456",
+      "size": 465310,
+      "pointer_blob": "8eb443e37349c39305a36d8192f6735e8b287067"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/flash-image-006.png",
+      "sha256": "a9d8f3d639d337796782db898f0e2fc4f953069936a900c196c92a5fbdcf289f",
+      "size": 562067,
+      "pointer_blob": "c09bf9bd3bd2916d4a201dfa239a4295b4b2fb8a"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/temp_flash_notes/temp-flash-notes-image-001.png",
+      "sha256": "b09ab9f7d1222cde0c9a7ef4212260fb7c5773130ccd1071f2bbb1d5e0bc1b35",
+      "size": 1107434,
+      "pointer_blob": "ef0d60d2a8707a9a08be1777bf851acf82e1c3ae"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/clients/Flash/temp_flash_notes/temp-flash-notes-image-002.png",
+      "sha256": "79248e00c6b8eaeeae6179d890089c4e29be3d0852005e41b06d3c13c04c7c74",
+      "size": 912476,
+      "pointer_blob": "ff9d5856b8b21bffdc3de6c9c781da57bf2aa434"
+    },
+    {
+      "path": "outsource-think/_obsidian/attachments/ctx9-pasted-image-20260624160553.png",
+      "sha256": "92cc70ded715d158575321ef89bb2e4373fd317f774392ef5450d5ae37256c85",
+      "size": 314936,
+      "pointer_blob": "1ebada4622296a6b0bfa7c88eb2dc99c7185f682"
+    },
+    {
+      "path": "outsource-think/relationships/clients/Flash/Attachments/1BA15C00-54EA-42CF-B30A-81B6743807A5.jpg",
+      "sha256": "2dd070dcf7d4922d84ad293b3ef8158d9f6db9ae76dab3a5ca7d37b6447e05d8",
+      "size": 31388,
+      "pointer_blob": "c25c2a344a61213d46b0509b849e4ca6dff9c326"
+    },
+    {
+      "path": "outsource-think/relationships/clients/Flash/Attachments/243002AC-887E-4775-BC13-9EE6E2774A81.jpg",
+      "sha256": "ff732fc4d688961d68ac4c1728a2079ff74f624cc52698cb55b97edf6797025e",
+      "size": 24040,
+      "pointer_blob": "513a4c5bad54dee092c0cd828c81ca42b14e6295"
+    },
+    {
+      "path": "outsource-think/relationships/clients/Flash/Attachments/3F40E0A5-5D7C-401F-822F-3E1398B70E81.jpg",
+      "sha256": "a48400c89d4f644140208f5aac4f2eb218d6cfb51da9d0c141c48ef3b601db18",
+      "size": 37222,
+      "pointer_blob": "047d8fca94d100bd909e74650c0ebf4e85696f46"
+    },
+    {
+      "path": "outsource-think/relationships/clients/Flash/Attachments/65A5CF98-650B-489B-A97B-B9F4107321C8.jpg",
+      "sha256": "de077f005d65d44afb6d0df839bede369f50d28e07c6ff225e6aea5f550b25f3",
+      "size": 33104,
+      "pointer_blob": "bf9a7203449db0aae944f5f7ecbb51cb515fee53"
+    },
+    {
+      "path": "outsource-think/relationships/clients/Flash/Attachments/7D2EE74F-C6B8-467E-ABF2-45E86126269F.jpg",
+      "sha256": "7d553d430d369fb47161fdc37f064d604503a697a6cb21ecc792ed99fa19fa36",
+      "size": 28178,
+      "pointer_blob": "864f52ba6f4842597b2e1505af2162c785cab7f4"
+    },
+    {
+      "path": "outsource-think/relationships/clients/Flash/Attachments/813E72E8-98E7-4E79-AA6A-89DF0A099962.jpg",
+      "sha256": "354a9cb2cd8ddc6ec407981d16cf5f317b30ab80869b24c4f8c412bd68825346",
+      "size": 46372,
+      "pointer_blob": "16dee6389731269312f1cfac451a0f1b81adfe47"
+    },
+    {
+      "path": "outsource-think/relationships/clients/Flash/Attachments/8BDE3DA3-8AC6-40CC-93DA-C163B65AF440.jpg",
+      "sha256": "e406eec960ea2e24d6657265ee6d527309180f5358330b30f1ada3beca0f42c7",
+      "size": 32704,
+      "pointer_blob": "af0e350c8d2fdf5c37a96422e564f7ed01140e4d"
+    },
+    {
+      "path": "outsource-think/relationships/clients/Flash/Attachments/8D20C0C2-0655-4F51-BD62-05E3232F112F.jpg",
+      "sha256": "bc4440ddea2a5061a30ff3c4dc1019d2de7b880a46ef09d31abf615ce8a2700e",
+      "size": 35512,
+      "pointer_blob": "13a7616942cca3737731f431a8342f4c6d939c50"
+    },
+    {
+      "path": "outsource-think/relationships/clients/Flash/Attachments/954DD946-A602-4275-AE4D-EDE1908C38DC.jpg",
+      "sha256": "08f86937be87de9cfc83f1660f34abafd0012d4ce6f5d4a251ee306e3e48f9b0",
+      "size": 25988,
+      "pointer_blob": "5b7e5fcf3177e2b2286ae6e1473e7472ee9e9328"
+    },
+    {
+      "path": "outsource-think/relationships/clients/Flash/Attachments/AF45B172-DAB7-47A8-80A7-A93B3FC0768C.jpg",
+      "sha256": "defac974765e3716255bb215676b38486b9a30fc32ba46d962b7893527d48793",
+      "size": 31394,
+      "pointer_blob": "6bf6108350224f1cad4e6291b9686ef0ec5b2079"
+    },
+    {
+      "path": "outsource-think/relationships/clients/Flash/Attachments/D2C64091-8A44-4D02-A3BD-5446A60EC1E9.jpg",
+      "sha256": "a4b1848e53a34889da46920bba7331622e8c2ab31a64f5d47f219765c317f134",
+      "size": 30999,
+      "pointer_blob": "a6b625b79eec5ef3a4ba9e537f77155024e544f2"
+    },
+    {
+      "path": "outsource-think/relationships/clients/Flash/Attachments/D5257E1D-886E-4C12-8426-A132FF20E512.jpg",
+      "sha256": "b1bb9dd857d43d47d6bfa5d1d2c637668a4e1f1ac84754bd5b47e90f6224b731",
+      "size": 37249,
+      "pointer_blob": "7d72665d442f9b44d1162f29655b5eabfac98d9e"
+    },
+    {
+      "path": "outsource-think/relationships/clients/Flash/Attachments/E9419008-453D-497E-9275-36ED673B7990.jpg",
+      "sha256": "2bb5e38aa1e2f1f56f5a01b3fc819728a519a47cb327f14cd08694c562bc68dc",
+      "size": 28548,
+      "pointer_blob": "0a671a268304b45ca970960e74093f4ef0af7c6b"
+    },
+    {
+      "path": "outsource-think/relationships/clients/Flash/Attachments/EA1DE07B-7D63-4C09-9EA9-1206EBD26E4A.jpg",
+      "sha256": "dfa47326e96c0a067699c19117230a8e91f4aa63e5ea7a47a1929e8d87ee4795",
+      "size": 22735,
+      "pointer_blob": "b929f3de647d45947b7e0be71b555491445ca20c"
+    },
+    {
+      "path": "outsource-think/relationships/clients/Flash/Attachments/EAC883D8-C633-4B52-8656-FF4A3E27F12F.jpg",
+      "sha256": "becf143dbba94205ff8559c7e1fcae7dce974e4a54816fa8928177d6ee054291",
+      "size": 26227,
+      "pointer_blob": "79bcad7a91116b0db40abeeb7bf0b8ea154091cc"
+    },
+    {
+      "path": "outsource-think/relationships/talent/candidate CVs/Michael Oosthuizen - CV - 2025-08.pdf",
+      "sha256": "2c1bea0b5dba4c4bf5d56434bd048f0e807d3a81e8cb26854b46e276d2237925",
+      "size": 84161,
+      "pointer_blob": "67b1f3e9cbf311a4754d752cb55d4ad07e7a00ac"
+    },
+    {
+      "path": "outsource-think/relationships/talent/candidate CVs/Robbie Perrott - CV - 2025.pdf",
+      "sha256": "9373e27645bfa06228eb37094d558a00a06c2dc79d2d7dda8a1bd46c31555f46",
+      "size": 96296,
+      "pointer_blob": "9be463a2e683889923a3d8a5f03d8707a4117996"
+    },
+    {
+      "path": "outsource-think/relationships/talent/role-references/Descent - AI Consultant.pdf",
+      "sha256": "b5a28e11e5e6c46fe86e1e38c1adb84fe80a92b2ce4da9a228b7a44bcedaa6a0",
+      "size": 46098,
+      "pointer_blob": "04450c04c3c022a003e89d88d0de032fd4bbb1bf"
+    },
+    {
+      "path": "outsource-think/relationships/talent/role-references/Descent - Forward Deployed AI Engineer.pdf",
+      "sha256": "4e8f178ed0c9010cdf05c04c4608197665de3ae9acd0cea4778ede81d3525713",
+      "size": 49533,
+      "pointer_blob": "22bb345ae428eda84f84c9a27f8902459f19090e"
+    },
+    {
+      "path": "outsource-think/relationships/talent/role-references/Verascient - Forward Deployed AI Engineer.pdf",
+      "sha256": "d94026726bea1ea8e717ecfb491f3e45e8a29e13ce297e68f2cdd5375036bd60",
+      "size": 100729,
+      "pointer_blob": "8401e8f43404e2d1feecb21d95bf4bdc0c240569"
+    },
+    {
       "path": "personal/_obsidian/attachments/Finance & Biz/Bank Details, Insurance, Forex, Ebucks\u2026/Business Gold Pricing/image 1.png",
       "sha256": "aa68bf902c1aae2df8c5d89c77cd93bf47052d9221689aafdab41095190ff2e7",
       "size": 426308,
@@ -35671,7 +35677,7 @@
       "pointer_blob": "62c724e8e39d6694a05907be737ab9f34de94f5c"
     },
     {
-      "path": "personal/job applications/resume/matt-main-resume-2026-v2.pdf",
+      "path": "personal/job applications/resume/matt-main-resume-2026.pdf",
       "sha256": "2c2e899cbeb66cbfe9bf87f5be0fbd8433734d8f3dd94ac36a6abd5ebb6bd5e3",
       "size": 129644,
       "pointer_blob": "a7f77099e11dab4c73f34d3da51cee7642fd5489"
@@ -35681,12 +35687,6 @@
       "sha256": "5c5659d1575d648deaa0f74ebfc7aa5e2458322d27621a403caa52cbf2bd0086",
       "size": 212375,
       "pointer_blob": "69aac777d8565dcb17e3890f881a772f8a5ef022"
-    },
-    {
-      "path": "personal/job applications/resume/matthew-derman-resume_2026.pdf",
-      "sha256": "cb7a6bac2bee797ee543dd225187055f69d260d2ecfda2d74c55e8dbd5bcb2d6",
-      "size": 805157,
-      "pointer_blob": "51dee740ff73affddc32747227c71e3c7f2393a4"
     }
   ]
 }

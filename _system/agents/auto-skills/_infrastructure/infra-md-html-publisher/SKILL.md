@@ -1,11 +1,17 @@
 ---
 name: infra-md-html-publisher
-description: Publish, discover, list, read, create, update, or inspect Markdown and safe static HTML artifacts through a configured publishing service, including existing documents, code-change overviews, PR descriptions, and plans. Use when the user says "md html publisher", "Markdown publisher", or "HTML publisher"; asks to find, read, publish, or share a hosted document; or supplies the configured service URL. Preserve supplied source exactly by default. Author or convert content into a plan only when explicitly requested.
+description: Publish, discover, list, read, create, update, or inspect generic readable Markdown and safe static HTML artifacts through a configured publishing service. Use when the user says "md html publisher", "Markdown publisher", or "HTML publisher"; asks to find, read, publish, or share a hosted document; or supplies the configured service URL. Preserve supplied source and artifact intent exactly by default.
 ---
 
 # Infra · MD HTML Publisher
 
 Read `_system/local/skills/infra-md-html-publisher/README.md` and private config first. Publish Markdown and safe static HTML through the configured service. Treat service/host names as publishing mechanism names, not automatic instructions to turn content into a plan. Default visual language is dark neutral monochrome: `#181818` page, dark-gray surfaces, near-white text, gray links and borders. Reserve color for diagrams, data visualization, syntax highlighting, and semantic status/callout states.
+
+## CTX9 artifact contract
+
+The canonical host is `artifacts.ctx9.com`. Generic rendered Markdown and safe static HTML use singular artifact key `readable` and UI label **Readables**. A readable may contain a plan, report, review, release note, code-change overview, PR description, or another document; the generic artifact description never implies planning semantics.
+
+`plans.ctx9.com` is removed at cutover with no redirect, alias, overlap, compatibility period, or compatibility wrapper. Treat old URLs in dated records as historical evidence, not active service aliases.
 
 ## Preserve artifact intent
 
@@ -108,7 +114,7 @@ Direct HTML is stored and served byte-exact; server does not inject theme CSS. F
 When user wants edits to stored canonical source, fetch source, edit only requested parts, republish same draft, then remove fetched temporary copy:
 
 ```bash
-md-html-publisher fetch "<plan-url>" --source --output .agents/live-view/<name>.md
+md-html-publisher fetch "<artifact-url>" --source --output .agents/live-view/<name>.md
 md-html-publisher upload .agents/live-view/<name>.md --draft "<id>" --project "<project>" --name "<document title>" --delete-after-upload
 ```
 

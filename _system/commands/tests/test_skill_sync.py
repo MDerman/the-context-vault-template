@@ -44,6 +44,24 @@ class SkillSyncTests(unittest.TestCase):
         )
         return path
 
+    def registry(self, root: Path, repositories: dict[str, object]) -> Path:
+        path = (
+            root
+            / "_system/local/skills/infra-code-folder-and-computer-topology/private/repositories.json"
+        )
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps({"repositories": repositories}) + "\n", encoding="utf-8")
+        return path
+
+    def repo_skill(self, repo: Path, relative: str, body: str = "") -> Path:
+        path = repo / relative
+        path.mkdir(parents=True)
+        name = path.name
+        (path / "SKILL.md").write_text(
+            f"---\nname: {name}\n---\n\n# {name}\n\n{body}", encoding="utf-8"
+        )
+        return path
+
     def test_recursive_groups_are_flattened(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root, home = self.roots(tmp)
@@ -245,6 +263,18 @@ class SkillSyncTests(unittest.TestCase):
                 ["claude-seo", "claude-seo-audit", "corey-analytics"],
             )
 
+    def test_vault_root_skill_uses_exact_title(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root, _home = self.roots(tmp)
+            self.skill(root, "auto-skills", "_vault/vault", title="Vault")
+            skills = sync_skills.scan_source(root / "_system/agents/auto-skills", "auto")
+            self.assertEqual([skill.name for skill in skills], ["vault"])
+        with tempfile.TemporaryDirectory() as tmp:
+            root, _home = self.roots(tmp)
+            self.skill(root, "auto-skills", "_vault/vault", title="Vault · Vault")
+            with self.assertRaisesRegex(sync_skills.SyncError, "Root skill H1 must be exactly"):
+                sync_skills.scan_source(root / "_system/agents/auto-skills", "auto")
+
     def test_nested_pack_projection_marker_is_ignored(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root, _home = self.roots(tmp)
@@ -285,6 +315,291 @@ class SkillSyncTests(unittest.TestCase):
                 ["spreadsheets-update-financial-model-from-statements"],
             )
             self.assertEqual(skill.name, "spreadsheets-update-financial-model-from-statements")
+
+    def test_repo_projection_materializes_rewrites_and_copies_resources(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root, home = self.roots(tmp)
+            repo = Path(tmp) / "business"
+            first = self.repo_skill(
+                repo,
+                ".agents/skills/l-debugging",
+                "Use $l-tracing.\n",
+            )
+            tracing = self.repo_skill(repo, ".agents/skills/l-tracing")
+            references = first / "references"
+            references.mkdir()
+            (references / "notes.md").write_text("Also use $l-tracing.\n")
+            metadata = first / "agents/openai.yaml"
+            metadata.parent.mkdir()
+            metadata.write_text("policy:\n  allow_implicit_invocation: false\n")
+            self.registry(
+                root,
+                {
+                    "business": {
+                        "path": str(repo),
+                        "skill_projections": [
+                            {"source": ".agents/skills/l-debugging", "mode": "auto"},
+                            {"source": ".agents/skills/l-tracing", "mode": "auto"},
+                        ],
+                    }
+                },
+            )
+
+            sync_skills.sync(root, home, apply=True)
+
+            projected = (
+                root
+                / "_system/agents/working-repos/business/business-debugging"
+            )
+            skill_text = (projected / "SKILL.md").read_text()
+            self.assertIn("name: business-debugging", skill_text)
+            self.assertIn("# Impression · Debugging", skill_text)
+            self.assertIn("$business-tracing", skill_text)
+            self.assertIn(
+                "$business-tracing", (projected / "references/notes.md").read_text()
+            )
+            self.assertIn(
+                "allow_implicit_invocation: true",
+                (projected / "agents/openai.yaml").read_text(),
+            )
+            marker = json.loads(
+                (projected / sync_skills.working_repo_skills.MARKER).read_text()
+            )
+            self.assertEqual(marker["source"], ".agents/skills/l-debugging")
+            self.assertEqual(marker["mode"], "auto")
+            self.assertEqual(
+                marker["target"],
+                "_system/agents/working-repos/business/business-debugging",
+            )
+            self.assertTrue(marker["content_digest"])
+            self.assertTrue((root / "_system/agents/skills/business-debugging").is_symlink())
+            self.assertEqual(sync_skills.sync(root, home, apply=False), 0)
+
+    def test_repo_projection_dry_run_is_pure(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root, home = self.roots(tmp)
+            repo = Path(tmp) / "repo"
+            self.repo_skill(repo, ".agents/skills/l-example")
+            self.registry(
+                root,
+                {
+                    "repo": {
+                        "path": str(repo),
+                        "skill_projections": [
+                            {"source": ".agents/skills/l-example", "mode": "manual"}
+                        ],
+                    }
+                },
+            )
+            before = sorted(str(path.relative_to(root)) for path in root.rglob("*"))
+
+            sync_skills.sync(root, home, apply=False)
+
+            after = sorted(str(path.relative_to(root)) for path in root.rglob("*"))
+            self.assertEqual(before, after)
+            self.assertFalse((root / "_system/agents/working-repos").exists())
+
+    def test_missing_checkout_preserves_valid_tracked_projection(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root, home = self.roots(tmp)
+            repo = Path(tmp) / "repo"
+            self.repo_skill(repo, ".agents/skills/l-example")
+            self.registry(
+                root,
+                {
+                    "repo": {
+                        "path": str(repo),
+                        "skill_projections": [
+                            {"source": ".agents/skills/l-example", "mode": "auto"}
+                        ],
+                    }
+                },
+            )
+            sync_skills.sync(root, home, apply=True)
+            repo.rename(Path(tmp) / "repo-unavailable")
+
+            self.assertEqual(sync_skills.sync(root, home, apply=False), 0)
+            self.assertTrue(
+                (root / "_system/agents/working-repos/repo/repo-example/SKILL.md").is_file()
+            )
+
+    def test_legacy_projection_migrates_safely_when_checkout_is_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root, home = self.roots(tmp)
+            repo = Path(tmp) / "repo"
+            self.repo_skill(repo, ".agents/skills/l-example")
+            self.registry(
+                root,
+                {
+                    "repo": {
+                        "path": str(repo),
+                        "skill_projections": [
+                            {"source": ".agents/skills/l-example", "mode": "manual"}
+                        ],
+                    }
+                },
+            )
+            sync_skills.sync(root, home, apply=True)
+            current = root / "_system/agents/working-repos/repo/repo-example"
+            legacy = root / "_system/agents/local-repos/repo/manual-skills/repo-example"
+            legacy.parent.mkdir(parents=True)
+            current.rename(legacy)
+            marker_path = legacy / sync_skills.working_repo_skills.MARKER
+            marker = json.loads(marker_path.read_text())
+            marker["target"] = (
+                "_system/agents/local-repos/repo/manual-skills/repo-example"
+            )
+            marker_path.rename(
+                legacy / sync_skills.working_repo_skills.LEGACY_MARKER
+            )
+            (legacy / sync_skills.working_repo_skills.LEGACY_MARKER).write_text(
+                json.dumps(marker) + "\n"
+            )
+            repo.rename(Path(tmp) / "repo-unavailable")
+
+            sync_skills.sync(root, home, apply=True)
+
+            migrated = root / "_system/agents/working-repos/repo/repo-example"
+            self.assertTrue((migrated / "SKILL.md").is_file())
+            self.assertIn(
+                "allow_implicit_invocation: false",
+                (migrated / "agents/openai.yaml").read_text(),
+            )
+            self.assertFalse((root / "_system/agents/local-repos").exists())
+
+    def test_working_repo_tree_refuses_unmanaged_content(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root, home = self.roots(tmp)
+            unmanaged = root / "_system/agents/working-repos/repo/repo-example"
+            unmanaged.mkdir(parents=True)
+            (unmanaged / "SKILL.md").write_text(
+                "---\nname: repo-example\n---\n\n# Repo · Example\n"
+            )
+
+            with self.assertRaisesRegex(
+                sync_skills.working_repo_skills.ProjectionError,
+                "Unmanaged skill inside generated working-repos tree",
+            ):
+                sync_skills.sync(root, home, apply=False)
+
+    def test_present_checkout_missing_source_without_projection_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root, home = self.roots(tmp)
+            repo = Path(tmp) / "repo"
+            repo.mkdir()
+            self.registry(
+                root,
+                {
+                    "repo": {
+                        "path": str(repo),
+                        "skill_projections": [
+                            {"source": ".agents/skills/l-missing", "mode": "auto"}
+                        ],
+                    }
+                },
+            )
+            with self.assertRaisesRegex(
+                sync_skills.working_repo_skills.ProjectionError, "managed projection is missing"
+            ):
+                sync_skills.sync(root, home, apply=False)
+
+    def test_present_checkout_missing_source_preserves_projection_but_strict_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root, home = self.roots(tmp)
+            repo = Path(tmp) / "repo"
+            source = self.repo_skill(repo, ".agents/skills/l-example")
+            self.registry(
+                root,
+                {
+                    "repo": {
+                        "path": str(repo),
+                        "skill_projections": [
+                            {"source": ".agents/skills/l-example", "mode": "auto"}
+                        ],
+                    }
+                },
+            )
+            sync_skills.sync(root, home, apply=True)
+            for path in sorted(source.rglob("*"), reverse=True):
+                if path.is_file():
+                    path.unlink()
+                elif path.is_dir():
+                    path.rmdir()
+            source.rmdir()
+
+            self.assertEqual(sync_skills.sync(root, home, apply=False), 0)
+            with self.assertRaisesRegex(
+                sync_skills.working_repo_skills.ProjectionError,
+                "Required projected skill source is missing",
+            ):
+                sync_skills.sync(root, home, apply=False, require_repo_sources=True)
+
+    def test_obsolete_marked_projection_is_removed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root, home = self.roots(tmp)
+            repo = Path(tmp) / "repo"
+            self.repo_skill(repo, ".agents/skills/l-example")
+            registry = self.registry(
+                root,
+                {
+                    "repo": {
+                        "path": str(repo),
+                        "skill_projections": [
+                            {"source": ".agents/skills/l-example", "mode": "auto"}
+                        ],
+                    }
+                },
+            )
+            sync_skills.sync(root, home, apply=True)
+            registry.write_text(json.dumps({"repositories": {"repo": {"path": str(repo)}}}) + "\n")
+
+            sync_skills.sync(root, home, apply=True)
+
+            self.assertFalse((root / "_system/agents/working-repos/repo").exists())
+            self.assertFalse((root / "_system/agents/skills/repo-example").exists())
+
+    def test_repo_projection_rejects_duplicates_and_dangling_local_references(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root, home = self.roots(tmp)
+            repo = Path(tmp) / "repo"
+            self.repo_skill(repo, ".agents/skills/l-example")
+            self.registry(
+                root,
+                {
+                    "repo": {
+                        "path": str(repo),
+                        "skill_projections": [
+                            {"source": ".agents/skills/l-example", "mode": "auto"},
+                            {"source": ".agents/skills/l-example", "mode": "auto"},
+                        ],
+                    }
+                },
+            )
+            with self.assertRaisesRegex(
+                sync_skills.working_repo_skills.ProjectionError,
+                "Duplicate projected skill name",
+            ):
+                sync_skills.sync(root, home, apply=False)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root, home = self.roots(tmp)
+            repo = Path(tmp) / "repo"
+            self.repo_skill(repo, ".agents/skills/l-example", "Use $l-not-projected.\n")
+            self.registry(
+                root,
+                {
+                    "repo": {
+                        "path": str(repo),
+                        "skill_projections": [
+                            {"source": ".agents/skills/l-example", "mode": "auto"}
+                        ],
+                    }
+                },
+            )
+            with self.assertRaisesRegex(
+                sync_skills.working_repo_skills.ProjectionError, "unprojected repository skills"
+            ):
+                sync_skills.sync(root, home, apply=False)
 
 
 if __name__ == "__main__":

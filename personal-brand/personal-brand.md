@@ -1,7 +1,6 @@
 ---
 status: active
-context_type: personal-brand
-content_enabled: true
+content_schedules_enabled: true
 default_capture: false
 ---
 

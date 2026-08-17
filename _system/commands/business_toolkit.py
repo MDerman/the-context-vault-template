@@ -13,10 +13,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from script_utils import context_folder_metadata, discover_context_folders, resolve_vault_root
+from script_utils import discover_context_folders, resolve_vault_root
 
 
-PACK_RELATIVE = Path("_system/bootstrap/templates/business-context")
+PACK_RELATIVE = Path("_system/bootstrap/templates/context-folders/business")
 MANIFEST_NAME = ".business-toolkit.json"
 STATE_RELATIVE = Path("_obsidian/business-toolkit.json")
 TEMPLATER_RELATIVE = Path(".obsidian/plugins/templater-obsidian/data.json")
@@ -134,16 +134,13 @@ def install_scaffold(root: Path, context: str, *, apply: bool) -> int:
     return changed
 
 
-def business_contexts(root: Path) -> list[str]:
-    return [
-        name for name in discover_context_folders(root)
-        if (context_folder_metadata(root / name).get("context_type") or "business").strip().lower() == "business"
-    ]
+def configured_contexts(root: Path) -> list[str]:
+    return [name for name in discover_context_folders(root) if state_path(root, name).is_file()]
 
 
 def validate_context(root: Path, context: str) -> None:
-    if context not in business_contexts(root):
-        raise SystemExit(f"Not a registered business context folder: {context}")
+    if context not in discover_context_folders(root):
+        raise SystemExit(f"Not a registered context folder: {context}")
 
 
 def parse_csv(value: str | None) -> list[str]:
@@ -374,10 +371,8 @@ def sync_context(root: Path, context: str, *, includes: list[str] | None = None,
 
 
 def selected_contexts(root: Path, args: argparse.Namespace) -> list[str]:
-    if getattr(args, "all_business", False):
-        return business_contexts(root)
     if getattr(args, "configured", False):
-        return [name for name in business_contexts(root) if state_path(root, name).is_file()]
+        return configured_contexts(root)
     result = parse_csv(getattr(args, "context_folders", None))
     for context in result:
         validate_context(root, context)
@@ -425,6 +420,31 @@ def run_sync(root: Path, contexts: list[str], *, includes: list[str], excludes: 
     return 0
 
 
+def run_unconfigure(root: Path, contexts: list[str], *, apply: bool, force: bool) -> int:
+    _version, components = load_pack(root)
+    excludes = [component.id for component in components]
+    result = run_sync(
+        root,
+        contexts,
+        includes=[],
+        excludes=excludes,
+        apply=apply,
+        force=force,
+        use_saved=False,
+        allow_prompt=True,
+    )
+    if result:
+        return result
+    for context in contexts:
+        path = state_path(root, context)
+        if not path.exists() and apply:
+            continue
+        print(f"{'remove' if apply else '[dry-run] remove'} {path.relative_to(root)}")
+        if apply and path.is_file():
+            path.unlink()
+    return 0
+
+
 def status_context(root: Path, context: str) -> bool:
     pack_version, components = load_pack(root)
     state = load_state(root, context)
@@ -464,7 +484,6 @@ def status_context(root: Path, context: str) -> bool:
 def add_target_args(parser: argparse.ArgumentParser) -> None:
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--context-folders")
-    group.add_argument("--all-business", action="store_true")
     group.add_argument("--configured", action="store_true")
     parser.add_argument("--root", default=None)
 
@@ -480,13 +499,17 @@ def build_parser() -> argparse.ArgumentParser:
     sync.add_argument("--force", action="store_true")
     status = subparsers.add_parser("status")
     add_target_args(status)
+    unconfigure = subparsers.add_parser("unconfigure")
+    add_target_args(unconfigure)
+    unconfigure.add_argument("--apply", action="store_true")
+    unconfigure.add_argument("--force", action="store_true")
     return parser
 
 
 def wizard(root: Path) -> int:
-    contexts = business_contexts(root)
+    contexts = discover_context_folders(root)
     if not contexts:
-        print("No registered business context folders found.", file=sys.stderr)
+        print("No registered context folders found.", file=sys.stderr)
         return 2
     _version, components = load_pack(root)
     print("Business Toolkit\n")
@@ -534,9 +557,11 @@ def main(argv: list[str] | None = None) -> int:
     root = resolve_vault_root(args.root, __file__)
     contexts = selected_contexts(root, args)
     if not contexts:
-        parser.error("select --context-folders, --all-business, or --configured")
+        parser.error("select --context-folders or --configured")
     if args.command == "status":
         return 0 if all(status_context(root, context) for context in contexts) else 1
+    if args.command == "unconfigure":
+        return run_unconfigure(root, contexts, apply=args.apply, force=args.force)
     includes, excludes = parse_csv(args.include), parse_csv(args.exclude)
     return run_sync(root, contexts, includes=includes, excludes=excludes, apply=args.apply, force=args.force, use_saved=not includes and not excludes, allow_prompt=True)
 

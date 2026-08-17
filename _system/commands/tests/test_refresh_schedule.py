@@ -9,6 +9,7 @@ import fcntl
 import importlib.util
 import io
 import json
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -53,6 +54,93 @@ def today_utc() -> str:
 
 
 class RefreshScheduleTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.schedule_policy = mock.patch.object(
+            refresh_schedule,
+            "machine_schedule_policy",
+            return_value={"eligible": True, "machineId": "primary", "role": "primary"},
+        )
+        self.schedule_policy.start()
+        self.addCleanup(self.schedule_policy.stop)
+
+    def test_local_worker_role_blocks_schedule_without_registry(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            subprocess.run(["git", "init", str(root)], check=True, capture_output=True)
+            subprocess.run(
+                ["git", "config", "--local", "vault.machine-id", "worker-mac"],
+                cwd=root,
+                check=True,
+            )
+            subprocess.run(
+                ["git", "config", "--local", "vault.machine-role", "worker"],
+                cwd=root,
+                check=True,
+            )
+            self.schedule_policy.stop()
+            try:
+                policy = refresh_schedule.machine_schedule_policy(root)
+            finally:
+                self.schedule_policy.start()
+
+        self.assertFalse(policy["eligible"])
+        self.assertEqual(policy["role"], "worker")
+
+    def test_persistent_worker_block_survives_missing_git_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "vault"
+            state = Path(tmp) / "state"
+            root.mkdir()
+            state.mkdir()
+            (state / refresh_schedule.WORKER_BLOCK_NAME).write_text(
+                json.dumps({"machineId": "worker-mac", "role": "worker"}),
+                encoding="utf-8",
+            )
+            self.schedule_policy.stop()
+            try:
+                with mock.patch.object(refresh_schedule, "STATE_DIR", state):
+                    policy = refresh_schedule.machine_schedule_policy(root)
+            finally:
+                self.schedule_policy.start()
+
+        self.assertFalse(policy["eligible"])
+        self.assertEqual(policy["machineId"], "worker-mac")
+        self.assertIn("persistent", policy["blockedReason"])
+
+    def test_gitless_worker_identity_blocks_schedule_from_registry(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "vault"
+            marker = Path(tmp) / "machine-id"
+            state = Path(tmp) / "state"
+            root.mkdir()
+            marker.write_text("worker-mac\n", encoding="utf-8")
+            registry = (
+                root
+                / "_system/local/skills/infra-code-folder-and-computer-topology/private/machines.json"
+            )
+            registry.parent.mkdir(parents=True)
+            registry.write_text(
+                json.dumps(
+                    {
+                        "machines": [
+                            {"id": "worker-mac", "role": "worker"}
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            self.schedule_policy.stop()
+            try:
+                with mock.patch.object(refresh_schedule, "MACHINE_ID_PATH", marker):
+                    with mock.patch.object(refresh_schedule, "STATE_DIR", state):
+                        policy = refresh_schedule.machine_schedule_policy(root)
+            finally:
+                self.schedule_policy.start()
+
+        self.assertFalse(policy["eligible"])
+        self.assertEqual(policy["machineId"], "worker-mac")
+        self.assertEqual(policy["role"], "worker")
+
     def test_launch_agent_plist_includes_load_calendar_and_catchup_interval(self) -> None:
         config = {
             "label": "com.example.refresh",
@@ -81,6 +169,28 @@ class RefreshScheduleTests(unittest.TestCase):
             self.assertIn("would write", stdout.getvalue())
             launchctl.assert_not_called()
             run_due.assert_not_called()
+
+    def test_worker_cannot_register_or_run_schedule(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write_config(root)
+            refresh_schedule.machine_schedule_policy.return_value = {
+                "eligible": False,
+                "machineId": "worker-mac",
+                "role": "worker",
+                "blockedReason": "scheduled vault refresh is primary-only and cannot run on a worker",
+            }
+            with mock.patch.object(refresh_schedule.sys, "platform", "darwin"):
+                with mock.patch.object(refresh_schedule, "run_launchctl") as launchctl:
+                    with contextlib.redirect_stderr(io.StringIO()) as stderr:
+                        self.assertEqual(refresh_schedule.register(root, dry_run=False), 3)
+            self.assertIn("refused for worker", stderr.getvalue())
+            launchctl.assert_not_called()
+            with mock.patch.object(refresh_schedule, "run_refresh_with_retries") as refresh:
+                with contextlib.redirect_stdout(io.StringIO()) as stdout:
+                    self.assertEqual(refresh_schedule.run_due(root), 0)
+            self.assertIn("skipped for worker", stdout.getvalue())
+            refresh.assert_not_called()
 
     def test_run_due_skips_when_today_stamp_exists(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

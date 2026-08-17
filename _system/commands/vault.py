@@ -86,14 +86,14 @@ Common commands:
   project      Create and list project notes.
   task         Create TaskNotes tasks with validated project/epic links.
   folder       Create, register, or rename a context folder.
-  business-toolkit  Install and synchronize standard business-context folders and templates.
+  business-toolkit  Configure marker-owned business folders and templates for registered contexts.
   gcal         Read/write Google Calendar events, time blocks, and task date mirrors.
   git-media    Manage pointer-only media manifests and no-upload Git hooks.
   git-maintenance  Keep local Git history shallow and prune local objects.
   git-preflight  Fetch and fast-forward a clean master checkout.
   mobile-profile  Create/update .obsidian-mobile with safe mobile plugins and theme settings.
   machine      List, probe, SSH to, or open VNC for reviewed development machines.
-  worker-sync  Configure or repair explicit sparse worker checkouts and hooks.
+  worker-sync  Enforce Gitless iCloud Mac workers or repair sparse Linux checkouts.
   profile      Preview/apply Obsidian profile, theme, hotkey, and plugin upgrades.
   path-audit   Find persisted vault-root paths that make the vault non-portable.
   release      Publish SemVer public vault releases.
@@ -126,7 +126,7 @@ Examples:
   vault snippets sync --dry-run
   vault folder register studio
   vault business-toolkit sync --context-folders business,studio --apply
-  vault business-toolkit status --all-business
+  vault business-toolkit status --configured
   vault folder unregister studio --dry-run
   vault folder remove studio --dry-run
   vault folder rename business studio --dry-run

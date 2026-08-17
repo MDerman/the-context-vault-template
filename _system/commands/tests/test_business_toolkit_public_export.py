@@ -28,19 +28,19 @@ class BusinessToolkitPublicExportTests(unittest.TestCase):
                 root / "_library/business_toolkit",
             )
             shutil.copytree(
-                VAULT_ROOT / "_system/bootstrap/templates/business-context",
-                export_root / "_system/bootstrap/templates/business-context",
+                VAULT_ROOT / "_system/bootstrap/templates/context-folders/business",
+                export_root / "_system/bootstrap/templates/context-folders/business",
             )
             source_context = root / "private-company"
             source_context.mkdir(parents=True)
             (source_context / "private-company.md").write_text(
-                "---\nstatus: active\ncontext_type: business\ncontext_registered: true\n---\n",
+                "---\nstatus: active\ncontext_registered: true\n---\n",
                 encoding="utf-8",
             )
             export_context = export_root / "business"
             export_context.mkdir(parents=True)
             (export_context / "business.md").write_text(
-                "---\nstatus: active\ncontext_type: business\ncontext_registered: true\n---\n# business\n",
+                "---\nstatus: active\ncontext_registered: true\n---\n",
                 encoding="utf-8",
             )
             commands = export_root / "_system/commands"
@@ -85,7 +85,7 @@ class BusinessToolkitPublicExportTests(unittest.TestCase):
             config = {
                 "export_root": str(export_root),
                 "copy_obsidian": "exact",
-                "context_folders": [{"source": "private-company", "target": "business"}],
+                "context_folders": [{"source": "private-company", "target": "business", "folder_template": "business"}],
                 "library_include_paths": ["business_toolkit"],
             }
             exporter = BootstrapExporter(
@@ -97,7 +97,7 @@ class BusinessToolkitPublicExportTests(unittest.TestCase):
             )
 
             exporter.create_library_and_wiki()
-            exporter.install_public_business_toolkits()
+            exporter.install_public_folder_templates()
             exporter.sanitize_public_templater_rules()
             exporter.sanitize_public_iconize_paths()
 
@@ -109,7 +109,7 @@ class BusinessToolkitPublicExportTests(unittest.TestCase):
             manifest = json.loads(
                 (
                     export_root
-                    / "_system/bootstrap/templates/business-context/.business-toolkit.json"
+                    / "_system/bootstrap/templates/context-folders/business/.business-toolkit.json"
                 ).read_text(encoding="utf-8")
             )
             self.assertEqual(len(state["components"]), len(manifest["components"]))

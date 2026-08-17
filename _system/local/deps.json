@@ -12,7 +12,7 @@
           "target": "_system/agents/manual-skills/_creative/creative-frontend-slides",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "Creative · Frontend Slides"
+          "title_override": "Creative \u00b7 Frontend Slides"
         }
       ]
     },
@@ -27,10 +27,10 @@
       "projections": [
         {
           "source": "skills/agent-canvas",
-          "target": "_system/agents/auto-skills/_creative/creative-agent-canvas",
+          "target": "_system/agents/auto-skills/_vault/vault-excalidraw-canvas",
           "type": "auto-skill",
           "managed": true,
-          "title_override": "Creative · Agent Canvas"
+          "title_override": "Vault \u00b7 Excalidraw Canvas"
         }
       ]
     },
@@ -45,119 +45,119 @@
           "target": "_system/agents/manual-skills/_gws/gws-shared",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "GWS · Shared"
+          "title_override": "GWS \u00b7 Shared"
         },
         {
           "source": "skills/gws-drive",
           "target": "_system/agents/manual-skills/_gws/gws-drive",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "GWS · Drive"
+          "title_override": "GWS \u00b7 Drive"
         },
         {
           "source": "skills/gws-drive-upload",
           "target": "_system/agents/manual-skills/_gws/gws-drive-upload",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "GWS · Drive Upload"
+          "title_override": "GWS \u00b7 Drive Upload"
         },
         {
           "source": "skills/gws-gmail",
           "target": "_system/agents/manual-skills/_gws/gws-gmail",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "GWS · Gmail"
+          "title_override": "GWS \u00b7 Gmail"
         },
         {
           "source": "skills/gws-gmail-send",
           "target": "_system/agents/manual-skills/_gws/gws-gmail-send",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "GWS · Gmail Send"
+          "title_override": "GWS \u00b7 Gmail Send"
         },
         {
           "source": "skills/gws-gmail-triage",
           "target": "_system/agents/manual-skills/_gws/gws-gmail-triage",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "GWS · Gmail Triage"
+          "title_override": "GWS \u00b7 Gmail Triage"
         },
         {
           "source": "skills/gws-gmail-reply",
           "target": "_system/agents/manual-skills/_gws/gws-gmail-reply",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "GWS · Gmail Reply"
+          "title_override": "GWS \u00b7 Gmail Reply"
         },
         {
           "source": "skills/gws-gmail-reply-all",
           "target": "_system/agents/manual-skills/_gws/gws-gmail-reply-all",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "GWS · Gmail Reply All"
+          "title_override": "GWS \u00b7 Gmail Reply All"
         },
         {
           "source": "skills/gws-gmail-forward",
           "target": "_system/agents/manual-skills/_gws/gws-gmail-forward",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "GWS · Gmail Forward"
+          "title_override": "GWS \u00b7 Gmail Forward"
         },
         {
           "source": "skills/gws-gmail-read",
           "target": "_system/agents/manual-skills/_gws/gws-gmail-read",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "GWS · Gmail Read"
+          "title_override": "GWS \u00b7 Gmail Read"
         },
         {
           "source": "skills/gws-gmail-watch",
           "target": "_system/agents/manual-skills/_gws/gws-gmail-watch",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "GWS · Gmail Watch"
+          "title_override": "GWS \u00b7 Gmail Watch"
         },
         {
           "source": "skills/gws-calendar",
           "target": "_system/agents/manual-skills/_gws/gws-calendar",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "GWS · Calendar"
+          "title_override": "GWS \u00b7 Calendar"
         },
         {
           "source": "skills/gws-calendar-insert",
           "target": "_system/agents/manual-skills/_gws/gws-calendar-insert",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "GWS · Calendar Insert"
+          "title_override": "GWS \u00b7 Calendar Insert"
         },
         {
           "source": "skills/gws-calendar-agenda",
           "target": "_system/agents/manual-skills/_gws/gws-calendar-agenda",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "GWS · Calendar Agenda"
+          "title_override": "GWS \u00b7 Calendar Agenda"
         },
         {
           "source": "skills/gws-sheets",
           "target": "_system/agents/manual-skills/_gws/gws-sheets",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "GWS · Sheets"
+          "title_override": "GWS \u00b7 Sheets"
         },
         {
           "source": "skills/gws-sheets-append",
           "target": "_system/agents/manual-skills/_gws/gws-sheets-append",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "GWS · Sheets Append"
+          "title_override": "GWS \u00b7 Sheets Append"
         },
         {
           "source": "skills/gws-sheets-read",
           "target": "_system/agents/manual-skills/_gws/gws-sheets-read",
           "type": "manual-skill",
           "managed": true,
-          "title_override": "GWS · Sheets Read"
+          "title_override": "GWS \u00b7 Sheets Read"
         }
       ]
     },
@@ -167,55 +167,251 @@
       "path": "~/Code/open_source/marketingskills",
       "ref": "main",
       "projections": [
-        {"source": "skills/ab-testing", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-ab-testing", "type": "manual-skill"},
-        {"source": "skills/ad-creative", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-ad-creative", "type": "manual-skill"},
-        {"source": "skills/ads", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-ads", "type": "manual-skill"},
-        {"source": "skills/ai-seo", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-ai-seo", "type": "manual-skill"},
-        {"source": "skills/analytics", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-analytics", "type": "manual-skill"},
-        {"source": "skills/aso", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-aso", "type": "manual-skill"},
-        {"source": "skills/attribution", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-attribution", "type": "manual-skill"},
-        {"source": "skills/churn-prevention", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-churn-prevention", "type": "manual-skill"},
-        {"source": "skills/co-marketing", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-co-marketing", "type": "manual-skill"},
-        {"source": "skills/cold-email", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-cold-email", "type": "manual-skill"},
-        {"source": "skills/community-marketing", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-community-marketing", "type": "manual-skill"},
-        {"source": "skills/competitor-profiling", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-competitor-profiling", "type": "manual-skill"},
-        {"source": "skills/competitors", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-competitors", "type": "manual-skill"},
-        {"source": "skills/content-strategy", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-content-strategy", "type": "manual-skill"},
-        {"source": "skills/copy-editing", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-copy-editing", "type": "manual-skill"},
-        {"source": "skills/copywriting", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-copywriting", "type": "manual-skill"},
-        {"source": "skills/cro", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-cro", "type": "manual-skill"},
-        {"source": "skills/customer-research", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-customer-research", "type": "manual-skill"},
-        {"source": "skills/directory-submissions", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-directory-submissions", "type": "manual-skill"},
-        {"source": "skills/emails", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-emails", "type": "manual-skill"},
-        {"source": "skills/free-tools", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-free-tools", "type": "manual-skill"},
-        {"source": "skills/image", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-image", "type": "manual-skill"},
-        {"source": "skills/influencer-marketing", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-influencer-marketing", "type": "manual-skill"},
-        {"source": "skills/launch", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-launch", "type": "manual-skill"},
-        {"source": "skills/lead-magnets", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-lead-magnets", "type": "manual-skill"},
-        {"source": "skills/marketing-council", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-marketing-council", "type": "manual-skill"},
-        {"source": "skills/marketing-ideas", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-marketing-ideas", "type": "manual-skill"},
-        {"source": "skills/marketing-loops", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-marketing-loops", "type": "manual-skill"},
-        {"source": "skills/marketing-plan", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-marketing-plan", "type": "manual-skill"},
-        {"source": "skills/marketing-psychology", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-marketing-psychology", "type": "manual-skill"},
-        {"source": "skills/offers", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-offers", "type": "manual-skill"},
-        {"source": "skills/onboarding", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-onboarding", "type": "manual-skill"},
-        {"source": "skills/paywalls", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-paywalls", "type": "manual-skill"},
-        {"source": "skills/popups", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-popups", "type": "manual-skill"},
-        {"source": "skills/pricing", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-pricing", "type": "manual-skill"},
-        {"source": "skills/product-marketing", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-product-marketing", "type": "manual-skill"},
-        {"source": "skills/programmatic-seo", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-programmatic-seo", "type": "manual-skill"},
-        {"source": "skills/prospecting", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-prospecting", "type": "manual-skill"},
-        {"source": "skills/public-relations", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-public-relations", "type": "manual-skill"},
-        {"source": "skills/referrals", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-referrals", "type": "manual-skill"},
-        {"source": "skills/revops", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-revops", "type": "manual-skill"},
-        {"source": "skills/sales-enablement", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-sales-enablement", "type": "manual-skill"},
-        {"source": "skills/schema", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-schema", "type": "manual-skill"},
-        {"source": "skills/seo-audit", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-seo-audit", "type": "manual-skill"},
-        {"source": "skills/signup", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-signup", "type": "manual-skill"},
-        {"source": "skills/site-architecture", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-site-architecture", "type": "manual-skill"},
-        {"source": "skills/sms", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-sms", "type": "manual-skill"},
-        {"source": "skills/social", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-social", "type": "manual-skill"},
-        {"source": "skills/video", "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-video", "type": "manual-skill"}
+        {
+          "source": "skills/ab-testing",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-ab-testing",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/ad-creative",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-ad-creative",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/ads",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-ads",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/ai-seo",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-ai-seo",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/analytics",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-analytics",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/aso",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-aso",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/attribution",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-attribution",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/churn-prevention",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-churn-prevention",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/co-marketing",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-co-marketing",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/cold-email",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-cold-email",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/community-marketing",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-community-marketing",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/competitor-profiling",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-competitor-profiling",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/competitors",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-competitors",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/content-strategy",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-content-strategy",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/copy-editing",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-copy-editing",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/copywriting",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-copywriting",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/cro",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-cro",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/customer-research",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-customer-research",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/directory-submissions",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-directory-submissions",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/emails",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-emails",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/free-tools",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-free-tools",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/image",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-image",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/influencer-marketing",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-influencer-marketing",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/launch",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-launch",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/lead-magnets",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-lead-magnets",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/marketing-council",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-marketing-council",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/marketing-ideas",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-marketing-ideas",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/marketing-loops",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-marketing-loops",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/marketing-plan",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-marketing-plan",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/marketing-psychology",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-marketing-psychology",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/offers",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-offers",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/onboarding",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-onboarding",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/paywalls",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-paywalls",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/popups",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-popups",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/pricing",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-pricing",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/product-marketing",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-product-marketing",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/programmatic-seo",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-programmatic-seo",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/prospecting",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-prospecting",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/public-relations",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-public-relations",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/referrals",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-referrals",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/revops",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-revops",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/sales-enablement",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-sales-enablement",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/schema",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-schema",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-audit",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-seo-audit",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/signup",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-signup",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/site-architecture",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-site-architecture",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/sms",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-sms",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/social",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-social",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/video",
+          "target": "_system/agents/manual-skills/_corey-marketing-skills/corey-video",
+          "type": "manual-skill"
+        }
       ]
     },
     {
@@ -224,31 +420,131 @@
       "path": "~/Code/open_source/claude-seo",
       "ref": "main",
       "projections": [
-        {"source": "skills/seo", "target": "_system/agents/manual-skills/_claude-seo/claude-seo", "type": "manual-skill"},
-        {"source": "skills/seo-audit", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-audit", "type": "manual-skill"},
-        {"source": "skills/seo-backlinks", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-backlinks", "type": "manual-skill"},
-        {"source": "skills/seo-cluster", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-cluster", "type": "manual-skill"},
-        {"source": "skills/seo-competitor-pages", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-competitor-pages", "type": "manual-skill"},
-        {"source": "skills/seo-content", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-content", "type": "manual-skill"},
-        {"source": "skills/seo-content-brief", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-content-brief", "type": "manual-skill"},
-        {"source": "skills/seo-dataforseo", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-dataforseo", "type": "manual-skill"},
-        {"source": "skills/seo-drift", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-drift", "type": "manual-skill"},
-        {"source": "skills/seo-ecommerce", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-ecommerce", "type": "manual-skill"},
-        {"source": "skills/seo-flow", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-flow", "type": "manual-skill"},
-        {"source": "skills/seo-geo", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-geo", "type": "manual-skill"},
-        {"source": "skills/seo-google", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-google", "type": "manual-skill"},
-        {"source": "skills/seo-hreflang", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-hreflang", "type": "manual-skill"},
-        {"source": "skills/seo-image-gen", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-image-gen", "type": "manual-skill"},
-        {"source": "skills/seo-images", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-images", "type": "manual-skill"},
-        {"source": "skills/seo-local", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-local", "type": "manual-skill"},
-        {"source": "skills/seo-maps", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-maps", "type": "manual-skill"},
-        {"source": "skills/seo-page", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-page", "type": "manual-skill"},
-        {"source": "skills/seo-plan", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-plan", "type": "manual-skill"},
-        {"source": "skills/seo-programmatic", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-programmatic", "type": "manual-skill"},
-        {"source": "skills/seo-schema", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-schema", "type": "manual-skill"},
-        {"source": "skills/seo-sitemap", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-sitemap", "type": "manual-skill"},
-        {"source": "skills/seo-sxo", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-sxo", "type": "manual-skill"},
-        {"source": "skills/seo-technical", "target": "_system/agents/manual-skills/_claude-seo/claude-seo-technical", "type": "manual-skill"}
+        {
+          "source": "skills/seo",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-audit",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-audit",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-backlinks",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-backlinks",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-cluster",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-cluster",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-competitor-pages",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-competitor-pages",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-content",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-content",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-content-brief",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-content-brief",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-dataforseo",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-dataforseo",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-drift",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-drift",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-ecommerce",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-ecommerce",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-flow",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-flow",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-geo",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-geo",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-google",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-google",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-hreflang",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-hreflang",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-image-gen",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-image-gen",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-images",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-images",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-local",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-local",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-maps",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-maps",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-page",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-page",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-plan",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-plan",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-programmatic",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-programmatic",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-schema",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-schema",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-sitemap",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-sitemap",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-sxo",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-sxo",
+          "type": "manual-skill"
+        },
+        {
+          "source": "skills/seo-technical",
+          "target": "_system/agents/manual-skills/_claude-seo/claude-seo-technical",
+          "type": "manual-skill"
+        }
       ]
     },
     {
@@ -257,269 +553,1584 @@
       "path": "~/Code/open_source/gtm-skills",
       "ref": "main",
       "projections": [
-        {"source":"skills/alex-vacca/ai-personalization-prompts","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ai-personalization-prompts","type":"manual-skill","title_override":"Swan GTM Skills · AI personalization prompts"},
-        {"source":"skills/alex-vacca/atl-btl-messaging","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-atl-btl-messaging","type":"manual-skill","title_override":"Swan GTM Skills · ATL vs BTL messaging"},
-        {"source":"skills/alex-vacca/bridgebound-firmographic-15","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-bridgebound-firmographic-15","type":"manual-skill","title_override":"Swan GTM Skills · Bridgebound firmographic triggers"},
-        {"source":"skills/alex-vacca/bridgebound-history-16","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-bridgebound-history-16","type":"manual-skill","title_override":"Swan GTM Skills · Bridgebound history triggers"},
-        {"source":"skills/alex-vacca/bridgebound-in-market-20","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-bridgebound-in-market-20","type":"manual-skill","title_override":"Swan GTM Skills · Bridgebound in-market triggers"},
-        {"source":"skills/alex-vacca/bridgebound-relationship-39","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-bridgebound-relationship-39","type":"manual-skill","title_override":"Swan GTM Skills · Bridgebound relationship triggers"},
-        {"source":"skills/alex-vacca/bridgebound-symptoms-11","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-bridgebound-symptoms-11","type":"manual-skill","title_override":"Swan GTM Skills · Bridgebound symptoms and signs triggers"},
-        {"source":"skills/alex-vacca/buying-signals-6","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-buying-signals-6","type":"manual-skill","title_override":"Swan GTM Skills · Buying signals ranked by purchase correlation"},
-        {"source":"skills/alex-vacca/clay-buying-signals-5","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-clay-buying-signals-5","type":"manual-skill","title_override":"Swan GTM Skills · Clay buying signals"},
-        {"source":"skills/alex-vacca/clay-enrichment-9step","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-clay-enrichment-9step","type":"manual-skill","title_override":"Swan GTM Skills · Clay enrichment workflow"},
-        {"source":"skills/alex-vacca/clay-expert","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-clay-expert","type":"manual-skill","title_override":"Swan GTM Skills · The Clay expert"},
-        {"source":"skills/alex-vacca/cold-call-scripts","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cold-call-scripts","type":"manual-skill","title_override":"Swan GTM Skills · Cold call scripts"},
-        {"source":"skills/alex-vacca/cold-email-4-sequence","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cold-email-4-sequence","type":"manual-skill","title_override":"Swan GTM Skills · Cold email sequence"},
-        {"source":"skills/alex-vacca/cold-email-strategist","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cold-email-strategist","type":"manual-skill","title_override":"Swan GTM Skills · The cold email strategist"},
-        {"source":"skills/alex-vacca/cold-email-templates-34","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cold-email-templates-34","type":"manual-skill","title_override":"Swan GTM Skills · Cold email templates"},
-        {"source":"skills/alex-vacca/email-1-variations-7","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-email-1-variations-7","type":"manual-skill","title_override":"Swan GTM Skills · Email 1 variations"},
-        {"source":"skills/alex-vacca/email-metrics-benchmarks","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-email-metrics-benchmarks","type":"manual-skill","title_override":"Swan GTM Skills · Email metrics and benchmarks"},
-        {"source":"skills/alex-vacca/email-writing-frameworks","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-email-writing-frameworks","type":"manual-skill","title_override":"Swan GTM Skills · Email writing frameworks"},
-        {"source":"skills/alex-vacca/frontal-messaging-templates","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-frontal-messaging-templates","type":"manual-skill","title_override":"Swan GTM Skills · Frontal messaging templates"},
-        {"source":"skills/alex-vacca/gtm-philosophy","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-gtm-philosophy","type":"manual-skill","title_override":"Swan GTM Skills · GTM philosophy"},
-        {"source":"skills/alex-vacca/gtm-plays-11","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-gtm-plays-11","type":"manual-skill","title_override":"Swan GTM Skills · GTM signal plays"},
-        {"source":"skills/alex-vacca/inbound-triggers-30","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-inbound-triggers-30","type":"manual-skill","title_override":"Swan GTM Skills · Inbound triggers"},
-        {"source":"skills/alex-vacca/josh-braun-copywriting","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-josh-braun-copywriting","type":"manual-skill","title_override":"Swan GTM Skills · Josh Braun copywriting"},
-        {"source":"skills/alex-vacca/lead-sources-guide","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-lead-sources-guide","type":"manual-skill","title_override":"Swan GTM Skills · Lead sources guide"},
-        {"source":"skills/alex-vacca/linkedin-campaign-complete","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-campaign-complete","type":"manual-skill","title_override":"Swan GTM Skills · LinkedIn campaign playbook"},
-        {"source":"skills/alex-vacca/linkedin-limits-warmup","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-limits-warmup","type":"manual-skill","title_override":"Swan GTM Skills · LinkedIn limits and warm-up"},
-        {"source":"skills/alex-vacca/linkedin-success-factors","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-success-factors","type":"manual-skill","title_override":"Swan GTM Skills · LinkedIn success factors"},
-        {"source":"skills/alex-vacca/list-architect","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-list-architect","type":"manual-skill","title_override":"Swan GTM Skills · The list architect"},
-        {"source":"skills/alex-vacca/list-building-tips","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-list-building-tips","type":"manual-skill","title_override":"Swan GTM Skills · List building tips"},
-        {"source":"skills/alex-vacca/outbound-triggers-6","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-outbound-triggers-6","type":"manual-skill","title_override":"Swan GTM Skills · Outbound triggers"},
-        {"source":"skills/alex-vacca/outreach-4-categories","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-outreach-4-categories","type":"manual-skill","title_override":"Swan GTM Skills · Outreach categories"},
-        {"source":"skills/alex-vacca/personalization-6-buckets","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-personalization-6-buckets","type":"manual-skill","title_override":"Swan GTM Skills · Personalization buckets"},
-        {"source":"skills/alex-vacca/personalization-hooks","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-personalization-hooks","type":"manual-skill","title_override":"Swan GTM Skills · Personalization hooks"},
-        {"source":"skills/alex-vacca/personalization-playbooks","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-personalization-playbooks","type":"manual-skill","title_override":"Swan GTM Skills · Personalization playbooks"},
-        {"source":"skills/alex-vacca/sdr-master-prompts","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-sdr-master-prompts","type":"manual-skill","title_override":"Swan GTM Skills · SDR master prompts"},
-        {"source":"skills/alex-vacca/sdr-outbound-rules","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-sdr-outbound-rules","type":"manual-skill","title_override":"Swan GTM Skills · SDR outbound rules"},
-        {"source":"skills/alex-vacca/signal-sourcer","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-signal-sourcer","type":"manual-skill","title_override":"Swan GTM Skills · The signal sourcer"},
-        {"source":"skills/amos-bar-joseph/account-tier-scoring","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-account-tier-scoring","type":"manual-skill","title_override":"Swan GTM Skills · Account tier scoring"},
-        {"source":"skills/ariel-cohen/champion-move-detection","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-champion-move-detection","type":"manual-skill","title_override":"Swan GTM Skills · Champion move detection"},
-        {"source":"skills/ariel-cohen/closed-won-replication-play","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-closed-won-replication-play","type":"manual-skill","title_override":"Swan GTM Skills · Closed-won replication play"},
-        {"source":"skills/ariel-cohen/customer-expansion-scoring","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-customer-expansion-scoring","type":"manual-skill","title_override":"Swan GTM Skills · Customer expansion scoring"},
-        {"source":"skills/ariel-cohen/handle-linkedin-profile-view-signal","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-handle-linkedin-profile-view-signal","type":"manual-skill","title_override":"Swan GTM Skills · Handle LinkedIn profile view signal"},
-        {"source":"skills/ariel-cohen/influencer-post-engager-capture","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-influencer-post-engager-capture","type":"manual-skill","title_override":"Swan GTM Skills · Influencer post engager capture"},
-        {"source":"skills/ariel-cohen/linkedin-dm-signal-classifier","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-dm-signal-classifier","type":"manual-skill","title_override":"Swan GTM Skills · LinkedIn DM signal classifier"},
-        {"source":"skills/ariel-cohen/linkedin-engagement-handler","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-engagement-handler","type":"manual-skill","title_override":"Swan GTM Skills · LinkedIn post engagement handler"},
-        {"source":"skills/austin-hay/reverse-etl-activation","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reverse-etl-activation","type":"manual-skill","title_override":"Swan GTM Skills · Reverse ETL activation"},
-        {"source":"skills/bojan-berisavljevic/signal-to-campaign","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-signal-to-campaign","type":"manual-skill","title_override":"Swan GTM Skills · Signal to campaign"},
-        {"source":"skills/brad-smith/vc-portfolio-research","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-vc-portfolio-research","type":"manual-skill","title_override":"Swan GTM Skills · VC portfolio research"},
-        {"source":"skills/brianne-thomas/linkedin-ads-ctr-signal","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-ads-ctr-signal","type":"manual-skill","title_override":"Swan GTM Skills · LinkedIn Ads CTR signal"},
-        {"source":"skills/daniel-bustamante/52-newsletter-ideas","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-52-newsletter-ideas","type":"manual-skill","title_override":"Swan GTM Skills · Generate 52 newsletter ideas"},
-        {"source":"skills/daniel-bustamante/email-content-ideas","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-email-content-ideas","type":"manual-skill","title_override":"Swan GTM Skills · Brainstorm email and newsletter content ideas"},
-        {"source":"skills/daniel-bustamante/email-copy-optimizer","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-email-copy-optimizer","type":"manual-skill","title_override":"Swan GTM Skills · Optimize and edit email copy"},
-        {"source":"skills/daniel-bustamante/email-subject-lines","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-email-subject-lines","type":"manual-skill","title_override":"Swan GTM Skills · Generate email subject lines"},
-        {"source":"skills/daniel-bustamante/i-made-this-for-you-email","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-i-made-this-for-you-email","type":"manual-skill","title_override":"Swan GTM Skills · Write an \"I made this for you\" email"},
-        {"source":"skills/daniel-bustamante/lead-magnet-welcome-email","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-lead-magnet-welcome-email","type":"manual-skill","title_override":"Swan GTM Skills · Write a lead magnet welcome email"},
-        {"source":"skills/daniel-bustamante/linkedin-post-to-newsletter","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-post-to-newsletter","type":"manual-skill","title_override":"Swan GTM Skills · Repurpose a LinkedIn post into a newsletter issue"},
-        {"source":"skills/daniel-bustamante/newsletter-format","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-newsletter-format","type":"manual-skill","title_override":"Swan GTM Skills · Design your newsletter format"},
-        {"source":"skills/daniel-bustamante/newsletter-landing-page","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-newsletter-landing-page","type":"manual-skill","title_override":"Swan GTM Skills · Write a newsletter landing page"},
-        {"source":"skills/daniel-bustamante/newsletter-value-prop","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-newsletter-value-prop","type":"manual-skill","title_override":"Swan GTM Skills · Generate a newsletter value prop and name"},
-        {"source":"skills/daniel-bustamante/newsletter-welcome-email","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-newsletter-welcome-email","type":"manual-skill","title_override":"Swan GTM Skills · Write a newsletter welcome email"},
-        {"source":"skills/daniel-bustamante/newsletter-welcome-gift","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-newsletter-welcome-gift","type":"manual-skill","title_override":"Swan GTM Skills · Brainstorm your newsletter welcome gift"},
-        {"source":"skills/daniel-bustamante/newsletter-welcome-sequence","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-newsletter-welcome-sequence","type":"manual-skill","title_override":"Swan GTM Skills · Build a newsletter welcome sequence"},
-        {"source":"skills/daniel-bustamante/pain-is-the-pitch","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-pain-is-the-pitch","type":"manual-skill","title_override":"Swan GTM Skills · Rewrite an email with Pain Is The Pitch"},
-        {"source":"skills/daniel-bustamante/weekly-roundup-email","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-weekly-roundup-email","type":"manual-skill","title_override":"Swan GTM Skills · Write a weekly roundup email"},
-        {"source":"skills/danni-chen/founder-post-triggers-24","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-founder-post-triggers-24","type":"manual-skill","title_override":"Swan GTM Skills · Founder post triggers"},
-        {"source":"skills/dave-engel/conference-recommendation","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-conference-recommendation","type":"manual-skill","title_override":"Swan GTM Skills · Conference recommendation"},
-        {"source":"skills/din-arbel/signal-interpreter","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-signal-interpreter","type":"manual-skill","title_override":"Swan GTM Skills · Signal interpreter"},
-        {"source":"skills/din-arbel/warm-intro-intelligence","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-warm-intro-intelligence","type":"manual-skill","title_override":"Swan GTM Skills · Warm intro intelligence"},
-        {"source":"skills/dusan-vystrcil/hiring-radar","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-hiring-radar","type":"manual-skill","title_override":"Swan GTM Skills · Hiring radar"},
-        {"source":"skills/emilia-korczynska/linkedin-abm-ad-design","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-abm-ad-design","type":"manual-skill","title_override":"Swan GTM Skills · LinkedIn ABM ad design"},
-        {"source":"skills/emilia-korczynska/linkedin-abm-audit","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-abm-audit","type":"manual-skill","title_override":"Swan GTM Skills · LinkedIn ads & ABM audit"},
-        {"source":"skills/emilia-korczynska/linkedin-abm-monthly-report","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-abm-monthly-report","type":"manual-skill","title_override":"Swan GTM Skills · Monthly LinkedIn ABM report"},
-        {"source":"skills/emilia-korczynska/linkedin-abm-strategy-planner","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-abm-strategy-planner","type":"manual-skill","title_override":"Swan GTM Skills · LinkedIn ABM strategy planner"},
-        {"source":"skills/huxley-peckham/ai-visibility-sampling","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ai-visibility-sampling","type":"manual-skill","title_override":"Swan GTM Skills · AI visibility sampling"},
-        {"source":"skills/huxley-peckham/citation-gap-outreach","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-citation-gap-outreach","type":"manual-skill","title_override":"Swan GTM Skills · Citation gap outreach"},
-        {"source":"skills/huxley-peckham/local-ai-visibility","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-local-ai-visibility","type":"manual-skill","title_override":"Swan GTM Skills · Local AI visibility"},
-        {"source":"skills/ido-goldberg/audit-swan","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-audit-swan","type":"manual-skill","title_override":"Swan GTM Skills · Audit Swan"},
-        {"source":"skills/ido-goldberg/battlecard","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-battlecard","type":"manual-skill","title_override":"Swan GTM Skills · Battlecard"},
-        {"source":"skills/ido-goldberg/brief","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-brief","type":"manual-skill","title_override":"Swan GTM Skills · Brief"},
-        {"source":"skills/ido-goldberg/build-list","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-build-list","type":"manual-skill","title_override":"Swan GTM Skills · Build list"},
-        {"source":"skills/ido-goldberg/clear-my-desk","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-clear-my-desk","type":"manual-skill","title_override":"Swan GTM Skills · Clear my desk"},
-        {"source":"skills/ido-goldberg/community-radar","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-community-radar","type":"manual-skill","title_override":"Swan GTM Skills · Community radar"},
-        {"source":"skills/ido-goldberg/event-radar","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-event-radar","type":"manual-skill","title_override":"Swan GTM Skills · Event radar"},
-        {"source":"skills/ido-goldberg/handle-reply","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-handle-reply","type":"manual-skill","title_override":"Swan GTM Skills · Handle reply"},
-        {"source":"skills/ido-goldberg/icp","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-icp","type":"manual-skill","title_override":"Swan GTM Skills · ICP"},
-        {"source":"skills/ido-goldberg/inbox-zero","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-inbox-zero","type":"manual-skill","title_override":"Swan GTM Skills · Inbox zero"},
-        {"source":"skills/ido-goldberg/map-contacts","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-map-contacts","type":"manual-skill","title_override":"Swan GTM Skills · Map contacts"},
-        {"source":"skills/ido-goldberg/multi-thread-deals","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-multi-thread-deals","type":"manual-skill","title_override":"Swan GTM Skills · Multi-thread deals"},
-        {"source":"skills/ido-goldberg/pipeline-review","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-pipeline-review","type":"manual-skill","title_override":"Swan GTM Skills · Pipeline review"},
-        {"source":"skills/ido-goldberg/post-radar","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-post-radar","type":"manual-skill","title_override":"Swan GTM Skills · Post radar"},
-        {"source":"skills/ido-goldberg/reach-out","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reach-out","type":"manual-skill","title_override":"Swan GTM Skills · Reach out"},
-        {"source":"skills/ido-goldberg/research","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-research","type":"manual-skill","title_override":"Swan GTM Skills · Research"},
-        {"source":"skills/ido-goldberg/score","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-score","type":"manual-skill","title_override":"Swan GTM Skills · Score"},
-        {"source":"skills/ido-goldberg/skillify","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-skillify","type":"manual-skill","title_override":"Swan GTM Skills · Skillify"},
-        {"source":"skills/ido-goldberg/visitor-radar","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-visitor-radar","type":"manual-skill","title_override":"Swan GTM Skills · Visitor radar"},
-        {"source":"skills/imad-badreddine/cold-email-inbox-warmup","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cold-email-inbox-warmup","type":"manual-skill","title_override":"Swan GTM Skills · Cold email inbox warm-up"},
-        {"source":"skills/imad-badreddine/cold-email-preflight","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cold-email-preflight","type":"manual-skill","title_override":"Swan GTM Skills · Cold email pre-flight check"},
-        {"source":"skills/imad-badreddine/multi-sender-rotation","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-multi-sender-rotation","type":"manual-skill","title_override":"Swan GTM Skills · Multi-sender rotation"},
-        {"source":"skills/ivan-falco/1-to-1-abm-ads","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-1-to-1-abm-ads","type":"manual-skill","title_override":"Swan GTM Skills · 1:1 ABM ads"},
-        {"source":"skills/ivan-falco/abm-measurement-framework","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-abm-measurement-framework","type":"manual-skill","title_override":"Swan GTM Skills · ABM measurement framework"},
-        {"source":"skills/ivan-falco/abm-on-meta","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-abm-on-meta","type":"manual-skill","title_override":"Swan GTM Skills · ABM on Meta"},
-        {"source":"skills/ivan-falco/abm-retargeting-framework","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-abm-retargeting-framework","type":"manual-skill","title_override":"Swan GTM Skills · ABM retargeting framework"},
-        {"source":"skills/ivan-falco/account-selection-framework","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-account-selection-framework","type":"manual-skill","title_override":"Swan GTM Skills · Account selection framework"},
-        {"source":"skills/ivan-falco/ad-copywriting","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ad-copywriting","type":"manual-skill","title_override":"Swan GTM Skills · Ad copywriting"},
-        {"source":"skills/ivan-falco/ad-personas","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ad-personas","type":"manual-skill","title_override":"Swan GTM Skills · Ad persona framework"},
-        {"source":"skills/ivan-falco/ads-budget-allocation","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-budget-allocation","type":"manual-skill","title_override":"Swan GTM Skills · Budget allocation by stage"},
-        {"source":"skills/ivan-falco/ads-campaign-planning","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-campaign-planning","type":"manual-skill","title_override":"Swan GTM Skills · Campaign planning and execution"},
-        {"source":"skills/ivan-falco/ads-channel-selection","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-channel-selection","type":"manual-skill","title_override":"Swan GTM Skills · Channel selection guide"},
-        {"source":"skills/ivan-falco/ads-measurement-scorecard","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-measurement-scorecard","type":"manual-skill","title_override":"Swan GTM Skills · Ads measurement scorecard"},
-        {"source":"skills/ivan-falco/ads-offers-strategy","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-offers-strategy","type":"manual-skill","title_override":"Swan GTM Skills · Offers strategy guide"},
-        {"source":"skills/ivan-falco/ads-optimization-signals","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-optimization-signals","type":"manual-skill","title_override":"Swan GTM Skills · Optimization signals"},
-        {"source":"skills/ivan-falco/ads-outbound-signaling-guide","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-outbound-signaling-guide","type":"manual-skill","title_override":"Swan GTM Skills · LinkedIn ads and outbound signaling"},
-        {"source":"skills/ivan-falco/ads-scaling-quadrant","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-scaling-quadrant","type":"manual-skill","title_override":"Swan GTM Skills · The scaling quadrant"},
-        {"source":"skills/ivan-falco/ads-writing-style","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-writing-style","type":"manual-skill","title_override":"Swan GTM Skills · Writing style: no AI slop"},
-        {"source":"skills/ivan-falco/advantage-plus","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-advantage-plus","type":"manual-skill","title_override":"Swan GTM Skills · Advantage+ for B2B SaaS on Meta"},
-        {"source":"skills/ivan-falco/creating-campaigns-ads-audiences","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-creating-campaigns-ads-audiences","type":"manual-skill","title_override":"Swan GTM Skills · Create Meta campaigns & audiences"},
-        {"source":"skills/ivan-falco/creative-cadence-operating-system","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-creative-cadence-operating-system","type":"manual-skill","title_override":"Swan GTM Skills · Creative cadence operating system"},
-        {"source":"skills/ivan-falco/creative-fatigue-detection","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-creative-fatigue-detection","type":"manual-skill","title_override":"Swan GTM Skills · Creative fatigue detection"},
-        {"source":"skills/ivan-falco/demand-lifecycle","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-demand-lifecycle","type":"manual-skill","title_override":"Swan GTM Skills · The demand lifecycle"},
-        {"source":"skills/ivan-falco/google-ads","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-google-ads","type":"manual-skill","title_override":"Swan GTM Skills · Google Ads for B2B"},
-        {"source":"skills/ivan-falco/lead-form-optimization","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-lead-form-optimization","type":"manual-skill","title_override":"Swan GTM Skills · Lead form optimization"},
-        {"source":"skills/ivan-falco/linkedin-abm-1to1-few-many","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-abm-1to1-few-many","type":"manual-skill","title_override":"Swan GTM Skills · LinkedIn ABM — 1:1, 1:few, 1:many"},
-        {"source":"skills/ivan-falco/linkedin-ads-abm-guide","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-ads-abm-guide","type":"manual-skill","title_override":"Swan GTM Skills · LinkedIn ads for ABM"},
-        {"source":"skills/ivan-falco/linkedin-ads-audience-guide","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-ads-audience-guide","type":"manual-skill","title_override":"Swan GTM Skills · LinkedIn ads audience strategy"},
-        {"source":"skills/ivan-falco/linkedin-ads","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-ads","type":"manual-skill","title_override":"Swan GTM Skills · LinkedIn Ads for B2B"},
-        {"source":"skills/ivan-falco/message-validation","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-message-validation","type":"manual-skill","title_override":"Swan GTM Skills · Message validation & ad scaling"},
-        {"source":"skills/ivan-falco/meta-ads-operating-system","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-ads-operating-system","type":"manual-skill","title_override":"Swan GTM Skills · Meta Ads operating system"},
-        {"source":"skills/ivan-falco/meta-ads","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-ads","type":"manual-skill","title_override":"Swan GTM Skills · Meta ads management for B2B"},
-        {"source":"skills/ivan-falco/meta-api-reference","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-api-reference","type":"manual-skill","title_override":"Swan GTM Skills · Meta Marketing API reference"},
-        {"source":"skills/ivan-falco/meta-audience-strategy","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-audience-strategy","type":"manual-skill","title_override":"Swan GTM Skills · Meta audience strategy"},
-        {"source":"skills/ivan-falco/meta-b2b-overview","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-b2b-overview","type":"manual-skill","title_override":"Swan GTM Skills · Meta Ads for B2B SaaS - Overview"},
-        {"source":"skills/ivan-falco/meta-campaign-structure","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-campaign-structure","type":"manual-skill","title_override":"Swan GTM Skills · Meta campaign structure"},
-        {"source":"skills/ivan-falco/meta-capi-and-events","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-capi-and-events","type":"manual-skill","title_override":"Swan GTM Skills · Meta Conversions API & events"},
-        {"source":"skills/ivan-falco/meta-creative-strategy","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-creative-strategy","type":"manual-skill","title_override":"Swan GTM Skills · Meta creative strategy"},
-        {"source":"skills/ivan-falco/meta-offer-strategy","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-offer-strategy","type":"manual-skill","title_override":"Swan GTM Skills · Meta offer strategy"},
-        {"source":"skills/ivan-falco/meta-onboarding","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-onboarding","type":"manual-skill","title_override":"Swan GTM Skills · Meta ads onboarding"},
-        {"source":"skills/ivan-falco/meta-optimization-playbook","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-optimization-playbook","type":"manual-skill","title_override":"Swan GTM Skills · Meta Ads optimization playbook"},
-        {"source":"skills/ivan-falco/meta-reporting","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-reporting","type":"manual-skill","title_override":"Swan GTM Skills · Meta ads reporting"},
-        {"source":"skills/ivan-falco/meta-setup-and-tracking","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-setup-and-tracking","type":"manual-skill","title_override":"Swan GTM Skills · Meta Ads setup & tracking"},
-        {"source":"skills/ivan-falco/meta-third-party-conversion-tracking","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-third-party-conversion-tracking","type":"manual-skill","title_override":"Swan GTM Skills · Meta off-domain conversion tracking"},
-        {"source":"skills/ivan-falco/persona-mapping-framework","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-persona-mapping-framework","type":"manual-skill","title_override":"Swan GTM Skills · Persona mapping framework"},
-        {"source":"skills/ivan-falco/scale-b2b-qualified-pipeline","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-scale-b2b-qualified-pipeline","type":"manual-skill","title_override":"Swan GTM Skills · Scale qualified pipeline on Meta"},
-        {"source":"skills/jeremy-hurst/account-health-audit","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-account-health-audit","type":"manual-skill","title_override":"Swan GTM Skills · Account health audit"},
-        {"source":"skills/jeremy-hurst/expansion-opportunity-analysis","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-expansion-opportunity-analysis","type":"manual-skill","title_override":"Swan GTM Skills · Expansion opportunity analysis"},
-        {"source":"skills/jeremy-hurst/outreach-execution","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-outreach-execution","type":"manual-skill","title_override":"Swan GTM Skills · Outreach execution"},
-        {"source":"skills/jeremy-hurst/post-meeting-execution","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-post-meeting-execution","type":"manual-skill","title_override":"Swan GTM Skills · Post-meeting execution"},
-        {"source":"skills/john-williams/google-ads-budget-portfolio-reallocation","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-google-ads-budget-portfolio-reallocation","type":"manual-skill","title_override":"Swan GTM Skills · Portfolio-style budget reallocation across campaigns"},
-        {"source":"skills/john-williams/google-ads-pmax-asset-groups","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-google-ads-pmax-asset-groups","type":"manual-skill","title_override":"Swan GTM Skills · Performance Max asset group structure and hygiene"},
-        {"source":"skills/john-williams/google-ads-ppc-math","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-google-ads-ppc-math","type":"manual-skill","title_override":"Swan GTM Skills · PPC forecasting and unit-economics math"},
-        {"source":"skills/john-williams/google-ads-quality-score-diagnosis","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-google-ads-quality-score-diagnosis","type":"manual-skill","title_override":"Swan GTM Skills · Quality Score diagnosis and prioritization"},
-        {"source":"skills/john-williams/google-ads-write-safety","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-google-ads-write-safety","type":"manual-skill","title_override":"Swan GTM Skills · Write safety for AI agents on Google Ads accounts"},
-        {"source":"skills/jorge-macias/track-contact-job-changes","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-track-contact-job-changes","type":"manual-skill","title_override":"Swan GTM Skills · Track contact job changes"},
-        {"source":"skills/katya-tarapovskaia/account-intelligence-analyst","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-account-intelligence-analyst","type":"manual-skill","title_override":"Swan GTM Skills · Account intelligence analyst"},
-        {"source":"skills/kevin-kd-dorsey/call-scorecards","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-call-scorecards","type":"manual-skill","title_override":"Swan GTM Skills · Call scorecards"},
-        {"source":"skills/kevin-kd-dorsey/sales-playbook-foundations","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-sales-playbook-foundations","type":"manual-skill","title_override":"Swan GTM Skills · Sales playbook foundations"},
-        {"source":"skills/lucas-godtfredsen/auto-reply-is-not-a-reply","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-auto-reply-is-not-a-reply","type":"manual-skill","title_override":"Swan GTM Skills · An auto-reply is not a reply"},
-        {"source":"skills/lucas-godtfredsen/inbox-warm-up-ramp","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-inbox-warm-up-ramp","type":"manual-skill","title_override":"Swan GTM Skills · Warm up a sending inbox before you need it"},
-        {"source":"skills/lucas-godtfredsen/never-guess-an-email","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-never-guess-an-email","type":"manual-skill","title_override":"Swan GTM Skills · Never guess an email address"},
-        {"source":"skills/luke-shalom/category-of-one-positioning","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-category-of-one-positioning","type":"manual-skill","title_override":"Swan GTM Skills · Category-of-one positioning"},
-        {"source":"skills/maja-voje/outreach-messaging","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-outreach-messaging","type":"manual-skill","title_override":"Swan GTM Skills · Outreach messaging"},
-        {"source":"skills/manny-medina/ai-pricing-model-picker","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ai-pricing-model-picker","type":"manual-skill","title_override":"Swan GTM Skills · AI pricing model picker"},
-        {"source":"skills/manny-medina/credit-packaging","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-credit-packaging","type":"manual-skill","title_override":"Swan GTM Skills · Credit packaging"},
-        {"source":"skills/manny-medina/roi-proof-generator","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-roi-proof-generator","type":"manual-skill","title_override":"Swan GTM Skills · ROI proof generator"},
-        {"source":"skills/maxwell-nimmo/creator-programme-qbr","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-creator-programme-qbr","type":"manual-skill","title_override":"Swan GTM Skills · Draft creator programme QBR"},
-        {"source":"skills/maxwell-nimmo/draft-creator-campaign-brief","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-draft-creator-campaign-brief","type":"manual-skill","title_override":"Swan GTM Skills · Draft campaign brief"},
-        {"source":"skills/maxwell-nimmo/estimate-creator-rate","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-estimate-creator-rate","type":"manual-skill","title_override":"Swan GTM Skills · Estimate creator rate"},
-        {"source":"skills/maxwell-nimmo/negotiate-creator-rate","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-negotiate-creator-rate","type":"manual-skill","title_override":"Swan GTM Skills · Negotiate creator rate"},
-        {"source":"skills/maxwell-nimmo/set-creator-benchmarks","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-set-creator-benchmarks","type":"manual-skill","title_override":"Swan GTM Skills · Set performance benchmarks"},
-        {"source":"skills/nadav-david/bridge-before-cold","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-bridge-before-cold","type":"manual-skill","title_override":"Swan GTM Skills · Bridge before cold"},
-        {"source":"skills/nadav-david/earned-autonomy","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-earned-autonomy","type":"manual-skill","title_override":"Swan GTM Skills · Earned autonomy"},
-        {"source":"skills/nadav-david/inbound-is-data","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-inbound-is-data","type":"manual-skill","title_override":"Swan GTM Skills · Inbound is data"},
-        {"source":"skills/nadav-david/recent-discourse-sweep","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-recent-discourse-sweep","type":"manual-skill","title_override":"Swan GTM Skills · Recent discourse sweep"},
-        {"source":"skills/nadav-david/reply-pull-gate","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reply-pull-gate","type":"manual-skill","title_override":"Swan GTM Skills · Reply pull gate"},
-        {"source":"skills/pete-mientkiewicz/viral-linkedin-lead-magnet-post","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-viral-linkedin-lead-magnet-post","type":"manual-skill","title_override":"Swan GTM Skills · Viral LinkedIn Lead Magnet Post"},
-        {"source":"skills/peter-cools/competitor-connection-displacement","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-competitor-connection-displacement","type":"manual-skill","title_override":"Swan GTM Skills · Competitor connection displacement"},
-        {"source":"skills/peter-cools/outbound-strategy","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-outbound-strategy","type":"manual-skill","title_override":"Swan GTM Skills · Outbound strategy from intent"},
-        {"source":"skills/peter-cools/signal-anchored-message","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-signal-anchored-message","type":"manual-skill","title_override":"Swan GTM Skills · Signal-anchored message"},
-        {"source":"skills/peter-cools/signal-timing","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-signal-timing","type":"manual-skill","title_override":"Swan GTM Skills · Signal timing"},
-        {"source":"skills/peter-cools/website-to-signals","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-website-to-signals","type":"manual-skill","title_override":"Swan GTM Skills · Website to signals"},
-        {"source":"skills/rutger-katz/abm-engagement-scoring","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-abm-engagement-scoring","type":"manual-skill","title_override":"Swan GTM Skills · ABM engagement scoring"},
-        {"source":"skills/rutger-katz/crm-migration-consolidation","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-crm-migration-consolidation","type":"manual-skill","title_override":"Swan GTM Skills · CRM migration and consolidation"},
-        {"source":"skills/rutger-katz/cs-operations","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cs-operations","type":"manual-skill","title_override":"Swan GTM Skills · Customer success operations"},
-        {"source":"skills/rutger-katz/data-enrichment","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-data-enrichment","type":"manual-skill","title_override":"Swan GTM Skills · Data enrichment"},
-        {"source":"skills/rutger-katz/deal-desk-operations","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-deal-desk-operations","type":"manual-skill","title_override":"Swan GTM Skills · Deal desk operations"},
-        {"source":"skills/rutger-katz/deal-velocity-engineer","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-deal-velocity-engineer","type":"manual-skill","title_override":"Swan GTM Skills · Deal velocity engineering"},
-        {"source":"skills/rutger-katz/expansion-revenue-architect","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-expansion-revenue-architect","type":"manual-skill","title_override":"Swan GTM Skills · Expansion revenue architecture"},
-        {"source":"skills/rutger-katz/gtm-compensation","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-gtm-compensation","type":"manual-skill","title_override":"Swan GTM Skills · GTM compensation design"},
-        {"source":"skills/rutger-katz/gtm-data-architecture","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-gtm-data-architecture","type":"manual-skill","title_override":"Swan GTM Skills · GTM data architecture"},
-        {"source":"skills/rutger-katz/gtm-planning","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-gtm-planning","type":"manual-skill","title_override":"Swan GTM Skills · GTM planning and org design"},
-        {"source":"skills/rutger-katz/icp-builder","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-icp-builder","type":"manual-skill","title_override":"Swan GTM Skills · ICP builder"},
-        {"source":"skills/rutger-katz/lead-routing","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-lead-routing","type":"manual-skill","title_override":"Swan GTM Skills · Lead routing"},
-        {"source":"skills/rutger-katz/marketing-operations","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-marketing-operations","type":"manual-skill","title_override":"Swan GTM Skills · Marketing operations"},
-        {"source":"skills/rutger-katz/operating-cadence-designer","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-operating-cadence-designer","type":"manual-skill","title_override":"Swan GTM Skills · Operating cadence designer"},
-        {"source":"skills/rutger-katz/partner-channel-operations","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-partner-channel-operations","type":"manual-skill","title_override":"Swan GTM Skills · Partner channel operations"},
-        {"source":"skills/rutger-katz/partner-ecosystem-architect","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-partner-ecosystem-architect","type":"manual-skill","title_override":"Swan GTM Skills · Partner ecosystem architect"},
-        {"source":"skills/rutger-katz/pipeline-visibility","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-pipeline-visibility","type":"manual-skill","title_override":"Swan GTM Skills · Pipeline visibility"},
-        {"source":"skills/rutger-katz/positioning-messaging-designer","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-positioning-messaging-designer","type":"manual-skill","title_override":"Swan GTM Skills · Positioning and messaging designer"},
-        {"source":"skills/rutger-katz/pricing-monetisation-ops","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-pricing-monetisation-ops","type":"manual-skill","title_override":"Swan GTM Skills · Pricing and monetisation ops"},
-        {"source":"skills/rutger-katz/revenue-operating-cadence","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revenue-operating-cadence","type":"manual-skill","title_override":"Swan GTM Skills · Revenue operating cadence"},
-        {"source":"skills/rutger-katz/revops-change-management","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-change-management","type":"manual-skill","title_override":"Swan GTM Skills · RevOps change management"},
-        {"source":"skills/rutger-katz/revops-crisis","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-crisis","type":"manual-skill","title_override":"Swan GTM Skills · RevOps crisis triage"},
-        {"source":"skills/rutger-katz/revops-data-governance","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-data-governance","type":"manual-skill","title_override":"Swan GTM Skills · Revenue data governance"},
-        {"source":"skills/rutger-katz/revops-diagnostic","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-diagnostic","type":"manual-skill","title_override":"Swan GTM Skills · RevOps diagnostic"},
-        {"source":"skills/rutger-katz/revops-forecasting","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-forecasting","type":"manual-skill","title_override":"Swan GTM Skills · Revenue forecasting"},
-        {"source":"skills/rutger-katz/revops-handoffs","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-handoffs","type":"manual-skill","title_override":"Swan GTM Skills · Revenue handoff operations"},
-        {"source":"skills/rutger-katz/revops-hubspot","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-hubspot","type":"manual-skill","title_override":"Swan GTM Skills · HubSpot implementation for RevOps"},
-        {"source":"skills/rutger-katz/revops-metrics","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-metrics","type":"manual-skill","title_override":"Swan GTM Skills · Revenue performance metrics"},
-        {"source":"skills/rutger-katz/revops-org-chart","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-org-chart","type":"manual-skill","title_override":"Swan GTM Skills · RevOps org chart and team design"},
-        {"source":"skills/rutger-katz/revops-revenue-planning","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-revenue-planning","type":"manual-skill","title_override":"Swan GTM Skills · Revenue planning"},
-        {"source":"skills/rutger-katz/revops-salesforce","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-salesforce","type":"manual-skill","title_override":"Swan GTM Skills · Salesforce implementation for RevOps"},
-        {"source":"skills/rutger-katz/revops-strategy","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-strategy","type":"manual-skill","title_override":"Swan GTM Skills · RevOps strategy and pipeline architecture"},
-        {"source":"skills/rutger-katz/revops-tech-stack","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-tech-stack","type":"manual-skill","title_override":"Swan GTM Skills · Revenue tech stack architecture"},
-        {"source":"skills/rutger-katz/sales-methodology","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-sales-methodology","type":"manual-skill","title_override":"Swan GTM Skills · Sales methodology implementation"},
-        {"source":"skills/ryan-estes/beehiiv-newsletter-report","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-beehiiv-newsletter-report","type":"manual-skill","title_override":"Swan GTM Skills · Beehiiv newsletter performance report"},
-        {"source":"skills/sabahudin-murtic/competitive-intelligence-radar","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-competitive-intelligence-radar","type":"manual-skill","title_override":"Swan GTM Skills · Competitive intelligence radar"},
-        {"source":"skills/sam-dunning/seo-business-context","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-seo-business-context","type":"manual-skill","title_override":"Swan GTM Skills · Business context ingestion"},
-        {"source":"skills/sam-dunning/seo-business-fit-filter","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-seo-business-fit-filter","type":"manual-skill","title_override":"Swan GTM Skills · Business fit filter"},
-        {"source":"skills/sam-dunning/seo-keyword-validation","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-seo-keyword-validation","type":"manual-skill","title_override":"Swan GTM Skills · Keyword validation"},
-        {"source":"skills/sam-dunning/seo-opportunity-extraction","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-seo-opportunity-extraction","type":"manual-skill","title_override":"Swan GTM Skills · Opportunity extraction"},
-        {"source":"skills/sam-dunning/seo-serp-qualification","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-seo-serp-qualification","type":"manual-skill","title_override":"Swan GTM Skills · SERP qualification"},
-        {"source":"skills/sam-dunning/seo-topic-prioritization","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-seo-topic-prioritization","type":"manual-skill","title_override":"Swan GTM Skills · Topic prioritization"},
-        {"source":"skills/sam-dunning/seo-topic-research-pipeline","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-seo-topic-research-pipeline","type":"manual-skill","title_override":"Swan GTM Skills · SEO topic research pipeline"},
-        {"source":"skills/sam-dunning/seo-topic-shaping","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-seo-topic-shaping","type":"manual-skill","title_override":"Swan GTM Skills · Topic shaping"},
-        {"source":"skills/sangram-vajre/move-gtm-diagnostic","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-move-gtm-diagnostic","type":"manual-skill","title_override":"Swan GTM Skills · MOVE GTM diagnostic"},
-        {"source":"skills/shane-oconnor/dev-tool-pricing","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-dev-tool-pricing","type":"manual-skill","title_override":"Swan GTM Skills · Pricing for developer tools"},
-        {"source":"skills/shane-oconnor/founder-led-sales","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-founder-led-sales","type":"manual-skill","title_override":"Swan GTM Skills · Founder-led sales"},
-        {"source":"skills/shane-oconnor/positioning-and-story","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-positioning-and-story","type":"manual-skill","title_override":"Swan GTM Skills · Positioning and story"},
-        {"source":"skills/steve-armenti/account-progression-staging","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-account-progression-staging","type":"manual-skill","title_override":"Swan GTM Skills · Account progression staging"},
-        {"source":"skills/tanyo-gochev/campaign-benchmarking","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-campaign-benchmarking","type":"manual-skill","title_override":"Swan GTM Skills · Campaign benchmarking"},
-        {"source":"skills/tanyo-gochev/cold-email-first-touch","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cold-email-first-touch","type":"manual-skill","title_override":"Swan GTM Skills · Cold email first touch"},
-        {"source":"skills/tanyo-gochev/cold-offer-architect","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cold-offer-architect","type":"manual-skill","title_override":"Swan GTM Skills · Cold offer architect"},
-        {"source":"skills/tanyo-gochev/email-sequence","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-email-sequence","type":"manual-skill","title_override":"Swan GTM Skills · Email sequence"},
-        {"source":"skills/tanyo-gochev/icp-matrix-builder","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-icp-matrix-builder","type":"manual-skill","title_override":"Swan GTM Skills · ICP matrix builder"},
-        {"source":"skills/tanyo-gochev/linkedin-inmail","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-inmail","type":"manual-skill","title_override":"Swan GTM Skills · LinkedIn InMail"},
-        {"source":"skills/tanyo-gochev/objection-mining","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-objection-mining","type":"manual-skill","title_override":"Swan GTM Skills · Objection mining"},
-        {"source":"skills/tanyo-gochev/outbound-performance-diagnosis","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-outbound-performance-diagnosis","type":"manual-skill","title_override":"Swan GTM Skills · Outbound performance diagnosis"},
-        {"source":"skills/tanyo-gochev/saas-lifecycle","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-saas-lifecycle","type":"manual-skill","title_override":"Swan GTM Skills · SaaS lifecycle programs"},
-        {"source":"skills/tanyo-gochev/stage-aware-follow-up","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-stage-aware-follow-up","type":"manual-skill","title_override":"Swan GTM Skills · Stage-aware follow-up"},
-        {"source":"skills/tanyo-gochev/tam-builder","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-tam-builder","type":"manual-skill","title_override":"Swan GTM Skills · TAM builder"},
-        {"source":"skills/thebigasif/patent-backed-seo-quick-wins","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-patent-backed-seo-quick-wins","type":"manual-skill","title_override":"Swan GTM Skills · Patent-backed SEO quick wins"},
-        {"source":"skills/thomas-marcelle/build-influencer-marketing-strategy","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-build-influencer-marketing-strategy","type":"manual-skill","title_override":"Swan GTM Skills · Build influencer marketing strategy"},
-        {"source":"skills/thomas-marcelle/creator-deal-pricing","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-creator-deal-pricing","type":"manual-skill","title_override":"Swan GTM Skills · Creator deal pricing — CPC vs flat fee"},
-        {"source":"skills/thomas-marcelle/creator-led-growth-90-days","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-creator-led-growth-90-days","type":"manual-skill","title_override":"Swan GTM Skills · Creator-led growth in 90 days"},
-        {"source":"skills/thomas-marcelle/find-b2b-creators-linkedin","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-find-b2b-creators-linkedin","type":"manual-skill","title_override":"Swan GTM Skills · Find and vet B2B creators on LinkedIn"},
-        {"source":"skills/thomas-marcelle/forecast-creator-pipeline","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-forecast-creator-pipeline","type":"manual-skill","title_override":"Swan GTM Skills · Forecast pipeline from creator spend"},
-        {"source":"skills/thomas-marcelle/founder-employees-or-creators","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-founder-employees-or-creators","type":"manual-skill","title_override":"Swan GTM Skills · Founder, employees, or creators"},
-        {"source":"skills/thomas-marcelle/linkedin-creator-campaign-launch","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-creator-campaign-launch","type":"manual-skill","title_override":"Swan GTM Skills · Launch a LinkedIn creator campaign"},
-        {"source":"skills/thomas-marcelle/measure-creator-roi","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-measure-creator-roi","type":"manual-skill","title_override":"Swan GTM Skills · Measure creator marketing ROI"},
-        {"source":"skills/thomas-marcelle/write-b2b-sponsored-post","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-write-b2b-sponsored-post","type":"manual-skill","title_override":"Swan GTM Skills · Write a B2B sponsored post"},
-        {"source":"skills/tim-yakubson/b2b-cold-email-copywriting","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-b2b-cold-email-copywriting","type":"manual-skill","title_override":"Swan GTM Skills · B2B cold email copywriting"},
-        {"source":"skills/victor-moen/b2b-affiliate-program-playbook","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-b2b-affiliate-program-playbook","type":"manual-skill","title_override":"Swan GTM Skills · B2B affiliate program playbook"},
-        {"source":"skills/yahav-fuchs/advocate-voice-tuning","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-advocate-voice-tuning","type":"manual-skill","title_override":"Swan GTM Skills · Advocate voice tuning"},
-        {"source":"skills/yahav-fuchs/aeo-citation-drill-down","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-aeo-citation-drill-down","type":"manual-skill","title_override":"Swan GTM Skills · AEO citation drill-down"},
-        {"source":"skills/yahav-fuchs/aeo-score-audit","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-aeo-score-audit","type":"manual-skill","title_override":"Swan GTM Skills · AEO score audit"},
-        {"source":"skills/yahav-fuchs/aeo-visibility-tracking","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-aeo-visibility-tracking","type":"manual-skill","title_override":"Swan GTM Skills · AEO visibility tracking"},
-        {"source":"skills/yahav-fuchs/reddit-account-health","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reddit-account-health","type":"manual-skill","title_override":"Swan GTM Skills · Reddit account health"},
-        {"source":"skills/yahav-fuchs/reddit-account-warmup","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reddit-account-warmup","type":"manual-skill","title_override":"Swan GTM Skills · Reddit account warmup"},
-        {"source":"skills/yahav-fuchs/reddit-attribution-tracking","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reddit-attribution-tracking","type":"manual-skill","title_override":"Swan GTM Skills · Reddit attribution tracking"},
-        {"source":"skills/yahav-fuchs/reddit-brand-mention-triage","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reddit-brand-mention-triage","type":"manual-skill","title_override":"Swan GTM Skills · Reddit brand-mention triage"},
-        {"source":"skills/yahav-fuchs/reddit-campaign-launcher","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reddit-campaign-launcher","type":"manual-skill","title_override":"Swan GTM Skills · Reddit campaign launcher"},
-        {"source":"skills/yahav-fuchs/reddit-comment-safety","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reddit-comment-safety","type":"manual-skill","title_override":"Swan GTM Skills · Reddit comment safety"},
-        {"source":"skills/yahav-fuchs/subreddit-pre-post-check","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-subreddit-pre-post-check","type":"manual-skill","title_override":"Swan GTM Skills · Subreddit pre-post check"},
-        {"source":"skills/yahav-fuchs/subreddit-research","target":"_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-subreddit-research","type":"manual-skill","title_override":"Swan GTM Skills · Subreddit research"}
+        {
+          "source": "skills/alex-vacca/ai-personalization-prompts",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ai-personalization-prompts",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 AI personalization prompts"
+        },
+        {
+          "source": "skills/alex-vacca/atl-btl-messaging",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-atl-btl-messaging",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 ATL vs BTL messaging"
+        },
+        {
+          "source": "skills/alex-vacca/bridgebound-firmographic-15",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-bridgebound-firmographic-15",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Bridgebound firmographic triggers"
+        },
+        {
+          "source": "skills/alex-vacca/bridgebound-history-16",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-bridgebound-history-16",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Bridgebound history triggers"
+        },
+        {
+          "source": "skills/alex-vacca/bridgebound-in-market-20",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-bridgebound-in-market-20",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Bridgebound in-market triggers"
+        },
+        {
+          "source": "skills/alex-vacca/bridgebound-relationship-39",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-bridgebound-relationship-39",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Bridgebound relationship triggers"
+        },
+        {
+          "source": "skills/alex-vacca/bridgebound-symptoms-11",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-bridgebound-symptoms-11",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Bridgebound symptoms and signs triggers"
+        },
+        {
+          "source": "skills/alex-vacca/buying-signals-6",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-buying-signals-6",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Buying signals ranked by purchase correlation"
+        },
+        {
+          "source": "skills/alex-vacca/clay-buying-signals-5",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-clay-buying-signals-5",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Clay buying signals"
+        },
+        {
+          "source": "skills/alex-vacca/clay-enrichment-9step",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-clay-enrichment-9step",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Clay enrichment workflow"
+        },
+        {
+          "source": "skills/alex-vacca/clay-expert",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-clay-expert",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 The Clay expert"
+        },
+        {
+          "source": "skills/alex-vacca/cold-call-scripts",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cold-call-scripts",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Cold call scripts"
+        },
+        {
+          "source": "skills/alex-vacca/cold-email-4-sequence",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cold-email-4-sequence",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Cold email sequence"
+        },
+        {
+          "source": "skills/alex-vacca/cold-email-strategist",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cold-email-strategist",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 The cold email strategist"
+        },
+        {
+          "source": "skills/alex-vacca/cold-email-templates-34",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cold-email-templates-34",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Cold email templates"
+        },
+        {
+          "source": "skills/alex-vacca/email-1-variations-7",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-email-1-variations-7",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Email 1 variations"
+        },
+        {
+          "source": "skills/alex-vacca/email-metrics-benchmarks",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-email-metrics-benchmarks",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Email metrics and benchmarks"
+        },
+        {
+          "source": "skills/alex-vacca/email-writing-frameworks",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-email-writing-frameworks",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Email writing frameworks"
+        },
+        {
+          "source": "skills/alex-vacca/frontal-messaging-templates",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-frontal-messaging-templates",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Frontal messaging templates"
+        },
+        {
+          "source": "skills/alex-vacca/gtm-philosophy",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-gtm-philosophy",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 GTM philosophy"
+        },
+        {
+          "source": "skills/alex-vacca/gtm-plays-11",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-gtm-plays-11",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 GTM signal plays"
+        },
+        {
+          "source": "skills/alex-vacca/inbound-triggers-30",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-inbound-triggers-30",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Inbound triggers"
+        },
+        {
+          "source": "skills/alex-vacca/josh-braun-copywriting",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-josh-braun-copywriting",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Josh Braun copywriting"
+        },
+        {
+          "source": "skills/alex-vacca/lead-sources-guide",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-lead-sources-guide",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Lead sources guide"
+        },
+        {
+          "source": "skills/alex-vacca/linkedin-campaign-complete",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-campaign-complete",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 LinkedIn campaign playbook"
+        },
+        {
+          "source": "skills/alex-vacca/linkedin-limits-warmup",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-limits-warmup",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 LinkedIn limits and warm-up"
+        },
+        {
+          "source": "skills/alex-vacca/linkedin-success-factors",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-success-factors",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 LinkedIn success factors"
+        },
+        {
+          "source": "skills/alex-vacca/list-architect",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-list-architect",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 The list architect"
+        },
+        {
+          "source": "skills/alex-vacca/list-building-tips",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-list-building-tips",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 List building tips"
+        },
+        {
+          "source": "skills/alex-vacca/outbound-triggers-6",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-outbound-triggers-6",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Outbound triggers"
+        },
+        {
+          "source": "skills/alex-vacca/outreach-4-categories",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-outreach-4-categories",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Outreach categories"
+        },
+        {
+          "source": "skills/alex-vacca/personalization-6-buckets",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-personalization-6-buckets",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Personalization buckets"
+        },
+        {
+          "source": "skills/alex-vacca/personalization-hooks",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-personalization-hooks",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Personalization hooks"
+        },
+        {
+          "source": "skills/alex-vacca/personalization-playbooks",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-personalization-playbooks",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Personalization playbooks"
+        },
+        {
+          "source": "skills/alex-vacca/sdr-master-prompts",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-sdr-master-prompts",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 SDR master prompts"
+        },
+        {
+          "source": "skills/alex-vacca/sdr-outbound-rules",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-sdr-outbound-rules",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 SDR outbound rules"
+        },
+        {
+          "source": "skills/alex-vacca/signal-sourcer",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-signal-sourcer",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 The signal sourcer"
+        },
+        {
+          "source": "skills/amos-bar-joseph/account-tier-scoring",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-account-tier-scoring",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Account tier scoring"
+        },
+        {
+          "source": "skills/ariel-cohen/champion-move-detection",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-champion-move-detection",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Champion move detection"
+        },
+        {
+          "source": "skills/ariel-cohen/closed-won-replication-play",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-closed-won-replication-play",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Closed-won replication play"
+        },
+        {
+          "source": "skills/ariel-cohen/customer-expansion-scoring",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-customer-expansion-scoring",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Customer expansion scoring"
+        },
+        {
+          "source": "skills/ariel-cohen/handle-linkedin-profile-view-signal",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-handle-linkedin-profile-view-signal",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Handle LinkedIn profile view signal"
+        },
+        {
+          "source": "skills/ariel-cohen/influencer-post-engager-capture",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-influencer-post-engager-capture",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Influencer post engager capture"
+        },
+        {
+          "source": "skills/ariel-cohen/linkedin-dm-signal-classifier",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-dm-signal-classifier",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 LinkedIn DM signal classifier"
+        },
+        {
+          "source": "skills/ariel-cohen/linkedin-engagement-handler",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-engagement-handler",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 LinkedIn post engagement handler"
+        },
+        {
+          "source": "skills/austin-hay/reverse-etl-activation",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reverse-etl-activation",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Reverse ETL activation"
+        },
+        {
+          "source": "skills/bojan-berisavljevic/signal-to-campaign",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-signal-to-campaign",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Signal to campaign"
+        },
+        {
+          "source": "skills/brad-smith/vc-portfolio-research",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-vc-portfolio-research",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 VC portfolio research"
+        },
+        {
+          "source": "skills/brianne-thomas/linkedin-ads-ctr-signal",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-ads-ctr-signal",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 LinkedIn Ads CTR signal"
+        },
+        {
+          "source": "skills/daniel-bustamante/52-newsletter-ideas",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-52-newsletter-ideas",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Generate 52 newsletter ideas"
+        },
+        {
+          "source": "skills/daniel-bustamante/email-content-ideas",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-email-content-ideas",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Brainstorm email and newsletter content ideas"
+        },
+        {
+          "source": "skills/daniel-bustamante/email-copy-optimizer",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-email-copy-optimizer",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Optimize and edit email copy"
+        },
+        {
+          "source": "skills/daniel-bustamante/email-subject-lines",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-email-subject-lines",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Generate email subject lines"
+        },
+        {
+          "source": "skills/daniel-bustamante/i-made-this-for-you-email",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-i-made-this-for-you-email",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Write an \"I made this for you\" email"
+        },
+        {
+          "source": "skills/daniel-bustamante/lead-magnet-welcome-email",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-lead-magnet-welcome-email",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Write a lead magnet welcome email"
+        },
+        {
+          "source": "skills/daniel-bustamante/linkedin-post-to-newsletter",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-post-to-newsletter",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Repurpose a LinkedIn post into a newsletter issue"
+        },
+        {
+          "source": "skills/daniel-bustamante/newsletter-format",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-newsletter-format",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Design your newsletter format"
+        },
+        {
+          "source": "skills/daniel-bustamante/newsletter-landing-page",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-newsletter-landing-page",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Write a newsletter landing page"
+        },
+        {
+          "source": "skills/daniel-bustamante/newsletter-value-prop",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-newsletter-value-prop",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Generate a newsletter value prop and name"
+        },
+        {
+          "source": "skills/daniel-bustamante/newsletter-welcome-email",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-newsletter-welcome-email",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Write a newsletter welcome email"
+        },
+        {
+          "source": "skills/daniel-bustamante/newsletter-welcome-gift",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-newsletter-welcome-gift",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Brainstorm your newsletter welcome gift"
+        },
+        {
+          "source": "skills/daniel-bustamante/newsletter-welcome-sequence",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-newsletter-welcome-sequence",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Build a newsletter welcome sequence"
+        },
+        {
+          "source": "skills/daniel-bustamante/pain-is-the-pitch",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-pain-is-the-pitch",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Rewrite an email with Pain Is The Pitch"
+        },
+        {
+          "source": "skills/daniel-bustamante/weekly-roundup-email",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-weekly-roundup-email",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Write a weekly roundup email"
+        },
+        {
+          "source": "skills/danni-chen/founder-post-triggers-24",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-founder-post-triggers-24",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Founder post triggers"
+        },
+        {
+          "source": "skills/dave-engel/conference-recommendation",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-conference-recommendation",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Conference recommendation"
+        },
+        {
+          "source": "skills/din-arbel/signal-interpreter",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-signal-interpreter",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Signal interpreter"
+        },
+        {
+          "source": "skills/din-arbel/warm-intro-intelligence",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-warm-intro-intelligence",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Warm intro intelligence"
+        },
+        {
+          "source": "skills/dusan-vystrcil/hiring-radar",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-hiring-radar",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Hiring radar"
+        },
+        {
+          "source": "skills/emilia-korczynska/linkedin-abm-ad-design",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-abm-ad-design",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 LinkedIn ABM ad design"
+        },
+        {
+          "source": "skills/emilia-korczynska/linkedin-abm-audit",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-abm-audit",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 LinkedIn ads & ABM audit"
+        },
+        {
+          "source": "skills/emilia-korczynska/linkedin-abm-monthly-report",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-abm-monthly-report",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Monthly LinkedIn ABM report"
+        },
+        {
+          "source": "skills/emilia-korczynska/linkedin-abm-strategy-planner",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-abm-strategy-planner",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 LinkedIn ABM strategy planner"
+        },
+        {
+          "source": "skills/huxley-peckham/ai-visibility-sampling",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ai-visibility-sampling",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 AI visibility sampling"
+        },
+        {
+          "source": "skills/huxley-peckham/citation-gap-outreach",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-citation-gap-outreach",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Citation gap outreach"
+        },
+        {
+          "source": "skills/huxley-peckham/local-ai-visibility",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-local-ai-visibility",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Local AI visibility"
+        },
+        {
+          "source": "skills/ido-goldberg/audit-swan",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-audit-swan",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Audit Swan"
+        },
+        {
+          "source": "skills/ido-goldberg/battlecard",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-battlecard",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Battlecard"
+        },
+        {
+          "source": "skills/ido-goldberg/brief",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-brief",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Brief"
+        },
+        {
+          "source": "skills/ido-goldberg/build-list",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-build-list",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Build list"
+        },
+        {
+          "source": "skills/ido-goldberg/clear-my-desk",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-clear-my-desk",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Clear my desk"
+        },
+        {
+          "source": "skills/ido-goldberg/community-radar",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-community-radar",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Community radar"
+        },
+        {
+          "source": "skills/ido-goldberg/event-radar",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-event-radar",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Event radar"
+        },
+        {
+          "source": "skills/ido-goldberg/handle-reply",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-handle-reply",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Handle reply"
+        },
+        {
+          "source": "skills/ido-goldberg/icp",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-icp",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 ICP"
+        },
+        {
+          "source": "skills/ido-goldberg/inbox-zero",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-inbox-zero",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Inbox zero"
+        },
+        {
+          "source": "skills/ido-goldberg/map-contacts",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-map-contacts",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Map contacts"
+        },
+        {
+          "source": "skills/ido-goldberg/multi-thread-deals",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-multi-thread-deals",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Multi-thread deals"
+        },
+        {
+          "source": "skills/ido-goldberg/pipeline-review",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-pipeline-review",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Pipeline review"
+        },
+        {
+          "source": "skills/ido-goldberg/post-radar",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-post-radar",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Post radar"
+        },
+        {
+          "source": "skills/ido-goldberg/reach-out",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reach-out",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Reach out"
+        },
+        {
+          "source": "skills/ido-goldberg/research",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-research",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Research"
+        },
+        {
+          "source": "skills/ido-goldberg/score",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-score",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Score"
+        },
+        {
+          "source": "skills/ido-goldberg/skillify",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-skillify",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Skillify"
+        },
+        {
+          "source": "skills/ido-goldberg/visitor-radar",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-visitor-radar",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Visitor radar"
+        },
+        {
+          "source": "skills/imad-badreddine/cold-email-inbox-warmup",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cold-email-inbox-warmup",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Cold email inbox warm-up"
+        },
+        {
+          "source": "skills/imad-badreddine/cold-email-preflight",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cold-email-preflight",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Cold email pre-flight check"
+        },
+        {
+          "source": "skills/imad-badreddine/multi-sender-rotation",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-multi-sender-rotation",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Multi-sender rotation"
+        },
+        {
+          "source": "skills/ivan-falco/1-to-1-abm-ads",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-1-to-1-abm-ads",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 1:1 ABM ads"
+        },
+        {
+          "source": "skills/ivan-falco/abm-measurement-framework",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-abm-measurement-framework",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 ABM measurement framework"
+        },
+        {
+          "source": "skills/ivan-falco/abm-on-meta",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-abm-on-meta",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 ABM on Meta"
+        },
+        {
+          "source": "skills/ivan-falco/abm-retargeting-framework",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-abm-retargeting-framework",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 ABM retargeting framework"
+        },
+        {
+          "source": "skills/ivan-falco/account-selection-framework",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-account-selection-framework",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Account selection framework"
+        },
+        {
+          "source": "skills/ivan-falco/ad-copywriting",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ad-copywriting",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Ad copywriting"
+        },
+        {
+          "source": "skills/ivan-falco/ad-personas",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ad-personas",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Ad persona framework"
+        },
+        {
+          "source": "skills/ivan-falco/ads-budget-allocation",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-budget-allocation",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Budget allocation by stage"
+        },
+        {
+          "source": "skills/ivan-falco/ads-campaign-planning",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-campaign-planning",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Campaign planning and execution"
+        },
+        {
+          "source": "skills/ivan-falco/ads-channel-selection",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-channel-selection",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Channel selection guide"
+        },
+        {
+          "source": "skills/ivan-falco/ads-measurement-scorecard",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-measurement-scorecard",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Ads measurement scorecard"
+        },
+        {
+          "source": "skills/ivan-falco/ads-offers-strategy",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-offers-strategy",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Offers strategy guide"
+        },
+        {
+          "source": "skills/ivan-falco/ads-optimization-signals",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-optimization-signals",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Optimization signals"
+        },
+        {
+          "source": "skills/ivan-falco/ads-outbound-signaling-guide",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-outbound-signaling-guide",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 LinkedIn ads and outbound signaling"
+        },
+        {
+          "source": "skills/ivan-falco/ads-scaling-quadrant",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-scaling-quadrant",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 The scaling quadrant"
+        },
+        {
+          "source": "skills/ivan-falco/ads-writing-style",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ads-writing-style",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Writing style: no AI slop"
+        },
+        {
+          "source": "skills/ivan-falco/advantage-plus",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-advantage-plus",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Advantage+ for B2B SaaS on Meta"
+        },
+        {
+          "source": "skills/ivan-falco/creating-campaigns-ads-audiences",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-creating-campaigns-ads-audiences",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Create Meta campaigns & audiences"
+        },
+        {
+          "source": "skills/ivan-falco/creative-cadence-operating-system",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-creative-cadence-operating-system",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Creative cadence operating system"
+        },
+        {
+          "source": "skills/ivan-falco/creative-fatigue-detection",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-creative-fatigue-detection",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Creative fatigue detection"
+        },
+        {
+          "source": "skills/ivan-falco/demand-lifecycle",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-demand-lifecycle",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 The demand lifecycle"
+        },
+        {
+          "source": "skills/ivan-falco/google-ads",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-google-ads",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Google Ads for B2B"
+        },
+        {
+          "source": "skills/ivan-falco/lead-form-optimization",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-lead-form-optimization",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Lead form optimization"
+        },
+        {
+          "source": "skills/ivan-falco/linkedin-abm-1to1-few-many",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-abm-1to1-few-many",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 LinkedIn ABM \u2014 1:1, 1:few, 1:many"
+        },
+        {
+          "source": "skills/ivan-falco/linkedin-ads-abm-guide",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-ads-abm-guide",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 LinkedIn ads for ABM"
+        },
+        {
+          "source": "skills/ivan-falco/linkedin-ads-audience-guide",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-ads-audience-guide",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 LinkedIn ads audience strategy"
+        },
+        {
+          "source": "skills/ivan-falco/linkedin-ads",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-ads",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 LinkedIn Ads for B2B"
+        },
+        {
+          "source": "skills/ivan-falco/message-validation",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-message-validation",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Message validation & ad scaling"
+        },
+        {
+          "source": "skills/ivan-falco/meta-ads-operating-system",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-ads-operating-system",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Meta Ads operating system"
+        },
+        {
+          "source": "skills/ivan-falco/meta-ads",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-ads",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Meta ads management for B2B"
+        },
+        {
+          "source": "skills/ivan-falco/meta-api-reference",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-api-reference",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Meta Marketing API reference"
+        },
+        {
+          "source": "skills/ivan-falco/meta-audience-strategy",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-audience-strategy",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Meta audience strategy"
+        },
+        {
+          "source": "skills/ivan-falco/meta-b2b-overview",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-b2b-overview",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Meta Ads for B2B SaaS - Overview"
+        },
+        {
+          "source": "skills/ivan-falco/meta-campaign-structure",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-campaign-structure",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Meta campaign structure"
+        },
+        {
+          "source": "skills/ivan-falco/meta-capi-and-events",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-capi-and-events",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Meta Conversions API & events"
+        },
+        {
+          "source": "skills/ivan-falco/meta-creative-strategy",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-creative-strategy",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Meta creative strategy"
+        },
+        {
+          "source": "skills/ivan-falco/meta-offer-strategy",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-offer-strategy",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Meta offer strategy"
+        },
+        {
+          "source": "skills/ivan-falco/meta-onboarding",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-onboarding",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Meta ads onboarding"
+        },
+        {
+          "source": "skills/ivan-falco/meta-optimization-playbook",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-optimization-playbook",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Meta Ads optimization playbook"
+        },
+        {
+          "source": "skills/ivan-falco/meta-reporting",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-reporting",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Meta ads reporting"
+        },
+        {
+          "source": "skills/ivan-falco/meta-setup-and-tracking",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-setup-and-tracking",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Meta Ads setup & tracking"
+        },
+        {
+          "source": "skills/ivan-falco/meta-third-party-conversion-tracking",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-meta-third-party-conversion-tracking",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Meta off-domain conversion tracking"
+        },
+        {
+          "source": "skills/ivan-falco/persona-mapping-framework",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-persona-mapping-framework",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Persona mapping framework"
+        },
+        {
+          "source": "skills/ivan-falco/scale-b2b-qualified-pipeline",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-scale-b2b-qualified-pipeline",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Scale qualified pipeline on Meta"
+        },
+        {
+          "source": "skills/jeremy-hurst/account-health-audit",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-account-health-audit",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Account health audit"
+        },
+        {
+          "source": "skills/jeremy-hurst/expansion-opportunity-analysis",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-expansion-opportunity-analysis",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Expansion opportunity analysis"
+        },
+        {
+          "source": "skills/jeremy-hurst/outreach-execution",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-outreach-execution",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Outreach execution"
+        },
+        {
+          "source": "skills/jeremy-hurst/post-meeting-execution",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-post-meeting-execution",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Post-meeting execution"
+        },
+        {
+          "source": "skills/john-williams/google-ads-budget-portfolio-reallocation",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-google-ads-budget-portfolio-reallocation",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Portfolio-style budget reallocation across campaigns"
+        },
+        {
+          "source": "skills/john-williams/google-ads-pmax-asset-groups",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-google-ads-pmax-asset-groups",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Performance Max asset group structure and hygiene"
+        },
+        {
+          "source": "skills/john-williams/google-ads-ppc-math",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-google-ads-ppc-math",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 PPC forecasting and unit-economics math"
+        },
+        {
+          "source": "skills/john-williams/google-ads-quality-score-diagnosis",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-google-ads-quality-score-diagnosis",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Quality Score diagnosis and prioritization"
+        },
+        {
+          "source": "skills/john-williams/google-ads-write-safety",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-google-ads-write-safety",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Write safety for AI agents on Google Ads accounts"
+        },
+        {
+          "source": "skills/jorge-macias/track-contact-job-changes",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-track-contact-job-changes",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Track contact job changes"
+        },
+        {
+          "source": "skills/katya-tarapovskaia/account-intelligence-analyst",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-account-intelligence-analyst",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Account intelligence analyst"
+        },
+        {
+          "source": "skills/kevin-kd-dorsey/call-scorecards",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-call-scorecards",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Call scorecards"
+        },
+        {
+          "source": "skills/kevin-kd-dorsey/sales-playbook-foundations",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-sales-playbook-foundations",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Sales playbook foundations"
+        },
+        {
+          "source": "skills/lucas-godtfredsen/auto-reply-is-not-a-reply",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-auto-reply-is-not-a-reply",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 An auto-reply is not a reply"
+        },
+        {
+          "source": "skills/lucas-godtfredsen/inbox-warm-up-ramp",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-inbox-warm-up-ramp",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Warm up a sending inbox before you need it"
+        },
+        {
+          "source": "skills/lucas-godtfredsen/never-guess-an-email",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-never-guess-an-email",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Never guess an email address"
+        },
+        {
+          "source": "skills/luke-shalom/category-of-one-positioning",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-category-of-one-positioning",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Category-of-one positioning"
+        },
+        {
+          "source": "skills/maja-voje/outreach-messaging",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-outreach-messaging",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Outreach messaging"
+        },
+        {
+          "source": "skills/manny-medina/ai-pricing-model-picker",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-ai-pricing-model-picker",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 AI pricing model picker"
+        },
+        {
+          "source": "skills/manny-medina/credit-packaging",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-credit-packaging",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Credit packaging"
+        },
+        {
+          "source": "skills/manny-medina/roi-proof-generator",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-roi-proof-generator",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 ROI proof generator"
+        },
+        {
+          "source": "skills/maxwell-nimmo/creator-programme-qbr",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-creator-programme-qbr",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Draft creator programme QBR"
+        },
+        {
+          "source": "skills/maxwell-nimmo/draft-creator-campaign-brief",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-draft-creator-campaign-brief",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Draft campaign brief"
+        },
+        {
+          "source": "skills/maxwell-nimmo/estimate-creator-rate",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-estimate-creator-rate",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Estimate creator rate"
+        },
+        {
+          "source": "skills/maxwell-nimmo/negotiate-creator-rate",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-negotiate-creator-rate",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Negotiate creator rate"
+        },
+        {
+          "source": "skills/maxwell-nimmo/set-creator-benchmarks",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-set-creator-benchmarks",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Set performance benchmarks"
+        },
+        {
+          "source": "skills/nadav-david/bridge-before-cold",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-bridge-before-cold",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Bridge before cold"
+        },
+        {
+          "source": "skills/nadav-david/earned-autonomy",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-earned-autonomy",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Earned autonomy"
+        },
+        {
+          "source": "skills/nadav-david/inbound-is-data",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-inbound-is-data",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Inbound is data"
+        },
+        {
+          "source": "skills/nadav-david/recent-discourse-sweep",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-recent-discourse-sweep",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Recent discourse sweep"
+        },
+        {
+          "source": "skills/nadav-david/reply-pull-gate",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reply-pull-gate",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Reply pull gate"
+        },
+        {
+          "source": "skills/pete-mientkiewicz/viral-linkedin-lead-magnet-post",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-viral-linkedin-lead-magnet-post",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Viral LinkedIn Lead Magnet Post"
+        },
+        {
+          "source": "skills/peter-cools/competitor-connection-displacement",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-competitor-connection-displacement",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Competitor connection displacement"
+        },
+        {
+          "source": "skills/peter-cools/outbound-strategy",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-outbound-strategy",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Outbound strategy from intent"
+        },
+        {
+          "source": "skills/peter-cools/signal-anchored-message",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-signal-anchored-message",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Signal-anchored message"
+        },
+        {
+          "source": "skills/peter-cools/signal-timing",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-signal-timing",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Signal timing"
+        },
+        {
+          "source": "skills/peter-cools/website-to-signals",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-website-to-signals",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Website to signals"
+        },
+        {
+          "source": "skills/rutger-katz/abm-engagement-scoring",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-abm-engagement-scoring",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 ABM engagement scoring"
+        },
+        {
+          "source": "skills/rutger-katz/crm-migration-consolidation",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-crm-migration-consolidation",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 CRM migration and consolidation"
+        },
+        {
+          "source": "skills/rutger-katz/cs-operations",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cs-operations",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Customer success operations"
+        },
+        {
+          "source": "skills/rutger-katz/data-enrichment",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-data-enrichment",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Data enrichment"
+        },
+        {
+          "source": "skills/rutger-katz/deal-desk-operations",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-deal-desk-operations",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Deal desk operations"
+        },
+        {
+          "source": "skills/rutger-katz/deal-velocity-engineer",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-deal-velocity-engineer",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Deal velocity engineering"
+        },
+        {
+          "source": "skills/rutger-katz/expansion-revenue-architect",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-expansion-revenue-architect",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Expansion revenue architecture"
+        },
+        {
+          "source": "skills/rutger-katz/gtm-compensation",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-gtm-compensation",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 GTM compensation design"
+        },
+        {
+          "source": "skills/rutger-katz/gtm-data-architecture",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-gtm-data-architecture",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 GTM data architecture"
+        },
+        {
+          "source": "skills/rutger-katz/gtm-planning",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-gtm-planning",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 GTM planning and org design"
+        },
+        {
+          "source": "skills/rutger-katz/icp-builder",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-icp-builder",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 ICP builder"
+        },
+        {
+          "source": "skills/rutger-katz/lead-routing",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-lead-routing",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Lead routing"
+        },
+        {
+          "source": "skills/rutger-katz/marketing-operations",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-marketing-operations",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Marketing operations"
+        },
+        {
+          "source": "skills/rutger-katz/operating-cadence-designer",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-operating-cadence-designer",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Operating cadence designer"
+        },
+        {
+          "source": "skills/rutger-katz/partner-channel-operations",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-partner-channel-operations",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Partner channel operations"
+        },
+        {
+          "source": "skills/rutger-katz/partner-ecosystem-architect",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-partner-ecosystem-architect",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Partner ecosystem architect"
+        },
+        {
+          "source": "skills/rutger-katz/pipeline-visibility",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-pipeline-visibility",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Pipeline visibility"
+        },
+        {
+          "source": "skills/rutger-katz/positioning-messaging-designer",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-positioning-messaging-designer",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Positioning and messaging designer"
+        },
+        {
+          "source": "skills/rutger-katz/pricing-monetisation-ops",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-pricing-monetisation-ops",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Pricing and monetisation ops"
+        },
+        {
+          "source": "skills/rutger-katz/revenue-operating-cadence",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revenue-operating-cadence",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Revenue operating cadence"
+        },
+        {
+          "source": "skills/rutger-katz/revops-change-management",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-change-management",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 RevOps change management"
+        },
+        {
+          "source": "skills/rutger-katz/revops-crisis",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-crisis",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 RevOps crisis triage"
+        },
+        {
+          "source": "skills/rutger-katz/revops-data-governance",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-data-governance",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Revenue data governance"
+        },
+        {
+          "source": "skills/rutger-katz/revops-diagnostic",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-diagnostic",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 RevOps diagnostic"
+        },
+        {
+          "source": "skills/rutger-katz/revops-forecasting",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-forecasting",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Revenue forecasting"
+        },
+        {
+          "source": "skills/rutger-katz/revops-handoffs",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-handoffs",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Revenue handoff operations"
+        },
+        {
+          "source": "skills/rutger-katz/revops-hubspot",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-hubspot",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 HubSpot implementation for RevOps"
+        },
+        {
+          "source": "skills/rutger-katz/revops-metrics",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-metrics",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Revenue performance metrics"
+        },
+        {
+          "source": "skills/rutger-katz/revops-org-chart",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-org-chart",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 RevOps org chart and team design"
+        },
+        {
+          "source": "skills/rutger-katz/revops-revenue-planning",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-revenue-planning",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Revenue planning"
+        },
+        {
+          "source": "skills/rutger-katz/revops-salesforce",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-salesforce",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Salesforce implementation for RevOps"
+        },
+        {
+          "source": "skills/rutger-katz/revops-strategy",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-strategy",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 RevOps strategy and pipeline architecture"
+        },
+        {
+          "source": "skills/rutger-katz/revops-tech-stack",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-revops-tech-stack",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Revenue tech stack architecture"
+        },
+        {
+          "source": "skills/rutger-katz/sales-methodology",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-sales-methodology",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Sales methodology implementation"
+        },
+        {
+          "source": "skills/ryan-estes/beehiiv-newsletter-report",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-beehiiv-newsletter-report",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Beehiiv newsletter performance report"
+        },
+        {
+          "source": "skills/sabahudin-murtic/competitive-intelligence-radar",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-competitive-intelligence-radar",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Competitive intelligence radar"
+        },
+        {
+          "source": "skills/sam-dunning/seo-business-context",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-seo-business-context",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Business context ingestion"
+        },
+        {
+          "source": "skills/sam-dunning/seo-business-fit-filter",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-seo-business-fit-filter",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Business fit filter"
+        },
+        {
+          "source": "skills/sam-dunning/seo-keyword-validation",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-seo-keyword-validation",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Keyword validation"
+        },
+        {
+          "source": "skills/sam-dunning/seo-opportunity-extraction",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-seo-opportunity-extraction",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Opportunity extraction"
+        },
+        {
+          "source": "skills/sam-dunning/seo-serp-qualification",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-seo-serp-qualification",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 SERP qualification"
+        },
+        {
+          "source": "skills/sam-dunning/seo-topic-prioritization",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-seo-topic-prioritization",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Topic prioritization"
+        },
+        {
+          "source": "skills/sam-dunning/seo-topic-research-pipeline",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-seo-topic-research-pipeline",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 SEO topic research pipeline"
+        },
+        {
+          "source": "skills/sam-dunning/seo-topic-shaping",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-seo-topic-shaping",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Topic shaping"
+        },
+        {
+          "source": "skills/sangram-vajre/move-gtm-diagnostic",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-move-gtm-diagnostic",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 MOVE GTM diagnostic"
+        },
+        {
+          "source": "skills/shane-oconnor/dev-tool-pricing",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-dev-tool-pricing",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Pricing for developer tools"
+        },
+        {
+          "source": "skills/shane-oconnor/founder-led-sales",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-founder-led-sales",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Founder-led sales"
+        },
+        {
+          "source": "skills/shane-oconnor/positioning-and-story",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-positioning-and-story",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Positioning and story"
+        },
+        {
+          "source": "skills/steve-armenti/account-progression-staging",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-account-progression-staging",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Account progression staging"
+        },
+        {
+          "source": "skills/tanyo-gochev/campaign-benchmarking",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-campaign-benchmarking",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Campaign benchmarking"
+        },
+        {
+          "source": "skills/tanyo-gochev/cold-email-first-touch",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cold-email-first-touch",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Cold email first touch"
+        },
+        {
+          "source": "skills/tanyo-gochev/cold-offer-architect",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-cold-offer-architect",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Cold offer architect"
+        },
+        {
+          "source": "skills/tanyo-gochev/email-sequence",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-email-sequence",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Email sequence"
+        },
+        {
+          "source": "skills/tanyo-gochev/icp-matrix-builder",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-icp-matrix-builder",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 ICP matrix builder"
+        },
+        {
+          "source": "skills/tanyo-gochev/linkedin-inmail",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-inmail",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 LinkedIn InMail"
+        },
+        {
+          "source": "skills/tanyo-gochev/objection-mining",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-objection-mining",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Objection mining"
+        },
+        {
+          "source": "skills/tanyo-gochev/outbound-performance-diagnosis",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-outbound-performance-diagnosis",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Outbound performance diagnosis"
+        },
+        {
+          "source": "skills/tanyo-gochev/saas-lifecycle",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-saas-lifecycle",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 SaaS lifecycle programs"
+        },
+        {
+          "source": "skills/tanyo-gochev/stage-aware-follow-up",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-stage-aware-follow-up",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Stage-aware follow-up"
+        },
+        {
+          "source": "skills/tanyo-gochev/tam-builder",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-tam-builder",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 TAM builder"
+        },
+        {
+          "source": "skills/thebigasif/patent-backed-seo-quick-wins",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-patent-backed-seo-quick-wins",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Patent-backed SEO quick wins"
+        },
+        {
+          "source": "skills/thomas-marcelle/build-influencer-marketing-strategy",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-build-influencer-marketing-strategy",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Build influencer marketing strategy"
+        },
+        {
+          "source": "skills/thomas-marcelle/creator-deal-pricing",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-creator-deal-pricing",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Creator deal pricing \u2014 CPC vs flat fee"
+        },
+        {
+          "source": "skills/thomas-marcelle/creator-led-growth-90-days",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-creator-led-growth-90-days",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Creator-led growth in 90 days"
+        },
+        {
+          "source": "skills/thomas-marcelle/find-b2b-creators-linkedin",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-find-b2b-creators-linkedin",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Find and vet B2B creators on LinkedIn"
+        },
+        {
+          "source": "skills/thomas-marcelle/forecast-creator-pipeline",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-forecast-creator-pipeline",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Forecast pipeline from creator spend"
+        },
+        {
+          "source": "skills/thomas-marcelle/founder-employees-or-creators",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-founder-employees-or-creators",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Founder, employees, or creators"
+        },
+        {
+          "source": "skills/thomas-marcelle/linkedin-creator-campaign-launch",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-linkedin-creator-campaign-launch",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Launch a LinkedIn creator campaign"
+        },
+        {
+          "source": "skills/thomas-marcelle/measure-creator-roi",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-measure-creator-roi",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Measure creator marketing ROI"
+        },
+        {
+          "source": "skills/thomas-marcelle/write-b2b-sponsored-post",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-write-b2b-sponsored-post",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Write a B2B sponsored post"
+        },
+        {
+          "source": "skills/tim-yakubson/b2b-cold-email-copywriting",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-b2b-cold-email-copywriting",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 B2B cold email copywriting"
+        },
+        {
+          "source": "skills/victor-moen/b2b-affiliate-program-playbook",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-b2b-affiliate-program-playbook",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 B2B affiliate program playbook"
+        },
+        {
+          "source": "skills/yahav-fuchs/advocate-voice-tuning",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-advocate-voice-tuning",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Advocate voice tuning"
+        },
+        {
+          "source": "skills/yahav-fuchs/aeo-citation-drill-down",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-aeo-citation-drill-down",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 AEO citation drill-down"
+        },
+        {
+          "source": "skills/yahav-fuchs/aeo-score-audit",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-aeo-score-audit",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 AEO score audit"
+        },
+        {
+          "source": "skills/yahav-fuchs/aeo-visibility-tracking",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-aeo-visibility-tracking",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 AEO visibility tracking"
+        },
+        {
+          "source": "skills/yahav-fuchs/reddit-account-health",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reddit-account-health",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Reddit account health"
+        },
+        {
+          "source": "skills/yahav-fuchs/reddit-account-warmup",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reddit-account-warmup",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Reddit account warmup"
+        },
+        {
+          "source": "skills/yahav-fuchs/reddit-attribution-tracking",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reddit-attribution-tracking",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Reddit attribution tracking"
+        },
+        {
+          "source": "skills/yahav-fuchs/reddit-brand-mention-triage",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reddit-brand-mention-triage",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Reddit brand-mention triage"
+        },
+        {
+          "source": "skills/yahav-fuchs/reddit-campaign-launcher",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reddit-campaign-launcher",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Reddit campaign launcher"
+        },
+        {
+          "source": "skills/yahav-fuchs/reddit-comment-safety",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-reddit-comment-safety",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Reddit comment safety"
+        },
+        {
+          "source": "skills/yahav-fuchs/subreddit-pre-post-check",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-subreddit-pre-post-check",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Subreddit pre-post check"
+        },
+        {
+          "source": "skills/yahav-fuchs/subreddit-research",
+          "target": "_system/agents/manual-skills/_swan-gtm-skills/swan-gtm-subreddit-research",
+          "type": "manual-skill",
+          "title_override": "Swan GTM Skills \u00b7 Subreddit research"
+        }
       ]
     },
     {
@@ -527,6 +2138,7 @@
       "url": "https://github.com/mattpocock/skills.git",
       "path": "~/Code/open_source/mattpocock-skills",
       "ref": "main",
+      "sync_enabled": false,
       "projections": [
         {
           "source": "skills/engineering",
@@ -563,14 +2175,14 @@
           "target": "_system/agents/auto-skills/_spreadsheets/spreadsheets-witan-read-source",
           "type": "auto-skill",
           "managed": true,
-          "title_override": "Spreadsheets · Witan Read Source"
+          "title_override": "Spreadsheets \u00b7 Witan Read Source"
         },
         {
           "source": "skills/witan-xlsx",
           "target": "_system/agents/auto-skills/_spreadsheets/spreadsheets-witan-xlsx",
           "type": "auto-skill",
           "managed": true,
-          "title_override": "Spreadsheets · Witan XLSX"
+          "title_override": "Spreadsheets \u00b7 Witan XLSX"
         }
       ]
     }

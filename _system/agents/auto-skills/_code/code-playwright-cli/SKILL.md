@@ -21,38 +21,12 @@ playwright-cli screenshot
 playwright-cli close
 ```
 
-## Repo-specific command paths
+## Choose the browser surface
 
-### App-only debugging
-
-Use the repo wrapper to attach to the running shared Chrome profile:
-
-```bash
-pnpm chrome:debug
-pnpm playwright-cli
-pnpm playwright-cli -- open http://app.localhost:3000
-pnpm playwright-cli -- -s=business-agent-123 open http://app.localhost:3000
-pnpm playwright-cli -- --auth-export open http://app.localhost:3000
-pnpm playwright-cli:shared -- open http://app.localhost:3000
-```
-
-The `--auth-export` flow reuses the Playwright cookie export for app/session state. Live LinkedIn behavior still needs the already-running shared Chrome profile.
-
-## Extension debugging rules for this repo
-
-When debugging an extension issue, inspect all relevant surfaces before changing code:
-
-1. popup
-2. app bridge on `app.localhost:3000`
-3. LinkedIn content-script surface
-
-Typical extension workflow:
-
-```bash
-playwright-cli snapshot
-playwright-cli console
-playwright-cli network
-```
+- Use this CLI for terminal-driven, repeatable browser automation, snapshots, tracing, and isolated sessions.
+- Use `$code-chrome-devtools-cli` for lower-level Chrome DevTools Protocol work.
+- Use `$chrome:control-chrome` when an existing signed-in Chrome session, its open tabs, or installed extensions matter.
+- For Impression-specific wrappers, authentication, extension surfaces, and local URLs, use `$business-debugging-and-testing`.
 
 ## Core commands
 
@@ -160,9 +134,7 @@ playwright-cli open --config=my-config.json
 
 ## Notes
 
-- Runtime wrapper configs are generated under `.playwright/cli.*.runtime.json`
-- `pnpm playwright-cli` and `pnpm playwright-cli:shared` default to the repo-scoped shared Chrome attach flow
-- `pnpm playwright-cli:extension` uses the shared extension/debug profile
-- Use `--auth-export` for isolated manual runs, and keep Playwright tests on exported auth state
-- Use snapshots first when exploring unfamiliar UI
-- Prefer unique `-s=` session names for agent work
+- Follow the owning repository's documented wrapper and authentication flow when it provides one.
+- Use snapshots first when exploring unfamiliar UI.
+- Prefer unique `-s=` session names for agent work.
+- Save traces, screenshots, videos, and state only in an appropriate repo artifact or temporary directory.

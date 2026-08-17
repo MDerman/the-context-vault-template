@@ -1,6 +1,6 @@
 ## Local Vault Data
 
-User-specific configuration and runtime state live here. Generic workflows stay in skills and tools.
+Vault-owned user-specific configuration and runtime state live here. Generic workflows stay in skills and tools; machine-wide runtime state follows the separate convention below.
 
 ### Skill configuration contract
 
@@ -21,6 +21,6 @@ _system/local/skills/<skill-name>/
 - Config may reference external repositories by logical ID; topology config resolves IDs to local paths.
 - Every config folder needs `README.md` describing public/private status and authoritative owner.
 
-General vault configuration stays directly under `_system/local`; ignored reports, backups, and install/export state live under `state/`.
+General vault configuration stays directly under `_system/local`; ignored reports, backups, and install/export state live under `state/`. Machine-wide Code workspace runtime data belongs under `~/Code/.workspace-sync/`, not here; follow [[_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/README-machine-runtime-state|Machine Runtime State]].
 
 Public export excludes every `_system/local/skills/**/private/**` path, `_system/local/snippets/private/**`, all `_system/local/env/**` contents, and `_system/local/state/**`. Public skills must handle missing private config with setup guidance.

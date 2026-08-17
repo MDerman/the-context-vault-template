@@ -22,7 +22,9 @@ from vault_layout import VAULT_CONFIG_PATH
 SCRIPT_DIR = Path(__file__).resolve().parent
 DEFAULT_LABEL = "com.obsidian-context-vault.refresh"
 STATE_DIR = Path.home() / "Library/Application Support/obsidian-context-vault"
+WORKER_BLOCK_NAME = "worker-refresh-block.json"
 LOG_DIR = Path.home() / "Library/Logs"
+MACHINE_ID_PATH = Path.home() / ".config/vault/machine-id"
 
 
 def system_timezone() -> str:
@@ -97,6 +99,101 @@ def launch_service(label: str) -> str:
     return f"{launch_domain()}/{label}"
 
 
+def machine_schedule_policy(root: Path) -> dict[str, object]:
+    block_path = STATE_DIR / WORKER_BLOCK_NAME
+    if block_path.is_file():
+        try:
+            block = json.loads(block_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            block = {}
+        if not isinstance(block, dict):
+            block = {}
+        return {
+            "eligible": False,
+            "machineId": block.get("machineId"),
+            "role": "worker",
+            "blockedReason": "persistent machine-local worker block prohibits scheduled vault refresh",
+        }
+    role_result = subprocess.run(
+        ["git", "config", "--local", "--get", "vault.machine-role"],
+        cwd=root,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
+    configured_role = role_result.stdout.strip()
+    result = subprocess.run(
+        ["git", "config", "--local", "--get", "vault.machine-id"],
+        cwd=root,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
+    machine_id = result.stdout.strip()
+    if not machine_id:
+        try:
+            machine_id = MACHINE_ID_PATH.read_text(encoding="utf-8").strip()
+        except OSError:
+            machine_id = ""
+    if configured_role == "worker":
+        return {
+            "eligible": False,
+            "machineId": machine_id or None,
+            "role": "worker",
+            "blockedReason": "scheduled vault refresh is primary-only and cannot run on a worker",
+        }
+    registry_path = (
+        root
+        / "_system/local/skills/infra-code-folder-and-computer-topology/private/machines.json"
+    )
+    if not machine_id or not registry_path.is_file():
+        return {"eligible": True, "machineId": machine_id or None, "role": None}
+    try:
+        registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {"eligible": True, "machineId": machine_id, "role": None}
+    machine = next(
+        (item for item in registry.get("machines", []) if item.get("id") == machine_id),
+        None,
+    )
+    role = machine.get("role") if isinstance(machine, dict) else None
+    eligible = role != "worker"
+    return {
+        "eligible": eligible,
+        "machineId": machine_id,
+        "role": role,
+        "blockedReason": (
+            "scheduled vault refresh is primary-only and cannot run on a worker"
+            if not eligible
+            else None
+        ),
+    }
+
+
+def block_worker(machine_id: str, dry_run: bool) -> int:
+    path = STATE_DIR / WORKER_BLOCK_NAME
+    if dry_run:
+        print(f"would write persistent worker refresh block: {path}")
+        return 0
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    try:
+        temporary.write_text(
+            json.dumps({"machineId": machine_id, "role": "worker"}, sort_keys=True)
+            + "\n",
+            encoding="utf-8",
+        )
+        temporary.chmod(0o600)
+        os.replace(temporary, path)
+    finally:
+        if temporary.exists():
+            temporary.unlink()
+    print(f"blocked scheduled vault refresh on worker {machine_id}")
+    return 0
+
+
 def refresh_command(root: Path) -> list[str]:
     return [sys.executable, str(SCRIPT_DIR / "refresh_schedule.py"), "--root", str(root), "run-due"]
 
@@ -131,6 +228,13 @@ def register(root: Path, dry_run: bool) -> int:
     if sys.platform != "darwin":
         print("refresh schedule requires macOS launchd", file=sys.stderr)
         return 2
+    policy = machine_schedule_policy(root)
+    if not policy["eligible"]:
+        print(
+            f"refresh schedule refused for worker {policy['machineId']}: {policy['blockedReason']}",
+            file=sys.stderr,
+        )
+        return 3
     config = load_refresh_config(root)
     label = label_from_config(config)
     path = plist_path(label)
@@ -187,6 +291,7 @@ def status_payload(root: Path) -> dict[str, object]:
         "retryAttempts": config_int(config, "retry_attempts", 3),
         "retryDelaySeconds": config_int(config, "retry_delay_seconds", 60),
         "lastRefreshDate": stamp.read_text(encoding="utf-8").strip() if stamp.exists() else None,
+        **machine_schedule_policy(root),
     }
 
 
@@ -204,6 +309,9 @@ def status(root: Path, json_output: bool = False) -> int:
     print(f"retry_attempts: {payload['retryAttempts']}")
     print(f"retry_delay_seconds: {payload['retryDelaySeconds']}")
     print(f"last_refresh_date: {payload['lastRefreshDate'] or 'none'}")
+    print(f"eligible: {'yes' if payload['eligible'] else 'no'}")
+    if payload.get("blockedReason"):
+        print(f"blocked_reason: {payload['blockedReason']}")
     return 0
 
 
@@ -234,6 +342,12 @@ def run_refresh_with_retries(root: Path, today: str, config: dict[str, object]) 
 
 
 def run_due(root: Path) -> int:
+    policy = machine_schedule_policy(root)
+    if not policy["eligible"]:
+        print(
+            f"refresh schedule skipped for worker {policy['machineId']}: {policy['blockedReason']}"
+        )
+        return 0
     config = load_refresh_config(root)
     if not bool(config.get("enabled", True)):
         print("refresh schedule disabled in config")
@@ -265,6 +379,9 @@ def main(argv: list[str] | None = None) -> int:
         command.add_argument("--dry-run", action="store_true")
     status_parser = subparsers.add_parser("status")
     status_parser.add_argument("--json", action="store_true", help="Emit machine-readable status JSON.")
+    block_parser = subparsers.add_parser("block-worker")
+    block_parser.add_argument("--machine-id", required=True)
+    block_parser.add_argument("--dry-run", action="store_true")
     subparsers.add_parser("run-due")
     args = parser.parse_args(argv)
 
@@ -275,6 +392,8 @@ def main(argv: list[str] | None = None) -> int:
         return unregister(root, args.dry_run)
     if args.command == "status":
         return status(root, json_output=args.json)
+    if args.command == "block-worker":
+        return block_worker(args.machine_id, args.dry_run)
     if args.command == "run-due":
         return run_due(root)
     return 2

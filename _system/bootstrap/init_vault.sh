@@ -186,9 +186,12 @@ load_config() {
   if [[ ! -f "${CONFIG_PATH}" ]]; then
     CONTEXT_FOLDERS="personal,personal-brand,business"
     ACTIVE_CONTEXT_FOLDERS="${CONTEXT_FOLDERS}"
-    CONTENT_CONTEXT_FOLDERS="personal-brand,business"
+    BLOG_CONTEXT_FOLDERS="personal-brand,business"
+    SOCIAL_CONTENT_CONTEXT_FOLDERS="personal-brand,business"
+    NEWSLETTER_CONTEXT_FOLDERS="personal-brand,business"
+    CONTENT_SCHEDULE_CONTEXT_FOLDERS="personal-brand,business"
+    FOLDER_TEMPLATES="personal-brand:personal-brand,business:business"
     DEFAULT_CONTEXT_FOLDER="personal"
-    CONTEXT_TYPES="personal:personal,personal-brand:personal-brand,business:business"
     return 0
   fi
   eval "$("${PYTHON_BIN}" - "${CONFIG_PATH}" <<'PY'
@@ -201,16 +204,22 @@ data = json.load(open(path, encoding="utf-8"))
 items = data.get("context_folders") or []
 names = [item["name"] for item in items]
 active = [item["name"] for item in items if item.get("status") == "active"]
-content = [item["name"] for item in items if item.get("content_enabled")]
+blog = [item["name"] for item in items if "blog" in item.get("capabilities", [])]
+social = [item["name"] for item in items if "social-content" in item.get("capabilities", [])]
+newsletters = [item["name"] for item in items if "newsletters" in item.get("capabilities", [])]
+schedules = [item["name"] for item in items if item.get("content_schedules")]
 defaults = [item["name"] for item in items if item.get("default_capture")]
 default = defaults[0] if defaults else (active[0] if active else (names[0] if names else "personal"))
-types = [f'{item["name"]}:{item.get("context_type") or "business"}' for item in items]
+templates = [f'{item["name"]}:{item["folder_template"]}' for item in items if item.get("folder_template")]
 values = {
     "CONTEXT_FOLDERS": ",".join(names),
     "ACTIVE_CONTEXT_FOLDERS": ",".join(active),
-    "CONTENT_CONTEXT_FOLDERS": ",".join(content),
+    "BLOG_CONTEXT_FOLDERS": ",".join(blog),
+    "SOCIAL_CONTENT_CONTEXT_FOLDERS": ",".join(social),
+    "NEWSLETTER_CONTEXT_FOLDERS": ",".join(newsletters),
+    "CONTENT_SCHEDULE_CONTEXT_FOLDERS": ",".join(schedules),
+    "FOLDER_TEMPLATES": ",".join(templates),
     "DEFAULT_CONTEXT_FOLDER": default,
-    "CONTEXT_TYPES": ",".join(types),
 }
 for key, value in values.items():
     print(f"{key}={shlex.quote(value)}")
@@ -221,15 +230,21 @@ PY
 save_config() {
   local context_csv="$1"
   local active_csv="$2"
-  local content_csv="$3"
-  local default_context="$4"
-  local context_types_csv="$5"
+  local blog_csv="$3"
+  local social_csv="$4"
+  local newsletter_csv="$5"
+  local schedules_csv="$6"
+  local default_context="$7"
+  local templates_csv="$8"
 
   CONTEXT_FOLDERS_CSV="$context_csv" \
     ACTIVE_CONTEXT_FOLDERS_CSV="$active_csv" \
-    CONTENT_CONTEXT_FOLDERS_CSV="$content_csv" \
+    BLOG_CONTEXT_FOLDERS_CSV="$blog_csv" \
+    SOCIAL_CONTENT_CONTEXT_FOLDERS_CSV="$social_csv" \
+    NEWSLETTER_CONTEXT_FOLDERS_CSV="$newsletter_csv" \
+    CONTENT_SCHEDULE_CONTEXT_FOLDERS_CSV="$schedules_csv" \
     DEFAULT_CONTEXT_FOLDER_VALUE="$default_context" \
-    CONTEXT_TYPES_CSV="$context_types_csv" \
+    FOLDER_TEMPLATES_CSV="$templates_csv" \
     DRY_RUN_VALUE="$DRY_RUN" \
     "${PYTHON_BIN}" - "${CONFIG_PATH}" <<'PY'
 import json
@@ -239,21 +254,29 @@ import sys
 path = sys.argv[1]
 names = [item for item in os.environ["CONTEXT_FOLDERS_CSV"].split(",") if item]
 active = {item for item in os.environ["ACTIVE_CONTEXT_FOLDERS_CSV"].split(",") if item}
-content = {item for item in os.environ["CONTENT_CONTEXT_FOLDERS_CSV"].split(",") if item}
+blog = {item for item in os.environ["BLOG_CONTEXT_FOLDERS_CSV"].split(",") if item}
+social = {item for item in os.environ["SOCIAL_CONTENT_CONTEXT_FOLDERS_CSV"].split(",") if item}
+newsletters = {item for item in os.environ["NEWSLETTER_CONTEXT_FOLDERS_CSV"].split(",") if item}
+schedules = {item for item in os.environ["CONTENT_SCHEDULE_CONTEXT_FOLDERS_CSV"].split(",") if item}
 default = os.environ["DEFAULT_CONTEXT_FOLDER_VALUE"]
-types = {}
-for item in os.environ["CONTEXT_TYPES_CSV"].split(","):
+templates = {}
+for item in os.environ["FOLDER_TEMPLATES_CSV"].split(","):
     if not item:
         continue
-    name, context_type = item.split(":", 1)
-    types[name] = context_type
+    name, template = item.split(":", 1)
+    templates[name] = template
 data = {
     "context_folders": [
         {
             "name": name,
             "status": "active" if name in active else "archived",
-            "context_type": types.get(name, "business"),
-            "content_enabled": name in content,
+            "capabilities": [feature for feature, enabled in [
+                ("blog", name in blog),
+                ("social-content", name in social),
+                ("newsletters", name in newsletters),
+            ] if enabled],
+            "content_schedules": name in schedules,
+            **({"folder_template": templates[name]} if name in templates else {}),
             "default_capture": name == default,
         }
         for name in names
@@ -300,9 +323,12 @@ collect_config() {
 
   CONTEXT_FOLDERS="$(join_by_comma "${personal_context}" "${brand_context}" "${business_context}")"
   ACTIVE_CONTEXT_FOLDERS="${CONTEXT_FOLDERS}"
-  CONTENT_CONTEXT_FOLDERS="$(join_by_comma "${brand_context}" "${business_context}")"
+  BLOG_CONTEXT_FOLDERS="$(join_by_comma "${brand_context}" "${business_context}")"
+  SOCIAL_CONTENT_CONTEXT_FOLDERS="$(join_by_comma "${brand_context}" "${business_context}")"
+  NEWSLETTER_CONTEXT_FOLDERS="$(join_by_comma "${brand_context}" "${business_context}")"
+  CONTENT_SCHEDULE_CONTEXT_FOLDERS="$(join_by_comma "${brand_context}" "${business_context}")"
+  FOLDER_TEMPLATES="$(join_by_comma "${brand_context}:personal-brand" "${business_context}:business")"
   DEFAULT_CONTEXT_FOLDER="${personal_context}"
-  CONTEXT_TYPES="$(join_by_comma "${personal_context}:personal" "${brand_context}:personal-brand" "${business_context}:business")"
 
   cat <<EOF
 
@@ -310,37 +336,25 @@ Setup choices:
 
   Context folders: ${CONTEXT_FOLDERS}
   Active folders:  ${ACTIVE_CONTEXT_FOLDERS}
-  Content system:  ${CONTENT_CONTEXT_FOLDERS}
+  Blog:            ${BLOG_CONTEXT_FOLDERS}
+  Social content:  ${SOCIAL_CONTENT_CONTEXT_FOLDERS}
+  Newsletters:     ${NEWSLETTER_CONTEXT_FOLDERS}
+  Schedules:       ${CONTENT_SCHEDULE_CONTEXT_FOLDERS}
   Default capture: ${DEFAULT_CONTEXT_FOLDER}
-  Types:           ${CONTEXT_TYPES}
+  Folder templates:${FOLDER_TEMPLATES}
 
 EOF
 
-  save_config "${CONTEXT_FOLDERS}" "${ACTIVE_CONTEXT_FOLDERS}" "${CONTENT_CONTEXT_FOLDERS}" "${DEFAULT_CONTEXT_FOLDER}" "${CONTEXT_TYPES}"
-}
-
-context_folder_for_type() {
-  local wanted_type="$1"
-  local fallback="$2"
-  local pair name context_type
-  IFS=',' read -r -a pairs <<<"${CONTEXT_TYPES}"
-  for pair in "${pairs[@]}"; do
-    [[ -n "${pair}" ]] || continue
-    name="${pair%%:*}"
-    context_type="${pair#*:}"
-    if [[ "${context_type}" == "${wanted_type}" ]]; then
-      echo "${name}"
-      return 0
-    fi
-  done
-  echo "${fallback}"
+  save_config "${CONTEXT_FOLDERS}" "${ACTIVE_CONTEXT_FOLDERS}" "${BLOG_CONTEXT_FOLDERS}" "${SOCIAL_CONTENT_CONTEXT_FOLDERS}" "${NEWSLETTER_CONTEXT_FOLDERS}" "${CONTENT_SCHEDULE_CONTEXT_FOLDERS}" "${DEFAULT_CONTEXT_FOLDER}" "${FOLDER_TEMPLATES}"
 }
 
 remap_starter_context_folders() {
+  local configured=()
   local personal_target brand_target business_target
-  personal_target="$(context_folder_for_type "personal" "personal")"
-  brand_target="$(context_folder_for_type "personal-brand" "personal-brand")"
-  business_target="$(context_folder_for_type "business" "business")"
+  IFS=',' read -r -a configured <<<"${CONTEXT_FOLDERS}"
+  personal_target="${configured[0]:-personal}"
+  brand_target="${configured[1]:-personal-brand}"
+  business_target="${configured[2]:-business}"
 
   rename_starter_context_folder "personal" "${personal_target}"
   rename_starter_context_folder "personal-brand" "${brand_target}"
@@ -514,13 +528,28 @@ main() {
     --root "${VAULT_ROOT}" \
     --context-folders "${CONTEXT_FOLDERS}" \
     --active-context-folders "${ACTIVE_CONTEXT_FOLDERS}" \
-    --content-context-folders "${CONTENT_CONTEXT_FOLDERS}" \
-    --context-types "${CONTEXT_TYPES}" \
+    --blog-context-folders "${BLOG_CONTEXT_FOLDERS}" \
+    --social-content-context-folders "${SOCIAL_CONTENT_CONTEXT_FOLDERS}" \
+    --newsletter-context-folders "${NEWSLETTER_CONTEXT_FOLDERS}" \
+    --content-schedule-context-folders "${CONTENT_SCHEDULE_CONTEXT_FOLDERS}" \
+    --folder-templates "${FOLDER_TEMPLATES}" \
     --default-context-folder "${DEFAULT_CONTEXT_FOLDER}" \
     --skip-install-vault-command \
     --skip-agent-symlinks
 
-  run_with_optional_dry_run "${PYTHON_BIN}" "${SCRIPT_DIR}/agents/ensure-agent-file-symlinks.py" --root "${VAULT_ROOT}"
+  local template_pair template_context template_name
+  IFS=',' read -r -a template_pairs <<<"${FOLDER_TEMPLATES}"
+  for template_pair in "${template_pairs[@]}"; do
+    [[ -n "${template_pair}" ]] || continue
+    template_context="${template_pair%%:*}"
+    template_name="${template_pair#*:}"
+    [[ "${template_name}" == "business" ]] || continue
+    if [[ "${DRY_RUN}" -eq 1 ]]; then
+      run_dry_capable "${PYTHON_BIN}" "${VAULT_ROOT}/_system/commands/business_toolkit.py" sync --root "${VAULT_ROOT}" --context-folders "${template_context}"
+    else
+      run_dry_capable "${PYTHON_BIN}" "${VAULT_ROOT}/_system/commands/business_toolkit.py" sync --root "${VAULT_ROOT}" --context-folders "${template_context}" --apply
+    fi
+  done
 
   if [[ "${DRY_RUN}" -eq 1 ]]; then
     run_dry_capable "${PYTHON_BIN}" "${VAULT_ROOT}/_system/commands/deps.py" sync --root "${VAULT_ROOT}" --dry-run

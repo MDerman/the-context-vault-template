@@ -39,12 +39,14 @@ Keep public setup instructions in `README-public-vault-template.md`, but keep in
 
 The exporter:
 
-- copies root agent wiring, selected root files, root `.obsidian` and `.obsidian-mobile` profile files with configured exclusions, `_system` minus generated/private outputs, empty `_library`, `_wiki/AGENTS.md`, and configured context folder scaffolds;
+- copies root agent wiring, selected root files, root `.obsidian` and `.obsidian-mobile` profile files with configured exclusions, `_system` minus generated/private outputs and personal `_system/agents/config`, empty `_library`, `_wiki/AGENTS.md`, and configured context folder scaffolds;
 - derives managed dependency projection targets from `_system/local/deps.json` and omits them; fresh installs recreate local projections without exporting machine-specific absolute symlinks;
 - writes `_system/local/state/export-manifest.json` so future exports can remove stale export-owned files;
 - preserves repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, and contribution docs;
 - exports portable local README/defaults but excludes `_system/local/skills/**/private/**`, `_system/local/snippets/private/**`, all `_system/local/env/**` contents, and `_system/local/state/**`;
 - refuses to export inside the source vault.
+
+Public context entries declare `capabilities`, `content_schedules`, and an optional `folder_template` explicitly. The bootstrap does not infer context types. Physical packs live under `_system/bootstrap/templates/context-folders/`.
 
 Use raw export for inspection and repair only. Normal public publishing goes through:
 
@@ -94,7 +96,7 @@ Correct wording: Export includes plugin metadata/styles and non-sensitive settin
 
 Public install script:
 
-- installs Homebrew if it is missing, then checks Homebrew-managed dependencies;
+- installs Homebrew if it is missing, then checks Homebrew-managed dependencies, including the CTX2 baseline of Node `>=24.19.0 <25`, pnpm `>=11.21.0 <12`, Age, OpenSSL, Git, curl, and compiler tooling;
 - clones `MDerman/the-context-vault-template` into the default target `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault`, or a first-argument target override;
 - expands quoted `~`, `~/...`, and `~user/...` target overrides before creating the target directory;
 - resolves relative target overrides from the directory where the installer was launched;
@@ -104,13 +106,14 @@ Public install script:
 - stores vault-local bootstrap metadata under `_system/local/state/install.json`;
 - runs from README via `sudo bash`, resolves the original sudo user, and writes the vault/state as that user;
 - removes the public-repo `.git` pointer from the vault;
-- runs `_system/bootstrap/init_vault.sh --enable-git`, which asks for three exact context-folder slugs and initializes personal Git/LFS directly under `~/.local/share/vault-git/<vault-name>.git`, outside iCloud.
+- runs `_system/bootstrap/init_vault.sh --enable-git`, which asks for three exact context-folder slugs, preserves the starter examples through explicit capabilities/templates, and initializes personal Git/LFS directly under `~/.local/share/vault-git/<vault-name>.git`, outside iCloud.
 - downloads active third-party Obsidian plugin bundles, while Context Nine and Relay are already shipped in the vault export.
 - clones every repo from `_system/local/deps.json` at release-locked commits, creates projections, and runs vault-owned setup hooks. Agent Canvas setup builds editable checkout, links Bun package, and installs `~/.local/bin/agent-canvas`.
+- does not clone private personal Code workspaces or personal agent configuration. Personal fleet onboarding uses `$infra-sync-code-workspaces` after target-local authentication to reconcile both from the registered primary before strict repo-owned skill validation.
 
 Public README invokes root `install.sh` through the GitHub raw URL and shows only the default command plus a custom-target example.
 
-User Git is separate from hidden public-upstream state. Public installs enable personal Git/LFS by default outside iCloud. Run `init_vault.sh --no-git` only for manual setup that intentionally omits personal Git.
+User Git is separate from hidden public-upstream state. Public installs enable personal Git/LFS by default only when creating the installation's primary Vault. Never run the Git-enabled initializer on a Mac joining an existing Vault through iCloud; use the worker-Mac onboarding flow, which requires no Vault Git and a dangling shared `.git` pointer. Run `init_vault.sh --no-git` for an intentional standalone Gitless setup.
 
 ## Profile Upgrade Flow
 
@@ -140,7 +143,9 @@ Profile upgrade does not advance the installed public commit. A later full `vaul
 - `_system/migrations`: empty framework for future public bootstrap migrations.
 - `_system/inbox`: generated/import inbox files such as Brain Dump imports.
 - `_system/local/state`: ignored local backups, install/export state, and upgrade reports.
-- `_system/sync`: rclone backup/sync tooling.
+- `_system/sync`: disabled, unused, and unsupported historical rclone backup/sync tooling; keep its automation off.
 - `_system/tools`: reusable tools outside `vault` dispatcher.
 
 New system-level tools should go in `_system/commands` only when they belong behind `vault`. Otherwise use `_system/tools` and document dependency needs in `_system/bootstrap/Brewfile`.
+
+The public dependency installer provides CTX2 prerequisites but never registry credentials. Git and private package-registry authentication remain explicit machine-local onboarding gates.

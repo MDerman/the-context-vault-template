@@ -132,7 +132,7 @@ Sync Embeds supports normal editing shortcuts inside embeds and has header helpe
 
 Omnisearch is the preferred fast search layer for this vault. It is installed from Community Plugins as `omnisearch`.
 
-Use `Shift then Shift` for `Omnisearch: Vault search` when finding a document across the vault. Doubleshift handles that double-tap shortcut, and `Cmd+Shift+F` remains a fallback. Use `Cmd+F` for `Omnisearch: In-file search` when skimming matches inside the active Markdown note. Core Global Search is still available on `Cmd+Shift+P` for cases where the built-in search syntax is needed.
+Use `Shift then Shift` for `Omnisearch: Vault search` when finding a document across the vault. Doubleshift handles that double-tap shortcut. Use `Alt+Cmd+F` for `Omnisearch: In-file search` when skimming matches inside the active Markdown note; `Cmd+F` uses Obsidian's core find interface. Core Global Search is still available on `Cmd+Shift+P` for cases where the built-in search syntax is needed.
 
 Omnisearch is different from core Global Search: it is optimized for quickly finding the most relevant notes, not for replacing every advanced core-search workflow. It ranks documents by terms in filenames, paths, headings, and repeated note content, and it tolerates small typos.
 
@@ -208,20 +208,19 @@ Each context folder has a local dashboard at `<context-folder>/_obsidian/bases/c
 | Plugin | Use |
 | --- | --- |
 | Emoji Title | Reads `emoji` from note frontmatter and shows it in the File Explorer and open-note title/tab. File-type fallbacks are disabled so emojis remain explicit Markdown metadata. |
-| Omnisearch | Preferred fast relevance-ranked search; `Shift then Shift` opens Vault search, `Cmd+Shift+F` is the fallback, and `Cmd+F` opens In-file search. |
+| Omnisearch | Preferred fast relevance-ranked search; `Shift then Shift` opens Vault search and `Alt+Cmd+F` opens In-file search. |
 | Open Tab Settings | Makes normal note opens create or focus tabs instead of replacing the current tab; prevents duplicate tabs and keeps explicit `Cmd+Click`/middle-click opens in the opposite tab group when possible. |
 | Doubleshift | Maps double-tapping left Shift to `Omnisearch: Vault search`. |
 | Checklist Reset | Resets checklist notes via command palette. |
 | Code Editor Shortcuts | Adds editor commands such as configured `Ctrl+D` delete line. |
 | Consistent Attachments and Links | Keeps links/attachments consistent when moving notes. |
-| Automatically reveal active file | Reveals the current note in the file explorer. |
 | Show Current File Path | Displays the active file path. |
 | BRAT | Manages beta plugins, including Sync Embeds. |
 | Minimal Theme Settings / Style Settings | Theme and CSS-snippet configuration. |
 | Text Generator | AI text-generation plugin, available when configured. |
 | Share Note | Publish/share individual notes. |
 
-Plugin folders for Dataview, Git, Kanban, and Todoist Sync exist locally, but they are not currently enabled in `.obsidian/community-plugins.json`.
+Plugin folders for Automatically reveal active file, Dataview, Git, Kanban, and Todoist Sync exist locally, but they are not currently enabled in `.obsidian/community-plugins.json`.
 
 ## Workflows From Older Plugin Notes
 

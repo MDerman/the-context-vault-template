@@ -10,7 +10,7 @@ This note covers the built-in Obsidian ideas a new user should understand before
 - Use `[[Note Name^block-id]]` to link to a specific block. Use display text with a pipe, for example `[[Note Name#Heading|friendly label]]`.
 - Use `![[Note Name]]` to transclude another note into the current note.
 - Use Quick Switcher (`Cmd+O`) to find or create notes quickly.
-- Use core Global Search (`Cmd+Shift+P`) when you need built-in search syntax. `Cmd+Shift+F` is configured for Omnisearch Vault search.
+- Use core Global Search (`Cmd+Shift+P`) when you need built-in search syntax. `Shift` then `Shift` opens Omnisearch Vault search, while `Cmd+F` uses core find in the current file and `Alt+Cmd+F` uses Omnisearch In-file search.
 
 ## Markdown Basics
 

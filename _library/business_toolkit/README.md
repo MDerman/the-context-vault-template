@@ -4,7 +4,7 @@ status: active
 
 # Business Toolkit
 
-The canonical business scaffold lives under `_system/bootstrap/templates/business-context/`; operating instructions live in [[Business Toolkit]]. This library folder is only its navigation entry point; reusable business research belongs in the most specific topical library category.
+The canonical business scaffold lives under `_system/bootstrap/templates/context-folders/business/`; operating instructions live in [[Business Toolkit]]. This library folder is only its navigation entry point; reusable business research belongs in the most specific topical library category.
 
 ## Knowledge routes
 
@@ -29,17 +29,17 @@ The canonical business scaffold lives under `_system/bootstrap/templates/busines
 Create a new business context with the complete ordinary folder scaffold:
 
 ```bash
-vault folder -n studio -s active --context-type business
+vault folder -n studio -s active --folder-template business
 ```
 
-Registering an existing folder is conservative: it installs only selected managed templates, Templater rules, toolkit state, and 📋 icons for operating folders that already exist.
+Registering an existing folder adds only the core/capability structure requested. Configure the business toolkit explicitly afterward if wanted.
 
 ```bash
-vault folder register studio --context-type business
+vault folder register studio
 vault business-toolkit
 vault business-toolkit sync --context-folders studio
 vault business-toolkit sync --context-folders studio --apply
-vault business-toolkit status --all-business
+vault business-toolkit status --configured
 ```
 
 Normal synchronization never creates, deletes, or restructures ordinary business folders. It protects locally edited managed templates and changed managed icons. Interactive apply asks once before replacing all detected drift; non-interactive apply aborts atomically unless `--force` is supplied.

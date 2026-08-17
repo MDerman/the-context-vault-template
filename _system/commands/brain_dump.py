@@ -254,7 +254,11 @@ def clear_body_for_note(template: str, note_name: str) -> str:
     return f"<div>{escaped_name}</div>{rendered}"
 
 
-def save_brain_dump_attachments(note_name: str, attachments_dir: Path, import_id: str) -> list[dict[str, str]]:
+def save_brain_dump_attachments(
+    note_name: str,
+    attachments_dir: Path,
+    import_id: str,
+) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
     attachments_dir.mkdir(parents=True, exist_ok=True)
     script = r'''
 on sanitizeFileName(rawName)
@@ -270,6 +274,20 @@ on sanitizeFileName(rawName)
   if safeName is "" then set safeName to "attachment"
   return safeName
 end sanitizeFileName
+
+on sanitizeOutputField(rawValue)
+  if rawValue is missing value then return ""
+  set safeValue to rawValue as text
+  set badChars to {tab, return, linefeed}
+  repeat with badChar in badChars
+    set AppleScript's text item delimiters to badChar
+    set valueParts to text items of safeValue
+    set AppleScript's text item delimiters to " "
+    set safeValue to valueParts as text
+  end repeat
+  set AppleScript's text item delimiters to ""
+  return safeValue
+end sanitizeOutputField
 
 on run argv
   set noteTitle to item 1 of argv
@@ -288,21 +306,33 @@ on run argv
     set attachmentIndex to 0
     repeat with noteAttachment in attachments of targetNote
       set attachmentIndex to attachmentIndex + 1
-      set attachmentName to name of noteAttachment
-      if attachmentName is missing value or attachmentName is "" then set attachmentName to "attachment-" & attachmentIndex
-      set safeName to my sanitizeFileName(attachmentName)
+      set attachmentName to ""
+      try
+        set attachmentName to name of noteAttachment
+        if attachmentName is missing value then set attachmentName to ""
+      end try
+      set safeBaseName to attachmentName
+      if safeBaseName is "" then set safeBaseName to "attachment-" & attachmentIndex
+      set safeName to my sanitizeFileName(safeBaseName)
       set outputName to importPrefix & "-" & attachmentIndex & "-" & safeName
       set outputPath to outputDir & "/" & outputName
-      save noteAttachment in (POSIX file outputPath)
       set attachmentCID to ""
       set attachmentURL to ""
       try
         set attachmentCID to content identifier of noteAttachment
+        if attachmentCID is missing value then set attachmentCID to ""
       end try
       try
         set attachmentURL to URL of noteAttachment
+        if attachmentURL is missing value then set attachmentURL to ""
       end try
-      set end of outputLines to attachmentCID & tab & attachmentName & tab & outputName & tab & attachmentURL
+      try
+        save noteAttachment in (POSIX file outputPath)
+        set end of outputLines to "saved" & tab & attachmentCID & tab & attachmentName & tab & outputName & tab & attachmentURL
+      on error errorMessage number errorNumber
+        set cleanError to my sanitizeOutputField(errorMessage)
+        set end of outputLines to "failed" & tab & attachmentCID & tab & attachmentName & tab & outputName & tab & attachmentURL & tab & errorNumber & tab & cleanError
+      end try
     end repeat
   end tell
   set AppleScript's text item delimiters to linefeed
@@ -322,19 +352,52 @@ end run
         raise SystemExit(f"Apple Notes attachment ingest failed: {detail}")
 
     attachments: list[dict[str, str]] = []
+    failures: list[dict[str, str]] = []
     for raw_line in result.stdout.splitlines():
         if not raw_line.strip():
             continue
-        cid, original_name, output_name, url = (raw_line.split("\t") + ["", "", "", ""])[:4]
-        attachments.append(
-            {
-                "cid": cid.strip(),
-                "original_name": original_name.strip() or output_name.strip(),
-                "output_name": output_name.strip(),
-                "url": url.strip(),
-            }
-        )
-    return attachments
+        fields = raw_line.split("\t")
+        status = fields[0].strip()
+        if status == "saved":
+            cid, original_name, output_name, url = (fields[1:] + ["", "", "", ""])[:4]
+            attachments.append(
+                {
+                    "cid": cid.strip(),
+                    "original_name": original_name.strip() or output_name.strip(),
+                    "output_name": output_name.strip(),
+                    "url": url.strip(),
+                }
+            )
+        elif status == "failed":
+            cid, original_name, output_name, url, error_number, error_message = (
+                fields[1:] + ["", "", "", "", "", ""]
+            )[:6]
+            failures.append(
+                {
+                    "cid": cid.strip(),
+                    "original_name": original_name.strip(),
+                    "output_name": output_name.strip(),
+                    "url": url.strip(),
+                    "error_number": error_number.strip(),
+                    "error_message": error_message.strip(),
+                }
+            )
+        else:
+            raise SystemExit(f"Apple Notes attachment ingest returned an unknown record: {raw_line}")
+    return attachments, failures
+
+
+def failures_are_embedded_tables(note_html: str, failures: list[dict[str, str]]) -> bool:
+    if not failures:
+        return True
+    table_object_count = len(re.findall(r"<object\b[^>]*>\s*<table\b", note_html, flags=re.I))
+    if table_object_count < len(failures):
+        return False
+    for failure in failures:
+        references = [failure.get("cid", ""), failure.get("url", "")]
+        if any(reference and reference in note_html for reference in references):
+            return False
+    return True
 
 
 def build_attachment_links(root: Path, attachments_dir: Path, attachments: list[dict[str, str]]) -> dict[str, str]:
@@ -417,11 +480,25 @@ def main(argv: list[str] | None = None) -> int:
     import_id = dt.datetime.now().strftime("%Y%m%dT%H%M%S")
 
     attachments: list[dict[str, str]] = []
+    attachment_failures: list[dict[str, str]] = []
     attachment_links: dict[str, str] = {}
     attachment_fallback_links: list[str] = []
     used_attachment_links: set[str] = set()
     if copy_attachments and not args.dry_run:
-        attachments = save_brain_dump_attachments(note_name, attachments_dir, import_id)
+        attachments, attachment_failures = save_brain_dump_attachments(note_name, attachments_dir, import_id)
+        if attachment_failures and not failures_are_embedded_tables(raw_body, attachment_failures):
+            failure = attachment_failures[0]
+            detail = failure.get("error_message") or f"AppleScript error {failure.get('error_number', 'unknown')}"
+            raise SystemExit(
+                "Apple Notes attachment ingest failed before the note was written or cleared: "
+                f"{detail}"
+            )
+        if attachment_failures:
+            print(
+                f"Skipped {len(attachment_failures)} Apple Notes table object(s); "
+                "their text is preserved from the note body.",
+                file=sys.stderr,
+            )
         attachment_links = build_attachment_links(root, attachments_dir, attachments)
         attachment_fallback_links = build_attachment_link_sequence(root, attachments_dir, attachments)
 

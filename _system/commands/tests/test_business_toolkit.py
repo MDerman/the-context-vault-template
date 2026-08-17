@@ -28,6 +28,7 @@ from business_toolkit import (  # noqa: E402
     load_pack,
     load_state,
     run_sync,
+    run_unconfigure,
     select_components,
     sha256_file,
     sync_context,
@@ -42,7 +43,7 @@ class BusinessToolkitTests(unittest.TestCase):
         context = root / "studio"
         context.mkdir(parents=True)
         (context / "studio.md").write_text(
-            "---\nstatus: active\ncontext_type: business\ncontext_registered: true\n---\n# studio\n",
+            "---\nstatus: active\ncontext_registered: true\n---\n",
             encoding="utf-8",
         )
         templater = root / TEMPLATER_RELATIVE
@@ -202,7 +203,7 @@ class BusinessToolkitTests(unittest.TestCase):
             agency = root / "agency"
             agency.mkdir()
             (agency / "agency.md").write_text(
-                "---\nstatus: active\ncontext_type: business\ncontext_registered: true\n---\n",
+                "---\nstatus: active\ncontext_registered: true\n---\n",
                 encoding="utf-8",
             )
             for context in ("studio", "agency"):
@@ -228,6 +229,19 @@ class BusinessToolkitTests(unittest.TestCase):
             self.assertEqual(changed.read_text(encoding="utf-8"), "local edit\n")
             self.assertEqual((root / "agency" / STATE_RELATIVE).read_bytes(), agency_state)
             self.assertEqual((root / TEMPLATER_RELATIVE).read_bytes(), templater_state)
+
+    def test_unconfigure_removes_managed_state_but_keeps_operating_folders(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = self.make_root(tmp)
+            operating = root / "studio/meetings/1-on-1s"
+            operating.mkdir(parents=True)
+            sync_context(root, "studio", includes=["meetings.one-on-ones"], apply=True, use_saved=False)
+            destination = root / "studio/_obsidian/templates/business-toolkit/meetings/one-on-one-template.md"
+            self.assertTrue(destination.is_file())
+            self.assertEqual(run_unconfigure(root, ["studio"], apply=True, force=False), 0)
+            self.assertFalse(destination.exists())
+            self.assertFalse((root / "studio" / STATE_RELATIVE).exists())
+            self.assertTrue(operating.is_dir())
 
 
 if __name__ == "__main__":

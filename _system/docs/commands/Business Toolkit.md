@@ -5,7 +5,7 @@ status: enabled
 
 # Business Toolkit
 
-This note is the navigation home for the business toolkit. The canonical literal scaffold lives under `_system/bootstrap/templates/business-context/`. Fresh business contexts receive its complete ordinary folder tree without folder-level README files. Registration and later synchronization install only selected managed templates, Templater rules, state, and 📋 Iconize markers for operating folders that already exist.
+This note is the navigation home for the business toolkit. The canonical literal scaffold lives under `_system/bootstrap/templates/context-folders/business/`. Selecting `--folder-template business` for a new context installs its ordinary folder tree and managed templates. A context is considered configured only when `_obsidian/business-toolkit.json` exists; there is no business context type.
 
 ## Interactive installer
 
@@ -13,7 +13,7 @@ This note is the navigation home for the business toolkit. The canonical literal
 vault business-toolkit
 ```
 
-The wizard lists current business contexts, accepts a multi-selection, and allows component or group exclusions.
+The wizard lists registered contexts, accepts a multi-selection, and allows component or group exclusions.
 
 ## Preview and apply
 
@@ -21,15 +21,18 @@ The wizard lists current business contexts, accepts a multi-selection, and allow
 vault business-toolkit sync --context-folders business,studio
 vault business-toolkit sync --context-folders business,studio --apply
 vault business-toolkit sync --configured --apply
-vault business-toolkit status --all-business
+vault business-toolkit status --configured
+vault business-toolkit unconfigure --context-folders studio --apply
 ```
 
 Available groups are `meetings`, `product`, `gtm`, `operations`, and `skills`. Component ids are listed in the canonical pack manifest.
 
-Normal sync never creates, deletes, or restructures ordinary business folders. It protects locally changed installed templates and changed managed icons. Apply mode preflights all selected contexts: a terminal asks once before overwriting all conflicts, a non-interactive run aborts without mutation, and `--force` explicitly replaces them.
+Explicit targets may be any registered context. Normal sync never creates, deletes, or restructures ordinary folders. It protects locally changed installed templates and changed managed icons. Apply mode preflights all selected contexts: a terminal asks once before overwriting all conflicts, a non-interactive run aborts without mutation, and `--force` explicitly replaces them.
 
 Excluding a previously installed component removes its managed Templater rule, unchanged installed template, and unchanged managed icon. Operating folders and business notes are never deleted.
 
 Each configured context stores its selection, installed hashes, icon ownership, and pack version in `_obsidian/business-toolkit.json`. Desktop and mobile Iconize files are reconciled when present; unrelated settings and custom icons are preserved.
+
+`unconfigure` safely removes unchanged managed templates, rules, icons, and the marker. Use `--force` only when intentionally discarding locally changed managed files.
 
 Periodic templates, TaskNotes templates, generated Bases, context notes, and Excalidraw setup remain owned by the core bootstrap generator.

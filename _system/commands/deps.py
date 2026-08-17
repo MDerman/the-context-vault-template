@@ -49,6 +49,7 @@ class Repo:
     locked_commit: str | None
     setup_script: str | None
     projections: list[Projection]
+    sync_enabled: bool = True
 
 
 def utc_stamp() -> str:
@@ -145,6 +146,7 @@ def load_config(root: Path) -> list[Repo]:
                     else None
                 ),
                 projections=projections,
+                sync_enabled=bool(item.get("sync_enabled", True)),
             )
         )
     return repos
@@ -189,6 +191,7 @@ def repo_summary(repo: Repo) -> dict[str, Any]:
         "url": repo.url,
         "path": str(repo.path),
         "ref": repo.ref,
+        "sync_enabled": repo.sync_enabled,
         "locked_commit": repo.locked_commit,
         "exists": exists,
         "git": False,
@@ -286,7 +289,15 @@ def status_payload(root: Path, repos: list[Repo]) -> dict[str, Any]:
         projections = []
         for projection in repo.projections:
             health = projection_health(root, projection)
-            state = "ok" if health["source_exists"] and health["target_exists"] and health["marker"] else "needs-sync"
+            state = (
+                "disabled"
+                if not repo.sync_enabled
+                else (
+                    "ok"
+                    if health["source_exists"] and health["target_exists"] and health["marker"]
+                    else "needs-sync"
+                )
+            )
             projections.append(
                 {
                     **health,
@@ -316,6 +327,7 @@ def print_status(root: Path, repos: list[Repo]) -> int:
         log(f"{repo.id}")
         log(f"  path: {summary['path']}")
         log(f"  ref: {repo.ref}")
+        log(f"  sync: {'enabled' if repo.sync_enabled else 'disabled'}")
         if repo.locked_commit:
             log(f"  locked: {short(repo.locked_commit)}")
         log(f"  exists: {'yes' if summary['exists'] else 'no'}")
@@ -330,7 +342,15 @@ def print_status(root: Path, repos: list[Repo]) -> int:
             log("  up to date: " + ("yes" if summary["local_commit"] == summary["remote_commit"] else "no"))
         for projection in repo.projections:
             health = projection_health(root, projection)
-            state = "ok" if health["source_exists"] and health["target_exists"] and health["marker"] else "needs-sync"
+            state = (
+                "disabled"
+                if not repo.sync_enabled
+                else (
+                    "ok"
+                    if health["source_exists"] and health["target_exists"] and health["marker"]
+                    else "needs-sync"
+                )
+            )
             log(f"  projection {projection.target}: {state}")
         setup = repo_setup_health(root, repo)
         if setup:
@@ -891,6 +911,9 @@ def sync(root: Path, repos: list[Repo], apply: bool) -> int:
     skill_projection_touched = False
     setup_queue: list[tuple[Repo, bool]] = []
     for repo in repos:
+        if not repo.sync_enabled:
+            log(f"Skip disabled dependency: {repo.id}")
+            continue
         repo_missing_before = not repo.path.exists()
         repo_changed = sync_repo(repo, apply)
         if repo_missing_before and not apply:
@@ -917,6 +940,9 @@ def project_auto_skills(root: Path, repos: list[Repo], apply: bool) -> int:
     """Repair auto-skill projections from existing checkouts without pulling or building repos."""
     touched = False
     for repo in repos:
+        if not repo.sync_enabled:
+            log(f"Skip disabled dependency: {repo.id}")
+            continue
         for projection in repo.projections:
             if projection.type != "auto-skill" or not projection.managed:
                 continue

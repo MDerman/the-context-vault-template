@@ -76,7 +76,7 @@ class DashboardChecklistTests(unittest.TestCase):
         self.assertIn("##### personal\n", rendered)
         self.assertNotIn("#### Action\n", rendered)
         self.assertNotIn("#### Home Pages", rendered)
-        self.assertGreaterEqual(rendered.count("\n---\n"), 3)
+        self.assertEqual(rendered.count("\n***\n"), 3)
 
     def test_quick_links_include_periodic_rollups_and_conditional_month(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

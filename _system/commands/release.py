@@ -296,7 +296,7 @@ def ensure_public_repo(public_root: Path, repo_url: str) -> str:
     if not branch:
         raise SystemExit("Public repo is not on a branch.")
     remote = run(["git", "remote", "get-url", "origin"], cwd=public_root).stdout.strip()
-    if remote.removesuffix(".git") != repo_url.removesuffix(".git"):
+    if repo_slug(remote) != repo_slug(repo_url):
         raise SystemExit(f"Unexpected public repo origin: {remote}")
     status = run(["git", "status", "--short"], cwd=public_root).stdout.strip()
     if status:

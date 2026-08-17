@@ -38,6 +38,34 @@ GENERATED = (
 
 
 class RefreshTests(unittest.TestCase):
+    def test_schedule_refresh_is_gated_by_schedule_frontmatter_not_blog_folders(self) -> None:
+        import content
+        import dashboard
+        import periodic
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for name, schedules_enabled in (("blog-only", False), ("scheduled", True)):
+                context = root / name
+                (context / "_obsidian/content/items/blog-posts").mkdir(parents=True)
+                schedules = "content_schedules_enabled: true\n" if schedules_enabled else ""
+                (context / f"{name}.md").write_text(
+                    f"---\nstatus: active\n{schedules}context_registered: true\n---\n",
+                    encoding="utf-8",
+                )
+            selected = ["blog-only", "scheduled"]
+            periods = {"daily": "2026-08-13"}
+            with (
+                mock.patch.object(refresh, "configured_context_folders", return_value=selected),
+                mock.patch.object(periodic, "resolve_entities", return_value=selected),
+                mock.patch.object(content, "generate_content_schedules", return_value=[]) as generate_content,
+                mock.patch.object(periodic, "generate_periodic_notes", return_value=(selected, periods)),
+                mock.patch.object(dashboard, "write_dashboard"),
+            ):
+                refresh.generate_derived_views(root, day=refresh.dt.date(2026, 8, 13))
+
+        self.assertEqual(generate_content.call_args.args[1], ["scheduled"])
+
     def test_refresh_skips_brain_dump_by_default(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "vault"

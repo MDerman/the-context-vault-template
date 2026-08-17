@@ -1,6 +1,6 @@
 ---
 name: code-env-tooling
-description: Use when adding, changing, loading, syncing, encrypting, decrypting, or troubleshooting environment variables; covers .env.base workflow, env-tooling CLI, k3s env scripts, cicd env scripts, and run-after-updating-env.sh.
+description: Use when adding, changing, loading, syncing, encrypting, decrypting, or troubleshooting environment variables; covers .env.base workflow, the ctx2 CLI and env-tooling compatibility alias, k3s env scripts, cicd env scripts, and run-after-updating-env.sh.
 ---
 
 # Code · Env Tooling
@@ -16,7 +16,7 @@ Do not add new keys only to `.env`, encrypted env files, generated final env fil
 ### K3s Preset Repos
 
 Use this pattern in repos that keep project-level `.env.base` and `.env` files
-and use the `k3s` env-tooling preset:
+and use the `k3s` ctx2 compatibility preset:
 
 1. Add new keys to `.env.base`.
 2. Run:
@@ -31,12 +31,12 @@ and use the `k3s` env-tooling preset:
 ./encrypt-env-files.sh
 ```
 
-These wrappers call env-tooling with the `k3s` preset. `sync k3s` syncs `.env` from `.env.base`. `encrypt k3s` layers non-empty `.env` overrides on top of `.env.base`, writes `.env.final.tmp`, and encrypts `.env.final.sops`.
+These wrappers call ctx2 with the `k3s` preset. `sync k3s` syncs `.env` from `.env.base`. `encrypt k3s` layers non-empty `.env` overrides on top of `.env.base`, writes `.env.final.tmp`, and encrypts `.env.final.sops`.
 
 ### CICD Preset Repos
 
 Use this pattern in repos that keep environment files inside a `cicd/`
-directory and use the `cicd` env-tooling preset:
+directory and use the `cicd` ctx2 compatibility preset:
 
 1. Add new keys to `cicd/.env.base`.
 2. Run:
@@ -52,36 +52,36 @@ For one environment only:
 ./run-after-updating-env.sh dev1
 ```
 
-`run-after-updating-env.sh` calls `env-tooling post-update cicd --dir "$SCRIPT_DIR"`. It syncs env files, encrypts SOPS envs, decrypts generated envs, and refreshes filtered Next.js env files for staging/prod when relevant.
+`run-after-updating-env.sh` calls `ctx2 post-update cicd --dir "$SCRIPT_DIR"`. It syncs env files, encrypts SOPS envs, decrypts generated envs, and refreshes filtered Next.js env files for staging/prod when relevant.
 
-## Env-Tooling CLI
+## Ctx2 compatibility CLI
 
-Locate env-tooling from the current repo wrapper or from `ENV_TOOLING_BIN`.
+Locate ctx2 from the current repo wrapper or `CTX2_BIN`; use `ENV_TOOLING_BIN` only as the temporary compatibility override.
 Core commands:
 
 ```bash
-env-tooling load cicd --dir /path/to/cicd --environment dev1 --emit-shell
-env-tooling post-update cicd --dir /path/to/cicd dev1
-env-tooling sync cicd --dir /path/to/cicd
-env-tooling encrypt cicd --dir /path/to/cicd dev1
-env-tooling decrypt cicd --dir /path/to/cicd dev1
-env-tooling create-next cicd --dir /path/to/cicd production
-env-tooling load k3s --dir /path/to/k3s-env-dir --emit-shell
-env-tooling sync k3s --dir /path/to/k3s-env-dir
-env-tooling encrypt k3s --dir /path/to/k3s-env-dir
-env-tooling load default --dir /path/to/shared-env-dir --emit-shell
+ctx2 load cicd --dir /path/to/cicd --environment dev1 --emit-shell
+ctx2 post-update cicd --dir /path/to/cicd dev1
+ctx2 sync cicd --dir /path/to/cicd
+ctx2 encrypt cicd --dir /path/to/cicd dev1
+ctx2 decrypt cicd --dir /path/to/cicd dev1
+ctx2 create-next cicd --dir /path/to/cicd production
+ctx2 load k3s --dir /path/to/k3s-env-dir --emit-shell
+ctx2 sync k3s --dir /path/to/k3s-env-dir
+ctx2 encrypt k3s --dir /path/to/k3s-env-dir
+ctx2 load default --dir /path/to/shared-env-dir --emit-shell
 ```
 
-Repo wrappers should stay thin: resolve repo-local directory, locate `ENV_TOOLING_BIN`, call this CLI, and source emitted shell when needed. Env merge, SOPS decrypt/encrypt, sync, and post-update behavior belong in env-tooling repo.
+Repo wrappers should stay thin: resolve the repo-local directory, locate `CTX2_BIN` with the temporary `ENV_TOOLING_BIN` fallback, call this CLI, and source emitted shell when needed. Env merge, SOPS decrypt/encrypt, sync, and post-update behavior belong in ctx2.
 
 ## Portable Binary Resolution
 
-Wrappers such as `load-env.sh`, `sync-env-files.sh`, and `encrypt-env-files.sh` should resolve env-tooling in this order:
+Wrappers such as `load-env.sh`, `sync-env-files.sh`, and `encrypt-env-files.sh` should resolve ctx2 in this order:
 
-1. `ENV_TOOLING_BIN` if set.
-2. Logical repository ID `env-tooling` from the private topology registry when the vault is available.
-3. Sibling checkout: `../env-tooling/bin/env-tooling`.
-4. Documented project fallback such as `$HOME/Code/ctx9/env-tooling/bin/env-tooling` when the wrapper must also work without the vault.
+1. `CTX2_BIN` if set.
+2. `ENV_TOOLING_BIN` while the compatibility window remains open.
+3. Logical repository ID `ctx2` from the private topology registry when the vault is available.
+4. Sibling checkout `../ctx2/bin/ctx2`, or a documented project fallback when the wrapper must also work without the vault.
 
 This keeps the skill generic, lets the fleet registry own the current checkout path, and preserves standalone repo wrappers without personal absolute paths.
 

@@ -16,7 +16,7 @@ Dry-run the default/configured setup:
 _system/bootstrap/init_vault.sh --dry-run --non-interactive
 ```
 
-The init script installs/checks dependencies, prompts for context folders, runs bootstrap, ensures agent symlinks, installs the `vault` command, and optionally sets up Git/LFS with the Git directory outside iCloud. Fresh Git repositories are initialized directly under `~/.local/share/vault-git/<vault-name>.git`; existing in-vault Git directories are moved there before Git hooks or index updates run.
+The init script installs/checks dependencies, prompts for context folders, runs bootstrap, ensures agent symlinks, installs the `vault` command, and optionally sets up Git/LFS with the Git directory outside iCloud. Git-enabled initialization is for the primary Vault only. A Mac joining that Vault through iCloud must use worker onboarding and must not run Git-enabled init. Fresh primary Git repositories are initialized directly under `~/.local/share/vault-git/<vault-name>.git`; existing in-vault Git directories are moved there before Git hooks or index updates run.
 User Git/LFS is off by default; pass `--enable-git` when intentionally creating a personal vault repository.
 
 Context-folder answers are stored in:
@@ -69,7 +69,7 @@ vault folder remove business --apply
 
 `remove` is dry-run by default and only deletes files with `--apply`.
 
-Root `AGENTS.md` is direct-edit source of truth. Agent setup ensures symlinks with:
+Root `AGENTS.md` is direct-edit source of truth for the Vault. Agent setup ensures Vault-local aliases through the same shared implementation used by regular skill sync; the compatibility command is:
 
 ```bash
 python3 _system/bootstrap/agents/ensure-agent-file-symlinks.py --root . --dry-run

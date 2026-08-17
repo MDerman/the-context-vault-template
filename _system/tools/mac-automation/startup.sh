@@ -10,7 +10,7 @@ remap_tilde_key() {
 
 open_application() {
   local bundle_id="$1"
-  /usr/bin/open -gja -b "$bundle_id"
+  /usr/bin/open -gj -b "$bundle_id"
   echo "Opened $bundle_id at $(/bin/date '+%Y-%m-%d %H:%M:%S')"
 }
 

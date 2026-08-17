@@ -200,7 +200,7 @@
   {
     "id": "skills-sync-dry-run",
     "label": "Skills Sync Dry Run",
-    "description": "Validate grouped skill sources and preview catalog/global link changes.",
+    "description": "Validate skill sources and preview repo projections plus catalog/global link changes.",
     "group": "Maintenance",
     "risk": "dry-run",
     "mode": "run",
@@ -214,7 +214,7 @@
   {
     "id": "skills-sync-apply",
     "label": "Skills Sync",
-    "description": "Enforce invocation policies and rebuild skill catalog/global links.",
+    "description": "Rebuild selected repo projections, invocation policies, and skill catalog/global links.",
     "group": "Maintenance",
     "risk": "apply",
     "mode": "run",
@@ -843,14 +843,14 @@
   {
     "id": "business-toolkit-status",
     "label": "Business Toolkit Status",
-    "description": "Check installed business-context templates, folder rules, and local drift.",
+    "description": "Check configured business-toolkit templates, folder rules, and local drift.",
     "group": "Contexts",
     "risk": "read",
     "mode": "run",
     "args": [
       "business-toolkit",
       "status",
-      "--all-business"
+      "--configured"
     ],
     "palette": true,
     "tui": true
@@ -858,7 +858,7 @@
   {
     "id": "business-toolkit-sync",
     "label": "Business Toolkit Sync",
-    "description": "Update all configured business contexts from the shared canonical template pack.",
+    "description": "Update all marker-configured contexts from the shared canonical business pack.",
     "group": "Contexts",
     "risk": "apply",
     "mode": "run",

@@ -14,13 +14,13 @@ This is the fuller script reference. Use `_system/docs/commands/README.md` for n
 - `mac_startup.py`: validates private per-machine startup opt-ins and application bundle identifiers, installs or removes the copied macOS `RunAtLoad` runtime, archives configured legacy LaunchAgents, reports state, and runs enabled actions. Explicit `--provision-disabled` supports reviewed onboarding without fleet enablement. Use `vault mac-startup`.
 - `dashboard.py`: private renderer used by `refresh.py`; it is not a `vault` command.
 - `content.py`: generates fixed 4-week content schedule notes from enabled `_obsidian/content/content-cadence.json` files and maintains the `Current content schedule:` line in each enabled context folder note. Supports `schedule_format`, `publication_order`, and `--force` to regenerate existing managed schedule notes.
-- `periodic.py`: creates current context source periodic notes, carries daily checklists forward, and generates vault Sync Embed rollups under `_system/_obsidian/periodic/`.
+- `periodic.py`: creates current context source periodic notes, non-destructively carries daily task-section content forward, and generates vault Sync Embed rollups under `_system/_obsidian/periodic/`.
 - `brain_dump.py`: imports the Brain Dump Apple Note into its single vault import file, copies attachments, and can clear the source note.
 - `brain_dump_triage.py`: creates optional Brain Dump batch backups/proposals, maintains triage Base, clears import file, and applies approved proposals.
 - `epic.py`: creates, renames, deletes, lists, and syncs context folder epics; keeps task links, per-epic TaskNotes Kanban Bases, and managed vault task kanban epic views in sync.
 - `gcal.py`: uses GWS credentials for Google Calendar API calls, reads vault calendar behavior from `_system/local/calendar.json`, creates required vault calendars, lists calendar events for agents, creates specific default-calendar events, creates `Time Blocks`, and two-way mirrors TaskNotes `scheduled`/`due` dates to `Scheduled Tasks`/`Due Tasks`.
 - `folder.py`: creates/registers a context folder from the scaffold template.
-- `business_toolkit.py`: installs and synchronizes the canonical business-context folder and template pack, preserves per-context selections, and reconciles Templater folder rules.
+- `business_toolkit.py`: installs, synchronizes, or safely unconfigures the marker-owned business folder/template pack for any registered context.
 - `attachments.py`: dry-runs, applies, and verifies attachment cleanup so note attachments live under each owning top-level root folder's `_obsidian/attachments` directory. Reports and quarantined import leftovers are written outside the vault under `~/Downloads/vault-generated/`.
 - `backup.py`: backs up root `.obsidian` under `_system/local/state/backups/obsidian-profile/`.
 - `bootstrap_export.py`: exports the public bootstrap vault from current vault state using `_system/bootstrap/bootstrap-export.json`.
@@ -28,16 +28,19 @@ This is the fuller script reference. Use `_system/docs/commands/README.md` for n
 - `git_media.py`: generates and verifies pointer-only media manifests, checks local LFS objects, and installs no-upload pre-push hook. Use `vault git-media`.
 - `git_maintenance.py`: keeps normal Git history shallow and compacts local Git objects. Use `vault git-maintenance`.
 - `git_preflight.py`: fetches and fast-forwards clean `master` before refresh changes files. Use `vault git-preflight`.
-- `worker_bootstrap.py`: explicitly installs versioned hooks and creates or repairs sparse worker checkouts without background Git synchronization; reviewed onboarding can target one disabled worker through `--provision-disabled`. Use `vault worker-sync`.
+- `worker_bootstrap.py`: keeps iCloud worker Macs Gitless, recoverably retires only the expected legacy external Git directory, and writes machine-local identity plus refresh prohibition; reviewed onboarding can target one disabled Mac worker through `--provision-disabled`. Use `vault worker-sync` only for Mac workers.
 - `deps.py project-auto-skills`: repairs generated auto-skill projections from existing dependency checkouts without pulling or building them; Git projection hooks and worker bootstrap run this before global skill projection.
-- `_system/agents/sync_skills.py`: validates grouped auto/manual/GH skill sources, enforces invocation policy, repairs dependency moves, and rebuilds flat catalog plus per-skill global links. Use `vault skills sync`.
+- `_system/agents/sync_skills.py`: validates grouped auto/manual/GH skill sources, materializes selected repo-owned projections, enforces invocation policy, repairs dependency moves, rebuilds flat catalog plus per-skill global links, and reconciles local versioned global-agent instructions. Use `vault skills sync`.
+- `_system/agents/global_agent_configuration.py`: shared Vault alias, machine-footer rendering, and atomic home-file reconciliation used by regular sync, bootstrap, and fleet deployment.
+- `_system/agents/auto-skills/_infrastructure/infra-sync-code-workspaces/scripts/sync_code_workspaces.py`: reconciles registered Code repositories and invokes the same primary-owned Codex/Claude configuration sync used during onboarding.
+- `_system/agents/auto-skills/_infrastructure/infra-sync-code-workspaces/scripts/sync_agent_configuration.py`: previews, applies, or verifies personal Codex/Claude configuration without changing repositories.
 - `snippets.py`: checks and materializes canonical text blocks inside configured files across registered repositories. Use `vault snippets`.
 
 ## Bootstrap Scripts
 
 - `_system/bootstrap/init_vault.sh`: first-run fresh/exported vault setup entrypoint.
 - `_system/bootstrap/bootstrap_vault.py`: scaffolds/reconciles context folders, templates, Bases, starter notes, and generated setup docs.
-- `_system/bootstrap/agents/ensure-agent-file-symlinks.py`: ensures `CLAUDE.md`, `.agents/skills`, and `.claude/skills` symlinks/dirs without rewriting `AGENTS.md`.
+- `_system/bootstrap/agents/ensure-agent-file-symlinks.py`: compatibility CLI delegating Vault alias setup to `_system/agents/global_agent_configuration.py`.
 - `_system/bootstrap/Brewfile`: Homebrew formulas for bootstrap-managed CLI dependencies.
 - `_system/bootstrap/install_dependencies.sh`: installs/checks local CLI dependencies from the bootstrap Brewfile.
 - `_system/bootstrap/install_agent_canvas.py`: checks, builds, and repairs editable Agent Canvas CLI/package links through dependency setup hooks.

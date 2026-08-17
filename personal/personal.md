@@ -1,8 +1,6 @@
 ---
 emoji: 🏠
 status: active
-context_type: personal
-content_enabled: false
 default_capture: true
 ---
 

@@ -4,13 +4,13 @@ status: enabled
 ---
 # Content System And Schedules
 
-Content-enabled context folders store owned content under `_obsidian/content`. This includes items, ideas, publication definitions, drafts, and planning state. Executable work about content belongs in `_obsidian/tasks`, not content storage.
+Context folders may independently support blogs, social content, and newsletters under `_obsidian/content`. Executable work about content belongs in `_obsidian/tasks`, not content storage.
 
 ## Structure
 
 ```text
 <context-folder>/_obsidian/content/
-  content-cadence.json
+  content-cadence.json       # only with --content-schedules
   publications/
     blogs/
     newsletters/
@@ -22,7 +22,7 @@ Content-enabled context folders store owned content under `_obsidian/content`. T
     social-posts/
   ideas/
   archive/
-<context-folder>/_obsidian/content-schedules/
+<context-folder>/_obsidian/content-schedules/  # only with --content-schedules
 ```
 
 ## Schemas
@@ -88,6 +88,8 @@ vault content
 ```
 
 `vault refresh` runs content generation automatically before periodic generation so periodic templates can embed current schedule.
+
+Only context notes with `content_schedules_enabled: true` participate. Capability folders alone never create or refresh schedules. Blog, social-content, and newsletter support is inferred from their respective directories.
 
 Content schedule notes live in `<context-folder>/_obsidian/content-schedules/` and normal refresh is create-only. `_obsidian/content/content-cadence.json` controls `schedule_format` and `publication_order`. The generator also keeps the `Current content schedule:` line in the context folder note.
 

@@ -57,5 +57,7 @@
       "_system/**"
     ]
   },
-  "migrations": []
+  "migrations": [
+    "_system/migrations/001-core-first-context-features.py"
+  ]
 }

@@ -6,6 +6,8 @@
     {
       "source": "personal",
       "target": "personal",
+      "capabilities": [],
+      "content_schedules": false,
       "public_home_description": [
         "This is your personal home for goals, tasks, routines, reflection, and durable life notes.",
         "Use it to keep personal plans and reference material separate from public brand or business work."
@@ -14,6 +16,9 @@
     {
       "source": "personal-brand",
       "target": "personal-brand",
+      "capabilities": ["blog", "social-content", "newsletters"],
+      "content_schedules": true,
+      "folder_template": "personal-brand",
       "public_home_description": [
         "This is your personal-brand home for content ideas, audience notes, brand strategy, offers, CRM context, and publishing plans.",
         "Use it to keep public-facing strategy and creative work separate from private personal notes."
@@ -22,6 +27,9 @@
     {
       "source": "business",
       "target": "business",
+      "capabilities": ["blog", "social-content", "newsletters"],
+      "content_schedules": true,
+      "folder_template": "business",
       "public_home_description": [
         "This is your business home for tasks, projects, team notes, leads, resources, and operating docs.",
         "Use it for company work that needs structure without mixing into personal or personal-brand material."
@@ -65,9 +73,9 @@
     "_system/local/dashboard-action-links.md"
   ],
   "generated_exclude_globs": [
+    "_system/agents/config/**",
     "_system/agents/auto-skills/_infrastructure/infra-onboard-machine/references/**",
     "_system/agents/auto-skills/_infrastructure/infra-onboard-machine/scripts/**",
-    "_system/agents/auto-skills/_infrastructure/infra-onboard-worker-mac/scripts/**",
     "_system/agents/auto-skills/_infrastructure/infra-manage-fleet-terminal-workspaces/assets/**",
     "_system/agents/auto-skills/_infrastructure/infra-manage-fleet-terminal-workspaces/references/**",
     "_system/agents/auto-skills/_infrastructure/infra-manage-fleet-terminal-workspaces/scripts/**",
@@ -79,6 +87,7 @@
     "_system/_obsidian/attachments/**",
     "_system/agents/manual-skills/**",
     "_system/agents/gh-skills/**",
+    "_system/agents/working-repos/**",
     "_system/agents/skills-dump/**",
     "_system/local/state/**",
     "_system/inbox/**",

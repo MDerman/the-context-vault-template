@@ -3,22 +3,24 @@
     {
       "name": "personal",
       "status": "active",
-      "context_type": "personal",
-      "content_enabled": false,
+      "capabilities": [],
+      "content_schedules": false,
       "default_capture": true
     },
     {
       "name": "personal-brand",
       "status": "active",
-      "context_type": "personal-brand",
-      "content_enabled": true,
+      "capabilities": ["blog", "social-content", "newsletters"],
+      "content_schedules": true,
+      "folder_template": "personal-brand",
       "default_capture": false
     },
     {
       "name": "business",
       "status": "active",
-      "context_type": "business",
-      "content_enabled": true,
+      "capabilities": ["blog", "social-content", "newsletters"],
+      "content_schedules": true,
+      "folder_template": "business",
       "default_capture": false
     }
   ]

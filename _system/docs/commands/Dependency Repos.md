@@ -30,6 +30,24 @@ Use dependency repos for any external checkout the vault should keep fresh durin
 
 Each repo can define projections. A projection maps one repo folder into a vault target. Skill projections are only one projection type.
 
+Set `"sync_enabled": false` on a repo to pause it without forgetting it:
+
+```json
+{
+  "id": "example-skills",
+  "sync_enabled": false,
+  "projections": [
+    {
+      "source": "skills/example",
+      "target": "_system/agents/manual-skills/_example/example-skill",
+      "type": "manual-skill"
+    }
+  ]
+}
+```
+
+A disabled repo remains in `deps.json`, and its existing materialized projections remain discoverable. Dependency sync does not clone, fetch, check out, rebuild projections, or run setup for it. It also does not recreate a disabled projection if its target is later removed. Omit `sync_enabled` or set it to `true` to resume normal syncing. `vault deps status` reports the repo and its projections as disabled.
+
 A repo may also define a vault-owned setup hook:
 
 ```json
@@ -60,6 +78,7 @@ Current tracked repos:
 - `marketingskills` -> `~/Code/open_source/marketingskills`
 - `claude-seo` -> `~/Code/open_source/claude-seo`
 - `swan-gtm-skills` -> `~/Code/open_source/gtm-skills`
+- `mattpocock-skills` -> `~/Code/open_source/mattpocock-skills` (sync disabled; projected snapshot retained)
 
 Current projected auto skills:
 
@@ -76,7 +95,7 @@ Current projected manual skills:
 - all skills from the Marketing Skills dependency under `_corey-marketing-skills/`, using the `corey-` discovery prefix
 - all skills from the Claude SEO dependency under `_claude-seo/`, using the `claude-seo-` discovery prefix
 - all public skills from the Swan GTM Skills dependency under `_swan-gtm-skills/`, using the `swan-gtm-` discovery prefix
-- the engineering and productivity packs from Matt Pocock's Skills dependency under `_matt-p-skills/`, using the `mp-` discovery prefix
+- the retained engineering and productivity snapshots from Matt Pocock's Skills dependency under `_matt-p-skills/`, using the `mp-` discovery prefix (repo sync disabled)
 
 When adding a new external repo with skills:
 
@@ -88,6 +107,8 @@ When adding a new external repo with skills:
 6. Start fresh Codex task and confirm discovery; current tasks cache catalog.
 
 `vault deps sync --apply` clones missing repos, checks out release-locked commits when present, rebuilds managed wrappers, runs skill sync when projections change, then runs setup hooks.
+
+Repos with `sync_enabled: false` are skipped by both full dependency sync and `project-auto-skills`; their current projections are left untouched.
 
 Use repeatable `--repo <dependency-id>` selectors when only specific dependencies should be updated and projected.
 

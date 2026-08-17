@@ -106,11 +106,11 @@ def entity_status(root: Path, entity: str) -> str:
     return str(simple_frontmatter(path.read_text(encoding="utf-8")).get("status", "")).strip().lower()
 
 
-def entity_content_enabled(root: Path, entity: str) -> bool:
+def entity_content_schedules_enabled(root: Path, entity: str) -> bool:
     path = context_folder_note_path(root / entity)
     if not path.exists():
         return False
-    return bool(simple_frontmatter(path.read_text(encoding="utf-8")).get("content_enabled", False))
+    return bool(simple_frontmatter(path.read_text(encoding="utf-8")).get("content_schedules_enabled", False))
 
 
 def resolve_entities(root: Path, configured: list[str], explicit: list[str], include_all: bool) -> list[str]:
@@ -556,7 +556,7 @@ def main(argv: list[str] | None = None) -> None:
     configured = configured_context_folders(root, parse_entities(args.configured_entities), DEFAULT_ENTITIES)
     explicit = parse_entities(args.entities)
     selected = resolve_entities(root, configured, explicit, args.all)
-    content_entities = [entity for entity in selected if entity_content_enabled(root, entity)]
+    content_entities = [entity for entity in selected if entity_content_schedules_enabled(root, entity)]
     generate_content_schedules(root, content_entities, dt.date.fromisoformat(args.date), force=args.force)
 
 

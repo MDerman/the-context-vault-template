@@ -36,12 +36,14 @@ This is made possible by a custom plugin called Context Nine and by the Relay pl
 - The installer runs with `sudo`, but writes the vault and bootstrap state as the user who invoked sudo.
 - Vault folder has no public-repo `.git` pointer after install. Bootstrap then creates a personal Git pointer whose real repository lives under `~/.local/share/vault-git/<vault-name>.git`.
 - `init_vault.sh` installs/checks command dependencies, clones release-locked external repos, runs setup hooks, creates starter context folders, rebuilds per-skill agent discovery links, installs `vault` to `~/.local/bin/vault`, and adds that directory to zsh startup files.
-- The starter business context includes the complete self-explanatory folder scaffold under `_system/bootstrap/templates/business-context/` plus managed templates for meetings, product work, GTM, operating metrics, SOPs, status reports, and local skills. Run `vault business-toolkit` to install or customize the managed parts for another business context.
+- The dependency set includes the CTX2 machine baseline: Node 24 from 24.19.0 onward, pnpm 11 from 11.21.0 onward, Age, OpenSSL, Git, curl, and compiler tooling. Git and private package-registry authentication remain separate machine-local login steps; the public installer never embeds credentials.
+- Context folders are core-first. The starter personal-brand and business examples explicitly add content capabilities, schedules, and their physical packs from `_system/bootstrap/templates/context-folders/`.
+- The starter business pack includes managed templates for meetings, product work, GTM, operating metrics, SOPs, status reports, and local skills. Run `vault business-toolkit` to configure its managed parts for any registered context.
 - Agent Canvas installs as editable source under `~/Code/open_source/agent-canvas`. Setup builds it, projects its skill globally, links Bun package, and installs `~/.local/bin/agent-canvas`. Run `vault deps sync --apply` to repair it after local edits or upgrades.
 - On macOS, the installer registers or updates the daily `vault refresh` LaunchAgent. If registration fails, run `vault refresh-schedule register` after setup.
 - Context folder names must start and end with a letter or number and may use letters, numbers, dots, and hyphens, for example `business` or `business.nosync`. If you rename a starter folder during setup, the installer moves the folder and rewrites structured references such as paths, Obsidian links, plugin settings, frontmatter identity values, and `@context` tokens. It does not blindly rewrite normal prose.
 - The one-line `sudo bash` installer also installs `/usr/local/bin/vault`, so `vault` works even before a new shell has loaded `~/.local/bin`.
-- Public installer enables personal Git/LFS outside iCloud. For an intentional no-Git manual setup, run `_system/bootstrap/init_vault.sh --no-git`.
+- Public installer enables personal Git/LFS outside iCloud when creating the primary Vault. A Mac joining an existing iCloud Vault must use the Gitless worker onboarding flow instead; never create worker-side Vault Git. For an intentional standalone no-Git setup, run `_system/bootstrap/init_vault.sh --no-git`.
 
 Preview a context folder rename later with:
 
@@ -80,7 +82,7 @@ Daily flow:
 5. Check `_system/_obsidian/bases/tasks-today.base` and `_system/_obsidian/bases/tasks-home.base`.
 6. Check `_system/_obsidian/bases/content-kanban.base` when content is part of the day.
 
-Content-enabled workspaces use `_obsidian/content/publications`, `_obsidian/content/items`, `_obsidian/content/ideas`, and `_obsidian/content-schedules`. Tasks still live in `_obsidian/tasks`; a content note becomes work only when it has a real next action, status, date, blocker, or project.
+Content capabilities are independent: blogs, social content, newsletters, and schedules are selected separately. Tasks still live in `_obsidian/tasks`; a content note becomes work only when it has a real next action, status, date, blocker, or project.
 
 ## Upgrade Installed Vault
 

@@ -5,11 +5,14 @@
 - Implicit source: `_system/agents/auto-skills/<_group>/<skill>/SKILL.md`
 - Explicit-only source: `_system/agents/manual-skills/<_group>/<skill>/SKILL.md`
 - GitHub-managed source: `_system/agents/gh-skills/<skill>/SKILL.md`
+- Selected repo projection: `_system/agents/working-repos/<repo-id>/<projected-name>/SKILL.md`
 - Generated catalog: `_system/agents/skills/<skill>`
 - Dormant storage: `_system/agents/skills-dump/<skill>/`
 - Repo-local skills: `.agents/skills/`
 
 `skills/` contains symlinks only. Put new or moved skills under auto, manual, or GH source, then sync. Never install content into generated catalog.
+
+Use `$agents-write-a-skill` when creating or restructuring a skill; it owns the authoring method and routes back here for canonical naming, source, invocation, and projection rules.
 
 Organizer folders must use `_lower-kebab`, may nest recursively, and never contain `SKILL.md`. Skill folder must contain `SKILL.md`; folder basename must equal frontmatter `name`. Names must be globally unique.
 
@@ -27,6 +30,7 @@ Organizer folders must use `_lower-kebab`, may nest recursively, and never conta
 | Folder | Token |
 |---|---|
 | `_agents` | `agents` |
+| `_blogs` | `blog` |
 | `_claude-seo` | `claude-seo` |
 | `_code` | `code` |
 | `_corey-marketing-skills` | `corey` |
@@ -47,7 +51,7 @@ Shared skill sync validates the category prefix and big-endian H1 for auto/manua
 
 Use a dedicated pack token when a large installed collection would otherwise flood autocomplete under a broad functional token. Choose a short, distinctive publisher or repository phrase; prefix every projected skill consistently; and preserve the upstream capability slug after that prefix. Register the pack group and title in `sync_skills.py` rather than weakening category validation.
 
-A pack may expose one orchestrating root skill whose name exactly equals its pack token, such as `_claude-seo/claude-seo`. Register that exception explicitly; ordinary category skills still require `<token>-<capability>`.
+A pack may expose one orchestrating root skill whose name exactly equals its pack token, such as `_claude-seo/claude-seo`. Register that exception explicitly; ordinary category skills still require `<token>-<capability>`. The canonical `_vault/vault` router is the only ordinary category root exception and uses the exact H1 `# Vault`.
 
 ## Skill And Config Separation
 
@@ -88,6 +92,7 @@ Sync performs full preflight before writes. Malformed sources, duplicate names, 
 
 Apply:
 
+- validates configured repository skill projections and rebuilds changed tracked copies before discovery links;
 - repairs dependency target/type metadata after manually moving a managed skill wrapper;
 - removes stale catalog links and rebuilds changed links;
 - maintains per-skill links under `~/.agents/skills`, `~/.claude/skills`, `~/.kilo/skills`, and `~/.kilocode/skills` when Kilocode exists;
@@ -100,6 +105,8 @@ Existing tasks cache skill catalog. Start new task or restart Codex after sync.
 ## Dependency Skills
 
 External repos stay under `~/Code/open_source/<repo-name>` and are configured in `_system/local/deps.json`.
+
+Set a repo's `sync_enabled` field to `false` to retain its configuration and currently materialized skill projections as a discoverable snapshot while excluding that repo from dependency and auto-skill projection sync. Re-enable it to resume refreshes. See [[_system/docs/commands/Dependency Repos|Dependency Repos]].
 
 Use `manual-skill` for explicit-only wrapper or `auto-skill` for implicit wrapper. Wrapper materializes upstream `SKILL.md` for Codex loader compatibility, projects supporting assets, and keeps invocation policy metadata vault-owned. The projection target basename overrides upstream frontmatter `name`; optional `title_override` replaces or inserts its first H1. `vault deps sync` reapplies these deterministic local overrides without changing upstream repositories.
 
@@ -124,4 +131,10 @@ GH publisher files remain untouched. Name conflict fails preflight.
 
 ## Repo-Local Skills
 
-Repo-local `.agents/skills` stays real and outside global sync. Repo `.claude/skills` may link to `../.agents/skills`.
+Repository-owned skills always begin in `.agents/skills/l-<capability>`. They stay local by default; registering a repository never projects all its skills. Repo `.claude/skills` may link to `../.agents/skills`.
+
+Selected user-owned repo skills may be listed explicitly under that repo's `skill_projections` in the private topology `repositories.json`. Each entry contains a repo-relative `source` and `auto` or `manual` mode. Sync derives `<repo-id>-<capability>`, rejects global collisions and names over 64 characters, rewrites the copied frontmatter/H1 and `$l-sibling` references, copies supporting resources, enforces invocation policy, and records a managed digest marker under `_system/agents/working-repos/<repo-id>/`. Invocation mode is metadata, not a projection subfolder.
+
+If a whole configured checkout or selected source is unavailable, ordinary sync preserves a valid tracked copy and warns. `vault skills sync --dry-run --require-repo-sources` fails unless every configured checkout and selected source exists; use it for machine acceptance after Code workspace reconciliation. Missing or invalid tracked projections still fail. Only obsolete marked projections are removed; unmanaged content is never replaced.
+
+Reference skills portably as `$skill-name`. Relative cross-skill paths are allowed only between Vault-owned sources. Use `vault root` only when a real Vault filesystem path is necessary. Manual dependencies require explicit user invocation; capabilities that must compose automatically belong in auto skills.

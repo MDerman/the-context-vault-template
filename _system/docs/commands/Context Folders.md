@@ -19,7 +19,7 @@ Each folder owns `<context-folder>/<context-folder>.md`. Frontmatter controls di
 ```yaml
 ---
 status: active
-content_enabled: false
+content_schedules_enabled: true
 default_capture: true
 ---
 ```
@@ -27,7 +27,8 @@ default_capture: true
 - `status: active`: included in default rollups.
 - `status: archived`: retained but excluded from default rollups.
 - blank/missing status: not active.
-- `content_enabled: true`: scaffolds content storage, cadence config, schedules, and views.
+- Blog, social-content, and newsletter support is inferred from their capability folders.
+- `content_schedules_enabled: true`: participates in cadence and schedule refresh. Omit it otherwise.
 - `default_capture: true`: preferred unspecific capture destination; fallback is first active folder.
 
 Context note also holds local routing and entity operating sections. Headings such as `Identity`, `Momentum`, and personal-brand `Social Selling` are optional human organization. Generators do not extract or duplicate heading content.
@@ -40,8 +41,8 @@ Context note also holds local routing and entity operating sections. Headings su
   _obsidian/
     attachments/
     bases/
-    content/            # content-enabled only
-    content-schedules/  # content-enabled only
+    content/            # selected capabilities only
+    content-schedules/  # schedule-enabled only
     epics/
     excalidraw/
     periodic/
@@ -69,11 +70,29 @@ vault folder -n new-context-folder -s active
 vault folder -n new-context-folder -s archived
 ```
 
-Use `--content-enabled` when the context folder should have `_obsidian/content` infrastructure.
+Creation is core-first. Add only the capabilities needed:
+
+```bash
+vault folder -n publication -s active --blog
+vault folder -n creator -s active --blog --social-content --newsletters
+vault folder -n creator -s active --content-schedules
+vault folder -n creator -s active --folder-template personal-brand
+vault folder -n studio -s active --folder-template business
+```
+
+- `--blog` creates blog item and publication folders.
+- `--social-content` creates social posts, YouTube, ideas, and archive folders.
+- `--newsletters` creates newsletter item and publication folders.
+- `--content-schedules` creates cadence/schedule infrastructure and persists schedule participation.
+- `--folder-template personal-brand|business` applies one physical pack during new-context creation only.
+
+Content flags may be added while registering an existing context. A folder template cannot: it is a creation-time seed and its name is never persisted.
 
 Creation writes control note, creates operating structure and local templates/shared-template links, then refreshes discovered context wiring.
 
-New business contexts receive the complete ordinary scaffold under `_system/bootstrap/templates/business-context/`. The scaffold uses self-explanatory folder names and does not add folder-level README files. Use `--toolkit-exclude gtm` (or component ids) to omit managed templates, rules, and icons, or `--no-business-toolkit` to opt out of those managed additions. Registering an existing context never backfills missing ordinary folders.
+Physical packs are directly browsable under `_system/bootstrap/templates/context-folders/`. They do not define a context type. The `personal-brand` pack seeds `brand`, `audience`, `offers`, `products`, `writing`, `media`, and `relationships`; the `business` pack seeds the established operating scaffold and configures its managed toolkit.
+
+`--context-type` and `--content-enabled` were removed. Use the independent capability, schedule, and folder-template options above.
 
 Use `status: archived` for inactive-but-kept folders. Rename through `vault folder` command so structured path/context references update together.
 
