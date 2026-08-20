@@ -32,7 +32,7 @@ kubectl -n <namespace> get deploy,statefulset,job,cronjob,pvc
 - For CNPG trouble, inspect cluster and instance status first; then follow the PostgreSQL runbook in the resolved k3s checkout.
 - For connection-pool symptoms, separate PgBouncer health from PostgreSQL health before changing either.
 - For pending pods or attachment errors, investigate nodes, Longhorn/CSI, volumes, and PVC events before restarting CNPG or applications.
-- For application alerts and remediation orchestration, use the relevant projected repo skill, such as `$self-healing-fix-prod-errors`.
+- For application alerts and remediation orchestration, use the relevant projected repo skill, such as `$incident-controller-fix-prod-errors`.
 
 ## Mutation guardrail
 

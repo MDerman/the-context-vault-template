@@ -96,7 +96,7 @@ Correct wording: Export includes plugin metadata/styles and non-sensitive settin
 
 Public install script:
 
-- installs Homebrew if it is missing, then checks Homebrew-managed dependencies, including the CTX2 baseline of Node `>=24.19.0 <25`, pnpm `>=11.21.0 <12`, Age, OpenSSL, Git, curl, and compiler tooling;
+- installs Homebrew if it is missing, then checks Homebrew-managed dependencies, including the Secret Bindings baseline of Node `>=24.19.0 <25`, pnpm `>=11.21.0 <12`, Age, OpenSSL, Git, curl, and compiler tooling;
 - clones `MDerman/the-context-vault-template` into the default target `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault`, or a first-argument target override;
 - expands quoted `~`, `~/...`, and `~user/...` target overrides before creating the target directory;
 - resolves relative target overrides from the directory where the installer was launched;
@@ -148,4 +148,4 @@ Profile upgrade does not advance the installed public commit. A later full `vaul
 
 New system-level tools should go in `_system/commands` only when they belong behind `vault`. Otherwise use `_system/tools` and document dependency needs in `_system/bootstrap/Brewfile`.
 
-The public dependency installer provides CTX2 prerequisites but never registry credentials. Git and private package-registry authentication remain explicit machine-local onboarding gates.
+The public dependency installer provides Secret Bindings prerequisites but never registry credentials. Git and private package-registry authentication remain explicit machine-local onboarding gates.

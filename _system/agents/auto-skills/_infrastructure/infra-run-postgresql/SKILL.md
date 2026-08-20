@@ -38,7 +38,7 @@ ROLLBACK;
 
 - Use `$infra-kubernetes` for CNPG pods, scheduling, services, PVCs, Longhorn/CSI, or node health.
 - Return to the owning repo's debugging skill for ORM, schema, application-query, or test-fixture issues.
-- Use the projected self-healing production skill when alert evidence, remediation, and post-fix verification are part of one incident.
+- Use the projected incident-controller production skill when alert evidence, remediation, and post-fix verification are part of one incident.
 
 ## Mutation guardrail
 

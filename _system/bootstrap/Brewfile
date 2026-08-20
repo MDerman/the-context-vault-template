@@ -9,7 +9,7 @@ brew "tmux"
 brew "starship" unless legacy_intel_macos
 brew "terminal-notifier"
 brew "jq"
-# CTX2 supports the Node 24 LTS line from 24.19.0 onward.
+# Secret Bindings supports the Node 24 LTS line from 24.19.0 onward.
 brew "node@24"
 brew "pnpm"
 brew "age"
