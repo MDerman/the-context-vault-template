@@ -1,5 +1,5 @@
 # Infra File Upload local configuration
 
-This folder records instance ownership for `$infra-file-upload`. The private topology registry must contain logical repository ID `file-upload`; that repository's `.env.base` owns bucket name, root prefix, and public base URL. Bucket-scoped `R2_FILE_UPLOAD_ACCESS_KEY_ID` and `R2_FILE_UPLOAD_SECRET_ACCESS_KEY` credentials and the optional Cloudflare provisioning token remain owned by the registered k3s env loader.
+This folder records instance ownership for `$infra-file-upload`. The installed `ctx9-content` command and its Content configuration own the API, rendered, and public-file origins. Authentication is stored through `ctx9-content login --token-stdin` or supplied by Secret Bindings.
 
-Do not duplicate repository paths, bucket values, domains, or credentials here. Update topology when the checkout moves and update the uploader repository's env workflow when its public storage configuration changes.
+Do not duplicate repository paths, bucket values, domains, or credentials here. Content owns object storage and delivery policy; the skill owns only the intent-specific safety defaults.

@@ -1,3 +1,3 @@
-# md-html-publisher Config
+# CTX9 Content publisher config
 
-Private service identity for `md-html-publisher`. Generic artifact-preservation and publishing workflow remains in the skill.
+Private service identity for `ctx9-content`. Generic document-preservation and publishing behavior remains in `$infra-md-html-publisher`; service delivery policy remains in Content.
