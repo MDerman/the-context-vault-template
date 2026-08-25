@@ -1,11 +1,11 @@
 ---
 name: infra-md-html-publisher
-description: Publishes, discovers, reads, updates, or shares rendered Markdown and safe static HTML through CTX9 Content. Use when the user asks to host a readable document, publish Markdown or HTML, find a hosted document, or update an existing live document while preserving its intent.
+description: Publishes, discovers, reads, updates, or shares rendered Markdown and safe static HTML through CTX9 Publisher. Use when the user asks to host a readable document, publish Markdown or HTML, find a hosted document, or update an existing live document while preserving its intent.
 ---
 
 # Infra · MD HTML Publisher
 
-Use `ctx9-content` with `kind=document`, `presentation=rendered`, and the supplied document's intent unchanged. Read [[references/content-document-lifecycle|Content Document Lifecycle]] for discovery, versioning, and exact deletion.
+Use `publish` with `kind=document`, `presentation=rendered`, and the supplied document's intent unchanged. Read [[references/publisher-document-lifecycle|Publisher Document Lifecycle]] for discovery, versioning, and exact deletion.
 
 ## Preserve intent
 
@@ -16,21 +16,21 @@ Use `ctx9-content` with `kind=document`, `presentation=rendered`, and the suppli
 
 ## Publish
 
-Run `ctx9-content doctor --json`, then publish Markdown or safe static HTML:
+Run `publish doctor --json`, then publish Markdown or safe static HTML:
 
 ```bash
-ctx9-content publish path/to/source.md --kind document --visibility unlisted --purpose document --collection project --owner-domain project --owner-type document --owner-reference stable-name
-ctx9-content publish path/to/source.html --kind document --visibility unlisted --purpose document --collection project --owner-reference stable-name
+publish publish path/to/source.md --kind document --visibility unlisted --purpose document --collection project --owner-domain project --owner-type document --owner-reference stable-name
+publish publish path/to/source.html --kind document --visibility unlisted --purpose document --collection project --owner-reference stable-name
 ```
 
 For generated HTML, start from `assets/dark-monochrome.html`. Require a doctype, non-empty title, semantic responsive markup, and static inline CSS/SVG. Reject scripts, handlers, forms, frames, embeds, objects, meta refresh, and `javascript:` URLs.
 
 ## Update
 
-Use the same Content ID and current ETag to preserve the stable URL:
+Use the same publication ID and current ETag to preserve the stable URL:
 
 ```bash
-ctx9-content new-version <id> path/to/source.md --etag '<etag>' --kind document --visibility unlisted --purpose document --owner-reference stable-name
+publish new-version <id> path/to/source.md --etag '<etag>' --kind document --visibility unlisted --purpose document --owner-reference stable-name
 ```
 
 Keep existing source files. Remove generated temporary source only after successful publication. If publication fails, retain it for diagnosis.
