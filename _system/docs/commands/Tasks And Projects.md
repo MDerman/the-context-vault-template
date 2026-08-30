@@ -14,6 +14,7 @@ Projects and epics are ordinary Obsidian notes:
 ```
 
 Use epics for larger themes, projects for concrete workstreams, and tasks for executable work.
+- NB - Epics are only assigned to a single context folder. You cannot have multiple context folders using the same epic. If there is ambiguity, ask the user before cleaning up and maybe renaming the Epic appropriately.
 
 ## Commands
 

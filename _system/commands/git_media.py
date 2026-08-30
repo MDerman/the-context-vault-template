@@ -345,7 +345,7 @@ def hook_is_installed(root: Path) -> bool:
 
 def pointer_only_role(root: Path) -> str:
     identity = run_git(root, "config", "--get", "vault.machine-id", check=False).stdout.decode().strip()
-    registry_path = root / "_system/local/skills/infra-code-folder-and-computer-topology/private/machines.json"
+    registry_path = root / "_system/agents/_package/instance/fleet/machines.json"
     if not identity or not registry_path.is_file():
         return "primary"
     try:
@@ -428,7 +428,9 @@ def main(argv: list[str] | None = None) -> int:
     subparsers.add_parser("status", help="Show pointer-only repository status.")
 
     hook_parser = subparsers.add_parser("install-hook", help="Install no-upload pre-push verification hook.")
-    hook_parser.add_argument("--apply", action="store_true", help="Apply instead of showing dry run.")
+    hook_mode = hook_parser.add_mutually_exclusive_group()
+    hook_mode.add_argument("--dry-run", action="store_true", help="Preview without changing files.")
+    hook_mode.add_argument("--apply", action="store_true", help="Compatibility flag; `vault git-media install-hook` applies by default.")
 
     pre_push_parser = subparsers.add_parser("pre-push", help=argparse.SUPPRESS)
     pre_push_parser.add_argument("remote", nargs="?")

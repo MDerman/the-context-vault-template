@@ -19,10 +19,10 @@ The wizard lists registered contexts, accepts a multi-selection, and allows comp
 
 ```bash
 vault business-toolkit sync --context-folders business,studio
-vault business-toolkit sync --context-folders business,studio --apply
-vault business-toolkit sync --configured --apply
+vault business-toolkit sync --context-folders business,studio
+vault business-toolkit sync --configured
 vault business-toolkit status --configured
-vault business-toolkit unconfigure --context-folders studio --apply
+vault business-toolkit unconfigure --context-folders studio
 ```
 
 Available groups are `meetings`, `product`, `gtm`, `operations`, and `skills`. Component ids are listed in the canonical pack manifest.

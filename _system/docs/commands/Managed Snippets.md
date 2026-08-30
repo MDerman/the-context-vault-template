@@ -13,13 +13,14 @@ vault snippets check
 vault snippets check git-task-workflow --repo vault
 vault snippets check --json
 vault snippets sync --dry-run
-vault snippets sync git-task-workflow --repo business --apply
+vault snippets sync git-task-workflow --repo business
 ```
 
 `check` exits successfully only when every selected target matches its canonical
-source. `sync` defaults to a unified-diff dry run. `--apply` changes only managed
-block bodies, including when unrelated files or surrounding text are being edited;
-it never stages, commits, pushes, or rewrites any other content.
+source. `sync` applies by default; pass `--dry-run` for a unified diff without
+writing. It changes only managed block bodies, including when unrelated files or
+surrounding text are being edited; it never stages, commits, pushes, or rewrites
+any other content.
 
 Add marker pairs manually at deliberate document positions. Missing, partial,
 malformed, duplicated, or nested markers stop the whole selected apply before any

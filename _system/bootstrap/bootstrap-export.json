@@ -16,7 +16,11 @@
     {
       "source": "personal-brand",
       "target": "personal-brand",
-      "capabilities": ["blog", "social-content", "newsletters"],
+      "capabilities": [
+        "blog",
+        "social-content",
+        "newsletters"
+      ],
       "content_schedules": true,
       "folder_template": "personal-brand",
       "public_home_description": [
@@ -27,7 +31,11 @@
     {
       "source": "business",
       "target": "business",
-      "capabilities": ["blog", "social-content", "newsletters"],
+      "capabilities": [
+        "blog",
+        "social-content",
+        "newsletters"
+      ],
       "content_schedules": true,
       "folder_template": "business",
       "public_home_description": [
@@ -56,13 +64,10 @@
     }
   ],
   "root_dirs": [
-    ".agents/skills",
-    "_system/agents/manual-skills",
-    "_system/agents/gh-skills"
+    ".agents/skills"
   ],
   "root_symlinks": {
-    "CLAUDE.md": "AGENTS.md",
-    ".claude/skills": "../.agents/skills"
+    "CLAUDE.md": "AGENTS.md"
   },
   "system_root_markdown_allow_paths": [
     "_system/README.md",
@@ -73,22 +78,11 @@
     "_system/local/dashboard-action-links.md"
   ],
   "generated_exclude_globs": [
-    "_system/agents/config/**",
-    "_system/agents/auto-skills/_infrastructure/infra-onboard-machine/references/**",
-    "_system/agents/auto-skills/_infrastructure/infra-onboard-machine/scripts/**",
-    "_system/agents/auto-skills/_infrastructure/infra-manage-fleet-terminal-workspaces/assets/**",
-    "_system/agents/auto-skills/_infrastructure/infra-manage-fleet-terminal-workspaces/references/**",
-    "_system/agents/auto-skills/_infrastructure/infra-manage-fleet-terminal-workspaces/scripts/**",
-    "_system/local/skills/**/private",
-    "_system/local/skills/**/private/**",
+    "_system/agents/**",
     "_system/local/snippets/private",
     "_system/local/snippets/private/**",
     "_system/_obsidian/periodic/**",
     "_system/_obsidian/attachments/**",
-    "_system/agents/manual-skills/**",
-    "_system/agents/gh-skills/**",
-    "_system/agents/working-repos/**",
-    "_system/agents/skills-dump/**",
     "_system/local/state/**",
     "_system/inbox/**",
     "_system/sync/**",

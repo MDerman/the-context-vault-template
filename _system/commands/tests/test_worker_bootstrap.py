@@ -50,11 +50,9 @@ class WorkerBootstrapTests(unittest.TestCase):
         worker = {
             "id": "worker",
             "platform": "linux",
-            "vault_sync": {
-                "checkout": "sparse",
-                "repo_path": "/home/test/Code/vault",
-                "sparse_paths": [".agents", "_system", ".githooks"],
-            },
+            "home": "/home/test",
+            "roots": {"code": "~/Code", "vault": None},
+            "vault": {"enabled": False, "checkout_mode": "none", "required": False},
         }
         with self.assertRaisesRegex(
             worker_bootstrap.WorkerBootstrapError, "Mac/iCloud-only"
@@ -65,10 +63,12 @@ class WorkerBootstrapTests(unittest.TestCase):
         worker = {
             "id": "worker-mac",
             "platform": "macos",
-            "vault_sync": {
-                "checkout": "icloud",
-                "repo_path": "/Users/test/Library/Mobile Documents/iCloud~md~obsidian/Documents/Vault",
+            "home": "/Users/test",
+            "roots": {
+                "code": "~/Code",
+                "vault": "~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Vault",
             },
+            "vault": {"enabled": True, "checkout_mode": "icloud-gitless", "required": True},
         }
         script = worker_bootstrap.bootstrap_script(worker)
         self.assertIn("-flags +dataless", script)
@@ -94,13 +94,11 @@ class WorkerBootstrapTests(unittest.TestCase):
             "ssh_alias": "worker",
             "home": "/home/test",
             "global_agents_eligible": True,
-            "vault_sync": {
-                "enabled": False,
-                "required": False,
-            },
+            "roots": {"code": "~/Code", "vault": None},
+            "vault": {"enabled": False, "checkout_mode": "none", "required": False},
         }
         registry = {
-            "schema_version": 4,
+            "schema_version": 7,
             "primary_machine_id": "primary",
             "machines": [
                 {
@@ -111,6 +109,8 @@ class WorkerBootstrapTests(unittest.TestCase):
                     "platform": "macos",
                     "transport": "local",
                     "home": "/Users/primary",
+                    "roots": {"code": "~/Code", "vault": "~/Vault"},
+                    "vault": {"enabled": True, "checkout_mode": "primary-external-git", "required": True},
                     "global_agents_eligible": True,
                 },
                 worker,
@@ -128,7 +128,7 @@ class WorkerBootstrapTests(unittest.TestCase):
 
     def test_provision_disabled_flag_refuses_enabled_worker(self) -> None:
         registry = {
-            "schema_version": 4,
+            "schema_version": 7,
             "primary_machine_id": "primary",
             "machines": [
                 {
@@ -139,6 +139,8 @@ class WorkerBootstrapTests(unittest.TestCase):
                     "platform": "linux",
                     "transport": "local",
                     "home": "/Users/primary",
+                    "roots": {"code": "~/Code", "vault": "~/Vault"},
+                    "vault": {"enabled": True, "checkout_mode": "primary-external-git", "required": True},
                     "global_agents_eligible": True,
                 },
                 {
@@ -151,11 +153,8 @@ class WorkerBootstrapTests(unittest.TestCase):
                     "ssh_alias": "worker",
                     "home": "/home/test",
                     "global_agents_eligible": True,
-                    "vault_sync": {
-                        "enabled": True,
-                        "checkout": "icloud",
-                        "repo_path": "/Users/test/Vault",
-                    },
+                    "roots": {"code": "~/Code", "vault": "/Users/test/Vault"},
+                    "vault": {"enabled": True, "checkout_mode": "icloud-gitless", "required": True},
                 },
             ],
         }
@@ -180,15 +179,11 @@ class WorkerBootstrapTests(unittest.TestCase):
             "ssh_alias": "worker-mac",
             "home": "/Users/test",
             "global_agents_eligible": False,
-            "vault_sync": {
-                "enabled": True,
-                "checkout": "sparse",
-                "repo_path": "/Users/test/Code/vault",
-                "sparse_paths": [".agents", "_system", ".githooks"],
-            },
+            "roots": {"code": "~/Code", "vault": "/Users/test/Code/vault"},
+            "vault": {"enabled": True, "checkout_mode": "sparse", "required": True},
         }
         registry = {
-            "schema_version": 4,
+            "schema_version": 7,
             "primary_machine_id": "primary",
             "machines": [
                 {
@@ -199,6 +194,8 @@ class WorkerBootstrapTests(unittest.TestCase):
                     "platform": "macos",
                     "transport": "local",
                     "home": "/Users/primary",
+                    "roots": {"code": "~/Code", "vault": "~/Vault"},
+                    "vault": {"enabled": True, "checkout_mode": "primary-external-git", "required": True},
                     "global_agents_eligible": True,
                 },
                 worker,
@@ -215,8 +212,7 @@ class WorkerBootstrapTests(unittest.TestCase):
             (VAULT_ROOT / f".githooks/{name}").read_text()
             for name in ("post-checkout", "post-merge", "post-rewrite")
         )
-        self.assertIn("project-auto-skills", checkout_hooks)
-        self.assertIn("sync_skills.py", checkout_hooks)
+        self.assertIn("agents/_package/src/sync_agents.py", checkout_hooks)
         all_hooks = post_commit + checkout_hooks
         for forbidden in ("git push", "ssh ", "vault-worker-sync"):
             self.assertNotIn(forbidden, all_hooks)

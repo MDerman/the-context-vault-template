@@ -10,6 +10,8 @@ Use terminal command first:
 vault --help
 ```
 
+Mutating `vault` commands apply by default. Pass `--dry-run` to preview without writing, or a command's `--verify`/`--verify-only` mode for read-only verification. Legacy `--apply` flags remain accepted for compatibility but are unnecessary.
+
 Main script implementations live in:
 
 ```text
@@ -22,19 +24,21 @@ For global routing, read root [[AGENTS]]. For tool and skill SOPs, read [[_syste
 
 Open only the script doc needed for the current task. Create a separate `README-<topic>.md` only when a command needs richer examples, SOPs, or quick start notes.
 
-## Script Docs
+## Workflow Docs
 
 - [[_system/docs/commands/Root|Root]]
 - [[_system/docs/commands/Init Vault|Init Vault]]
 - [[_system/docs/commands/Bootstrap Export|Bootstrap Export]]
 - [[_system/docs/commands/Public Vault Upgrade|Public Vault Upgrade]]
 - [[_system/docs/commands/Dependency Repos|Dependency Repos]]
-- [[_system/docs/commands/Agent Skills Sync|Agent Skills Sync]]
+- [[_system/docs/commands/Agent Sync|Agent Sync]]
+- [[_system/docs/commands/Agent Update|Agent Update]]
 - [[_system/docs/commands/Managed Snippets|Managed Snippets]]
 - [[_system/docs/commands/Refresh|Refresh]]
 - [[_system/tools/mac-automation/README|macOS Startup Automation]]
 - [[_system/docs/commands/README-git|Git Repository]]
 - [[_system/docs/commands/Vault Git Sync|Vault Git Sync]]
+- [[_system/docs/commands/Vault Access|Vault Access]]
 - [[_system/docs/commands/Inventory|Inventory]]
 - [[_system/docs/commands/Machines|Machines]]
 - [[_system/docs/commands/Tasks And Projects|Tasks And Projects]]

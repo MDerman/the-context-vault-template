@@ -40,13 +40,14 @@ def install_hooks(root: Path, apply: bool) -> None:
 
 
 def bootstrap_script(worker: dict[str, Any]) -> str:
-    config = worker["vault_sync"]
-    repo = str(config["repo_path"])
-    checkout = str(config.get("checkout", "icloud"))
-    if worker.get("platform") != "macos" or checkout != "icloud":
+    vault = worker["vault"]
+    roots = worker["roots"]
+    if worker.get("platform") != "macos" or vault.get("checkout_mode") != "icloud-gitless":
         raise WorkerBootstrapError(
             f"Vault worker bootstrap is Mac/iCloud-only: {worker['id']}"
         )
+    resolved = machine_registry.resolve_registered_root(str(worker["home"]), roots.get("vault"))
+    repo = str(resolved)
     return f"""set -eu
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
 repo={shlex.quote(repo)}
@@ -84,10 +85,6 @@ if git -C "$repo" rev-parse --git-dir >/dev/null 2>&1; then
   echo "worker iCloud vault still resolves as a Git worktree: $repo" >&2
   exit 2
 fi
-if [ -e "$HOME/Code/vault" ]; then
-  echo "legacy Mac Vault repository must be moved out of ~/Code before acceptance: $HOME/Code/vault" >&2
-  exit 2
-fi
 /bin/mkdir -p "$HOME/.config/vault" "$HOME/.local/bin"
 /bin/chmod 700 "$HOME/.config/vault"
 identity_tmp="$HOME/.config/vault/.machine-id.$$"
@@ -95,8 +92,7 @@ identity_tmp="$HOME/.config/vault/.machine-id.$$"
 /bin/chmod 600 "$identity_tmp"
 /bin/mv "$identity_tmp" "$HOME/.config/vault/machine-id"
 /bin/ln -sfn "$repo/_system/commands/vault.py" "$HOME/.local/bin/vault"
-python3 "$repo/_system/commands/deps.py" --root "$repo" project-auto-skills --apply
-python3 "$repo/_system/agents/sync_skills.py" sync --root "$repo" --home "$HOME" --apply
+python3 "$repo/_system/agents/_package/src/sync_agents.py" sync --root "$repo" --home "$HOME" --skills --local-only
 python3 "$repo/_system/commands/refresh_schedule.py" --root "$repo" block-worker --machine-id {shlex.quote(str(worker['id']))}
 python3 "$repo/_system/commands/refresh_schedule.py" --root "$repo" unregister
 """
@@ -117,19 +113,14 @@ def bootstrap_worker(
         raise WorkerBootstrapError(
             f"machine is already enabled; omit --provision-disabled: {worker['id']}"
         )
-    config = worker.get("vault_sync", {})
-    if worker.get("role") != "worker" or not config.get("enabled"):
+    vault = worker.get("vault", {})
+    roots = worker.get("roots", {})
+    if worker.get("role") != "worker" or not vault.get("enabled"):
         raise WorkerBootstrapError(f"vault worker bootstrap disabled: {worker['id']}")
-    repo = str(config["repo_path"])
-    checkout = str(config.get("checkout", "icloud"))
-    if worker.get("platform") != "macos" or checkout != "icloud":
+    repo = str(machine_registry.resolve_registered_root(str(worker["home"]), roots.get("vault")))
+    if worker.get("platform") != "macos" or vault.get("checkout_mode") != "icloud-gitless":
         raise WorkerBootstrapError(
             f"Vault worker bootstrap is Mac/iCloud-only: {worker['id']}"
-        )
-    mac_code_vault = PurePosixPath(str(worker["home"])) / "Code/vault"
-    if worker.get("platform") == "macos" and PurePosixPath(repo) == mac_code_vault:
-        raise WorkerBootstrapError(
-            f"macOS workers must not use ~/Code/vault: {worker['id']}"
         )
     if not apply:
         print(f"DRY RUN: bootstrap {worker['id']} at {repo} through {worker['ssh_alias']}")
@@ -147,10 +138,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--root", default=None)
     sub = parser.add_subparsers(dest="command", required=True)
     hooks = sub.add_parser("install-hooks")
-    hooks.add_argument("--apply", action="store_true")
+    hooks_mode = hooks.add_mutually_exclusive_group()
+    hooks_mode.add_argument("--dry-run", action="store_true")
+    hooks_mode.add_argument("--apply", action="store_true")
     bootstrap = sub.add_parser("bootstrap")
     bootstrap.add_argument("name")
-    bootstrap.add_argument("--apply", action="store_true")
+    bootstrap_mode = bootstrap.add_mutually_exclusive_group()
+    bootstrap_mode.add_argument("--dry-run", action="store_true")
+    bootstrap_mode.add_argument("--apply", action="store_true")
     bootstrap.add_argument(
         "--provision-disabled",
         action="store_true",
@@ -166,7 +161,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "install-hooks":
             install_hooks(root, args.apply)
         elif args.command == "bootstrap":
-            registry_path = root / "_system/local/skills/infra-code-folder-and-computer-topology/private/machines.json"
+            registry_path = root / "_system/agents/_package/instance/fleet/machines.json"
             bootstrap_worker(
                 root,
                 machine_registry.load_registry(registry_path),

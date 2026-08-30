@@ -30,7 +30,7 @@ DEFAULT_REPO_URL = "https://github.com/MDerman/the-context-vault-template.git"
 INSTALL_PATH = INSTALL_STATE_PATH
 POLICY_PATH = BOOTSTRAP_POLICY_PATH
 REPORT_ROOT = UPGRADE_REPORTS_DIR
-DEPS_SCRIPT = Path("_system/commands/deps.py")
+DEPS_SCRIPT = Path("_system/deps/install.sh")
 STATE_BASE = Path.home() / "Library/Application Support/context-nine-vault-bootstrap"
 
 
@@ -331,12 +331,13 @@ def run_migrations(root: Path, policy: dict[str, Any], report_dir: Path, apply: 
 
 def run_dependency_sync(root: Path, apply: bool) -> dict[str, Any]:
     script = root / DEPS_SCRIPT
-    mode = "--apply" if apply else "--dry-run"
+    mode = "apply" if apply else "--dry-run"
     result: dict[str, Any] = {"path": DEPS_SCRIPT.as_posix(), "mode": mode}
     if not script.exists():
         result["result"] = "missing"
         return result
-    completed = run([sys.executable, str(script), "sync", mode, "--root", str(root)], check=False)
+    command = [str(script)] if apply else [str(script), "--dry-run"]
+    completed = run(command, cwd=root, check=False)
     result["returncode"] = completed.returncode
     result["stdout"] = completed.stdout.strip()
     result["stderr"] = completed.stderr.strip()
@@ -737,7 +738,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("command", nargs="?", choices=["status", "doctor", "repair-prompt", "init-state"])
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--dry-run", action="store_true", help="Preview upgrade and write a report.")
-    mode.add_argument("--apply", action="store_true", help="Apply upgrade.")
+    mode.add_argument("--apply", action="store_true", help="Compatibility flag; `vault upgrade` already applies by default.")
     parser.add_argument("--from-current", action="store_true", help="For init-state: recreate hidden state from current public repo.")
     parser.add_argument("--repo-url", default=None, help="Override upstream public repo URL for init-state.")
     parser.add_argument("--root", default=None, help="Vault root. Defaults to auto-discovery.")
@@ -764,7 +765,7 @@ def main(argv: list[str] | None = None) -> int:
         if not load_install(root):
             return run_dependency_only_upgrade(root, apply=False)
         return run_upgrade(root, apply=False)
-    print("Use `vault upgrade status`, `vault upgrade --dry-run`, or `vault upgrade --apply`.")
+    print("Use `vault upgrade status`, `vault upgrade --dry-run`, or `vault upgrade`.")
     return 2
 
 

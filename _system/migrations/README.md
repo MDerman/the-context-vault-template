@@ -10,7 +10,7 @@ Each migration must support:
 
 ```bash
 python3 _system/migrations/<script>.py --root /path/to/vault --report /path/to/report.json --dry-run
-python3 _system/migrations/<script>.py --root /path/to/vault --report /path/to/report.json --apply
+python3 _system/migrations/<script>.py --root /path/to/vault --report /path/to/report.json
 ```
 
 Migrations must be idempotent and must write JSON reports.

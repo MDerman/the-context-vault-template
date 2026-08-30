@@ -9,6 +9,7 @@ This is the fuller script reference. Use `_system/docs/commands/README.md` for n
 ## Main Scripts
 
 - `vault.py`: terminal dispatcher installed as `vault` in `~/.local/bin`; forwards subcommands to the scripts below.
+- `remote_access.py`: local-Mac `vault access` entrypoint for worktree safety, shared leases, and optional receipt/upload diagnostics. The reviewed deployable host/client/controller lives in the existing `infra-onboard-machine` skill. Remote Linux launchers intercept `vault access` outside the mount.
 - `refresh.py`: sole full-refresh entrypoint; runs required Git preflight before generated changes, optional Brain Dump ingestion, best-effort Google Calendar mirror, content schedules, source/vault periodic notes, `Dashboard.md`, and best-effort Git maintenance.
 - `refresh_schedule.py`: registers, unregisters, reports, and runs the macOS LaunchAgent daily refresh wrapper.
 - `mac_startup.py`: validates private per-machine startup opt-ins and application bundle identifiers, installs or removes the copied macOS `RunAtLoad` runtime, archives configured legacy LaunchAgents, reports state, and runs enabled actions. Explicit `--provision-disabled` supports reviewed onboarding without fleet enablement. Use `vault mac-startup`.
@@ -29,21 +30,21 @@ This is the fuller script reference. Use `_system/docs/commands/README.md` for n
 - `git_maintenance.py`: keeps normal Git history shallow and compacts local Git objects. Use `vault git-maintenance`.
 - `git_preflight.py`: fetches and fast-forwards clean `master` before refresh changes files. Use `vault git-preflight`.
 - `worker_bootstrap.py`: keeps iCloud worker Macs Gitless, recoverably retires only the expected legacy external Git directory, and writes machine-local identity plus refresh prohibition; reviewed onboarding can target one disabled Mac worker through `--provision-disabled`. Use `vault worker-sync` only for Mac workers.
-- `deps.py project-auto-skills`: repairs generated auto-skill projections from existing dependency checkouts without pulling or building them; Git projection hooks and worker bootstrap run this before global skill projection.
-- `_system/agents/sync_skills.py`: validates grouped auto/manual/GH skill sources, materializes selected repo-owned projections, enforces invocation policy, repairs dependency moves, rebuilds flat catalog plus per-skill global links, and reconciles local versioned global-agent instructions. Use `vault skills sync`.
-- `_system/agents/global_agent_configuration.py`: shared Vault alias, machine-footer rendering, and atomic home-file reconciliation used by regular sync, bootstrap, and fleet deployment.
-- `_system/agents/auto-skills/_infrastructure/infra-sync-code-workspaces/scripts/sync_code_workspaces.py`: reconciles registered Code repositories and invokes the same primary-owned Codex/Claude configuration sync used during onboarding.
-- `_system/agents/auto-skills/_infrastructure/infra-sync-code-workspaces/scripts/sync_agent_configuration.py`: previews, applies, or verifies personal Codex/Claude configuration without changing repositories.
+- `_system/agents/_package/src/sync_agents.py`: canonical default-apply fleet orchestrator for portable skills, Codex/Claude settings, and rendered instructions. Use `ctx9-agents sync`; add component selectors or `--dry-run` when needed.
+- `_system/agents/_package/src/sync_skills.py`: validates grouped auto/manual/GH skill sources, materializes selected repo-owned projections, enforces invocation policy, repairs dependency moves, and rebuilds the Vault-local flat catalog.
+- `_system/agents/_package/src/skill_snapshots.py`: builds and installs verified point-in-time global skill copies while preserving unmanaged skills.
+- `_system/agents/_package/src/global_agent_configuration.py`: shared Vault alias, machine-footer rendering, and atomic home-file reconciliation used by regular sync, bootstrap, and fleet deployment.
+- `_system/agents/skills/auto/_infrastructure/infra-sync-code-workspaces/scripts/sync_code_workspaces.py`: reconciles registered Code repositories and invokes the same primary-owned Codex/Claude configuration sync used during onboarding.
+- `_system/agents/skills/auto/_infrastructure/infra-sync-code-workspaces/scripts/sync_agent_configuration.py`: previews, applies, or verifies personal Codex/Claude configuration without changing repositories.
 - `snippets.py`: checks and materializes canonical text blocks inside configured files across registered repositories. Use `vault snippets`.
 
 ## Bootstrap Scripts
 
 - `_system/bootstrap/init_vault.sh`: first-run fresh/exported vault setup entrypoint.
+- `_system/bootstrap/offer_machine_setup.py`: testable optional post-init prompt that invokes `vault machine setup` only on explicit yes and always skips under non-interactive setup.
 - `_system/bootstrap/bootstrap_vault.py`: scaffolds/reconciles context folders, templates, Bases, starter notes, and generated setup docs.
-- `_system/bootstrap/agents/ensure-agent-file-symlinks.py`: compatibility CLI delegating Vault alias setup to `_system/agents/global_agent_configuration.py`.
-- `_system/bootstrap/Brewfile`: Homebrew formulas for bootstrap-managed CLI dependencies.
-- `_system/bootstrap/install_dependencies.sh`: installs/checks local CLI dependencies from the bootstrap Brewfile.
-- `_system/bootstrap/install_agent_canvas.py`: checks, builds, and repairs editable Agent Canvas CLI/package links through dependency setup hooks.
+- `_system/deps/packages.yaml`: approved cross-platform public Vault dependencies.
+- `_system/deps/install.py`: installs and verifies the public dependency manifest; bootstrap's wrapper only invokes it.
 - `_system/bootstrap/install_vault_command.py`: installs the `vault` dispatcher symlink.
 
 ## Secondary Scripts

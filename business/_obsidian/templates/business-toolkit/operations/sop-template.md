@@ -1,13 +1,16 @@
-***
+<%*
+const date = tp.date.now("YYYY-MM-DD");
+-%>
+---
 type: sop
 status: draft
-date: 2026-08-13
+date: <% date %>
 project:
 people:
 source:
-***
+---
 
-# SOP - offer-template
+# SOP - <% tp.file.title %>
 
 ## Purpose
 

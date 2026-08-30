@@ -201,15 +201,6 @@ def discover_entities(root: Path, excluded: set[str] | None = None) -> list[str]
     return entities
 
 
-def discover_coding_agents(root: Path) -> list[str]:
-    agents = []
-    if (root / ".agents").exists() or (root / "AGENTS.md").exists():
-        agents.append("codex")
-    if (root / ".claude").exists() or (root / "CLAUDE.md").exists():
-        agents.append("claude")
-    return agents or ["codex"]
-
-
 def load_bootstrap(root: Path):
     path = root / "_system/bootstrap/bootstrap_vault.py"
     if not path.exists():
@@ -344,11 +335,9 @@ def create_main(argv: list[str], *, register_mode: bool = False) -> None:
         entities=entities,
         active_entities=active_entities,
         default_entity=default_entity,
-        coding_agents=discover_coding_agents(root),
         context_features=context_features,
         content_schedule_entities=content_schedule_entities,
         install_vault_command_enabled=True,
-        agent_symlinks_enabled=True,
         dry_run=args.dry_run,
         run_date=bootstrap_module.parse_date(None),
     )
@@ -397,11 +386,9 @@ def rerun_bootstrap(root: Path, dry_run: bool, excluded: set[str] | None = None)
         entities=entities,
         active_entities=active_entities,
         default_entity=default_context_folder(root, entities),
-        coding_agents=discover_coding_agents(root),
         context_features=context_features,
         content_schedule_entities=content_schedule_entities,
         install_vault_command_enabled=True,
-        agent_symlinks_enabled=True,
         dry_run=dry_run,
         run_date=bootstrap_module.parse_date(None),
     )
@@ -429,7 +416,7 @@ def remove_main(argv: list[str]) -> None:
     parser = argparse.ArgumentParser(description="Remove a context folder from disk and regenerate vault views.")
     parser.add_argument("name", help="Context folder slug.")
     parser.add_argument("--root", default=None, help="Vault root. Defaults to auto-discovery.")
-    parser.add_argument("--apply", action="store_true", help="Actually delete the folder. Without this, only prints planned changes.")
+    parser.add_argument("--apply", action="store_true", help="Compatibility flag; `vault folder remove` already applies by default.")
     parser.add_argument("--dry-run", action="store_true", help="Print planned changes without deleting files.")
     args = parser.parse_args(argv)
 

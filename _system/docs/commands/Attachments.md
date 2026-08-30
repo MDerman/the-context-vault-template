@@ -13,7 +13,7 @@ vault attachments
 Apply the planned cleanup:
 
 ```bash
-vault attachments --apply
+vault attachments
 ```
 
 Verify after cleanup:
@@ -27,7 +27,7 @@ read-only by default and writes an auditable manifest before any changes:
 
 ```bash
 vault attachments --reconcile-learning-export "/path/to/LEARNINGRECON" --repair-deterministic-global
-vault attachments --reconcile-learning-export "/path/to/LEARNINGRECON" --repair-deterministic-global --apply
+vault attachments --reconcile-learning-export "/path/to/LEARNINGRECON" --repair-deterministic-global
 ```
 
 Reconciliation preserves current note prose and frontmatter, restores missing

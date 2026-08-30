@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import json
 import sys
 import tempfile
 import unittest
@@ -33,11 +34,9 @@ class PublicContextExportTests(unittest.TestCase):
                 entities=["personal"],
                 active_entities=["personal"],
                 default_entity="personal",
-                coding_agents=[],
                 context_features={"personal": set()},
                 content_schedule_entities=[],
                 install_vault_command_enabled=False,
-                agent_symlinks_enabled=False,
                 dry_run=False,
                 run_date=dt.date(2026, 8, 3),
             )
@@ -97,184 +96,30 @@ class PublicContextExportTests(unittest.TestCase):
             self.assertFalse((export_root / "_system/PRIVATE-NOTE.md").exists())
             self.assertFalse((export_root / "_system/NEW-NOTE.md").exists())
 
-    def test_generic_topology_skill_exports_but_private_machine_data_does_not(self) -> None:
+    def test_agent_package_is_excluded_as_one_product_boundary(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "source"
             export_root = Path(tmp) / "public"
-            skill = root / "_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology"
-            skill.mkdir(parents=True)
-            (skill / "SKILL.md").write_text(
-                "generic primary and worker topology skill\n",
-                encoding="utf-8",
-            )
-            (skill / "README-primary-worker-vault-sync.md").write_text("generic sync rules\n")
-            references = skill / "references"
-            references.mkdir()
-            (references / "private-fleet.md").write_text("private address and alias\n")
-            catalog = root / "_system/agents/skills"
-            catalog.mkdir(parents=True)
-            (catalog / "infra-code-folder-and-computer-topology").symlink_to(
-                "../auto-skills/_infrastructure/infra-code-folder-and-computer-topology"
-            )
-            (root / "AGENTS.md").write_text(
-                "# Agent Instructions\n\n"
-                "- Public rule.\n"
-                "- [[_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/SKILL|Code Folder and Computer Topology skill]].\n",
-                encoding="utf-8",
-            )
+            private = root / "_system/agents/_package/instance/fleet/machines.json"
+            generic = root / "_system/agents/skills/auto/_infrastructure/example/SKILL.md"
+            private.parent.mkdir(parents=True)
+            generic.parent.mkdir(parents=True)
+            private.write_text("private fleet\n", encoding="utf-8")
+            generic.write_text("generic skill\n", encoding="utf-8")
             config = {
                 "export_root": str(export_root),
                 "copy_obsidian": "exact",
-                "root_files": ["AGENTS.md"],
-                "generated_exclude_globs": [
-                    "_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/references/**",
-                ],
-                "text_rewrite_suffixes": [".md"],
-            }
-            exporter = BootstrapExporter(
-                root=root,
-                config=config,
-                export_root=export_root,
-                force=True,
-                dry_run=False,
-            )
-            exporter.copy_root_files()
-            exporter.copy_system_or_shared("_system")
-
-            exported_skill = export_root / "_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology"
-            self.assertTrue((exported_skill / "SKILL.md").exists())
-            self.assertTrue((exported_skill / "README-primary-worker-vault-sync.md").exists())
-            self.assertFalse((exported_skill / "references/private-fleet.md").exists())
-            self.assertTrue((export_root / "_system/agents/skills/infra-code-folder-and-computer-topology").is_symlink())
-            exported_agents = (export_root / "AGENTS.md").read_text(encoding="utf-8")
-            self.assertIn("Public rule", exported_agents)
-            self.assertIn("Code Folder and Computer Topology", exported_agents)
-
-    def test_skill_private_config_and_shared_env_contents_do_not_export(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp) / "source"
-            export_root = Path(tmp) / "public"
-            private = root / "_system/local/skills/example-skill/private"
-            private.mkdir(parents=True)
-            (private / "config.json").write_text('{"domain":"private.example"}\n')
-            config_readme = private.parent / "README.md"
-            config_readme.write_text("portable setup guidance\n")
-            nested_private = root / "_system/local/skills/example-skill/Mac Startup/private"
-            nested_private.mkdir(parents=True)
-            (nested_private / "machines.json").write_text('{"machines":[]}\n')
-            (nested_private.parent / "README.md").write_text("portable nested defaults\n")
-            snippets_private = root / "_system/local/snippets/private"
-            snippets_private.mkdir(parents=True)
-            (snippets_private / "targets.json").write_text('{"targets":[]}\n')
-            (snippets_private.parent / "README.md").write_text("portable snippet defaults\n")
-            env_dir = root / "_system/local/env"
-            env_dir.mkdir(parents=True)
-            (env_dir / ".env.base").write_text("API_TOKEN=\n")
-            (env_dir / "README.md").write_text("env instructions\n")
-            config = {
-                "export_root": str(export_root),
-                "copy_obsidian": "exact",
-                "generated_exclude_globs": [
-                    "_system/local/skills/**/private",
-                    "_system/local/skills/**/private/**",
-                    "_system/local/snippets/private",
-                    "_system/local/snippets/private/**",
-                ],
+                "generated_exclude_globs": ["_system/agents/**"],
             }
             exporter = BootstrapExporter(root=root, config=config, export_root=export_root, force=True, dry_run=False)
             exporter.copy_system_or_shared("_system")
+            self.assertFalse((export_root / "_system/agents").exists())
 
-            self.assertTrue((export_root / "_system/local/skills/example-skill/README.md").exists())
-            self.assertFalse((export_root / "_system/local/skills/example-skill/private").exists())
-            self.assertTrue((export_root / "_system/local/skills/example-skill/Mac Startup/README.md").exists())
-            self.assertFalse((export_root / "_system/local/skills/example-skill/Mac Startup/private").exists())
-            self.assertTrue((export_root / "_system/local/snippets/README.md").exists())
-            self.assertFalse((export_root / "_system/local/snippets/private").exists())
-            self.assertTrue((export_root / "_system/local/env").is_dir())
-            self.assertEqual(list((export_root / "_system/local/env").iterdir()), [])
-
-    def test_managed_dependency_projection_is_not_exported(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp) / "source"
-            export_root = Path(tmp) / "public"
-            config_dir = root / "_system/local"
-            projection = root / "_system/agents/skills/vault-excalidraw-canvas"
-            checkout = Path(tmp) / "checkout/skills/agent-canvas"
-            config_dir.mkdir(parents=True)
-            checkout.mkdir(parents=True)
-            (checkout / "SKILL.md").write_text("external\n")
-            projection.parent.mkdir(parents=True)
-            projection.symlink_to(checkout)
-            (config_dir / "deps.json").write_text(
-                '{"repos":[{"projections":[{"target":"_system/agents/skills/vault-excalidraw-canvas","managed":true}]}]}\n'
-            )
-            config = {"export_root": str(export_root), "copy_obsidian": "exact"}
-            exporter = BootstrapExporter(root=root, config=config, export_root=export_root, force=True, dry_run=False)
-            exporter.copy_system_or_shared("_system")
-            self.assertFalse((export_root / "_system/agents/skills/vault-excalidraw-canvas").exists())
-
-    def test_working_repo_projection_and_catalog_link_are_not_exported(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp) / "source"
-            export_root = Path(tmp) / "public"
-            projection = (
-                root
-                / "_system/agents/working-repos/business"
-                / "business-debugging-and-testing"
-            )
-            catalog = root / "_system/agents/skills"
-            projection.mkdir(parents=True)
-            catalog.mkdir(parents=True)
-            (projection / "SKILL.md").write_text("projected private repo skill\n")
-            (catalog / "business-debugging-and-testing").symlink_to(
-                "../working-repos/business/business-debugging-and-testing"
-            )
-            config = {
-                "export_root": str(export_root),
-                "copy_obsidian": "exact",
-                "generated_exclude_globs": ["_system/agents/working-repos/**"],
-            }
-            exporter = BootstrapExporter(
-                root=root,
-                config=config,
-                export_root=export_root,
-                force=True,
-                dry_run=False,
-            )
-
-            exporter.copy_system_or_shared("_system")
-
-            self.assertFalse((export_root / "_system/agents/working-repos").exists())
-            self.assertFalse(
-                (export_root / "_system/agents/skills/business-debugging-and-testing").exists()
-            )
-
-    def test_auto_source_and_catalog_link_export_but_dependency_auto_link_does_not(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp) / "source"
-            export_root = Path(tmp) / "public"
-            local = root / "_system/agents/auto-skills/_code/code-local-skill"
-            external = root / "_system/agents/auto-skills/_creative/creative-external-skill"
-            catalog = root / "_system/agents/skills"
-            local.mkdir(parents=True)
-            external.mkdir(parents=True)
-            catalog.mkdir(parents=True)
-            (local / "SKILL.md").write_text("local\n")
-            (external / "SKILL.md").write_text("external\n")
-            (catalog / "code-local-skill").symlink_to("../auto-skills/_code/code-local-skill")
-            (catalog / "creative-external-skill").symlink_to("../auto-skills/_creative/creative-external-skill")
-            deps_config = root / "_system/local/deps.json"
-            deps_config.parent.mkdir(parents=True)
-            deps_config.write_text(
-                '{"repos":[{"projections":[{"target":"_system/agents/auto-skills/_creative/creative-external-skill","managed":true}]}]}\n'
-            )
-            config = {"export_root": str(export_root), "copy_obsidian": "exact"}
-            exporter = BootstrapExporter(root=root, config=config, export_root=export_root, force=True, dry_run=False)
-            exporter.copy_system_or_shared("_system")
-            self.assertTrue((export_root / "_system/agents/auto-skills/_code/code-local-skill/SKILL.md").exists())
-            self.assertTrue((export_root / "_system/agents/skills/code-local-skill").is_symlink())
-            self.assertFalse((export_root / "_system/agents/auto-skills/_creative/creative-external-skill").exists())
-            self.assertFalse((export_root / "_system/agents/skills/creative-external-skill").exists())
+    def test_production_export_has_no_agent_readds(self) -> None:
+        config = json.loads((BOOTSTRAP_DIR / "bootstrap-export.json").read_text(encoding="utf-8"))
+        self.assertIn("_system/agents/**", config["generated_exclude_globs"])
+        explicit_sources = {item["source"] for item in config["root_files"] if isinstance(item, dict)}
+        self.assertFalse(any(source.startswith("_system/agents/") for source in explicit_sources))
 
     def test_patched_simple_folder_note_bundle_is_exported(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

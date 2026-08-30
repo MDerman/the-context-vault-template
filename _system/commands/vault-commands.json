@@ -47,6 +47,22 @@
     "tui": true
   },
   {
+    "id": "vault-access-status",
+    "label": "Vault Access Status",
+    "description": "Show worktree safety, writer lease, and optional iCloud and receipt state.",
+    "group": "Inspect",
+    "risk": "read",
+    "mode": "run",
+    "args": [
+      "access",
+      "status",
+      "--json"
+    ],
+    "cockpit": true,
+    "palette": true,
+    "tui": true
+  },
+  {
     "id": "content",
     "label": "Content Schedules",
     "description": "Generate current content schedules from cadence config.",
@@ -198,35 +214,6 @@
     "tui": true
   },
   {
-    "id": "skills-sync-dry-run",
-    "label": "Skills Sync Dry Run",
-    "description": "Validate skill sources and preview repo projections plus catalog/global link changes.",
-    "group": "Maintenance",
-    "risk": "dry-run",
-    "mode": "run",
-    "args": [
-      "skills",
-      "sync",
-      "--dry-run"
-    ],
-    "tui": true
-  },
-  {
-    "id": "skills-sync-apply",
-    "label": "Skills Sync",
-    "description": "Rebuild selected repo projections, invocation policies, and skill catalog/global links.",
-    "group": "Maintenance",
-    "risk": "apply",
-    "mode": "run",
-    "confirm": true,
-    "args": [
-      "skills",
-      "sync",
-      "--apply"
-    ],
-    "tui": true
-  },
-  {
     "id": "snippets-check",
     "label": "Managed Snippets Check",
     "description": "Verify that every configured managed text block matches its canonical source.",
@@ -263,8 +250,7 @@
     "confirm": true,
     "args": [
       "snippets",
-      "sync",
-      "--apply"
+      "sync"
     ],
     "tui": true
   },
@@ -276,7 +262,8 @@
     "risk": "dry-run",
     "mode": "run",
     "args": [
-      "attachments"
+      "attachments",
+      "--dry-run"
     ],
     "tui": true
   },
@@ -289,8 +276,7 @@
     "mode": "long-running",
     "confirm": true,
     "args": [
-      "attachments",
-      "--apply"
+      "attachments"
     ],
     "tui": true
   },
@@ -337,8 +323,7 @@
     "args": [
       "gcal",
       "calendars",
-      "ensure",
-      "--apply"
+      "ensure"
     ],
     "tui": true
   },
@@ -366,8 +351,7 @@
     "confirm": true,
     "args": [
       "gcal",
-      "sync-tasks",
-      "--apply"
+      "sync-tasks"
     ],
     "tui": true
   },
@@ -612,8 +596,7 @@
     "confirm": true,
     "args": [
       "deps",
-      "sync",
-      "--apply"
+      "sync"
     ],
     "palette": true,
     "tui": true
@@ -676,8 +659,7 @@
     "mode": "long-running",
     "confirm": true,
     "args": [
-      "upgrade",
-      "--apply"
+      "upgrade"
     ],
     "palette": true,
     "tui": true
@@ -732,8 +714,7 @@
     "confirm": true,
     "args": [
       "git-media",
-      "install-hook",
-      "--apply"
+      "install-hook"
     ],
     "tui": true
   },
@@ -800,8 +781,7 @@
     "confirm": true,
     "args": [
       "profile",
-      "upgrade",
-      "--apply"
+      "upgrade"
     ],
     "tui": true
   },
@@ -866,8 +846,7 @@
     "args": [
       "business-toolkit",
       "sync",
-      "--configured",
-      "--apply"
+      "--configured"
     ],
     "palette": true,
     "tui": true

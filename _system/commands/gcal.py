@@ -349,7 +349,7 @@ def command_auth(env: Env) -> int:
     print("Run:")
     print("  gws auth setup")
     print("  gws auth login --services calendar,drive")
-    print("  vault gcal calendars ensure --apply")
+    print("  vault gcal calendars ensure")
     return 0
 
 

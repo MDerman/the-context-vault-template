@@ -1,13 +1,16 @@
-***
+<%*
+const date = tp.date.now("YYYY-MM-DD");
+-%>
+---
 type: competitor
 status: active
-date: 2026-08-13
+date: <% date %>
 project:
 people:
 source:
-***
+---
 
-# Competitor - offer-template
+# Competitor - <% tp.file.title %>
 
 ## Positioning
 

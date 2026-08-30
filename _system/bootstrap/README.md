@@ -27,7 +27,7 @@ Keep public setup instructions in `README-public-vault-template.md`, but keep in
 - `_system/docs/commands/README.md`: normal command/operator workflows.
 - `_system/docs/commands/README-reference.md`: full command and bootstrap script inventory.
 - `_system/README.md`: concise vault architecture, ownership, and routing.
-- `_system/agents/README.md`: agent skill docs.
+- `_system/agents/README.md`: private standalone agent-package architecture; excluded from the public Vault.
 - `_system/tools/README.md`: reusable tool docs.
 - `_system/docs/obsidian/README.md`: Obsidian profile, plugins, UI settings, templates, Sync Embeds.
 
@@ -39,12 +39,25 @@ Keep public setup instructions in `README-public-vault-template.md`, but keep in
 
 The exporter:
 
-- copies root agent wiring, selected root files, root `.obsidian` and `.obsidian-mobile` profile files with configured exclusions, `_system` minus generated/private outputs and personal `_system/agents/config`, empty `_library`, `_wiki/AGENTS.md`, and configured context folder scaffolds;
-- derives managed dependency projection targets from `_system/local/deps.json` and omits them; fresh installs recreate local projections without exporting machine-specific absolute symlinks;
+- copies selected root files, root `.obsidian` and `.obsidian-mobile` profile files with configured exclusions, Vault system files, selected `_library` paths, `_wiki/AGENTS.md`, and configured context folder scaffolds;
+- excludes `_system/agents/**` as one product boundary and never sanitizes or re-adds agent-package files;
 - writes `_system/local/state/export-manifest.json` so future exports can remove stale export-owned files;
 - preserves repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, and contribution docs;
-- exports portable local README/defaults but excludes `_system/local/skills/**/private/**`, `_system/local/snippets/private/**`, all `_system/local/env/**` contents, and `_system/local/state/**`;
+- exports portable local README/defaults but excludes `_system/local/snippets/private/**`, all `_system/local/env/**` contents, and `_system/local/state/**`;
 - refuses to export inside the source vault.
+
+## Current Exclusion Boundary
+
+`_system/bootstrap/bootstrap-export.json` is the executable source of truth. At a high level, export excludes:
+
+- personal context content; only configured public context folder notes, Bases, periodic templates, and selected physical packs are produced;
+- generated root dashboards, vault periodic rollups, system attachments, inbox contents, local state, and sync remnants;
+- the complete `_system/agents/**` package, including skills, private instance configuration and generated state;
+- private local skill/snippet subfolders and all `_system/local/env` contents while keeping the empty env folder;
+- private invoice/email tools;
+- sensitive names such as `.env`, secrets, kubeconfig, plugin integration data, plugin logs, third-party plugin code, `.DS_Store`, `__pycache__`, `.pyc`, and `.bak` files.
+
+The standalone agent product has its own allowlist exporter, release metadata and publication approval. Vault export never consumes that allowlist.
 
 Public context entries declare `capabilities`, `content_schedules`, and an optional `folder_template` explicitly. The bootstrap does not infer context types. Physical packs live under `_system/bootstrap/templates/context-folders/`.
 
@@ -59,7 +72,7 @@ vault release publish --bump patch
 
 Release metadata lives in `_system/bootstrap/release.json`. It stores the SemVer, tag, release timestamp, dependency lock path, and dependency lock SHA-256. Any public release must update this file through `vault release publish`; do not commit a public export with stale release metadata.
 
-Dependency lock metadata lives in `_system/local/dependencies.lock.json`. It records tested Homebrew dependency versions, exact external repo commits from `deps.json`, Obsidian plugin manifest versions, and GitHub CLI/`gh skill` availability for the release.
+Dependency lock metadata lives in `_system/local/dependencies.lock.json`. It records verified public Vault package state and Obsidian plugin release inputs. Agent skills and external agent sources are independently owned.
 
 ## Plugin Code
 
@@ -96,7 +109,7 @@ Correct wording: Export includes plugin metadata/styles and non-sensitive settin
 
 Public install script:
 
-- installs Homebrew if it is missing, then checks Homebrew-managed dependencies, including the Secret Bindings baseline of Node `>=24.19.0 <25`, pnpm `>=11.21.0 <12`, Age, OpenSSL, Git, curl, and compiler tooling;
+- installs Homebrew if it is missing, then invokes `_system/deps/install.py` against `_system/deps/packages.yaml`; private CTX2 and agent prerequisites are deliberately excluded;
 - clones `MDerman/the-context-vault-template` into the default target `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault`, or a first-argument target override;
 - expands quoted `~`, `~/...`, and `~user/...` target overrides before creating the target directory;
 - resolves relative target overrides from the directory where the installer was launched;
@@ -106,10 +119,11 @@ Public install script:
 - stores vault-local bootstrap metadata under `_system/local/state/install.json`;
 - runs from README via `sudo bash`, resolves the original sudo user, and writes the vault/state as that user;
 - removes the public-repo `.git` pointer from the vault;
-- runs `_system/bootstrap/init_vault.sh --enable-git`, which asks for three exact context-folder slugs, preserves the starter examples through explicit capabilities/templates, and initializes personal Git/LFS directly under `~/.local/share/vault-git/<vault-name>.git`, outside iCloud.
+- runs `_system/bootstrap/init_vault.sh --enable-git`, which asks for three exact context-folder slugs, preserves the starter examples through explicit capabilities/templates, and initializes personal Git/LFS directly under `~/.local/share/vault-git/<vault-name>.git`.
 - downloads active third-party Obsidian plugin bundles, while Context Nine and Relay are already shipped in the vault export.
-- clones every repo from `_system/local/deps.json` at release-locked commits, creates projections, and runs vault-owned setup hooks. Agent Canvas setup builds editable checkout, links Bun package, and installs `~/.local/bin/agent-canvas`.
-- does not clone private personal Code workspaces or personal agent configuration. Personal fleet onboarding uses `$infra-sync-code-workspaces` after target-local authentication to reconcile both from the registered primary before strict repo-owned skill validation.
+- defaults to Vault-only in non-interactive mode. An explicit `--agent-package-source` may install the separately exported agent package after the Vault is valid, with independent flags for global instructions, Claude alias and skill discovery aliases.
+- asks one agent-package question interactively, followed by focused optional choices only when selected. Declining, EOF or an unavailable optional source never changes the validity of the installed Vault.
+- records the optional choice under `_system/local/state/agent-package-install.json`; the agent package can be installed or managed later without reinstalling the Vault.
 
 Public README invokes root `install.sh` through the GitHub raw URL and shows only the default command plus a custom-target example.
 
@@ -117,9 +131,9 @@ User Git is separate from hidden public-upstream state. Public installs enable p
 
 ## Profile Upgrade Flow
 
-`vault profile upgrade --dry-run` and `vault profile upgrade --apply` use the same hidden upstream Git state as `vault upgrade`, but only apply root `.obsidian` profile files for plugins, theme, hotkeys, snippets, and safe profile settings. Workspace/open-tab layout files are skipped unless the user passes `--include-workspace`.
+`vault profile upgrade --dry-run` and `vault profile upgrade` use the same hidden upstream Git state as `vault upgrade`, but only apply root `.obsidian` profile files for plugins, theme, hotkeys, snippets, and safe profile settings. Workspace/open-tab layout files are skipped unless the user passes `--include-workspace`.
 
-Profile upgrade does not advance the installed public commit. A later full `vault upgrade --apply` still sees all non-profile public updates.
+Profile upgrade does not advance the installed public commit. A later full `vault upgrade` still sees all non-profile public updates.
 
 ## Edge Cases
 
@@ -136,7 +150,7 @@ Profile upgrade does not advance the installed public commit. A later full `vaul
 
 ## System Folder Map
 
-- `_system/bootstrap`: first install, public export config, release metadata, upgrade policy, agent symlink helpers, dependency install, and plugin install. Canonical skill sync lives under `_system/agents`.
+- `_system/bootstrap`: first-install, public-export, release, upgrade, and plugin orchestration. Public dependency intent and installation live under `_system/deps`; canonical agent sync lives under `_system/agents`.
 - `_system/docs`: durable command, Obsidian profile, and workflow docs.
 - `_system/commands`: implementations behind the `vault` dispatcher and supporting script utilities.
 - `_system/local`: user-specific general configuration, per-skill configuration, env tooling, and runtime state.
@@ -146,6 +160,6 @@ Profile upgrade does not advance the installed public commit. A later full `vaul
 - `_system/sync`: disabled, unused, and unsupported historical rclone backup/sync tooling; keep its automation off.
 - `_system/tools`: reusable tools outside `vault` dispatcher.
 
-New system-level tools should go in `_system/commands` only when they belong behind `vault`. Otherwise use `_system/tools` and document dependency needs in `_system/bootstrap/Brewfile`.
+New system-level tools should go in `_system/commands` only when they belong behind `vault`. Otherwise use `_system/tools` and declare public Vault dependencies in `_system/deps/packages.yaml`.
 
-The public dependency installer provides Secret Bindings prerequisites but never registry credentials. Git and private package-registry authentication remain explicit machine-local onboarding gates.
+The public dependency installer never provides private CTX2 or fleet-agent prerequisites. `ctx9-agents sync` owns those approved dependencies after private fleet authentication.

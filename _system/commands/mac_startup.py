@@ -19,10 +19,10 @@ from script_utils import resolve_vault_root
 
 
 DEFAULT_LABEL = "com.obsidian-context-vault.mac-startup"
-DEFAULT_CONFIG_RELATIVE = Path("_system/local/skills/infra-code-folder-and-computer-topology/Mac Startup/defaults.json")
-PRIVATE_CONFIG_RELATIVE = Path("_system/local/skills/infra-code-folder-and-computer-topology/Mac Startup/private/machines.json")
+DEFAULT_CONFIG_RELATIVE = Path("_system/agents/_package/instance/skills/config/infra-code-folder-and-computer-topology/Mac Startup/defaults.json")
+PRIVATE_CONFIG_RELATIVE = Path("_system/agents/_package/instance/fleet/startup.json")
 TOPOLOGY_REGISTRY_RELATIVE = Path(
-    "_system/local/skills/infra-code-folder-and-computer-topology/private/machines.json"
+    "_system/agents/_package/instance/fleet/machines.json"
 )
 RUNNER_RELATIVE = Path("_system/tools/mac-automation/startup.sh")
 
@@ -218,7 +218,7 @@ def require_eligible_machine(
     machine_id = config.get("machine_id")
     if not isinstance(machine_id, str) or not machine_id:
         raise MacStartupError(
-            "this machine has no Vault identity; identify it with `vault machine identify ID --apply`"
+            "this machine has no Vault identity; identify it with `vault machine identify ID`"
         )
     machine = registered_machine(root, machine_id)
     if machine is None:

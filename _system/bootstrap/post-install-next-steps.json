@@ -2,6 +2,13 @@
   "title": "Optional next steps",
   "steps": [
     {
+      "title": "Prepare another personal machine",
+      "description": "Run the standalone worker wizard. It requires an explicit WireGuard or Tailscale choice and can open Codex with an editable onboarding request.",
+      "commands": [
+        "vault machine setup"
+      ]
+    },
+    {
       "title": "Start using Relay",
       "description": "Watch the tutorial video, then open Obsidian and configure Relay for shared folders/workspaces.",
       "url": "https://drive.google.com/file/d/1Rnlbrc10ckh9bnxiz_CkdLYXE0jTdyUI/view?usp=sharing"
@@ -12,7 +19,7 @@
       "commands": [
         "gws auth setup",
         "gws auth login --services calendar,drive",
-        "vault gcal calendars ensure --apply"
+        "vault gcal calendars ensure"
       ]
     },
     {

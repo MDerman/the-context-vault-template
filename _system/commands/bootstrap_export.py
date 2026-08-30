@@ -16,14 +16,14 @@ from pathlib import Path
 from typing import Any
 
 from script_utils import context_folder_note_path, resolve_vault_root
-from vault_layout import BOOTSTRAP_DIR, DEPENDENCY_CONFIG_PATH, EXPORT_MANIFEST_PATH
+from vault_layout import BOOTSTRAP_DIR, EXPORT_MANIFEST_PATH
 
 
 DEFAULT_CONFIG = str(BOOTSTRAP_DIR / "bootstrap-export.json")
 DEFAULT_MANIFEST_NAME = str(EXPORT_MANIFEST_PATH)
 PUBLIC_WORKSPACE_FILE = "README.md"
 MANIFEST_VERSION = 1
-GLOBAL_EXCLUDE_SUFFIXES = (".bak",)
+GLOBAL_EXCLUDE_SUFFIXES = (".bak", ".pyc", ".pyo")
 PRIVATE_EXPORT_DROP_LINE_MARKER = "private-export: drop-line"
 PRIVATE_EXPORT_DROP_LINKS = (
     "[[personal/Daily What To Do|Daily What To Do]]",
@@ -152,26 +152,6 @@ class BootstrapExporter:
         self.manifest_name = config.get("manifest_name", DEFAULT_MANIFEST_NAME)
         self.exported_paths: set[str] = set()
         self.explicit_root_names = self.collect_explicit_root_names()
-        self.dependency_projection_targets = self.load_dependency_projection_targets()
-
-    def load_dependency_projection_targets(self) -> set[Path]:
-        config_path = self.root / DEPENDENCY_CONFIG_PATH
-        if not config_path.is_file():
-            return set()
-        try:
-            data = json.loads(config_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            return set()
-        targets: set[Path] = set()
-        for repo in data.get("repos", []):
-            for projection in repo.get("projections", []):
-                if not projection.get("managed", True):
-                    continue
-                target = Path(str(projection.get("target", "")))
-                if not target.parts or target.is_absolute() or ".." in target.parts:
-                    continue
-                targets.add(target)
-        return targets
 
     def log(self, message: str) -> None:
         prefix = "[dry-run] " if self.dry_run else ""
@@ -368,13 +348,6 @@ class BootstrapExporter:
             relative = item.relative_to(self.root)
             if self.should_skip_system_shared(relative, item.is_dir()):
                 continue
-            if (
-                item.is_symlink()
-                and len(relative.parts) == 4
-                and relative.parts[:3] == ("_system", "agents", "skills")
-                and self.should_skip_catalog_link(item)
-            ):
-                continue
             target = self.export_root / relative
             if item.is_symlink():
                 self.create_symlink(target, os.readlink(item))
@@ -383,24 +356,8 @@ class BootstrapExporter:
             elif item.is_file():
                 self.copy_file(item, target)
 
-    def should_skip_catalog_link(self, item: Path) -> bool:
-        raw = os.readlink(item)
-        if (
-            raw.startswith("../manual-skills/")
-            or raw.startswith("../gh-skills/")
-            or raw.startswith("../working-repos/")
-        ):
-            return True
-        resolved = item.resolve(strict=False)
-        return any(
-            resolved == (self.root / target).resolve(strict=False)
-            for target in self.dependency_projection_targets
-        )
-
     def should_skip_system_shared(self, relative: Path, is_dir: bool) -> bool:
         rel = posix(relative)
-        if any(relative == target or is_relative_to(relative, target) for target in self.dependency_projection_targets):
-            return True
         if self.is_global_exclude_path(relative):
             return True
         if self.is_sensitive_path(relative):
@@ -608,11 +565,9 @@ class BootstrapExporter:
             entities=targets,
             active_entities=self.public_active_contexts(),
             default_entity=self.public_default_context(),
-            coding_agents=[],
             context_features=self.public_context_features(),
             content_schedule_entities=self.public_content_schedule_contexts(),
             install_vault_command_enabled=False,
-            agent_symlinks_enabled=False,
             dry_run=self.dry_run,
             run_date=datetime.now(timezone.utc).date(),
         )

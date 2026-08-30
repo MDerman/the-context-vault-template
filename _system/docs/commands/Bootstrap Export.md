@@ -22,7 +22,7 @@ vault release publish --bump patch
 
 The export writes a root `README.md` from `_system/bootstrap/README-public-vault-template.md`. Internal bootstrap/export mechanics live in `_system/bootstrap/README.md`. With `--force`, the exporter mirrors export-owned files into the configured export root while preserving repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, and contribution docs.
 
-Managed dependency projection targets are derived from `_system/local/deps.json` and excluded with all descendants. Install recreates them from local dependency checkouts, so public output never contains machine-specific absolute projection symlinks.
+The exporter excludes `_system/agents/**` completely. It does not sanitize, project, or re-add agent scripts, skills, fleet configuration, aliases, or installation behavior. The exported Vault is a complete independent product; the separately versioned agent package is optional.
 
 Default export root and context folder output mapping live in:
 
@@ -31,3 +31,5 @@ _system/bootstrap/bootstrap-export.json
 ```
 
 Implementation script: `_system/commands/bootstrap_export.py`.
+
+Interactive exported installs may offer the independently sourced agent package only after the Vault is valid. Non-interactive install remains Vault-only unless explicit agent flags are supplied. Public repository creation or agent publication is not part of Vault export.

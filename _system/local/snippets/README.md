@@ -12,7 +12,7 @@ _system/local/snippets/
 ```
 
 External repository IDs resolve through
-`_system/local/skills/infra-code-folder-and-computer-topology/private/repositories.json`.
+`_system/agents/_package/instance/fleet/workspaces.json`.
 Repository ID `vault` always means the current vault root. Public bootstrap export
 keeps defaults and sources but excludes `private/` targets.
 
@@ -38,12 +38,14 @@ vault snippets list
 vault snippets check
 vault snippets check git-task-workflow --repo vault
 vault snippets sync --dry-run
-vault snippets sync --apply
+vault snippets sync
 ```
 
-`sync` is a dry-run unless `--apply` is passed. It validates every selected
-source, repository, target, and marker before writing; changes only managed block
-bodies; preserves surrounding local edits; and never stages, commits, or pushes.
+`vault snippets sync` applies by default; pass `--dry-run` to preview. The
+standalone Python implementation still accepts its internal compatibility
+`--apply` flag. It validates every selected source, repository, target, and marker
+before writing; changes only managed block bodies; preserves surrounding local
+edits; and never stages, commits, or pushes.
 If a target changes while apply is running, the write stops rather than replacing
 the newer content.
 

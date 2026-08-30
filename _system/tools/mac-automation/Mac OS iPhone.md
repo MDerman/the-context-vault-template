@@ -73,8 +73,6 @@ sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.DiskArbit
 defaults write com.apple.Dock showhidden -bool TRUE && killall Dock
 ```
 
-![[_system/_obsidian/attachments/Untitled.png]]
-
 # BetterTouchTool
 
 [https://folivora.ai/buy](https://folivora.ai/buy)
@@ -132,5 +130,3 @@ IPhone
 Iphone 11 and later - tap and hold shutter button in photo mode to shoot video. Swipe to right to lock. This WORKS WHILE PLAYING MUSIC. 
 
 blackMagic DiskTest
-
-![[_system/_obsidian/attachments/Untitled 1.png]]

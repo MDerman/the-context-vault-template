@@ -1,13 +1,16 @@
-***
+<%*
+const date = tp.date.now("YYYY-MM-DD");
+-%>
+---
 type: product-spec
 status: draft
-date: 2026-08-13
+date: <% date %>
 project:
 people:
 source:
-***
+---
 
-# user-signal-template
+# <% tp.file.title %>
 
 ## Problem
 

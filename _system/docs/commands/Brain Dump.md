@@ -16,7 +16,7 @@ Apple Notes exposes embedded tables as unnamed attachments even though their con
 
 Implementation script: `_system/commands/brain_dump.py`.
 
-Use [[_system/agents/manual-skills/_vault/vault-triage-brain-dump-section/SKILL|Triage Brain Dump Section]] for reviewed, section-level routing.
+Use [[_system/agents/skills/manual/_vault/vault-triage-brain-dump-section/SKILL|Triage Brain Dump Section]] for reviewed, section-level routing.
 
 Optional batch proposal commands remain available:
 

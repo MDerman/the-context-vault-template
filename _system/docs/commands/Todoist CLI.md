@@ -22,15 +22,13 @@ td auth login
 td auth status
 ```
 
-For script/env use, keep the real token in ignored `_system/local/env/.env` and load it before running `td`:
+Use the CLI's native credential manager for both interactive and scripted work:
 
 ```bash
-TODOIST_API_TOKEN=
-source "$(vault root)/_system/local/env/load-env.sh"
 td auth status
 ```
 
-`TODOIST_API_TOKEN` in `_system/local/env/.env.base` is only a placeholder. Do not put real tokens in tracked files.
+The legacy `TODOIST_API_TOKEN` placeholder remains only until its quarantined Vault source crosses protected equality and deletion review. Do not use or update that source.
 
 ## Simple Tasks
 

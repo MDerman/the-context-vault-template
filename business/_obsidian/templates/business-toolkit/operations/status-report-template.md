@@ -1,13 +1,16 @@
-***
+<%*
+const date = tp.date.now("YYYY-MM-DD");
+-%>
+---
 type: status-report
 status: draft
-date: 2026-08-13
+date: <% date %>
 project:
 people:
 source:
-***
+---
 
-# Status Report - offer-template
+# Status Report - <% tp.file.title %>
 
 ## Wins
 
@@ -33,4 +36,3 @@ source:
 ## Other notes
 
 - 
-

@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import sys
 import tempfile
@@ -75,6 +76,32 @@ class BusinessToolkitTests(unittest.TestCase):
         self.assertNotIn("gtm", {item.group for item in without_gtm})
         with self.assertRaises(SystemExit):
             select_components(components, saved=None, includes=["does-not-exist"], excludes=[])
+
+    def test_managed_templates_render_valid_frontmatter_and_runtime_values(self) -> None:
+        _version, components = load_pack(VAULT_ROOT)
+        for component in components:
+            with self.subTest(component=component.id):
+                source = (VAULT_ROOT / PACK_RELATIVE / component.source).read_text(
+                    encoding="utf-8"
+                )
+                rendered = re.sub(r"<%\*[\s\S]*?-%>\n", "", source, count=1)
+                rendered = rendered.replace("<% date %>", "2030-01-02")
+                rendered = rendered.replace("<% tp.file.title %>", "Quarterly planning")
+                rendered = re.sub(
+                    r"<% defaultTitles\.has\(tp\.file\.title\) \? targetTitle : tp\.file\.title %>",
+                    "Quarterly planning",
+                    rendered,
+                )
+
+                self.assertTrue(rendered.startswith("---\n"))
+                self.assertIn("\n---\n", rendered[4:])
+                self.assertNotIn("<%", rendered)
+                self.assertNotIn("\n***\n", rendered)
+                self.assertNotIn("offer-template", rendered)
+                self.assertNotIn("user-signal-template", rendered)
+                self.assertNotIn("Old quick workout notes", rendered)
+                if component.id != "skills.local":
+                    self.assertIn("date: 2030-01-02", rendered)
 
     def test_manifest_rejects_unsafe_paths(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

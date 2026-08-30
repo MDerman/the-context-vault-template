@@ -21,7 +21,7 @@ Create or find the required calendars:
 
 ```bash
 vault gcal calendars ensure --dry-run
-vault gcal calendars ensure --apply
+vault gcal calendars ensure
 ```
 
 The required calendars are:
@@ -30,7 +30,7 @@ The required calendars are:
 - `Scheduled Tasks`: two-way mirror of TaskNotes `scheduled`.
 - `Due Tasks`: two-way mirror of TaskNotes `due`.
 
-`vault gcal calendars ensure --apply` also sets supported Google Calendar default popup reminders:
+`vault gcal calendars ensure` also sets supported Google Calendar default popup reminders:
 
 - `Time Blocks`: 0 minutes before event start.
 - `Scheduled Tasks`: 0 minutes before event start.
@@ -47,20 +47,20 @@ vault gcal list --days 7 --calendar all --json
 Create a specific event on the default Google Calendar:
 
 ```bash
-vault gcal create-event --title "Flight QR1372: Cape Town to Doha" --start "2026-06-02T19:30:00+02:00" --end "2026-06-03T06:00:00+03:00" --apply
+vault gcal create-event --title "Flight QR1372: Cape Town to Doha" --start "2026-06-02T19:30:00+02:00" --end "2026-06-03T06:00:00+03:00"
 ```
 
 Create a broad work block on `Time Blocks`:
 
 ```bash
-vault gcal create-block --title "AppSumo Launch Block" --start "2026-05-18T09:00" --end "2026-05-18T13:00" --apply
+vault gcal create-block --title "AppSumo Launch Block" --start "2026-05-18T09:00" --end "2026-05-18T13:00"
 ```
 
 Mirror TaskNotes dates:
 
 ```bash
 vault gcal sync-tasks --dry-run
-vault gcal sync-tasks --apply
+vault gcal sync-tasks
 vault gcal sync-tasks --dry-run --prune-orphaned-task-events
 ```
 
@@ -68,7 +68,7 @@ vault gcal sync-tasks --dry-run --prune-orphaned-task-events
 
 Agents should use `vault gcal create-event` for concrete appointments, travel, meetings, reservations, and dated personal or business events. It writes to the default calendar (`primary`) unless `--calendar` or the calendar config says otherwise. Use `vault gcal create-block` only when the user explicitly asks for time blocking or broad planning blocks. Broad work planning should usually use `Time Blocks`; add TaskNotes `scheduled` only when a task genuinely needs a specific work date/time.
 
-When Obsidian is open, Context Nine runs `vault gcal sync-tasks --apply` every 5 minutes. `vault refresh` runs `vault gcal sync-tasks --apply --prune-orphaned-task-events` once before regenerating context.
+When Obsidian is open, Context Nine runs `vault gcal sync-tasks` every 5 minutes. `vault refresh` runs `vault gcal sync-tasks --prune-orphaned-task-events` once before regenerating context.
 
 Implementation script: `_system/commands/gcal.py`. GWS credentials live outside vault. Tracked vault calendar behavior config lives in `_system/local/calendar.json`; shared vault env is not calendar config.
 

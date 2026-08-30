@@ -146,7 +146,7 @@ def machine_schedule_policy(root: Path) -> dict[str, object]:
         }
     registry_path = (
         root
-        / "_system/local/skills/infra-code-folder-and-computer-topology/private/machines.json"
+        / "_system/agents/_package/instance/fleet/machines.json"
     )
     if not machine_id or not registry_path.is_file():
         return {"eligible": True, "machineId": machine_id or None, "role": None}

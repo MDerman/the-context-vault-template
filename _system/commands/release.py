@@ -19,16 +19,15 @@ from typing import Any
 from script_utils import resolve_vault_root
 from vault_layout import (
     BOOTSTRAP_DIR,
-    DEPENDENCY_CONFIG_PATH,
     DEPENDENCY_LOCK_PATH,
     RELEASE_PATH,
+    VAULT_PACKAGE_MANIFEST_PATH,
 )
 
 
 DEFAULT_REPO_URL = "https://github.com/MDerman/the-context-vault-template.git"
 LOCK_PATH = DEPENDENCY_LOCK_PATH
-DEPS_PATH = DEPENDENCY_CONFIG_PATH
-BREWFILE_PATH = BOOTSTRAP_DIR / "Brewfile"
+PACKAGE_MANIFEST_PATH = VAULT_PACKAGE_MANIFEST_PATH
 EXPORT_CONFIG_PATH = BOOTSTRAP_DIR / "bootstrap-export.json"
 BOOTSTRAP_EXPORT = Path("_system/commands/bootstrap_export.py")
 SEMVER_RE = re.compile(r"^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
@@ -102,26 +101,14 @@ def bump_semver(current: SemVer | None, bump: str) -> SemVer:
     raise SystemExit(f"Unknown bump: {bump}")
 
 
-def brewfile_entries(path: Path) -> list[dict[str, str]]:
-    entries: list[dict[str, str]] = []
-    if not path.exists():
-        return entries
-    pattern = re.compile(r'^\s*(brew|cask)\s+"([^"]+)"')
-    for line in path.read_text(encoding="utf-8").splitlines():
-        match = pattern.match(line)
-        if match:
-            entries.append({"type": match.group(1), "name": match.group(2)})
-    return entries
-
-
-def installed_brew_version(entry: dict[str, str]) -> str | None:
+def installed_brew_version(manager: str, name: str) -> str | None:
     brew = shutil.which("brew")
     if not brew:
         return None
     args = [brew, "list"]
-    if entry["type"] == "cask":
+    if manager == "brew-cask":
         args.append("--cask")
-    args.extend(["--versions", entry["name"]])
+    args.extend(["--versions", name])
     result = run(args, check=False)
     if result.returncode != 0 or not result.stdout.strip():
         return None
@@ -132,43 +119,12 @@ def installed_brew_version(entry: dict[str, str]) -> str | None:
 def gh_version() -> dict[str, Any]:
     gh = shutil.which("gh")
     if not gh:
-        return {"available": False, "version": None, "skill_available": False}
+        return {"available": False, "version": None}
     version = run([gh, "--version"], check=False).stdout.splitlines()
     return {
         "available": True,
         "version": version[0] if version else None,
-        "skill_available": run([gh, "skill", "--help"], check=False).returncode == 0,
     }
-
-
-def git_ls_remote(repo_url: str, ref: str) -> str | None:
-    refs = [f"refs/heads/{ref}", f"refs/tags/{ref}", ref]
-    for candidate in refs:
-        result = run(["git", "ls-remote", repo_url, candidate], check=False)
-        if result.returncode == 0 and result.stdout.strip():
-            return result.stdout.split()[0]
-    return None
-
-
-def dependency_repo_locks(root: Path) -> list[dict[str, Any]]:
-    data = read_json(root / DEPS_PATH, {"repos": []})
-    locks: list[dict[str, Any]] = []
-    for item in data.get("repos", []):
-        repo_url = str(item["url"])
-        ref = str(item.get("ref") or "main")
-        resolved = git_ls_remote(repo_url, ref)
-        if not resolved:
-            raise SystemExit(f"Could not resolve dependency ref {ref} for {repo_url}")
-        locks.append(
-            {
-                "id": item["id"],
-                "url": repo_url,
-                "path": item.get("path"),
-                "ref": ref,
-                "resolved_commit": resolved,
-            }
-        )
-    return sorted(locks, key=lambda item: str(item["id"]))
 
 
 def obsidian_plugin_locks(root: Path) -> list[dict[str, Any]]:
@@ -196,12 +152,20 @@ def obsidian_plugin_locks(root: Path) -> list[dict[str, Any]]:
 
 
 def dependency_lock(root: Path, version: SemVer, generated_at: str) -> dict[str, Any]:
-    brew_entries = []
-    for entry in brewfile_entries(root / BREWFILE_PATH):
-        brew_entries.append(
+    manifest = read_json(root / PACKAGE_MANIFEST_PATH, {"packages": []})
+    vault_packages = []
+    for package in manifest.get("packages", []):
+        recipe = package.get("platforms", {}).get("macos", {})
+        manager = str(recipe.get("manager") or "")
+        name = str(recipe.get("package") or "")
+        vault_packages.append(
             {
-                **entry,
-                "installed_version": installed_brew_version(entry),
+                "id": package.get("id"),
+                "manager": manager,
+                "package": name,
+                "installed_version": installed_brew_version(manager, name)
+                if manager in {"brew", "brew-cask"} and name
+                else None,
             }
         )
     return {
@@ -209,8 +173,7 @@ def dependency_lock(root: Path, version: SemVer, generated_at: str) -> dict[str,
         "release_version": version.version,
         "release_tag": version.tag,
         "generated_at": generated_at,
-        "homebrew": brew_entries,
-        "external_repos": dependency_repo_locks(root),
+        "vault_packages": vault_packages,
         "obsidian_plugins": obsidian_plugin_locks(root),
         "github_cli": gh_version(),
     }

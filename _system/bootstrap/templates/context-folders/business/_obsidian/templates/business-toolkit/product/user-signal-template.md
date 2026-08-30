@@ -1,15 +1,18 @@
-***
+<%*
+const date = tp.date.now("YYYY-MM-DD");
+-%>
+---
 type: user-signal
 status: raw
-date: 2026-08-13
+date: <% date %>
 project:
 people:
 source:
 sentiment:
 feature:
-***
+---
 
-# User Signal - user-signal-template
+# User Signal - <% tp.file.title %>
 
 ## Exact signal
 

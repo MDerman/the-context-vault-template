@@ -683,7 +683,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reconcile-learning-export", required=True, type=Path, metavar="PATH")
     parser.add_argument("--repair-deterministic-global", action="store_true")
-    parser.add_argument("--apply", action="store_true")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--dry-run", action="store_true", help="Preview without changing files.")
+    mode.add_argument("--apply", action="store_true", help="Compatibility flag; the `vault` command applies by default.")
     parser.add_argument("--root", type=Path, default=None, help=argparse.SUPPRESS)
     return parser
 

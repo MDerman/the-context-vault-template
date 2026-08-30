@@ -4,12 +4,12 @@ Source research: [[_system/tools/ai-video-creation/video-creation-process-initia
 
 Active skills:
 
-- [[_system/agents/skills/video-ai-production/SKILL|video-ai-production]]
-- [[_system/agents/skills/video-elevenlabs-voiceover/SKILL|video-elevenlabs-voiceover]]
-- [[_system/agents/skills/video-heygen-avatar-render/SKILL|video-heygen-avatar-render]]
-- [[_system/agents/skills/video-hyperframes-motion-graphics/SKILL|video-hyperframes-motion-graphics]]
-- [[_system/agents/skills/video-ffmpeg-video-assembly/SKILL|video-ffmpeg-video-assembly]]
-- [[_system/agents/skills/video-qa-review/SKILL|video-qa-review]]
+- [[_system/agents/skills/manual/_video/video-ai-production/SKILL|video-ai-production]]
+- [[_system/agents/skills/manual/_video/video-elevenlabs-voiceover/SKILL|video-elevenlabs-voiceover]]
+- [[_system/agents/skills/manual/_video/video-heygen-avatar-render/SKILL|video-heygen-avatar-render]]
+- [[_system/agents/skills/manual/_video/video-hyperframes-motion-graphics/SKILL|video-hyperframes-motion-graphics]]
+- [[_system/agents/skills/manual/_video/video-ffmpeg-video-assembly/SKILL|video-ffmpeg-video-assembly]]
+- [[_system/agents/skills/manual/_video/video-qa-review/SKILL|video-qa-review]]
 
 ## Quick How To
 

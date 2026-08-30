@@ -6,6 +6,60 @@ DEFAULT_TARGET_RELATIVE="Library/Mobile Documents/iCloud~md~obsidian/Documents/O
 RELEASE_METADATA_RELATIVE="_system/bootstrap/release.json"
 INSTALL_STATE_RELATIVE="_system/local/state/install.json"
 
+TARGET_ARGUMENT=""
+AGENT_PACKAGE_SOURCE="${CTX9_AGENT_PACKAGE_SOURCE:-}"
+AGENT_GLOBAL_INSTRUCTIONS=0
+AGENT_CLAUDE_ALIAS=0
+AGENT_DISCOVERY_ALIASES=0
+NON_INTERACTIVE=0
+INSTALL_LAUNCH_DIR="$(pwd -P)"
+
+while [[ "$#" -gt 0 ]]; do
+  case "$1" in
+    --agent-package-source)
+      AGENT_PACKAGE_SOURCE="${2:?--agent-package-source requires a URL or path}"
+      shift 2
+      ;;
+    --agent-global-instructions)
+      AGENT_GLOBAL_INSTRUCTIONS=1
+      shift
+      ;;
+    --agent-claude-alias)
+      AGENT_CLAUDE_ALIAS=1
+      shift
+      ;;
+    --agent-discovery-aliases)
+      AGENT_DISCOVERY_ALIASES=1
+      shift
+      ;;
+    --non-interactive)
+      NON_INTERACTIVE=1
+      shift
+      ;;
+    --*)
+      echo "Unknown option: $1" >&2
+      exit 2
+      ;;
+    *)
+      if [[ -n "${TARGET_ARGUMENT}" ]]; then
+        echo "Only one Vault target path may be supplied." >&2
+        exit 2
+      fi
+      TARGET_ARGUMENT="$1"
+      shift
+      ;;
+  esac
+done
+
+if [[ -z "${AGENT_PACKAGE_SOURCE}" ]] && (( AGENT_GLOBAL_INSTRUCTIONS || AGENT_CLAUDE_ALIAS || AGENT_DISCOVERY_ALIASES )); then
+  echo "Agent instruction and alias flags require --agent-package-source." >&2
+  exit 2
+fi
+if (( AGENT_CLAUDE_ALIAS && ! AGENT_GLOBAL_INSTRUCTIONS )); then
+  echo "--agent-claude-alias requires --agent-global-instructions." >&2
+  exit 2
+fi
+
 INSTALL_USER="$(id -un)"
 if [[ "${EUID}" -eq 0 && -n "${SUDO_USER:-}" && "${SUDO_USER}" != "root" ]]; then
   INSTALL_USER="${SUDO_USER}"
@@ -50,7 +104,7 @@ resolve_target_path() {
   fi
 
   if [[ "${target}" != /* ]]; then
-    target="$(pwd -P)/${target}"
+    target="${INSTALL_LAUNCH_DIR}/${target}"
   fi
 
   printf '%s' "${target}"
@@ -62,7 +116,7 @@ if [[ -z "${INSTALL_HOME}" || ! -d "${INSTALL_HOME}" ]]; then
   exit 1
 fi
 
-TARGET="$(resolve_target_path "${1:-${INSTALL_HOME}/${DEFAULT_TARGET_RELATIVE}}")"
+TARGET="$(resolve_target_path "${TARGET_ARGUMENT:-${INSTALL_HOME}/${DEFAULT_TARGET_RELATIVE}}")"
 STATE_BASE="${INSTALL_HOME}/Library/Application Support/context-nine-vault-bootstrap"
 
 if ! command -v brew >/dev/null 2>&1; then
@@ -139,7 +193,78 @@ run_as_install_user rm -f "${TARGET}/.git"
 cd "${TARGET}"
 run_as_install_user /bin/bash _system/bootstrap/init_vault.sh --enable-git
 
+prompt_agent_package() {
+  if [[ "${NON_INTERACTIVE}" -eq 1 || -n "${AGENT_PACKAGE_SOURCE}" || ! -r /dev/tty ]]; then
+    return
+  fi
+  local answer=""
+  printf 'Install the optional standalone agent package now? [y/N] ' >/dev/tty
+  IFS= read -r answer </dev/tty || answer=""
+  case "${answer}" in
+    y|Y|yes|YES)
+      printf 'Agent package repository URL or local export path: ' >/dev/tty
+      IFS= read -r AGENT_PACKAGE_SOURCE </dev/tty || AGENT_PACKAGE_SOURCE=""
+      if [[ -n "${AGENT_PACKAGE_SOURCE}" ]]; then
+        printf 'Generate managed global Codex instructions? [y/N] ' >/dev/tty
+        IFS= read -r answer </dev/tty || answer=""
+        [[ "${answer}" =~ ^([yY]|yes|YES)$ ]] && AGENT_GLOBAL_INSTRUCTIONS=1
+        if [[ "${AGENT_GLOBAL_INSTRUCTIONS}" -eq 1 ]]; then
+          printf 'Create the managed Claude instruction alias? [y/N] ' >/dev/tty
+          IFS= read -r answer </dev/tty || answer=""
+          [[ "${answer}" =~ ^([yY]|yes|YES)$ ]] && AGENT_CLAUDE_ALIAS=1
+        fi
+        printf 'Create managed skill discovery aliases? [y/N] ' >/dev/tty
+        IFS= read -r answer </dev/tty || answer=""
+        [[ "${answer}" =~ ^([yY]|yes|YES)$ ]] && AGENT_DISCOVERY_ALIASES=1
+      fi
+      ;;
+  esac
+}
+
+install_optional_agent_package() {
+  prompt_agent_package
+  if [[ -z "${AGENT_PACKAGE_SOURCE}" ]]; then
+    return
+  fi
+  local package_dir="${AGENT_PACKAGE_SOURCE}"
+  if [[ "${AGENT_PACKAGE_SOURCE}" == http://* || "${AGENT_PACKAGE_SOURCE}" == https://* || "${AGENT_PACKAGE_SOURCE}" == git@* ]]; then
+    package_dir="${STATE_DIR}/agent-package-source"
+    if ! run_as_install_user "${GIT_BIN}" clone "${AGENT_PACKAGE_SOURCE}" "${package_dir}"; then
+      echo "Warning: optional agent package could not be cloned; the Vault install remains complete." >&2
+      return
+    fi
+  else
+    package_dir="$(resolve_target_path "${AGENT_PACKAGE_SOURCE}")"
+  fi
+  if [[ ! -f "${package_dir}/src/agents.py" ]]; then
+    echo "Warning: optional source is not an exported ctx9-agents package; the Vault install remains complete: ${package_dir}" >&2
+    return
+  fi
+  local agent_args=(
+    "${package_dir}/src/agents.py"
+    install
+    --source "${package_dir}"
+    --home "${INSTALL_HOME}"
+    --apply
+  )
+  if [[ "${AGENT_GLOBAL_INSTRUCTIONS}" -eq 1 ]]; then agent_args+=(--global-instructions); fi
+  if [[ "${AGENT_CLAUDE_ALIAS}" -eq 1 ]]; then agent_args+=(--claude-alias); fi
+  if [[ "${AGENT_DISCOVERY_ALIASES}" -eq 1 ]]; then agent_args+=(--discovery-aliases); fi
+  if ! run_as_install_user "${PYTHON_BIN}" "${agent_args[@]}"; then
+    echo "Warning: optional agent-package install failed; the Vault install remains complete." >&2
+    return
+  fi
+  run_as_install_user mkdir -p "${TARGET}/_system/local/state"
+  printf '{"schema_version":1,"installed":true,"global_instructions":%s,"claude_alias":%s,"discovery_aliases":%s}\n' \
+    "$([[ "${AGENT_GLOBAL_INSTRUCTIONS}" -eq 1 ]] && printf true || printf false)" \
+    "$([[ "${AGENT_CLAUDE_ALIAS}" -eq 1 ]] && printf true || printf false)" \
+    "$([[ "${AGENT_DISCOVERY_ALIASES}" -eq 1 ]] && printf true || printf false)" \
+    | run_as_install_user tee "${TARGET}/_system/local/state/agent-package-install.json" >/dev/null
+}
+
 PYTHON_BIN="$(command -v python3)"
+install_optional_agent_package
+
 if [[ "$(uname -s)" == "Darwin" ]]; then
   if run_as_install_user "${PYTHON_BIN}" "${TARGET}/_system/commands/refresh_schedule.py" --root "${TARGET}" register; then
     echo "Registered daily vault refresh schedule."

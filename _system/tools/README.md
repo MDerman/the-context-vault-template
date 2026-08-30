@@ -7,8 +7,8 @@ Reusable tools outside the `vault` dispatcher.
 - Put general utilities under `_system/tools/<tool-name>/`.
 - Put reusable commands under `_system/commands/` only when they belong behind `vault`.
 - Give each non-trivial tool folder a local `README.md`.
-- Add needed Homebrew formulas to `_system/bootstrap/Brewfile`.
-- Update `_system/bootstrap/install_dependencies.sh` only when install behavior changes.
+- Add public Vault runtime packages to `_system/deps/packages.yaml`.
+- Update `_system/deps/install.py` only when structured install behavior changes; bootstrap only invokes it.
 
 ## Run Tools
 

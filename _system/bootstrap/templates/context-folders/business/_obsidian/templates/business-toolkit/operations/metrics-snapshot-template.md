@@ -1,13 +1,16 @@
-***
+<%*
+const date = tp.date.now("YYYY-MM-DD");
+-%>
+---
 type: metrics-snapshot
 status: recorded
-date: 2026-08-13
+date: <% date %>
 project:
 people:
 source:
-***
+---
 
-# Metrics Snapshot - 2026-08-13
+# Metrics Snapshot - <% date %>
 
 ## Revenue
 

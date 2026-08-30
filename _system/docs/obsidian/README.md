@@ -9,7 +9,7 @@ This note holds Obsidian profile, plugin, and UI configuration details that shou
 Companion references:
 
 - [[obsidian-plugins-reference]]: installed/core plugins and configured workflows.
-- [[obsidian-keyboard-shortcuts]]: current hotkeys.
+- [[obsidian-keybindings]]: current hotkeys.
 - [[obsidian-core-features]]: non-plugin fundamentals.
 - [[obsidian-settings-and-examples]]: recommended settings and Markdown examples.
 
@@ -55,7 +55,7 @@ Use the standardization script to dry-run, apply, or verify routing:
 
 ```bash
 vault attachments
-vault attachments --apply
+vault attachments
 vault attachments --verify-only
 ```
 

@@ -8,6 +8,8 @@ Concise source of truth for vault architecture, ownership, and routing. Detailed
 - [[Dashboard|Dashboard]]: Obsidian home and current rollups.
 - [[_system/docs/commands/README|Scripts]]: `vault` command index.
 - [[_system/docs/obsidian/README|Obsidian Profile]]: plugins, templates, Bases, mobile profile, and UI.
+- [[_system/docs/keybindings/README|Keybindings]]: canonical shortcuts grouped by macOS, apps, Obsidian, media, and terminal tools.
+- [[_system/docs/terminal/README|Terminal]]: terminal setup, daily commands, architecture, and recovery.
 - [[_system/bootstrap/README|Bootstrap]]: public export, installs, releases, and upgrades.
 - [[_system/agents/README|Agents]]: shared skills and skill storage.
 - [[_system/tools/README|General Tools]]: tools outside `vault`.
@@ -121,8 +123,9 @@ SOP: [[_system/docs/commands/Attachments|Attachments]].
 ## System Folder
 
 - `_obsidian/`: shared Bases, templates, attachments, Excalidraw, and vault rollups.
-- `agents/`: auto/manual/GitHub-managed skill sources and generated catalog.
+- `agents/`: self-contained private agent package: dependencies, fleet desired state, workspaces, skills, configuration, portable workers, and verified aggregate state.
 - `bootstrap/`: public install, export, release, and upgrade framework.
+- `deps/`: approved public Vault/bootstrap packages and their cross-platform installer; bootstrap only invokes it.
 - `commands/`: `vault` dispatcher, commands, internals, and tests.
 - `local/`: user-specific general configuration, per-skill configuration, env tooling, and runtime state. Read [[_system/local/README|Local Vault Data]].
 - `docs/`: command, Obsidian, and workflow documentation.
@@ -133,7 +136,7 @@ SOP: [[_system/docs/commands/Attachments|Attachments]].
 
 Generated files carry managed markers. Edit source notes/docs, not generated outputs.
 
-Machine-wide operational state for repository reconciliation under `~/Code` lives outside the vault at `~/Code/.workspace-sync/`; vault-owned configuration and vault-specific state remain under `_system/local`. Follow [[_system/agents/auto-skills/_infrastructure/infra-code-folder-and-computer-topology/README-machine-runtime-state|Machine Runtime State]].
+Machine-wide operational state for repository reconciliation under `~/Code` lives outside the vault at `~/Code/.workspace-sync/`. `_system/local` records Vault-local actual state and user-specific values; desired fleet, workspace, skill-source, and agent dependency registries live in `_system/agents`. Follow [[_system/agents/skills/auto/_infrastructure/infra-code-folder-and-computer-topology/README-machine-runtime-state|Machine Runtime State]].
 
 ## Refresh And Generated Views
 

@@ -8,10 +8,10 @@ This private vault uses normal Git for notes, code, and configuration. Binary fi
 
 ## Layout
 
-- Working files: the full iCloud Vault root shared by the primary and iCloud-participating worker Macs.
+- Working files: the full iCloud Vault root shared by participating Macs and exposed without filtering to registered `remote-sshfs` clients through their exact Mac host.
 - Git owner: only the registered primary Mac has `~/.local/share/vault-git/Vault.git`, referenced by the shared `.git` file. Never sync that directory through iCloud.
-- Worker rule: the shared `.git` pointer is deliberately dangling on every iCloud worker Mac. Workers never run Vault Git or keep Vault LFS objects.
-- Host rule: never create or retain a separate Vault repository on a Mac worker, Linux machine, or other non-iCloud host.
+- Worker rule: the shared `.git` pointer is deliberately dangling on every iCloud worker and remote client. They never run Vault Git or keep Vault LFS objects.
+- Host rule: never create or retain a separate Vault repository, sparse checkout, Git proxy, or `~/Code/vault` on a Mac worker, Linux machine, or other non-owner host. A registered remote client may use only its full exact-path SSHFS mount.
 - Local media objects: `~/.local/share/vault-git/Vault.git/lfs/objects`.
 - Remote: private `https://github.com/MDerman/vault.git`.
 - Primary branch: `master`.
@@ -40,15 +40,15 @@ git commit -m "Description"
 git push
 ```
 
-Every completed Vault task on the primary includes all tracked and untracked non-ignored changes, even when generated, incidental, incomplete, or created by another task. Before commit, regenerate and stage the manifest and verify the index. A Gitless Mac worker never uses this commit procedure; it waits for iCloud upload and hands the complete worktree to the primary. `vault git-media status` verifies committed state, local media availability, and custom hook installation where Vault Git exists.
+Every completed Vault task on the primary includes all tracked and untracked non-ignored changes, even when generated, incidental, incomplete, or created by another task. Before commit, regenerate and stage the manifest and verify the index. A Gitless Mac worker and remote client never use this commit procedure; they finish after host filesystem durability and lease release without waiting for iCloud. The primary commits the complete worktree currently visible to it without waiting for or verifying a receipt. `vault git-media status` verifies committed state, local media availability, and custom hook installation where Vault Git exists.
 
 Versioned `.githooks/pre-push` validates pointer and manifest state when `vault.media-mode=pointer-only`. It intentionally never runs `git lfs pre-push`, so normal `git push` cannot upload media bodies. Install versioned hooks with:
 
 ```bash
-vault worker-sync install-hooks --apply
+vault worker-sync install-hooks
 ```
 
-The primary requires local LFS bodies before push. An iCloud worker Mac receives media working files through iCloud and has no Vault LFS cache. Do not copy the primary cache, run `git lfs pull` against the worker Vault, or place any Git state in iCloud. Worker Mac media changes are reviewed, manifested, committed, and pushed only after they reach the primary. Public installs retain ordinary Git LFS behavior unless pointer-only mode is configured.
+The primary requires local LFS bodies before push. An iCloud worker receives media through iCloud; a remote client reads the same bodies through SSHFS. Neither has a Vault LFS cache. Do not copy the primary cache, run `git lfs pull` against a worker worktree, or place Git state in iCloud. Worker media changes are reviewed, manifested, committed, and pushed when they are present in the primary's worktree; no upload receipt is required. Public installs retain ordinary Git LFS behavior unless pointer-only mode is configured.
 
 Do not run `git lfs push`. Do not replace hook with `git lfs install --force`.
 
@@ -78,7 +78,7 @@ Manifest is deterministic JSON sorted by path. Each entry records path, actual m
 
 `vault git-maintenance` compacts normal Git history. Local archive refs keep referenced commit history alive. Git bundle does not contain LFS media bodies.
 
-Do not run `git lfs prune` unless every required media body has another verified local backup. Keep the primary LFS object directory. Gitless Mac workers have no Vault Git cache; GitHub cannot restore the media bodies they receive through iCloud.
+Do not run `git lfs prune` unless every required media body has another verified local backup. Keep the primary LFS object directory. Gitless Macs and remote clients have no Vault Git cache; GitHub cannot restore the media bodies transported through iCloud.
 
 Public bootstrap remains separate: fresh public installs use ordinary Git LFS upload behavior unless pointer-only mode is explicitly configured. This private source-vault remote uses pointer metadata only.
 

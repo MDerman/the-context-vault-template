@@ -142,7 +142,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("command", nargs="?", choices=["upgrade"], help="Use `upgrade` to preview or apply profile updates.")
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--dry-run", action="store_true", help="Preview profile updates and write a report.")
-    mode.add_argument("--apply", action="store_true", help="Apply profile updates and install active plugins.")
+    mode.add_argument("--apply", action="store_true", help="Compatibility flag; `vault profile upgrade` already applies by default.")
     parser.add_argument("--include-workspace", action="store_true", help="Also replace Obsidian workspace/open-tabs layout files.")
     parser.add_argument("--root", default=None, help="Vault root. Defaults to auto-discovery.")
     return parser.parse_args(argv)
@@ -152,7 +152,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     root = resolve_vault_root(args.root, __file__)
     if args.command != "upgrade":
-        print("Use `vault profile upgrade --dry-run` or `vault profile upgrade --apply`.")
+        print("Use `vault profile upgrade --dry-run` or `vault profile upgrade`.")
         return 2
     if not args.apply and not args.dry_run:
         print("Use `--dry-run` or `--apply`.")

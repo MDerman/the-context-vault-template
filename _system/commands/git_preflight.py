@@ -27,11 +27,11 @@ def output(root: Path, *args: str) -> str:
 
 
 def run_skill_sync(root: Path) -> None:
-    script = root / "_system/agents/sync_skills.py"
+    script = root / "_system/agents/_package/src/sync_skills.py"
     if not script.is_file():
         raise PreflightError(f"skill sync script missing: {script}")
     subprocess.run(
-        [sys.executable, str(script), "sync", "--root", str(root), "--apply"],
+        [sys.executable, str(script), "sync", "--root", str(root), "--apply", "--catalog-only"],
         cwd=root,
         check=True,
     )

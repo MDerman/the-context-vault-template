@@ -1082,7 +1082,9 @@ def main(argv: list[str] | None = None) -> int:
 
         return reconcile_main(argv)
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--apply", action="store_true", help="Perform the migration. Default is dry-run.")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--dry-run", action="store_true", help="Preview without changing files.")
+    mode.add_argument("--apply", action="store_true", help="Compatibility flag; `vault attachments` already applies by default.")
     parser.add_argument("--verify-only", action="store_true", help="Run verification only.")
     args = parser.parse_args(argv)
 

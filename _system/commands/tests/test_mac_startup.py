@@ -407,7 +407,7 @@ class MacStartupTests(unittest.TestCase):
         self.assertFalse(defaults["enabled"])
         self.assertTrue(all(enabled is False for enabled in defaults["actions"].values()))
         self.assertEqual(defaults["applications"], [])
-        self.assertIn("_system/local/skills/**/private/**", export_config["generated_exclude_globs"])
+        self.assertIn("_system/agents/**", export_config["generated_exclude_globs"])
         self.assertNotIn("mac-startup install", installer_text)
 
 

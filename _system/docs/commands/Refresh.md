@@ -31,7 +31,7 @@ vault refresh-schedule status
 vault refresh-schedule unregister
 ```
 
-Scheduled and manual refresh are primary-only on Macs. `vault refresh-schedule register` refuses a registered worker, a stale worker LaunchAgent exits without running refresh, and worker-Mac bootstrap writes a persistent machine-local worker block before unregistering any existing schedule. A Gitless iCloud worker must not run `vault refresh`; complete file work there, wait for iCloud upload, and let the primary run refresh and Git coordination after [[Vault Git Sync|Mac-to-Mac handoff]].
+Scheduled and manual refresh are restricted to the schema-v7 `vault_git.refresh_owner_machine_id`, which currently equals the Git owner. `vault refresh-schedule register` refuses every worker, a stale worker LaunchAgent exits without refresh, and Mac-worker bootstrap writes a persistent block before unregistering an existing schedule. Gitless iCloud workers and remote SSHFS clients must not run refresh; they finish their upload handoff and let the owner refresh and coordinate Git after [[Vault Git Sync|Worktree handoff]].
 
 The schedule is configured in `_system/local/vault.json` under `refresh_schedule`. Use `timezone: local` to resolve each laptop's current system timezone at runtime. The LaunchAgent runs at load, at the configured time, and every `catchup_interval_seconds` seconds as an idempotent due check. A successful refresh writes the local date to `~/Library/Application Support/obsidian-context-vault/last-refresh-date.txt`; until that stamp matches today, failed refreshes retry according to `retry_attempts` and `retry_delay_seconds`.
 

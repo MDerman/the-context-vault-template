@@ -1,15 +1,18 @@
-***
+<%*
+const date = tp.date.now("YYYY-MM-DD");
+-%>
+---
 type: campaign
 status: draft
-date: 2026-08-13
+date: <% date %>
 project:
 people:
 source:
 channel:
 offer:
-***
+---
 
-# Campaign - offer-template
+# Campaign - <% tp.file.title %>
 
 ## Goal
 

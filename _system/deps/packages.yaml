@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "name": "vault-dependencies",
+  "packages": [
+    {
+      "id": "git",
+      "platforms": {
+        "macos": {"manager": "brew", "package": "git"},
+        "linux": {"manager": "apt", "package": "git"}
+      },
+      "verify": {"command": "git", "args": ["--version"]}
+    },
+    {
+      "id": "git-lfs",
+      "platforms": {
+        "macos": {"manager": "brew", "package": "git-lfs"},
+        "linux": {"manager": "apt", "package": "git-lfs"}
+      },
+      "verify": {"command": "git-lfs", "args": ["version"]}
+    },
+    {
+      "id": "github-cli",
+      "platforms": {
+        "macos": {"manager": "brew", "package": "gh"},
+        "linux": {"manager": "apt", "package": "gh"}
+      },
+      "verify": {"command": "gh", "args": ["--version"]}
+    },
+    {
+      "id": "jq",
+      "platforms": {
+        "macos": {"manager": "brew", "package": "jq"},
+        "linux": {"manager": "apt", "package": "jq"}
+      },
+      "verify": {"command": "jq", "args": ["--version"]}
+    },
+    {
+      "id": "python",
+      "platforms": {
+        "macos": {"manager": "brew", "package": "python@3.12"},
+        "linux": {"manager": "apt", "package": "python3"}
+      },
+      "verify": {"command": "python3", "args": ["--version"]}
+    },
+    {
+      "id": "ripgrep",
+      "platforms": {
+        "macos": {"manager": "brew", "package": "ripgrep"},
+        "linux": {"manager": "apt", "package": "ripgrep"}
+      },
+      "verify": {"command": "rg", "args": ["--version"]}
+    },
+    {
+      "id": "fzf",
+      "platforms": {
+        "macos": {"manager": "brew", "package": "fzf"},
+        "linux": {"manager": "apt", "package": "fzf"}
+      },
+      "verify": {"command": "fzf", "args": ["--version"]}
+    },
+    {
+      "id": "rclone",
+      "platforms": {
+        "macos": {"manager": "brew", "package": "rclone"},
+        "linux": {"manager": "apt", "package": "rclone"}
+      },
+      "verify": {"command": "rclone", "args": ["version"]}
+    },
+    {
+      "id": "terminal-notifier",
+      "platforms": {
+        "macos": {"manager": "brew", "package": "terminal-notifier"}
+      },
+      "verify": {"command": "terminal-notifier", "args": ["-help"]}
+    },
+    {
+      "id": "macfuse",
+      "platforms": {
+        "macos": {"manager": "brew-cask", "package": "macfuse"}
+      },
+      "verify": {"command": "brew", "args": ["list", "--cask", "macfuse"]}
+    }
+  ]
+}

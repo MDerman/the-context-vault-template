@@ -30,8 +30,8 @@ Usage: init_vault.sh [options]
 Initialize a fresh/exported vault after placing it in iCloud.
 
 The script installs/checks dependencies, asks which context folders should
-exist, runs the vault bootstrap, ensures agent symlinks, installs the `vault`
-command, then optionally moves the real Git directory outside iCloud.
+exist, runs the Vault bootstrap, installs the `vault` command, then optionally
+moves the real Git directory outside iCloud.
 
 Options:
   --non-interactive        Use init-vault-config.json if present, otherwise defaults.
@@ -534,8 +534,7 @@ main() {
     --content-schedule-context-folders "${CONTENT_SCHEDULE_CONTEXT_FOLDERS}" \
     --folder-templates "${FOLDER_TEMPLATES}" \
     --default-context-folder "${DEFAULT_CONTEXT_FOLDER}" \
-    --skip-install-vault-command \
-    --skip-agent-symlinks
+    --skip-install-vault-command
 
   local template_pair template_context template_name
   IFS=',' read -r -a template_pairs <<<"${FOLDER_TEMPLATES}"
@@ -550,18 +549,6 @@ main() {
       run_dry_capable "${PYTHON_BIN}" "${VAULT_ROOT}/_system/commands/business_toolkit.py" sync --root "${VAULT_ROOT}" --context-folders "${template_context}" --apply
     fi
   done
-
-  if [[ "${DRY_RUN}" -eq 1 ]]; then
-    run_dry_capable "${PYTHON_BIN}" "${VAULT_ROOT}/_system/commands/deps.py" sync --root "${VAULT_ROOT}" --dry-run
-  else
-    run_dry_capable "${PYTHON_BIN}" "${VAULT_ROOT}/_system/commands/deps.py" sync --root "${VAULT_ROOT}" --apply
-  fi
-
-  if [[ "${DRY_RUN}" -eq 1 ]]; then
-    run_dry_capable "${PYTHON_BIN}" "${VAULT_ROOT}/_system/agents/sync_skills.py" sync --root "${VAULT_ROOT}" --dry-run
-  else
-    run_dry_capable "${PYTHON_BIN}" "${VAULT_ROOT}/_system/agents/sync_skills.py" sync --root "${VAULT_ROOT}" --apply
-  fi
 
   run_with_optional_dry_run "${PYTHON_BIN}" "${SCRIPT_DIR}/install_vault_command.py" --root "${VAULT_ROOT}"
 

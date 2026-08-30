@@ -71,7 +71,8 @@
               "title": "Bookmarks"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       },
       {
         "id": "4365fdef29381df3",
@@ -113,7 +114,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 453.078125
+    "width": 465.546875
   },
   "right": {
     "id": "c5da0292b2670f3d",
@@ -200,7 +201,7 @@
             }
           },
           {
-            "id": "dd6a6c113fd78142",
+            "id": "4baef85f58cdb62d",
             "type": "leaf",
             "state": {
               "type": "system3-sync-status",
@@ -250,7 +251,7 @@
       "periodic-notes:Open today": false
     }
   },
-  "active": "cfeb932b48a1dcb5",
+  "active": "9b7389bfaf69c80d",
   "lastOpenFiles": [
     "README.md"
   ]

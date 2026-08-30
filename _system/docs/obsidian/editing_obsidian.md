@@ -288,7 +288,7 @@ Root hotkeys live here:
 Shortcut documentation lives here:
 
 ```text
-_system/docs/obsidian/obsidian-keyboard-shortcuts.md
+_system/docs/keybindings/obsidian-keybindings.md
 ```
 
 Context Nine adds commands for:
@@ -319,7 +319,7 @@ Use:
 
 ```bash
 vault attachments
-vault attachments --apply
+vault attachments
 vault attachments --verify-only
 ```
 

@@ -58,8 +58,6 @@ PERIODS = {
     "quarterly": "quarterly",
     "yearly": "yearly",
 }
-VALID_CODING_AGENTS = {"codex", "claude"}
-
 GENERATED_MARKER = "vault.bootstrap"
 VAULT_PERIODIC_MARKER = "vault.periodic"
 TASK_CONTEXT_VIEWS_MARKER = "vault.bootstrap.task-context-views"
@@ -87,11 +85,9 @@ class Bootstrap:
         entities: list[str],
         active_entities: list[str],
         default_entity: str,
-        coding_agents: list[str],
         context_features: dict[str, set[str]],
         content_schedule_entities: list[str],
         install_vault_command_enabled: bool,
-        agent_symlinks_enabled: bool,
         dry_run: bool,
         run_date: dt.date,
         folder_templates: dict[str, str] | None = None,
@@ -100,7 +96,6 @@ class Bootstrap:
         self.entities = entities
         self.active_entities = active_entities
         self.default_entity = default_entity
-        self.coding_agents = coding_agents
         self.context_features = {
             entity: set(context_features.get(entity, set())) for entity in entities
         }
@@ -109,7 +104,6 @@ class Bootstrap:
             entity for entity in entities if self.context_features.get(entity)
         ]
         self.install_vault_command_enabled = install_vault_command_enabled
-        self.agent_symlinks_enabled = agent_symlinks_enabled
         self.dry_run = dry_run
         self.run_date = run_date
         self.folder_templates = dict(folder_templates or {})
@@ -345,7 +339,7 @@ class Bootstrap:
             "_system/bootstrap",
             "_system/commands",
             "_system/local",
-            "_system/local/skills",
+            "_system/agents/_package/instance/skills/config",
             "_system/docs/commands",
             "_system/docs/obsidian",
             "_system/docs/workflows",
@@ -412,17 +406,6 @@ class Bootstrap:
         for entity in self.entities:
             status = "active" if entity in active else "archived"
             self.write_context_folder_note(entity, status, entity in schedules, entity == self.default_entity)
-
-    def setup_agent_infrastructure(self) -> None:
-        if self.coding_agents:
-            self.ensure_dir(self.root / "_system/agents/skills")
-            self.ensure_dir(self.root / "_system/agents/auto-skills")
-            self.ensure_dir(self.root / "_system/agents/manual-skills")
-            self.ensure_dir(self.root / "_system/agents/gh-skills")
-            self.ensure_dir(self.root / "_system/agents/skills-dump")
-            self.ensure_dir(self.root / ".agents")
-            self.ensure_dir(self.root / ".agents/skills")
-            self.ensure_dir(self.root / ".claude")
 
     def cleanup_obsolete_context_folder_workspace_artifacts(self) -> None:
         for entity in self.entities:
@@ -604,22 +587,6 @@ class Bootstrap:
         if result != 0:
             raise RuntimeError("Failed to install vault command")
 
-    def ensure_agent_file_symlinks(self) -> None:
-        import sys
-
-        if not self.agent_symlinks_enabled or not self.coding_agents:
-            self.log("skip agent file symlink setup")
-            return
-        agents_dir = self.root / "_system/agents"
-        if str(agents_dir) not in sys.path:
-            sys.path.insert(0, str(agents_dir))
-        import global_agent_configuration
-
-        report = global_agent_configuration.ensure_agent_paths(self.root, dry_run=self.dry_run)
-        for item in report["results"]:
-            if item["status"] != "match":
-                self.log(f"{item['detail']}: {item['path']}")
-
     def run_generators(self) -> None:
         import importlib.util
         import sys
@@ -647,14 +614,12 @@ class Bootstrap:
     def run(self) -> None:
         self.setup_directories()
         self.setup_context_folder_notes()
-        self.setup_agent_infrastructure()
         self.cleanup_obsolete_context_folder_workspace_artifacts()
         self.setup_context_template_dirs()
         self.setup_excalidraw()
         self.setup_templates()
         self.setup_bases()
         self.setup_starter_notes()
-        self.ensure_agent_file_symlinks()
         self.install_vault_command()
         self.run_generators()
 
@@ -1812,16 +1777,6 @@ def parse_folder_templates(value: str | None, entities: list[str]) -> dict[str, 
     return templates
 
 
-def parse_coding_agents(value: str | None) -> list[str]:
-    if not value:
-        return ["codex"]
-    agents = [item.strip().lower() for item in value.split(",") if item.strip()]
-    unsupported = [agent for agent in agents if agent not in VALID_CODING_AGENTS]
-    if unsupported:
-        raise SystemExit(f"unsupported coding agents: {unsupported}; supported agents: {sorted(VALID_CODING_AGENTS)}")
-    return sorted(set(agents))
-
-
 def prompt(default: str, label: str) -> str:
     answer = input(f"{label} [{default}]: ").strip()
     return answer or default
@@ -1844,12 +1799,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--default-context-folder", dest="default_entity", metavar="CONTEXT_FOLDER", default="personal", help="Default capture context folder.")
     parser.add_argument("--default-sub-vault", dest="default_entity", help=argparse.SUPPRESS)
     parser.add_argument("--default-entity", dest="default_entity", help=argparse.SUPPRESS)
-    parser.add_argument("--coding-agents", default="codex", help="Comma-separated coding agents: codex, claude, or codex,claude.")
     parser.add_argument("--date", help="Run date in YYYY-MM-DD. Defaults to today.")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--interactive", action="store_true")
     parser.add_argument("--skip-install-vault-command", action="store_true", help="Skip installing ~/.local/bin/vault.")
-    parser.add_argument("--skip-agent-symlinks", action="store_true", help="Skip root agent symlink setup.")
     return parser
 
 
@@ -1860,7 +1813,6 @@ def main(argv: list[str] | None = None) -> None:
     entities = parse_entities(args.entities)
     active_entities = parse_entities(args.active_entities) if args.active_entities else DEFAULT_ACTIVE_ENTITIES[:]
     default_entity = args.default_entity
-    coding_agents = parse_coding_agents(args.coding_agents)
     context_features = {entity: set() for entity in entities}
     feature_args = {
         "blog": args.blog_context_folders,
@@ -1889,7 +1841,6 @@ def main(argv: list[str] | None = None) -> None:
             }
         content_schedule_entities = parse_entities(prompt(",".join(content_schedule_entities), "Content schedule context folders"))
         default_entity = prompt(default_entity, "Default capture context folder")
-        coding_agents = parse_coding_agents(prompt(",".join(coding_agents), "Coding agents: codex, claude, or codex,claude"))
 
     if default_entity not in entities:
         raise SystemExit(f"default context folder {default_entity!r} is not in configured context folders: {entities}")
@@ -1907,11 +1858,9 @@ def main(argv: list[str] | None = None) -> None:
         entities=entities,
         active_entities=active_entities,
         default_entity=default_entity,
-        coding_agents=coding_agents,
         context_features=context_features,
         content_schedule_entities=content_schedule_entities,
         install_vault_command_enabled=not args.skip_install_vault_command,
-        agent_symlinks_enabled=not args.skip_agent_symlinks,
         dry_run=args.dry_run,
         run_date=parse_date(args.date),
         folder_templates=folder_templates,

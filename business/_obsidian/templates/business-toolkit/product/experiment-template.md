@@ -1,13 +1,16 @@
-***
+<%*
+const date = tp.date.now("YYYY-MM-DD");
+-%>
+---
 type: experiment
 status: planned
-date: 2026-08-13
+date: <% date %>
 project:
 people:
 source:
-***
+---
 
-# Experiment - user-signal-template
+# Experiment - <% tp.file.title %>
 
 ## Hypothesis
 
