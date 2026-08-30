@@ -69,6 +69,25 @@ class PublicContextExportTests(unittest.TestCase):
 
             self.assertTrue((export_root / "_system/local/state/export-manifest.json").is_file())
 
+    def test_forbidden_bytecode_residue_is_removed_and_audited(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "source"
+            export_root = Path(tmp) / "public"
+            root.mkdir()
+            cache = export_root / "_system/commands/__pycache__"
+            cache.mkdir(parents=True)
+            (cache / "leak.pyc").write_bytes(b"bytecode")
+            exporter = BootstrapExporter(
+                root=root,
+                config={"export_root": str(export_root)},
+                export_root=export_root,
+                force=True,
+                dry_run=False,
+            )
+            exporter.remove_forbidden_residue()
+            exporter.audit_forbidden_paths()
+            self.assertFalse(cache.exists())
+
     def test_system_root_markdown_is_private_by_default(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "source"

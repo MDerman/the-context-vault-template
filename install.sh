@@ -2,34 +2,31 @@
 set -euo pipefail
 
 REPO_URL="https://github.com/MDerman/the-context-vault-template.git"
+SKILL_SYSTEM_REPO_URL="https://github.com/MDerman/the-skill-problem-system.git"
 DEFAULT_TARGET_RELATIVE="Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault"
 RELEASE_METADATA_RELATIVE="_system/bootstrap/release.json"
 INSTALL_STATE_RELATIVE="_system/local/state/install.json"
 
 TARGET_ARGUMENT=""
-AGENT_PACKAGE_SOURCE="${CTX9_AGENT_PACKAGE_SOURCE:-}"
-AGENT_GLOBAL_INSTRUCTIONS=0
-AGENT_CLAUDE_ALIAS=0
-AGENT_DISCOVERY_ALIASES=0
+SKILL_SYSTEM_SOURCE="${CTX9_SKILL_SYSTEM_SOURCE:-}"
+INSTALL_SKILL_SYSTEM=0
+SKIP_SKILL_SYSTEM=0
 NON_INTERACTIVE=0
 INSTALL_LAUNCH_DIR="$(pwd -P)"
 
 while [[ "$#" -gt 0 ]]; do
   case "$1" in
-    --agent-package-source)
-      AGENT_PACKAGE_SOURCE="${2:?--agent-package-source requires a URL or path}"
+    --skill-system-source)
+      SKILL_SYSTEM_SOURCE="${2:?--skill-system-source requires a URL or path}"
+      INSTALL_SKILL_SYSTEM=1
       shift 2
       ;;
-    --agent-global-instructions)
-      AGENT_GLOBAL_INSTRUCTIONS=1
+    --install-skill-system)
+      INSTALL_SKILL_SYSTEM=1
       shift
       ;;
-    --agent-claude-alias)
-      AGENT_CLAUDE_ALIAS=1
-      shift
-      ;;
-    --agent-discovery-aliases)
-      AGENT_DISCOVERY_ALIASES=1
+    --skip-skill-system)
+      SKIP_SKILL_SYSTEM=1
       shift
       ;;
     --non-interactive)
@@ -51,12 +48,8 @@ while [[ "$#" -gt 0 ]]; do
   esac
 done
 
-if [[ -z "${AGENT_PACKAGE_SOURCE}" ]] && (( AGENT_GLOBAL_INSTRUCTIONS || AGENT_CLAUDE_ALIAS || AGENT_DISCOVERY_ALIASES )); then
-  echo "Agent instruction and alias flags require --agent-package-source." >&2
-  exit 2
-fi
-if (( AGENT_CLAUDE_ALIAS && ! AGENT_GLOBAL_INSTRUCTIONS )); then
-  echo "--agent-claude-alias requires --agent-global-instructions." >&2
+if (( INSTALL_SKILL_SYSTEM && SKIP_SKILL_SYSTEM )); then
+  echo "--install-skill-system and --skip-skill-system cannot be combined." >&2
   exit 2
 fi
 
@@ -193,77 +186,56 @@ run_as_install_user rm -f "${TARGET}/.git"
 cd "${TARGET}"
 run_as_install_user /bin/bash _system/bootstrap/init_vault.sh --enable-git
 
-prompt_agent_package() {
-  if [[ "${NON_INTERACTIVE}" -eq 1 || -n "${AGENT_PACKAGE_SOURCE}" || ! -r /dev/tty ]]; then
+prompt_skill_system() {
+  if [[ "${NON_INTERACTIVE}" -eq 1 || "${INSTALL_SKILL_SYSTEM}" -eq 1 || "${SKIP_SKILL_SYSTEM}" -eq 1 || ! -r /dev/tty ]]; then
     return
   fi
   local answer=""
-  printf 'Install the optional standalone agent package now? [y/N] ' >/dev/tty
+  printf 'Install the optional CTX9 skill system and public skills? [y/N] ' >/dev/tty
   IFS= read -r answer </dev/tty || answer=""
   case "${answer}" in
     y|Y|yes|YES)
-      printf 'Agent package repository URL or local export path: ' >/dev/tty
-      IFS= read -r AGENT_PACKAGE_SOURCE </dev/tty || AGENT_PACKAGE_SOURCE=""
-      if [[ -n "${AGENT_PACKAGE_SOURCE}" ]]; then
-        printf 'Generate managed global Codex instructions? [y/N] ' >/dev/tty
-        IFS= read -r answer </dev/tty || answer=""
-        [[ "${answer}" =~ ^([yY]|yes|YES)$ ]] && AGENT_GLOBAL_INSTRUCTIONS=1
-        if [[ "${AGENT_GLOBAL_INSTRUCTIONS}" -eq 1 ]]; then
-          printf 'Create the managed Claude instruction alias? [y/N] ' >/dev/tty
-          IFS= read -r answer </dev/tty || answer=""
-          [[ "${answer}" =~ ^([yY]|yes|YES)$ ]] && AGENT_CLAUDE_ALIAS=1
-        fi
-        printf 'Create managed skill discovery aliases? [y/N] ' >/dev/tty
-        IFS= read -r answer </dev/tty || answer=""
-        [[ "${answer}" =~ ^([yY]|yes|YES)$ ]] && AGENT_DISCOVERY_ALIASES=1
-      fi
+      INSTALL_SKILL_SYSTEM=1
       ;;
   esac
 }
 
-install_optional_agent_package() {
-  prompt_agent_package
-  if [[ -z "${AGENT_PACKAGE_SOURCE}" ]]; then
+install_optional_skill_system() {
+  prompt_skill_system
+  if [[ "${INSTALL_SKILL_SYSTEM}" -ne 1 ]]; then
     return
   fi
-  local package_dir="${AGENT_PACKAGE_SOURCE}"
-  if [[ "${AGENT_PACKAGE_SOURCE}" == http://* || "${AGENT_PACKAGE_SOURCE}" == https://* || "${AGENT_PACKAGE_SOURCE}" == git@* ]]; then
-    package_dir="${STATE_DIR}/agent-package-source"
-    if ! run_as_install_user "${GIT_BIN}" clone "${AGENT_PACKAGE_SOURCE}" "${package_dir}"; then
-      echo "Warning: optional agent package could not be cloned; the Vault install remains complete." >&2
-      return
-    fi
+  local source_value="${SKILL_SYSTEM_SOURCE:-${SKILL_SYSTEM_REPO_URL}}"
+  local source_dir="${source_value}"
+  if [[ "${source_value}" == http://* || "${source_value}" == https://* || "${source_value}" == git@* ]]; then
+    source_dir="${STATE_DIR}/skill-system-source"
+    run_as_install_user "${GIT_BIN}" clone "${source_value}" "${source_dir}"
   else
-    package_dir="$(resolve_target_path "${AGENT_PACKAGE_SOURCE}")"
+    source_dir="$(resolve_target_path "${source_value}")"
   fi
-  if [[ ! -f "${package_dir}/src/agents.py" ]]; then
-    echo "Warning: optional source is not an exported ctx9-agents package; the Vault install remains complete: ${package_dir}" >&2
-    return
+  if [[ ! -f "${source_dir}/_system/agents/_package/src/agents.py" || ! -x "${source_dir}/install.sh" ]]; then
+    echo "Skill system source is incomplete: ${source_dir}" >&2
+    exit 1
   fi
-  local agent_args=(
-    "${package_dir}/src/agents.py"
-    install
-    --source "${package_dir}"
-    --home "${INSTALL_HOME}"
-    --apply
-  )
-  if [[ "${AGENT_GLOBAL_INSTRUCTIONS}" -eq 1 ]]; then agent_args+=(--global-instructions); fi
-  if [[ "${AGENT_CLAUDE_ALIAS}" -eq 1 ]]; then agent_args+=(--claude-alias); fi
-  if [[ "${AGENT_DISCOVERY_ALIASES}" -eq 1 ]]; then agent_args+=(--discovery-aliases); fi
-  if ! run_as_install_user "${PYTHON_BIN}" "${agent_args[@]}"; then
-    echo "Warning: optional agent-package install failed; the Vault install remains complete." >&2
-    return
+  local skill_commit=""
+  skill_commit="$(run_as_install_user "${GIT_BIN}" -C "${source_dir}" rev-parse HEAD 2>/dev/null || true)"
+  local skill_version=""
+  skill_version="$(sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "${source_dir}/release.json" | head -1)"
+  run_as_install_user "${PYTHON_BIN}" "${TARGET}/_system/bootstrap/install_skill_system.py" \
+    --source-repo "${source_dir}" \
+    --vault-root "${TARGET}" \
+    --source-url "${source_value}" \
+    --release-version "${skill_version:-unknown}" \
+    --commit "${skill_commit:-local}"
+  if [[ "${NON_INTERACTIVE}" -eq 1 ]]; then
+    run_as_install_user env CTX9_NON_INTERACTIVE=1 HOME="${INSTALL_HOME}" /bin/bash "${source_dir}/install.sh"
+  else
+    run_as_install_user env HOME="${INSTALL_HOME}" /bin/bash "${source_dir}/install.sh" </dev/tty >/dev/tty
   fi
-  run_as_install_user mkdir -p "${TARGET}/_system/local/state"
-  printf '{"schema_version":1,"installed":true,"global_instructions":%s,"claude_alias":%s,"discovery_aliases":%s}\n' \
-    "$([[ "${AGENT_GLOBAL_INSTRUCTIONS}" -eq 1 ]] && printf true || printf false)" \
-    "$([[ "${AGENT_CLAUDE_ALIAS}" -eq 1 ]] && printf true || printf false)" \
-    "$([[ "${AGENT_DISCOVERY_ALIASES}" -eq 1 ]] && printf true || printf false)" \
-    | run_as_install_user tee "${TARGET}/_system/local/state/agent-package-install.json" >/dev/null
 }
 
 PYTHON_BIN="$(command -v python3)"
-install_optional_agent_package
+install_optional_skill_system
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
   if run_as_install_user "${PYTHON_BIN}" "${TARGET}/_system/commands/refresh_schedule.py" --root "${TARGET}" register; then

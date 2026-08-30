@@ -1,119 +1,26 @@
-# The Context Vault Template
+# Context Vault
 
-[Tutorial video](https://drive.google.com/file/d/1Rnlbrc10ckh9bnxiz_CkdLYXE0jTdyUI/view?usp=sharing)
+Context Vault is a local-first Obsidian and Markdown system that keeps notes, tasks, and agent context in one filesystem, part of the free and open-source developer system at [ctx9.com](https://ctx9.com).
 
-## Install On New Mac
-
-First run the install script from any terminal directory:
+## Install with your agent
 
 ```bash
-tmp="$(mktemp)" && curl -fsSL https://raw.githubusercontent.com/MDerman/the-context-vault-template/main/install.sh -o "$tmp" && sudo bash "$tmp" && rm -f "$tmp"
+gh skill install MDerman/the-context-vault-template skills/ctx9-install-context-vault --scope user
 ```
 
-To install somewhere else, pass a target path:
+Then tell your agent:
 
-```bash
-tmp="$(mktemp)" && curl -fsSL https://raw.githubusercontent.com/MDerman/the-context-vault-template/main/install.sh -o "$tmp" && sudo bash "$tmp" "~/Documents/Obsidian/vault" && rm -f "$tmp"
-```
+> Use $ctx9-install-context-vault to install Context Vault. Ask me where it should live, run the setup wizard with me, and verify the finished Vault.
 
-Quoted `~` paths work too, for example `"~/Documents/Obsidian/vault"`.
+## Problems this solves
 
-Then open it in Obsidian:
+- Notes, tasks, projects, and agent context stop drifting across separate apps.
+- Business, personal, and public work keep their own boundaries without losing shared structure.
+- Your working context stays readable, portable, and under your control.
 
-1. Open Obsidian.
-2. Choose "Open folder as vault".
-3. Select the vault folder, usually `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault`.
+## How I solved it
 
-## Further Vault Overview
-
-The goal of this vault is to have one Obsidian vault where everything related to your personal life, businesses, and other fields of life can live together while staying isolated. It is set up so agents, skills, and workflows have enough context to help schedule, evolve, update, code, and act as personal assistants for you and your business.
-
-This is made possible by a custom plugin called Context Nine and by the Relay plugin and many others. Relay lets team members collaborate on selected folders into their vault. This assumes everyone on your team will be using this vault setup.
-
-- Vault lives at `~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian/Vault` unless you pass a custom target path as the first script argument.
-- Public upstream Git state lives outside iCloud under `~/Library/Application Support/context-nine-vault-bootstrap/`.
-- Vault-local install, report, and export state lives under `_system/local/state/`.
-- The installer runs with `sudo`, but writes the vault and bootstrap state as the user who invoked sudo.
-- Vault folder has no public-repo `.git` pointer after install. Bootstrap then creates a personal Git pointer whose real repository lives under `~/.local/share/vault-git/<vault-name>.git`.
-- `init_vault.sh` installs approved public Vault dependencies, creates starter context folders, installs `vault` to `~/.local/bin/vault`, and adds that directory to zsh startup files. The Vault is complete without an agent package.
-- The standalone agent package, generic skills, generated global instructions, discovery aliases, and fleet setup are independent optional additions. They can be installed during the outer wizard or later without reinstalling the Vault.
-- The dependency set includes the CTX2 machine baseline: Node 24 from 24.19.0 onward, pnpm 11 from 11.21.0 onward, Age, OpenSSL, Git, curl, and compiler tooling. Git and private package-registry authentication remain separate machine-local login steps; the public installer never embeds credentials.
-- Context folders are core-first. The starter personal-brand and business examples explicitly add content capabilities, schedules, and their physical packs from `_system/bootstrap/templates/context-folders/`.
-- The starter business pack includes managed templates for meetings, product work, GTM, operating metrics, SOPs, status reports, and local skills. Run `vault business-toolkit` to configure its managed parts for any registered context.
-- On macOS, the installer registers or updates the daily `vault refresh` LaunchAgent. If registration fails, run `vault refresh-schedule register` after setup.
-- Context folder names must start and end with a letter or number and may use letters, numbers, dots, and hyphens, for example `business` or `business.nosync`. If you rename a starter folder during setup, the installer moves the folder and rewrites structured references such as paths, Obsidian links, plugin settings, frontmatter identity values, and `@context` tokens. It does not blindly rewrite normal prose.
-- The one-line `sudo bash` installer also installs `/usr/local/bin/vault`, so `vault` works even before a new shell has loaded `~/.local/bin`.
-- Public installer enables personal Git/LFS outside iCloud when creating the primary Vault. A Mac joining an existing iCloud Vault must use the Gitless worker onboarding flow instead; never create worker-side Vault Git. For an intentional standalone no-Git setup, run `_system/bootstrap/init_vault.sh --no-git`.
-
-Preview a context folder rename later with:
-
-```bash
-vault folder rename business studio --dry-run
-```
-
-Export includes desktop and mobile Obsidian profiles, plugin metadata/styles, and non-sensitive settings. It ships source bundles only for Context Nine and Relay, downloads active third-party plugin bundles during setup, and excludes known sensitive/local plugin config. When Obsidian first opens the vault, approve community plugins if Obsidian asks to trust the vault.
-
-## How To Use The Vault
-
-This vault is one command center with context folders as source-of-truth workspaces. Source notes describe what each workspace is trying to become; live inventory and generated Dashboard route current work.
-
-Start here after opening the vault:
-
-- `_system/README.md`: folder model, context folders, private/user-owned content, tasks, projects, epics, content, dashboards, and Relay collaboration.
-- `Dashboard.md`: generated home page, daily checklist, current context notes, schedules, and periodic links.
-- `_system/docs/obsidian/README.md`: Obsidian plugins, settings, templates, UI, and profile details.
-- `_system/docs/commands/README.md`: `vault` commands and normal workflows.
-- `_system/bootstrap/README.md`: bootstrap/export internals and system folder map.
-
-For Relay collaboration, read `_system/README.md`.
-
-Default workspace map:
-
-- `personal`: personal life, health, relationships, finances, default capture, and personal accountability.
-- `personal-brand`: personal brand, writing, media, audience, authority, and social selling.
-- `business`: product and business execution.
-
-Daily flow:
-
-1. Run `vault refresh`.
-2. Open `Dashboard.md`.
-3. Run `vault inventory` when agent or terminal routing is needed.
-4. Open today's vault periodic rollup under `_system/_obsidian/periodic/daily/` or relevant context source note.
-5. Check `_system/_obsidian/bases/tasks-today.base` and `_system/_obsidian/bases/tasks-home.base`.
-6. Check `_system/_obsidian/bases/content-kanban.base` when content is part of the day.
-
-Content capabilities are independent: blogs, social content, newsletters, and schedules are selected separately. Tasks still live in `_obsidian/tasks`; a content note becomes work only when it has a real next action, status, date, blocker, or project.
-
-## Upgrade Installed Vault
-
-Public vault updates are published as SemVer GitHub Releases such as `v0.1.0`. Each release records the public commit, release version, and dependency lock used by upgrade reports.
-
-Preview future public updates:
-
-```bash
-vault upgrade --dry-run
-```
-
-Apply public setup updates:
-
-```bash
-vault upgrade
-```
-
-You can also run `Vault Upgrade` from the Obsidian command palette. It applies the same public setup update as `vault upgrade`.
-
-Apply only Obsidian profile, theme, hotkey, and plugin updates:
-
-```bash
-vault profile upgrade
-```
-
-Repair/inspect upgrade state:
-
-```bash
-vault upgrade status
-vault upgrade doctor
-vault upgrade repair-prompt
-```
-
-If an upgrade fails, `vault upgrade status` shows the installed version/commit plus the failed target version/commit. The full report is written under `_system/local/state/upgrade-reports/`. Failed upgrades keep the previous installed version in install state so repair work can see what was attempted.
+- I made the filesystem and Markdown the source of truth, with Obsidian as the interface.
+- I use context folders for distinct areas of life and work, each with its own tasks, projects, templates, and attachments.
+- I added small commands and setup wizards for repeatable maintenance without hiding the underlying files.
+- I kept the skill system separate and optional, so the Vault works on its own.

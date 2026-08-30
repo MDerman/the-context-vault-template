@@ -26,6 +26,10 @@ from vault_layout import (
 
 
 DEFAULT_REPO_URL = "https://github.com/MDerman/the-context-vault-template.git"
+SKILLS_REPO_URL = "https://github.com/MDerman/the-skill-problem-system.git"
+SKILLS_RELEASE_PATH = Path("_system/agents/_package/export/release.json")
+SKILLS_EXPORT_CONFIG_PATH = Path("_system/agents/_package/export/agent-package-export.json")
+SKILLS_EXPORT = Path("_system/agents/_package/src/agents.py")
 LOCK_PATH = DEPENDENCY_LOCK_PATH
 PACKAGE_MANIFEST_PATH = VAULT_PACKAGE_MANIFEST_PATH
 EXPORT_CONFIG_PATH = BOOTSTRAP_DIR / "bootstrap-export.json"
@@ -184,6 +188,11 @@ def load_export_root(root: Path) -> Path:
     return Path(os.path.expanduser(str(config["export_root"]))).resolve()
 
 
+def load_skills_export_root(root: Path) -> Path:
+    config = read_json(root / SKILLS_EXPORT_CONFIG_PATH)
+    return Path(os.path.expanduser(str(config["default_export_root"]))).resolve()
+
+
 def release_payload(version: SemVer, generated_at: str, lock_sha: str) -> dict[str, Any]:
     return {
         "schema_version": 2,
@@ -277,92 +286,167 @@ def ensure_version_available(repo_url: str, version: SemVer) -> None:
 
 
 def choose_version(root: Path, args: argparse.Namespace) -> SemVer:
-    release = read_json(root / RELEASE_PATH, {})
-    current = latest_public_version(DEFAULT_REPO_URL, release)
+    return choose_product_version(root, args, DEFAULT_REPO_URL, RELEASE_PATH)
+
+
+def choose_product_version(
+    root: Path,
+    args: argparse.Namespace,
+    repo_url: str,
+    release_path: Path,
+) -> SemVer:
+    release = read_json(root / release_path, {})
+    unpublished = release.get("repository") is None and not release.get("published_at") and not release.get("released_at")
+    current = None if unpublished else latest_public_version(repo_url, release)
     if args.version:
         version = parse_semver(args.version)
         if not version:
             raise SystemExit(f"Invalid SemVer version: {args.version}")
     else:
         version = bump_semver(current, args.bump)
-    ensure_version_available(DEFAULT_REPO_URL, version)
+    ensure_version_available(repo_url, version)
     if current and version <= current:
         raise SystemExit(f"Version must be newer than latest public version {current.tag}: {version.tag}")
     return version
 
 
-def print_plan(version: SemVer, public_root: Path, lock_sha: str, branch: str) -> None:
-    print(f"version: {version.version}")
-    print(f"tag: {version.tag}")
-    print(f"public repo: {public_root}")
-    print(f"public branch: {branch}")
-    print(f"dependency lock sha256: {lock_sha}")
-    print("actions:")
-    print(f"  write {RELEASE_PATH}")
-    print(f"  write {LOCK_PATH}")
-    print("  vault bootstrap-export --force")
-    print(f"  git commit -m 'Release {version.tag}'")
-    print(f"  git tag -a {version.tag}")
-    print("  git push origin branch")
-    print(f"  git push origin {version.tag}")
-    print(f"  gh release create {version.tag} --verify-tag")
+@dataclass(frozen=True)
+class Product:
+    name: str
+    repo_url: str
+    public_root: Path
+    release_path: Path
+
+
+def products(root: Path, selected: str) -> list[Product]:
+    values = {
+        "vault": Product("vault", DEFAULT_REPO_URL, load_export_root(root), RELEASE_PATH),
+        "skills": Product("skills", SKILLS_REPO_URL, load_skills_export_root(root), SKILLS_RELEASE_PATH),
+    }
+    return list(values.values()) if selected == "all" else [values[selected]]
+
+
+def exported_fingerprint(root: Path, product: Product) -> dict[str, str]:
+    ignored = {
+        "vault": {"_system/local/state/export-manifest.json", RELEASE_PATH.as_posix(), LOCK_PATH.as_posix()},
+        "skills": {MANIFEST for MANIFEST in [".ctx9-agent-export-manifest.json", "release.json"]},
+    }[product.name]
+    result: dict[str, str] = {}
+    if not root.is_dir():
+        return result
+    for path in sorted(root.rglob("*")):
+        relative = path.relative_to(root).as_posix()
+        if ".git" in path.relative_to(root).parts or relative in ignored or not path.is_file():
+            continue
+        result[relative] = hashlib.sha256(path.read_bytes()).hexdigest()
+    return result
+
+
+def stage_export(root: Path, product: Product, destination: Path) -> None:
+    if product.name == "vault":
+        run(
+            [sys.executable, str(root / BOOTSTRAP_EXPORT), "--force", "--root", str(root), "--export-root", str(destination)],
+            cwd=root,
+        )
+    else:
+        run(
+            [sys.executable, str(root / SKILLS_EXPORT), "export", "--destination", str(destination), "--apply"],
+            cwd=root,
+        )
+
+
+def has_meaningful_changes(root: Path, product: Product) -> bool:
+    import tempfile
+
+    with tempfile.TemporaryDirectory(prefix=f"ctx9-release-{product.name}-") as temporary:
+        stage = Path(temporary) / "export"
+        stage_export(root, product, stage)
+        return exported_fingerprint(stage, product) != exported_fingerprint(product.public_root, product)
+
+
+def write_product_release(root: Path, product: Product, version: SemVer, generated_at: str) -> None:
+    if product.name == "vault":
+        lock = dependency_lock(root, version, generated_at)
+        lock_sha = hashlib.sha256(json_bytes(lock)).hexdigest()
+        write_json(root / LOCK_PATH, lock)
+        write_json(root / RELEASE_PATH, release_payload(version, generated_at, lock_sha))
+        run([sys.executable, str(root / BOOTSTRAP_EXPORT), "--force", "--root", str(root)], cwd=root)
+        return
+    write_json(
+        root / SKILLS_RELEASE_PATH,
+        {
+            "schema_version": 1,
+            "version": version.version,
+            "tag": version.tag,
+            "published_at": generated_at,
+            "repository": SKILLS_REPO_URL,
+        },
+    )
+    run(
+        [sys.executable, str(root / SKILLS_EXPORT), "export", "--destination", str(product.public_root), "--apply"],
+        cwd=root,
+    )
+
+
+def publish_product(root: Path, product: Product, version: SemVer, branch: str) -> None:
+    write_product_release(root, product, version, utc_iso())
+    status = run(["git", "status", "--short"], cwd=product.public_root).stdout.strip()
+    if not status:
+        raise SystemExit(f"{product.name} export produced no changes; refusing an empty release")
+    run(["git", "add", "-A"], cwd=product.public_root)
+    run(["git", "commit", "-m", f"Release {version.tag}"], cwd=product.public_root)
+    commit = run(["git", "rev-parse", "HEAD"], cwd=product.public_root).stdout.strip()
+    run(["git", "tag", "-a", version.tag, "-m", f"Release {version.tag}", commit], cwd=product.public_root)
+    run(["git", "push", "origin", branch], cwd=product.public_root)
+    run(["git", "push", "origin", version.tag], cwd=product.public_root)
+    run(
+        [
+            "gh", "release", "create", version.tag,
+            "--repo", repo_slug(product.repo_url),
+            "--title", f"Release {version.tag}",
+            "--notes", f"Public {product.name} release {version.tag}.",
+            "--verify-tag",
+        ],
+        cwd=product.public_root,
+    )
+    print(f"published {product.name} {version.tag} at {commit}")
 
 
 def publish(root: Path, args: argparse.Namespace) -> int:
     ensure_tools()
-    public_root = load_export_root(root)
-    branch = ensure_public_repo(public_root, DEFAULT_REPO_URL)
-    version = choose_version(root, args)
-    generated_at = utc_iso()
-    lock = dependency_lock(root, version, generated_at)
-    lock_sha = hashlib.sha256(json_bytes(lock)).hexdigest()
-    release = release_payload(version, generated_at, lock_sha)
-    print_plan(version, public_root, lock_sha, branch)
+    selected = products(root, args.product)
+    branches = {product.name: ensure_public_repo(product.public_root, product.repo_url) for product in selected}
+    changed = [product for product in selected if has_meaningful_changes(root, product)]
+    unchanged = sorted({product.name for product in selected} - {product.name for product in changed})
+    for name in unchanged:
+        print(f"{name}: unchanged, no release planned")
+    planned: list[tuple[Product, SemVer]] = []
+    for product in changed:
+        version = choose_product_version(root, args, product.repo_url, product.release_path)
+        planned.append((product, version))
+        print(f"{product.name}: changed, planned {version.tag} from {product.public_root}")
     if args.dry_run:
         print("dry run: no files, commits, tags, pushes, or releases changed.")
         return 0
-
-    write_json(root / LOCK_PATH, lock)
-    write_json(root / RELEASE_PATH, release)
-    run([sys.executable, str(root / BOOTSTRAP_EXPORT), "--force", "--root", str(root)], cwd=root)
-
-    status = run(["git", "status", "--short"], cwd=public_root).stdout.strip()
-    if not status:
-        raise SystemExit("Public export produced no changes; refusing empty release commit.")
-    run(["git", "add", "-A"], cwd=public_root)
-    run(["git", "commit", "-m", f"Release {version.tag}"], cwd=public_root)
-    commit = run(["git", "rev-parse", "HEAD"], cwd=public_root).stdout.strip()
-    run(["git", "tag", "-a", version.tag, "-m", f"Release {version.tag}", commit], cwd=public_root)
-    run(["git", "push", "origin", branch], cwd=public_root)
-    run(["git", "push", "origin", version.tag], cwd=public_root)
-    run(
-        [
-            "gh",
-            "release",
-            "create",
-            version.tag,
-            "--repo",
-            repo_slug(DEFAULT_REPO_URL),
-            "--title",
-            f"Release {version.tag}",
-            "--notes",
-            f"Public vault release {version.tag}.",
-            "--verify-tag",
-        ],
-        cwd=public_root,
-    )
-    print(f"published {version.tag} at {commit}")
+    for product, version in planned:
+        publish_product(root, product, version, branches[product.name])
     return 0
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Publish public vault SemVer releases.")
+    parser = argparse.ArgumentParser(description="Publish Context Vault and Skill Problem System releases.")
     subparsers = parser.add_subparsers(dest="command")
     publish_parser = subparsers.add_parser("publish", help="Export, commit, tag, push, and create GitHub release.")
     mode = publish_parser.add_mutually_exclusive_group()
     mode.add_argument("--bump", choices=["patch", "minor", "major"], default="patch", help="Version bump.")
     mode.add_argument("--version", help="Explicit SemVer version, with or without v prefix.")
     publish_parser.add_argument("--dry-run", action="store_true", help="Preview release actions without changes.")
+    publish_parser.add_argument(
+        "--product",
+        choices=["vault", "skills", "all"],
+        default="all",
+        help="Limit publishing to one public product. Defaults to all changed products.",
+    )
     publish_parser.add_argument("--root", default=None, help="Vault root. Defaults to auto-discovery.")
     return parser.parse_args(argv)
 

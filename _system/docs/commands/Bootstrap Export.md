@@ -18,11 +18,11 @@ vault release publish --dry-run --bump patch
 vault release publish --bump patch
 ```
 
-`vault release publish` updates `_system/bootstrap/release.json`, writes `_system/local/dependencies.lock.json`, exports, commits the public repo, creates tag `vX.Y.Z`, pushes, and creates the GitHub Release. Any public export commit must include a fresh `release.json` bump.
+`vault release publish` preflights both public products, reports which exports changed, and publishes only those products. Each product keeps independent SemVer metadata, tags, commits, and GitHub Releases. Use `--product vault`, `--product skills`, or `--product all` to retry one side after a partial external failure.
 
 The export writes a root `README.md` from `_system/bootstrap/README-public-vault-template.md`. Internal bootstrap/export mechanics live in `_system/bootstrap/README.md`. With `--force`, the exporter mirrors export-owned files into the configured export root while preserving repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, and contribution docs.
 
-The exporter excludes `_system/agents/**` completely. It does not sanitize, project, or re-add agent scripts, skills, fleet configuration, aliases, or installation behavior. The exported Vault is a complete independent product; the separately versioned agent package is optional.
+The Vault exporter excludes `_system/agents/**` completely. The Skill Problem System exporter separately publishes a sanitized `_system/agents` tree with public defaults, schemas, runtime, docs, and every active skill that passes its portability, privacy, configuration, provenance, and license checks. Its generated inventory records every exclusion.
 
 Default export root and context folder output mapping live in:
 
@@ -32,4 +32,4 @@ _system/bootstrap/bootstrap-export.json
 
 Implementation script: `_system/commands/bootstrap_export.py`.
 
-Interactive exported installs may offer the independently sourced agent package only after the Vault is valid. Non-interactive install remains Vault-only unless explicit agent flags are supplied. Public repository creation or agent publication is not part of Vault export.
+Interactive installs ask once whether to install the optional CTX9 skill system and public skills. Declining leaves `_system/agents` absent. Accepting copies the released public tree into the Vault, initializes its instance from blank defaults, runs the same setup wizard, and records release identity and selected integrations in ignored install state. Vault upgrades never overwrite that tree.

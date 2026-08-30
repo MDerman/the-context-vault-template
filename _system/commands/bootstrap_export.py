@@ -179,7 +179,9 @@ class BootstrapExporter:
         self.install_public_folder_templates()
         self.sanitize_public_templater_rules()
         self.sanitize_public_iconize_paths()
+        self.remove_forbidden_residue()
         self.write_manifest()
+        self.audit_forbidden_paths()
         self.log(f"export ready: {self.export_root}")
 
     def validate(self) -> None:
@@ -204,6 +206,10 @@ class BootstrapExporter:
         names = {self.manifest_name}
         for item in self.config.get("root_files", []):
             target = item.get("target") if isinstance(item, dict) else item
+            if target:
+                names.add(Path(target).parts[0])
+        for item in self.config.get("root_trees", []):
+            target = item.get("target")
             if target:
                 names.add(Path(target).parts[0])
         for link_name in self.config.get("root_symlinks", {}):
@@ -285,6 +291,12 @@ class BootstrapExporter:
             self.copy_file(self.root / source, self.export_root / target)
         for directory in self.config.get("root_dirs", []):
             self.ensure_dir(self.export_root / directory)
+        for item in self.config.get("root_trees", []):
+            source = self.root / item["source"]
+            target = self.export_root / item["target"]
+            if not source.is_dir():
+                raise SystemExit(f"Missing root tree: {source}")
+            self.copy_tree_all(source, target)
         for link_name, target in self.config.get("root_symlinks", {}).items():
             self.create_symlink(self.export_root / link_name, target)
 
@@ -634,7 +646,9 @@ class BootstrapExporter:
             for target, template in template_targets:
                 self.log(f"install {template} folder template in {target}")
             return
-        commands_dir = self.export_root / "_system/commands"
+        commands_dir = self.root / "_system/commands"
+        previous_dont_write_bytecode = sys.dont_write_bytecode
+        sys.dont_write_bytecode = True
         sys.path.insert(0, str(commands_dir))
         try:
             from business_toolkit import install_scaffold, sync_context
@@ -655,6 +669,29 @@ class BootstrapExporter:
         finally:
             if sys.path and sys.path[0] == str(commands_dir):
                 sys.path.pop(0)
+            sys.dont_write_bytecode = previous_dont_write_bytecode
+
+    def remove_forbidden_residue(self) -> None:
+        if self.dry_run:
+            self.log("remove forbidden bytecode residue")
+            return
+        for path in sorted(self.export_root.rglob("*"), reverse=True):
+            if path.is_file() and path.suffix in {".pyc", ".pyo"}:
+                path.unlink()
+            elif path.is_dir() and path.name == "__pycache__":
+                shutil.rmtree(path)
+
+    def audit_forbidden_paths(self) -> None:
+        if self.dry_run:
+            return
+        forbidden = [
+            path.relative_to(self.export_root).as_posix()
+            for path in self.export_root.rglob("*")
+            if path.name == "__pycache__" or path.suffix in {".pyc", ".pyo"}
+        ]
+        if forbidden:
+            rendered = "\n".join(f"- {path}" for path in forbidden[:20])
+            raise SystemExit(f"Refusing public export with forbidden bytecode paths:\n{rendered}")
 
     def sanitize_public_templater_rules(self) -> None:
         if self.dry_run:

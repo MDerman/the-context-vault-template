@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-08-30T16:02:51+00:00",
+  "generated_at": "2026-08-30T18:50:28+00:00",
   "paths": [
     ".agents/skills",
     ".agents/skills/.gitkeep",
@@ -277,6 +277,7 @@
     "_system/_obsidian/templates/shared/samples/Daily Notes Template.md",
     "_system/_obsidian/templates/shared/samples/Default Template.md",
     "_system/bootstrap",
+    "_system/bootstrap/AGENTS-public-vault-template.md",
     "_system/bootstrap/README-public-vault-template.md",
     "_system/bootstrap/README.md",
     "_system/bootstrap/agents",
@@ -287,10 +288,15 @@
     "_system/bootstrap/install.sh",
     "_system/bootstrap/install_dependencies.sh",
     "_system/bootstrap/install_plugins.py",
+    "_system/bootstrap/install_skill_system.py",
     "_system/bootstrap/install_vault_command.py",
     "_system/bootstrap/offer_machine_setup.py",
     "_system/bootstrap/post-install-next-steps.json",
     "_system/bootstrap/print_post_install_next_steps.py",
+    "_system/bootstrap/public-repo",
+    "_system/bootstrap/public-repo/skills",
+    "_system/bootstrap/public-repo/skills/ctx9-install-context-vault",
+    "_system/bootstrap/public-repo/skills/ctx9-install-context-vault/SKILL.md",
     "_system/bootstrap/release.json",
     "_system/bootstrap/templates",
     "_system/bootstrap/templates/context-folders",
@@ -410,6 +416,8 @@
     "_system/bootstrap/templates/context-folders/personal-brand/relationships/.gitkeep",
     "_system/bootstrap/templates/context-folders/personal-brand/writing",
     "_system/bootstrap/templates/context-folders/personal-brand/writing/.gitkeep",
+    "_system/bootstrap/tests",
+    "_system/bootstrap/tests/test_skill_system_install.py",
     "_system/bootstrap/upgrade-policy.json",
     "_system/commands",
     "_system/commands/attachment_reconcile.py",
@@ -895,6 +903,9 @@
     "personal/_obsidian/templates/periodic/quarterly-template.md",
     "personal/_obsidian/templates/periodic/weekly-template.md",
     "personal/_obsidian/templates/periodic/yearly-template.md",
-    "personal/personal.md"
+    "personal/personal.md",
+    "skills",
+    "skills/ctx9-install-context-vault",
+    "skills/ctx9-install-context-vault/SKILL.md"
   ]
 }

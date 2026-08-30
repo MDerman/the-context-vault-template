@@ -68,7 +68,7 @@ vault release publish --dry-run --bump patch
 vault release publish --bump patch
 ```
 
-`vault release publish` bumps the public SemVer release metadata, writes `_system/local/dependencies.lock.json`, exports the public vault, commits `~/Code/ctx9/vault-public`, creates annotated tag `vX.Y.Z`, pushes the commit/tag, and creates the GitHub Release. Use `--bump minor`, `--bump major`, or `--version X.Y.Z` when the release should not be a patch bump.
+`vault release publish` preflights the Vault and Skill Problem System, publishes only meaningful export changes, and keeps independent SemVer metadata for each product. Use `--product vault|skills|all` for scoped retries after partial external failures. Changed Vault releases update the dependency lock; changed skill-system releases regenerate their public skill inventory.
 
 Release metadata lives in `_system/bootstrap/release.json`. It stores the SemVer, tag, release timestamp, dependency lock path, and dependency lock SHA-256. Any public release must update this file through `vault release publish`; do not commit a public export with stale release metadata.
 
@@ -103,7 +103,7 @@ Exact-copy plugin files are scanned for high-confidence secrets before export. E
 
 `_system/bootstrap/install_plugins.py` installs third-party active plugin bundles during setup and upgrade. It reads `.obsidian/community-plugins.json`, skips exact-copy plugins from `obsidian_plugin_exact_copy_plugins`, resolves each remaining plugin through Obsidian's community plugin registry, and downloads `main.js`, `manifest.json`, and optional `styles.css` from the GitHub release matching the exported plugin manifest version.
 
-Correct wording: Export includes plugin metadata/styles and non-sensitive settings, ships source bundles only for Context Nine, Simple Folder Note, and Relay, downloads active third-party plugin bundles during setup/upgrade, and excludes known sensitive/local plugin config.
+Correct wording: Export includes plugin metadata/styles and non-sensitive settings, ships complete bundles for Context Nine, Simple Folder Note, and Relay, downloads active third-party plugin bundles during setup/upgrade, and excludes known sensitive/local plugin config.
 
 ## First Install Flow
 
@@ -120,10 +120,10 @@ Public install script:
 - runs from README via `sudo bash`, resolves the original sudo user, and writes the vault/state as that user;
 - removes the public-repo `.git` pointer from the vault;
 - runs `_system/bootstrap/init_vault.sh --enable-git`, which asks for three exact context-folder slugs, preserves the starter examples through explicit capabilities/templates, and initializes personal Git/LFS directly under `~/.local/share/vault-git/<vault-name>.git`.
-- downloads active third-party Obsidian plugin bundles, while Context Nine and Relay are already shipped in the vault export.
-- defaults to Vault-only in non-interactive mode. An explicit `--agent-package-source` may install the separately exported agent package after the Vault is valid, with independent flags for global instructions, Claude alias and skill discovery aliases.
-- asks one agent-package question interactively, followed by focused optional choices only when selected. Declining, EOF or an unavailable optional source never changes the validity of the installed Vault.
-- records the optional choice under `_system/local/state/agent-package-install.json`; the agent package can be installed or managed later without reinstalling the Vault.
+- downloads active third-party Obsidian plugin bundles, while complete bundles for Context Nine, Simple Folder Note, and Relay are already shipped in the vault export.
+- defaults to Vault-only in non-interactive mode. `--install-skill-system` explicitly opts in; `--skill-system-source` selects a reviewed local export or repository URL for tests and recovery.
+- asks `Install the optional CTX9 skill system and public skills? [y/N]`. Declining or EOF leaves `_system/agents` absent.
+- copies the released public `_system/agents` tree without Git metadata, initializes `_package/instance` from blank defaults, runs the shared skill-system wizard, installs every public skill globally, and records source URL, release version, commit, and selected integrations under `_system/local/state/skill-system-install.json`.
 
 Public README invokes root `install.sh` through the GitHub raw URL and shows only the default command plus a custom-target example.
 
