@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-30T18:50:23Z",
+  "generated_at": "2026-08-30T18:52:45Z",
   "github_cli": {
     "available": true,
     "version": "gh version 2.96.0 (2026-07-02)"
@@ -382,8 +382,8 @@
       "version": "4.5.3"
     }
   ],
-  "release_tag": "v0.2.7",
-  "release_version": "0.2.7",
+  "release_tag": "v0.2.8",
+  "release_version": "0.2.8",
   "schema_version": 1,
   "vault_packages": [
     {

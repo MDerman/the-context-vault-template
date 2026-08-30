@@ -326,7 +326,7 @@ def products(root: Path, selected: str) -> list[Product]:
     return list(values.values()) if selected == "all" else [values[selected]]
 
 
-def exported_fingerprint(root: Path, product: Product) -> dict[str, str]:
+def exported_fingerprint(root: Path, product: Product, only: set[str] | None = None) -> dict[str, str]:
     ignored = {
         "vault": {"_system/local/state/export-manifest.json", RELEASE_PATH.as_posix(), LOCK_PATH.as_posix()},
         "skills": {MANIFEST for MANIFEST in [".ctx9-agent-export-manifest.json", "release.json"]},
@@ -336,9 +336,14 @@ def exported_fingerprint(root: Path, product: Product) -> dict[str, str]:
         return result
     for path in sorted(root.rglob("*")):
         relative = path.relative_to(root).as_posix()
-        if ".git" in path.relative_to(root).parts or relative in ignored or not path.is_file():
+        if ".git" in path.relative_to(root).parts or relative in ignored or not path.is_file() or (only is not None and relative not in only):
             continue
-        result[relative] = hashlib.sha256(path.read_bytes()).hexdigest()
+        if path.suffix == ".base":
+            text = re.sub(r"(?m)^generated_at: .*\n", "", path.read_text(encoding="utf-8"))
+            payload = text.encode("utf-8")
+        else:
+            payload = path.read_bytes()
+        result[relative] = hashlib.sha256(payload).hexdigest()
     return result
 
 
@@ -361,7 +366,12 @@ def has_meaningful_changes(root: Path, product: Product) -> bool:
     with tempfile.TemporaryDirectory(prefix=f"ctx9-release-{product.name}-") as temporary:
         stage = Path(temporary) / "export"
         stage_export(root, product, stage)
-        return exported_fingerprint(stage, product) != exported_fingerprint(product.public_root, product)
+        staged = exported_fingerprint(stage, product)
+        owned = set(staged)
+        if product.name == "vault":
+            old_manifest = read_json(product.public_root / "_system/local/state/export-manifest.json", {"paths": []})
+            owned.update(str(path) for path in old_manifest.get("paths", []))
+        return staged != exported_fingerprint(product.public_root, product, owned)
 
 
 def write_product_release(root: Path, product: Product, version: SemVer, generated_at: str) -> None:
