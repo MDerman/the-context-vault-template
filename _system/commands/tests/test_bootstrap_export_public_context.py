@@ -137,6 +137,7 @@ class PublicContextExportTests(unittest.TestCase):
     def test_production_export_has_no_agent_readds(self) -> None:
         config = json.loads((BOOTSTRAP_DIR / "bootstrap-export.json").read_text(encoding="utf-8"))
         self.assertIn("_system/agents/**", config["generated_exclude_globs"])
+        self.assertIn("_system/local/git-media-manifest.json", config["generated_exclude_paths"])
         explicit_sources = {item["source"] for item in config["root_files"] if isinstance(item, dict)}
         self.assertFalse(any(source.startswith("_system/agents/") for source in explicit_sources))
 

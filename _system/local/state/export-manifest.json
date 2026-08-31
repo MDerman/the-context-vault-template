@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-08-31T10:47:15+00:00",
+  "generated_at": "2026-08-31T10:51:51+00:00",
   "paths": [
     ".agents/skills",
     ".agents/skills/.gitkeep",
@@ -558,7 +558,6 @@
     "_system/local/calendar.json",
     "_system/local/dependencies.lock.json",
     "_system/local/env",
-    "_system/local/git-media-manifest.json",
     "_system/local/snippets",
     "_system/local/snippets/README.md",
     "_system/local/snippets/defaults.json",

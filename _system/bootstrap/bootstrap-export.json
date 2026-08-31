@@ -84,7 +84,8 @@
   ],
   "generated_exclude_paths": [
     "Dashboard.md",
-    "_system/local/dashboard-action-links.md"
+    "_system/local/dashboard-action-links.md",
+    "_system/local/git-media-manifest.json"
   ],
   "generated_exclude_globs": [
     "_system/agents/**",
