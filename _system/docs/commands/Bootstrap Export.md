@@ -22,7 +22,7 @@ vault release publish --bump patch
 
 The export writes a root `README.md` from `_system/bootstrap/README-public-vault-template.md`. Internal bootstrap/export mechanics live in `_system/bootstrap/README.md`. With `--force`, the exporter mirrors export-owned files into the configured export root while preserving repo metadata such as `.git`, `.github`, `.gitignore`, `.gitattributes`, license files, and contribution docs.
 
-The Vault exporter excludes `_system/agents/**` completely. The Skill Problem System exporter separately publishes a sanitized `_system/agents` tree with public defaults, schemas, runtime, docs, and every active skill that passes its portability, privacy, configuration, provenance, and license checks. Its generated inventory records every exclusion.
+The Vault exporter excludes `_system/agents/**` completely. The Skill Problem System exporter separately publishes a sanitized `_system/agents` tree with public defaults, schemas, runtime, docs, and every active non-repository skill. It keeps repository-owned projections private and writes the audit report only to ignored Vault state.
 
 Default export root and context folder output mapping live in:
 
