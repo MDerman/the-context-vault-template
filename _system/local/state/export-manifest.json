@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-09-02T10:05:52+00:00",
+  "generated_at": "2026-09-02T10:45:40+00:00",
   "paths": [
     ".agents/skills",
     ".agents/skills/.gitkeep",
@@ -85,7 +85,6 @@
     ".obsidian/plugins/consistent-attachments-and-links/manifest.json",
     ".obsidian/plugins/consistent-attachments-and-links/styles.css",
     ".obsidian/plugins/context-nine",
-    ".obsidian/plugins/context-nine/main.js",
     ".obsidian/plugins/context-nine/manifest.json",
     ".obsidian/plugins/context-nine/styles.css",
     ".obsidian/plugins/dataview",

@@ -2,6 +2,8 @@
 
 Context Vault is a local-first Obsidian and Markdown system that keeps notes, tasks, and agent context in one filesystem, part of the free and open-source developer system at [ctx9.com](https://ctx9.com).
 
+It uses [Context Nine](https://community.obsidian.md/plugins/context-nine), its companion plugin listed in Obsidian's Community Plugin directory.
+
 ## Install with your agent
 
 Install the skill for each agent you use:

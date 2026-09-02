@@ -89,7 +89,6 @@ Plugin code is intentionally excluded for third-party plugins:
 
 Local or patched plugins ship their bundles exactly because they are source-of-truth vault behavior:
 
-- `context-nine/main.js`
 - `simple-folder-note/main.js`
 - `system3-relay/main.js`
 
@@ -103,7 +102,7 @@ Exact-copy plugin files are scanned for high-confidence secrets before export. E
 
 `_system/bootstrap/install_plugins.py` installs third-party active plugin bundles during setup and upgrade. It reads `.obsidian/community-plugins.json`, skips exact-copy plugins from `obsidian_plugin_exact_copy_plugins`, resolves each remaining plugin through Obsidian's community plugin registry, and downloads `main.js`, `manifest.json`, and optional `styles.css` from the GitHub release matching the exported plugin manifest version.
 
-Correct wording: Export includes plugin metadata/styles and non-sensitive settings, ships complete bundles for Context Nine, Simple Folder Note, and Relay, downloads active third-party plugin bundles during setup/upgrade, and excludes known sensitive/local plugin config.
+Correct wording: Export includes plugin metadata/styles and non-sensitive settings, ships complete bundles for Simple Folder Note and Relay, downloads Context Nine and other active community plugin bundles during setup/upgrade, and excludes known sensitive/local plugin config.
 
 ## First Install Flow
 
@@ -120,7 +119,7 @@ Public install script:
 - runs from README via `sudo bash`, resolves the original sudo user, and writes the vault/state as that user;
 - removes the public-repo `.git` pointer from the vault;
 - runs `_system/bootstrap/init_vault.sh --enable-git`, which asks for three exact context-folder slugs, preserves the starter examples through explicit capabilities/templates, and initializes personal Git/LFS directly under `~/.local/share/vault-git/<vault-name>.git`.
-- downloads active third-party Obsidian plugin bundles, while complete bundles for Context Nine, Simple Folder Note, and Relay are already shipped in the vault export.
+- downloads Context Nine and other active community plugin bundles, while complete bundles for Simple Folder Note and Relay are already shipped in the vault export.
 - defaults to Vault-only in non-interactive mode. `--install-skill-system` explicitly opts in; `--skill-system-source` selects a reviewed local export or repository URL for tests and recovery.
 - asks `Install the optional CTX9 skill system and public skills? [y/N]`. Declining or EOF leaves `_system/agents` absent.
 - copies the released public `_system/agents` tree without Git metadata, initializes `_package/instance` from blank defaults, runs the shared skill-system wizard, installs every public skill globally, and records source URL, release version, commit, and selected integrations under `_system/local/state/skill-system-install.json`.
