@@ -32,7 +32,7 @@ vault access ack-git --receipt SESSION_ID --commit COMMIT_SHA
 
 It also reports SSH and exact mount health, read-write mode, File Provider and iCloud container state, last activity, dataless/conflict/pause/pending paths, the lease owner/session/heartbeat/expiry, active session, and the latest receipt.
 
-`begin` requires a fully materialized, current downloaded worktree with no conflicts, pause, exclusions, or dataless files, then atomically acquires the one host-side lease. Pending outbound uploads and a container that is not caught up do not block access. Managed content-write commands fail without a matching lease. Close Obsidian and unmanaged Vault writers first because filesystem permissions cannot prevent them from bypassing the command boundary.
+`begin` requires a fully materialized, current downloaded worktree with no conflicts, pause, exclusions, or dataless files, then atomically acquires the one host-side lease. Pending outbound uploads and a container that is not caught up do not block access. Managed commands that write Vault files fail without a matching lease. Close Obsidian and unmanaged Vault writers first because filesystem permissions cannot prevent them from bypassing the command boundary.
 
 `finish` snapshots changes, hashes changed file bodies, records symlinks and deletions, fsyncs on the Mac host, writes an ignored diagnostic receipt, releases the lease, and returns immediately. It never waits for named uploads, receipt upload, or container caught-up state.
 

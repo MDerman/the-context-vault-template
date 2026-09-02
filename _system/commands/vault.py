@@ -66,7 +66,6 @@ COMMANDS = {
     "task": SCRIPT_DIR / "task.py",
     "folder": SCRIPT_DIR / "folder.py",
     "business-toolkit": SCRIPT_DIR / "business_toolkit.py",
-    "gcal": SCRIPT_DIR / "gcal.py",
     "git-media": SCRIPT_DIR / "git_media.py",
     "git-maintenance": SCRIPT_DIR / "git_maintenance.py",
     "git-preflight": SCRIPT_DIR / "git_preflight.py",
@@ -101,7 +100,6 @@ COMMAND_CAPABILITIES: dict[str, frozenset[str]] = {
     "task": frozenset({"content-write"}),
     "folder": frozenset({"content-write"}),
     "business-toolkit": frozenset({"content-write"}),
-    "gcal": frozenset({"content-write"}),
     "git-media": frozenset({"git-owner"}),
     "git-maintenance": frozenset({"git-owner"}),
     "git-preflight": frozenset({"git-owner"}),
@@ -226,7 +224,6 @@ DEFAULT_APPLY_PREFIXES: dict[str, tuple[tuple[str, ...], ...]] = {
     "attachments": ((),),
     "snippets": (("sync",),),
     "business-toolkit": (("sync",), ("unconfigure",)),
-    "gcal": (("calendars", "ensure"), ("create-event",), ("create-block",), ("sync-tasks",)),
     "git-media": (("install-hook",),),
     "machine": (
         ("init",),
@@ -281,7 +278,6 @@ Common commands:
   task         Create TaskNotes tasks with validated project/epic links.
   folder       Create, register, or rename a context folder.
   business-toolkit  Configure marker-owned business folders and templates for registered contexts.
-  gcal         Read/write Google Calendar events, time blocks, and task date mirrors.
   git-media    Manage pointer-only media manifests and no-upload Git hooks.
   git-maintenance  Keep local Git history shallow and prune local objects.
   git-preflight  Fetch and fast-forward a clean master checkout.
@@ -324,7 +320,6 @@ Examples:
   vault folder remove studio --dry-run
   vault folder rename business studio --dry-run
   vault epic create business "New Epic"
-  vault gcal list --days 7 --calendar all --json
   vault git-media status
   vault git-maintenance
   vault mobile-profile

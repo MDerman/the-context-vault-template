@@ -14,14 +14,13 @@ Refresh runs, in order:
 
 1. Required Git fetch/prune and fast-forward-only preflight when remote exists.
 2. Brain Dump ingestion only when `--sync-brain-dump` is passed.
-3. Best-effort Google Calendar TaskNotes mirror with orphan mirror-event pruning.
-4. Content schedule generation.
-5. Source periodic-note creation, non-destructive daily task-section carry-forward, and vault Sync Embed rollups.
-6. `Dashboard.md` generation.
-7. Best-effort local Git maintenance.
-8. Successful-refresh notification for Context Nine periodic-tab rollover.
+3. Content schedule generation.
+4. Source periodic-note creation, non-destructive daily task-section carry-forward, and vault Sync Embed rollups.
+5. `Dashboard.md` generation.
+6. Best-effort local Git maintenance.
+7. Successful-refresh notification for Context Nine periodic-tab rollover.
 
-Content, periodic, and Dashboard generation are required. Failure stops refresh so scheduled retries remain useful. Calendar and Git maintenance failures warn and continue.
+Content, periodic, and Dashboard generation are required. Failure stops refresh so scheduled retries remain useful. Git maintenance failures warn and continue.
 
 Register the local daily refresh LaunchAgent:
 
@@ -84,12 +83,6 @@ vault refresh --all
 ```
 
 Brain Dump ingestion is skipped by default. Use standalone `vault sync` or explicit `vault refresh --sync-brain-dump` when ingestion is wanted.
-
-To skip Google Calendar sync:
-
-```bash
-vault refresh --skip-gcal
-```
 
 To skip local Git maintenance:
 

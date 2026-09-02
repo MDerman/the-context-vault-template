@@ -32,17 +32,9 @@ In practice:
 
 Google Calendar workflow:
 
-- Native TaskNotes Google export is intentionally not the primary sync path because it supports one target task calendar. The vault mirror uses separate calendars.
-- `Time Blocks` is for broad manual or AI-created planning blocks.
-- `Scheduled Tasks` mirrors TaskNotes `scheduled`.
-- `Due Tasks` mirrors TaskNotes `due`.
-- First-time setup: run `gws auth setup`, then `gws auth login --services calendar,drive`, then `vault gcal calendars ensure`.
-- `vault gcal calendars ensure` sets default popup reminders: `Time Blocks` 0 minutes before, `Scheduled Tasks` 0 minutes before, and `Due Tasks` 0 plus 25 minutes before.
-- Google Calendar's API does not expose the UI-only all-day default reminder time such as "0 days before at 9:00 AM"; set that manually in Google Calendar if needed.
-- Use `vault gcal list --days 7 --calendar all --json` to inspect upcoming calendar context.
-- Use `vault gcal create-block ...` to create broad work blocks on `Time Blocks`.
-- Use `vault gcal sync-tasks --dry-run` before `vault gcal sync-tasks`.
-- Context Nine runs `vault gcal sync-tasks` every 5 minutes while Obsidian is open.
+- TaskNotes dates are not mirrored to Google Calendar.
+- Context Nine does not run a background calendar timer.
+- Use `$gws-custom-calendar` for authentication and explicit events. Its instance config owns the exact concrete-event and time-block calendar IDs.
 
 Useful TaskNotes natural-language input:
 

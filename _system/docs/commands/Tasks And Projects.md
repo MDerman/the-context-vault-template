@@ -129,7 +129,7 @@ Context views include `context-dashboard.base`, `projects-dashboard.base`, and `
 
 TaskNotes Kanban Bases group columns by `status` and use `projects` as horizontal swimlanes. TaskNotes command views remain separate from dashboard Bases.
 
-Google Calendar mirrors `scheduled` and `due` to separate calendars. Event/block/mirror rules: [[Google Calendar]].
+TaskNotes `scheduled` and `due` fields are not exported to Google Calendar automatically. Use `$gws-custom-calendar` only when an explicit calendar event or time block is wanted.
 
 ## Low-Context Searches
 

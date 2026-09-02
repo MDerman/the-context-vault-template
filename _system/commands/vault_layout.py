@@ -34,7 +34,6 @@ WORKSPACE_REGISTRY_PATH = AGENT_INSTANCE_DIR / "fleet/workspaces.json"
 WORKSPACE_DEPENDENCY_PATH = AGENT_INSTANCE_DIR / "dependencies/selections.json"
 AGENT_PACKAGE_MANIFEST_PATH = AGENT_PACKAGE_DIR / "defaults/dependencies.json"
 AGENT_DEPENDENCY_LOCK_PATH = AGENT_PACKAGE_DIR / "generated/state/dependencies.lock.json"
-CALENDAR_CONFIG_PATH = LOCAL_DIR / "calendar.json"
 
 BOOTSTRAP_POLICY_PATH = BOOTSTRAP_DIR / "upgrade-policy.json"
 RELEASE_PATH = BOOTSTRAP_DIR / "release.json"

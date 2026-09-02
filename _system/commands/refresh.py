@@ -175,7 +175,6 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Refresh vault schedules, periodic rollups, Dashboard, and integrations.")
     parser.add_argument("--root", default=None, help="Vault root. Defaults to auto-discovery.")
     parser.add_argument("--sync-brain-dump", action="store_true", help="Ingest configured Brain Dump Apple Note.")
-    parser.add_argument("--skip-gcal", action="store_true", help="Skip Google Calendar TaskNotes date mirror.")
     parser.add_argument(
         "--no-clear-brain-dump",
         action="store_true",
@@ -214,21 +213,6 @@ def main(argv: list[str] | None = None) -> int:
         if args.no_clear_brain_dump:
             ingest_command.append("--no-clear")
         run(ingest_command, root)
-
-    if not args.skip_gcal:
-        run_optional(
-            [
-                sys.executable,
-                str(script_dir / "gcal.py"),
-                "--root",
-                str(root),
-                "sync-tasks",
-                "--apply",
-                "--prune-orphaned-task-events",
-            ],
-            root,
-            "Google Calendar task sync",
-        )
 
     day = dt.date.fromisoformat(args.date) if args.date else local_today()
     _, periods, _ = generate_derived_views(

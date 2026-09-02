@@ -94,8 +94,8 @@
             "state": {
               "type": "tasknotes-pomodoro-view",
               "state": {},
-              "icon": "lucide-ghost",
-              "title": "tasknotes-pomodoro-view"
+              "icon": "clock",
+              "title": "Pomodoro"
             }
           },
           {
@@ -113,7 +113,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 465.546875
+    "width": 450.7578125
   },
   "right": {
     "id": "c5da0292b2670f3d",
@@ -200,7 +200,7 @@
             }
           },
           {
-            "id": "4baef85f58cdb62d",
+            "id": "12f71780230ee04a",
             "type": "leaf",
             "state": {
               "type": "system3-sync-status",
@@ -250,7 +250,7 @@
       "periodic-notes:Open today": false
     }
   },
-  "active": "d8e7297b1558ef74",
+  "active": "9c9bdf79ddab1c3b",
   "lastOpenFiles": [
     "README.md"
   ]

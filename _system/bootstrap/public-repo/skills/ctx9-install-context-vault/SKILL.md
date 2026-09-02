@@ -20,7 +20,7 @@ Install the public Context Vault with the user in control of its location and se
 ```
 
 5. Stay with the user while the context-folder wizard asks its questions. If the optional CTX9 skill system is selected, let its setup wizard finish too.
-6. Verify the target contains `_system/bootstrap/release.json`, the selected context folders, and a working `vault inventory` command.
+6. Verify the target contains `_system/bootstrap/release.json`, the selected context folders, `.obsidian/plugins/context-nine/main.js`, an active `context-nine` entry in `.obsidian/community-plugins.json`, and a working `vault inventory` command.
 7. Report the final absolute Vault path and any optional component the user declined.
 
 Never overwrite a non-empty target or replace an existing Vault.

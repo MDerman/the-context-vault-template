@@ -72,7 +72,7 @@ class RefreshTests(unittest.TestCase):
             root.mkdir()
             with mock.patch.object(refresh, "run") as run:
                 with mock.patch.object(refresh, "generate_derived_views", return_value=GENERATED) as generate:
-                    result = refresh.main(["--root", str(root), "--skip-gcal", "--skip-git-maintenance", "--skip-git-preflight"])
+                    result = refresh.main(["--root", str(root), "--skip-git-maintenance", "--skip-git-preflight"])
 
             self.assertEqual(result, 0)
             run.assert_not_called()
@@ -95,7 +95,7 @@ class RefreshTests(unittest.TestCase):
                     side_effect=lambda *args, **kwargs: (events.append("views") or GENERATED),
                 ):
                     result = refresh.main(
-                        ["--root", str(root), "--sync-brain-dump", "--skip-gcal", "--skip-git-maintenance", "--skip-git-preflight"]
+                        ["--root", str(root), "--sync-brain-dump", "--skip-git-maintenance", "--skip-git-preflight"]
                     )
 
             self.assertEqual(result, 0)
@@ -110,7 +110,6 @@ class RefreshTests(unittest.TestCase):
                     [
                         "--root",
                         str(root),
-                        "--skip-gcal",
                         "--skip-git-maintenance",
                         "--skip-git-preflight",
                         "--context-folders",
@@ -130,7 +129,7 @@ class RefreshTests(unittest.TestCase):
             root.mkdir()
             with mock.patch.object(refresh, "generate_derived_views", side_effect=RuntimeError("dashboard failed")):
                 with self.assertRaisesRegex(RuntimeError, "dashboard failed"):
-                    refresh.main(["--root", str(root), "--skip-gcal", "--skip-git-maintenance", "--skip-git-preflight"])
+                    refresh.main(["--root", str(root), "--skip-git-maintenance", "--skip-git-preflight"])
 
     def test_git_preflight_runs_before_generated_views(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -143,7 +142,7 @@ class RefreshTests(unittest.TestCase):
                     "generate_derived_views",
                     side_effect=lambda *args, **kwargs: (events.append("views") or GENERATED),
                 ):
-                    result = refresh.main(["--root", str(root), "--skip-gcal", "--skip-git-maintenance"])
+                    result = refresh.main(["--root", str(root), "--skip-git-maintenance"])
         self.assertEqual(result, 0)
         self.assertEqual(events, ["preflight", "views"])
 
@@ -164,7 +163,6 @@ class RefreshTests(unittest.TestCase):
                                 "--root",
                                 str(root),
                                 "--best-effort-git-preflight",
-                                "--skip-gcal",
                                 "--skip-git-maintenance",
                             ]
                         )
@@ -200,7 +198,6 @@ class RefreshTests(unittest.TestCase):
                                     str(root),
                                     "--date",
                                     "2026-07-28",
-                                    "--skip-gcal",
                                     "--skip-git-maintenance",
                                     "--skip-git-preflight",
                                 ]
@@ -222,7 +219,6 @@ class RefreshTests(unittest.TestCase):
                                 str(root),
                                 "--date",
                                 "2026-07-27",
-                                "--skip-gcal",
                                 "--skip-git-maintenance",
                                 "--skip-git-preflight",
                             ]

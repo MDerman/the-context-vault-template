@@ -299,7 +299,7 @@ var AttachmentRouter = class {
     const destination = await this.uniqueDestination(file, targetFolder);
     if (destination.existingFile) {
       if (forceMove || this.shouldMoveSource(file)) {
-        await this.app.vault.delete(file);
+        await this.app.fileManager.trashFile(file);
       }
       return destination.existingFile;
     }
@@ -379,8 +379,8 @@ var AttachmentRouter = class {
   async hashFile(file) {
     var _a;
     const buffer = await this.app.vault.readBinary(file);
-    if ((_a = globalThis.crypto) == null ? void 0 : _a.subtle) {
-      const digest = await globalThis.crypto.subtle.digest("SHA-256", buffer);
+    if ((_a = activeWindow.crypto) == null ? void 0 : _a.subtle) {
+      const digest = await activeWindow.crypto.subtle.digest("SHA-256", buffer);
       return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
     }
     let hash = 2166136261;
@@ -1318,8 +1318,6 @@ var DEFAULT_SETTINGS = {
   appleNotesAttachmentsPath: "_system/inbox/apple-notes-attachments",
   enableAutoAttachmentRouter: true,
   routeIntervalSeconds: 60,
-  enableGcalSync: true,
-  gcalSyncIntervalSeconds: 300,
   enableTaskContextRouter: true,
   deleteSourceAfterCapture: true,
   hoveredDeleteEnabled: true,
@@ -3617,7 +3615,6 @@ var ContextNinePlugin = class extends import_obsidian10.Plugin {
   constructor() {
     super(...arguments);
     this.queuedInboxPaths = /* @__PURE__ */ new Set();
-    this.gcalSyncProcess = null;
   }
   async onload() {
     await this.loadSettings();
@@ -3791,9 +3788,6 @@ var ContextNinePlugin = class extends import_obsidian10.Plugin {
     );
     if (this.settings.enableAutoAttachmentRouter) {
       this.registerAttachmentWatcher();
-    }
-    if (this.settings.enableGcalSync) {
-      this.registerGcalSyncTimer();
     }
     if (this.settings.enableTaskContextRouter) {
       this.taskContextRouter.register(this);
@@ -4010,54 +4004,6 @@ var ContextNinePlugin = class extends import_obsidian10.Plugin {
     const moved = await this.taskContextRouter.routeAllTasks();
     new import_obsidian10.Notice(`Moved ${moved} task file${moved === 1 ? "" : "s"}.`);
   }
-  registerGcalSyncTimer() {
-    const interval = Math.max(60, this.settings.gcalSyncIntervalSeconds) * 1e3;
-    this.registerInterval(
-      window.setInterval(() => {
-        this.runGcalSync();
-      }, interval)
-    );
-  }
-  runGcalSync() {
-    if (this.gcalSyncProcess) {
-      return;
-    }
-    const cwd = this.settings.vaultRoot || this.getCurrentVaultRoot() || DEFAULT_SETTINGS.vaultRoot;
-    const command = this.getVaultCommand(
-      this.settings.vaultCommand || DEFAULT_SETTINGS.vaultCommand,
-      cwd
-    );
-    const child = (0, import_child_process3.spawn)(command, ["gcal", "sync-tasks", "--apply"], {
-      cwd,
-      env: {
-        ...process.env,
-        PATH: process.env.PATH ? `${process.env.HOME}/.local/bin:${process.env.PATH}` : `${process.env.HOME}/.local/bin`
-      }
-    });
-    this.gcalSyncProcess = child;
-    child.stdout.on("data", (data) => {
-      const text = data.toString().trim();
-      if (text) {
-        console.log("[Context Nine] gcal sync:", text);
-      }
-    });
-    child.stderr.on("data", (data) => {
-      const text = data.toString().trim();
-      if (text) {
-        console.warn("[Context Nine] gcal sync:", text);
-      }
-    });
-    child.on("error", (error) => {
-      this.gcalSyncProcess = null;
-      console.error("[Context Nine] gcal sync failed", error);
-    });
-    child.on("close", (exitCode) => {
-      this.gcalSyncProcess = null;
-      if (exitCode !== 0) {
-        console.warn(`[Context Nine] gcal sync exited with ${exitCode}`);
-      }
-    });
-  }
 };
 var VaultPromptArgsModal = class extends import_obsidian10.Modal {
   constructor(app, command, onSubmit) {
@@ -4116,7 +4062,6 @@ var ContextNineSettingTab = class extends import_obsidian10.PluginSettingTab {
   display() {
     const { containerEl } = this;
     containerEl.empty();
-    containerEl.createEl("h2", { text: "Context Nine" });
     new import_obsidian10.Setting(containerEl).setName("Default capture context").addText((text) => {
       text.setValue(this.plugin.settings.defaultContext).onChange(async (value) => {
         this.plugin.settings.defaultContext = value.trim() || DEFAULT_SETTINGS.defaultContext;
@@ -4142,19 +4087,6 @@ var ContextNineSettingTab = class extends import_obsidian10.PluginSettingTab {
       text.setValue(String(this.plugin.settings.routeIntervalSeconds)).onChange(async (value) => {
         const parsed = Number.parseInt(value, 10);
         this.plugin.settings.routeIntervalSeconds = Number.isFinite(parsed) ? Math.max(5, parsed) : DEFAULT_SETTINGS.routeIntervalSeconds;
-        await this.plugin.saveSettings();
-      });
-    });
-    new import_obsidian10.Setting(containerEl).setName("Auto-sync Google Calendar tasks").addToggle((toggle) => {
-      toggle.setValue(this.plugin.settings.enableGcalSync).onChange(async (value) => {
-        this.plugin.settings.enableGcalSync = value;
-        await this.plugin.saveSettings();
-      });
-    });
-    new import_obsidian10.Setting(containerEl).setName("Google Calendar sync interval seconds").addText((text) => {
-      text.setValue(String(this.plugin.settings.gcalSyncIntervalSeconds)).onChange(async (value) => {
-        const parsed = Number.parseInt(value, 10);
-        this.plugin.settings.gcalSyncIntervalSeconds = Number.isFinite(parsed) ? Math.max(60, parsed) : DEFAULT_SETTINGS.gcalSyncIntervalSeconds;
         await this.plugin.saveSettings();
       });
     });

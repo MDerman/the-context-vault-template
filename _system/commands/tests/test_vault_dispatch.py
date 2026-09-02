@@ -27,7 +27,6 @@ class VaultDispatchTests(unittest.TestCase):
             ("attachments", ()): ["--apply"],
             ("snippets", ("sync",)): ["sync", "--apply"],
             ("business-toolkit", ("unconfigure",)): ["unconfigure", "--apply"],
-            ("gcal", ("calendars", "ensure")): ["calendars", "ensure", "--apply"],
             ("git-media", ("install-hook",)): ["install-hook", "--apply"],
             ("machine", ("identify", "wootbook")): ["identify", "wootbook", "--apply"],
             ("worker-sync", ("bootstrap", "wootbook")): ["bootstrap", "wootbook", "--apply"],
@@ -50,7 +49,6 @@ class VaultDispatchTests(unittest.TestCase):
                     [mode],
                 )
         self.assertEqual(vault_dispatch.with_default_apply("upgrade", ["status"]), ["status"])
-        self.assertEqual(vault_dispatch.with_default_apply("gcal", ["list-events"]), ["list-events"])
 
     def test_attachment_verification_uses_read_only_capability(self) -> None:
         self.assertEqual(

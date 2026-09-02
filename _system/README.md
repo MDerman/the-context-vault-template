@@ -98,7 +98,7 @@ Context-owned operating folders use `_obsidian` so ordinary work folders remain 
 
 Commands, schemas, statuses, shorthand, and Bases: [[_system/docs/commands/Tasks And Projects|Tasks And Projects]].
 
-Calendar mirror/event rules: [[_system/docs/commands/Google Calendar|Google Calendar]].
+Google Calendar events and time blocks use the direct GWS workflow in `$gws-custom-calendar`; TaskNotes dates are not mirrored automatically.
 
 ## Periodic Notes
 

@@ -295,67 +295,6 @@
     "tui": true
   },
   {
-    "id": "gcal-list-week",
-    "label": "GCal List Week",
-    "description": "List the next week of Google Calendar events as JSON.",
-    "group": "Calendar",
-    "risk": "read",
-    "mode": "run",
-    "args": [
-      "gcal",
-      "list",
-      "--days",
-      "7",
-      "--calendar",
-      "all",
-      "--json"
-    ],
-    "tui": true
-  },
-  {
-    "id": "gcal-ensure-calendars",
-    "label": "GCal Ensure Calendars",
-    "description": "Ensure required vault Google Calendars exist.",
-    "group": "Calendar",
-    "risk": "apply",
-    "mode": "run",
-    "confirm": true,
-    "args": [
-      "gcal",
-      "calendars",
-      "ensure"
-    ],
-    "tui": true
-  },
-  {
-    "id": "gcal-sync-tasks-dry-run",
-    "label": "GCal Sync Tasks Dry Run",
-    "description": "Preview TaskNotes date sync with Google Calendar.",
-    "group": "Calendar",
-    "risk": "dry-run",
-    "mode": "run",
-    "args": [
-      "gcal",
-      "sync-tasks",
-      "--dry-run"
-    ],
-    "tui": true
-  },
-  {
-    "id": "gcal-sync-tasks-apply",
-    "label": "GCal Sync Tasks",
-    "description": "Apply the two-way TaskNotes due/scheduled mirror with Google Calendar.",
-    "group": "Calendar",
-    "risk": "apply",
-    "mode": "long-running",
-    "confirm": true,
-    "args": [
-      "gcal",
-      "sync-tasks"
-    ],
-    "tui": true
-  },
-  {
     "id": "backup",
     "label": "Obsidian Profile Backup",
     "description": "Back up root Obsidian config under system backup.",

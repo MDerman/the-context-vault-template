@@ -45,7 +45,6 @@ Open only the script doc needed for the current task. Create a separate `README-
 - [[_system/docs/commands/Content Schedules|Content Schedules]]
 - [[_system/docs/commands/Periodic Rollups|Periodic Rollups]]
 - [[_system/docs/commands/Epics|Epics]]
-- [[_system/docs/commands/Google Calendar|Google Calendar]]
 - [[_system/docs/commands/Brain Dump|Brain Dump]]
 - [[_system/docs/commands/Attachments|Attachments]]
 - [[_system/docs/commands/Context Folders|Context Folders]]
